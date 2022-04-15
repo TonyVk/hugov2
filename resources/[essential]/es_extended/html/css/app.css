@@ -1,0 +1,219 @@
+@font-face {
+	font-family: 'Pricedown';
+	src: url('../fonts/pdown.ttf')
+}
+
+@font-face {
+	font-family: 'bankgothic';
+	src: url('../fonts/bankgothic.ttf')
+}
+
+html {
+	overflow: hidden;
+}
+
+#pbar {
+	display: none;
+	overflow: hidden;
+}
+
+#hud {
+	position: absolute;
+	font-family: 'Pricedown';
+	font-size: 35px;
+	color: white;
+	padding: 4px;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	text-align: right;
+	top: 80;
+	right: 40;
+}
+
+#inventory_notifications {
+	font-family: bankgothic;
+	position: absolute;
+	right: 40;
+	bottom: 75;
+	font-size: 2em;
+	font-weight: bold;
+	color: #FFF;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+#notifikacije{
+	position: absolute;
+	top: 290px;
+	left: 0px;
+}
+.notif{
+	background-image: linear-gradient(to right, rgb(255 0 0 / 6%), rgb(239 132 57));
+	padding: 10px;
+	display:none;
+	margin-top: 5px;
+	transition: .2s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+	word-wrap: normal;
+	max-width: 500px;
+	font-size: 20px;
+	font-family: serif;
+	/* display: flex; */
+	z-index: 9999999;
+	align-items: center;
+	justify-content: space-between;
+}
+#slika{
+	width: 40px;
+}
+.skrivanje{
+	transform: translateX(-110%);
+}
+#tekst{
+	margin-left: 20px;
+	color:white;
+}
+
+.notification {
+	-webkit-display: flex;
+	display: flex;
+	margin: 0 auto 10px auto;
+	width: 350px;
+	transition: .2s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+	min-height: 70px;
+}
+.notification .info {
+	-webkit-flex: 1;
+	flex: 1;
+	padding: 10px 10px 0 10px;
+	background: #ecf0f1;
+	border-radius: 3px 0 0 3px;
+	border-bottom: 3px solid #c0cdd1;
+}
+.notification .info h1 {
+	margin: 0;
+	padding: 0;
+	font-family: arial, sans-serif;
+	font-size: 16px;
+	color: #111;
+}
+.notification .info h1 a {
+	text-decoration: none;
+	color: #444;
+}
+.notification .info p {
+	margin: 0;
+	padding: 5px 0;
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	color: #666;
+}
+.notification .info .button {
+	display: inline-block;
+	margin: 3px 3px 5px 0;
+	padding: 3px 7px;
+	border-radius: 2px;
+	border-bottom: 1px solid;
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #ecf0f1;
+}
+.notification .info .button.blue {
+	background: #2980b9 !important;
+	border-bottom-color: #20638f !important;
+}
+.notification .info .button.red {
+	background: #e74c3c !important;
+	border-bottom-color: #d62c1a !important;
+}
+.notification .info .button.orange {
+	background: #f39c12 !important;
+	border-bottom-color: #c87f0a !important;
+}
+.notification .info .button.purple {
+	background: #9b59b6 !important;
+	border-bottom-color: #804399 !important;
+}
+.notification .info .button.green {
+	background: #27ae60 !important;
+	border-bottom-color: #1e8449 !important;
+}
+.notification .info .button.gray {
+	background: #95a5a6 !important;
+	border-bottom-color: #798d8f !important;
+}
+.notification .icon {
+	padding: 15px 0 0 0;
+	width: 70px;
+	border-radius: 0 3px 3px 0;
+	text-align: center;
+	font-size: 32px;
+	color: #ecf0f1;
+	border-bottom: 3px solid;
+}
+.notification .icon {
+	background: #7f8c8d;
+	border-bottom-color: #667273;
+}
+.notification .info .button {
+	background: #7f8c8d;
+	border-bottom-color: #667273;
+}
+.notification.green .icon {
+	background: #279bae;
+	border-bottom-color: #2e8695;
+}
+.notification.green .info .button {
+	background: #27ae60;
+	border-bottom-color: #1e8449;
+}
+
+.menu {
+	font-family: 'Open Sans', sans-serif;
+	min-width: 400px;
+	min-height: 250px;
+	color: #fff;
+	position: absolute;
+	left: 40;
+	top: 0;
+}
+
+.menu .head {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 28px;
+	padding: 10px;
+	background: #1A1A1A;
+	border-bottom: 3px solid #BC1635;
+	border-radius: 10px 10px 0 0;
+	-webkit-border-radius: 10px 10px 0 0;
+	-moz-border-radius: 10px 10px 0 0;
+	-o-border-radius: 10px 10px 0 0;
+	box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+	-webkit-box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+	-moz-box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+	-o-box-shadow: inset 0px 1px 0 rgba(255, 255, 255, 0.28);
+	box-shadow: 1px 1px 10px 4px rgba(0, 0, 0, 0.4);
+}
+
+.menu .head span {
+	font-family: 'Pricedown';
+	font-size: 28px;
+	padding-left: 15px;
+	padding-top: 6px;
+}
+
+.menu .menu-items .menu-item {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	height: 40px;
+	display: block;
+	background-color: #f1f1f1;
+	box-shadow: inset 1px 0px 0px 1px #b8b8b8;
+	height: 32px;
+	line-height: 32px;
+	color: #3A3A3A;
+	text-align: center;
+}
+
+.menu .menu-items .menu-item.selected {
+	background-color: #ccc;
+}
