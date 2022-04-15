@@ -46,10 +46,8 @@ files {
 	'ui/index.html',
 	'ui/discord.png',
 	'ui/logo.png',
-	'ui/slike/slika1.png',
+	'ui/slike/slika1.jpg',
 	'ui/slike/slika2.jpg',
-	'ui/slike/slika3.jpg',
-	'ui/slike/slika4.jpg',
 	"ui/assets/plugins/bootstrap-3.3.7-dist/css/bootstrap.css",
 	"ui/assets/plugins/jquery/jquery-3.2.1.min.js",
 	"ui/assets/plugins/bootstrap-3.3.7-dist/js/bootstrap.min.js"

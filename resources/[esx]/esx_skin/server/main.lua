@@ -29,6 +29,11 @@ AddEventHandler('skin:SpremiPodatke', function(data)
 	})
 end)
 
+RegisterServerEvent('spawn:SetajBucket')
+AddEventHandler('spawn:SetajBucket', function(br)
+	SetPlayerRoutingBucket(source, br)
+end)
+
 RegisterServerEvent('esx_skin:responseSaveSkin')
 AddEventHandler('esx_skin:responseSaveSkin', function(skin)
 
