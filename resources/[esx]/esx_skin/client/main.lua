@@ -255,13 +255,13 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict, scena)
 
 		TriggerEvent('skinchanger:getSkin', function(skin)
 			TriggerServerEvent('esx_skin:save', skin)
-			--if scena then
+			if scena then
 				DoScreenFadeOut(1)
 				TriggerEvent("MakniHud", true)
 				--CreatePlane(-2598.599609375, -2432.763671875, 500.94445800782, 241.49998474122, "AIRP")
 				--PokreniIntro()
 				IzaberiProslost()
-			--end
+			end
 			if submitCb ~= nil then
 				submitCb(data, menu)
 			end
