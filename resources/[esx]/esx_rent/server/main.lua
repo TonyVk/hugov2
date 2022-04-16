@@ -46,9 +46,54 @@ ESX.RegisterServerCallback('rent:RentajVozilo', function(source, cb, id, sime)
                             if xPlayer.getMoney() >= voz[v].cijena then
                                 xPlayer.removeMoney(voz[v].cijena)
                                 xPlayer.showNotification("Rentali ste vozilo za $"..voz[v].cijena)
+                                local sefCifra = voz[v].cijena*0.60
+                                Rent[i].sef = Rent[i].sef+sefCifra
+                                MySQL.Async.execute('UPDATE rent SET `sef` = @sef WHERE ID = @id',{
+                                    ['@sef'] = Rent[i].sef,
+                                    ['@id'] = id
+                                })
                                 cb(true)
                             else
                                 xPlayer.showNotification("Nemate dovoljno novca.")
+                                cb(false)
+                            end
+                        end
+                    end
+                    if not naso then
+                        xPlayer.showNotification("Greska! Vozilo se vise ne nalazi u ovom rentu.")
+                        cb(false)
+                    end
+                    break
+                end
+            end
+        end
+    end
+end)
+
+ESX.RegisterServerCallback('rent:UzmiLovu', function(source, cb, id, sime)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if xPlayer then
+        for i=1, #Rent, 1 do
+            if Rent[i] ~= nil then
+                if Rent[i].ID == id then
+                    local voz = Rent[i].vozila
+                    local naso = false
+                    for v=1, #voz, 1 do
+                        if voz[v].value == sime then
+                            naso = true
+                            if xPlayer.getMoney() >= voz[v].cijena then
+                                xPlayer.removeMoney(voz[v].cijena)
+                                xPlayer.showNotification("Platili ste rent vozila $"..voz[v].cijena)
+                                local sefCifra = voz[v].cijena*0.60
+                                Rent[i].sef = Rent[i].sef+sefCifra
+                                MySQL.Async.execute('UPDATE rent SET `sef` = @sef WHERE ID = @id',{
+                                    ['@sef'] = Rent[i].sef,
+                                    ['@id'] = id
+                                })
+                                cb(true)
+                            else
+                                xPlayer.showNotification("Nemate dovoljno novca za nastavak rentanja vozila.")
                                 cb(false)
                             end
                         end

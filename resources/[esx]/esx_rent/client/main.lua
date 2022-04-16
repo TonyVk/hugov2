@@ -13,6 +13,8 @@ local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local Rentao                    = false
 local RVozilo                   = nil
+local RentID                    = nil
+local RentIDVozilo              = nil
 local Blipovi                   = {}
 
 Citizen.CreateThread(function()
@@ -518,6 +520,9 @@ function OpenRentMenu(rid)
                                         ESX.Game.SpawnVehicle(data3.current.value, Rent[id].koord, 0.0, function (vehicle)
                                             TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
                                             RVozilo = vehicle
+                                            RentID = rid
+                                            RentIDVozilo = data3.current.value
+                                            SetTimeout(Config.Interval, UzmiLovu)
                                         end)
                                     end
                                 end, rid, data3.current.value)
@@ -548,7 +553,25 @@ RegisterCommand('unrent', function()
         ESX.ShowNotification("Unrentali ste vozilo.")
         ESX.Game.DeleteVehicle(RVozilo)
         RVozilo = nil
+        RentID = nil
+        RentIDVozilo = nil
     else
         ESX.ShowNotification("Nemate rentano vozilo.")
     end
 end, false)
+
+function UzmiLovu()
+    if Rentao then
+        ESX.TriggerServerCallback('rent:UzmiLovu', function(morel)
+            if morel then
+                SetTimeout(Config.Interval, UzmiLovu)
+            else
+                Rentao = false
+                ESX.Game.DeleteVehicle(RVozilo)
+                RVozilo = nil
+                RentID = nil
+                RentIDVozilo = nil
+            end
+        end, RentID, RentIDVozilo)
+    end
+end
