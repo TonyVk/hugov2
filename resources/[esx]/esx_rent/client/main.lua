@@ -13,7 +13,7 @@ local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local Rentao                    = false
 local RVozilo                   = nil
-
+local Blipovi                   = {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -31,6 +31,7 @@ function ProvjeriPosao()
     ESX.TriggerServerCallback('rent:DohvatiRent', function(vr)
 		Rent = vr
         SpawnCpove()
+        SpawnBlipove()
 	end)
 end
 
@@ -48,6 +49,28 @@ function SpawnCpove()
 	Cpovi = {}
 	for i=1, #Rent, 1 do
 		table.insert(Cpovi, {ID = check, Koord = Rent[i].koord, Spawnan = false, rID = Rent[i].ID})
+	end
+end
+
+function SpawnBlipove()
+	if #Blipovi > 0 then
+		for i=1, #Blipovi, 1 do
+		  	if Blipovi[i] ~= nil then
+                RemoveBlip(Blipovi[i])
+		  	end
+		end
+	end
+	Blipovi = {}
+	for i=1, #Rent, 1 do
+		Blipovi[i] = AddBlipForCoord(Rent[i].koord)
+        SetBlipSprite(Blipovi[i], 85)
+        SetBlipDisplay(Blipovi[i], 4)
+        SetBlipScale(Blipovi[i], 1.0)
+        SetBlipColour(Blipovi[i], 2)
+        SetBlipAsShortRange(Blipovi[i], true)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString("Rent auta")
+        EndTextCommandSetBlipName(Blipovi[i])
 	end
 end
 
@@ -364,6 +387,7 @@ RegisterNetEvent('rent:VratiRent')
 AddEventHandler('rent:VratiRent', function(vr)
 	Rent = vr
     SpawnCpove()
+    SpawnBlipove()
 end)
 
 -- Display markers 
