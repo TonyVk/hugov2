@@ -1,3 +1,5 @@
+--Zavrsi uzimanje vozila, kupovinu renta, dodaj blipove na mapu, kupovina vozila od strane vlasnika i postavljanje cijene???
+
 ESX                             = nil
 local perm 						= 0
 local Rent                      = {}
@@ -43,7 +45,7 @@ function SpawnCpove()
 	end
 	Cpovi = {}
 	for i=1, #Rent, 1 do
-		table.insert(Cpovi, {ID = check, Koord = Rent[i].koord, Spawnan = false})
+		table.insert(Cpovi, {ID = check, Koord = Rent[i].koord, Spawnan = false, rID = Rent[i].ID})
 	end
 end
 
@@ -263,7 +265,7 @@ Citizen.CreateThread(function()
 				if Cpovi[i] ~= nil and Cpovi[i].Spawnan then
 					if #(coords-Cpovi[i].Koord) < 1.5 then
                         isInMarker  = true
-                        currentZone = 'rent'
+                        currentZone = Cpovi[i].rID
                         break
 					end
 				end
@@ -289,7 +291,7 @@ Citizen.CreateThread(function()
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
 			if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
-                OpenRentMenu()
+                OpenRentMenu(CurrentActionData.rID)
 				CurrentAction = nil
 				GUI.Time      = GetGameTimer()
 			end
@@ -302,11 +304,9 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler('rent:hasEnteredMarker', function(zone)
-	if zone == 'rent' then
-		CurrentAction     = 'rent'
-		CurrentActionMsg  = "Pritisnite E da otvorite rent menu"
-		CurrentActionData = {}
-	end
+    CurrentAction     = 'rent'
+    CurrentActionMsg  = "Pritisnite E da otvorite rent menu"
+    CurrentActionData = {rID = zone}
 end)
 
 AddEventHandler('rent:hasExitedMarker', function(zone)
@@ -314,6 +314,37 @@ AddEventHandler('rent:hasExitedMarker', function(zone)
 	CurrentAction = nil
 end)
 
-function OpenRentMenu()
-    print("aaaa")
+function OpenRentMenu(rid)
+    local id
+    for i = 1, #Rent do
+        if Rent[i].ID == rid then
+            id = i
+            break
+        end
+    end
+    local elements = {}
+
+    table.insert(elements, {label = "Izaberite vozilo", value = "vozilo"})
+    if Rent[id].vlasnik == nil then
+        table.insert(elements, {label = "Kupite firmu", value = "kupi"})
+    end
+
+    ESX.UI.Menu.Open(
+        'default', GetCurrentResourceName(), 'menrent',
+        {
+            title    = "Izaberite opciju",
+            align    = 'top-left',
+            elements = elements,
+        },
+        function(data, menu)
+            if data.current.value == "vozilo" then
+
+            elseif data.current.value == "kupi" then
+
+            end
+        end,
+        function(data, menu)
+            menu.close()
+        end
+    )
 end
