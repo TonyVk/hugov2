@@ -11,6 +11,8 @@ local HasAlreadyEnteredMarker   = false
 local LastZone                  = nil
 local CurrentActionMsg          = ''
 local CurrentActionData         = {}
+local Rentao                    = false
+local RVozilo                   = nil
 
 
 Citizen.CreateThread(function()
@@ -114,6 +116,7 @@ RegisterCommand("uredirent", function(source, args, raw)
                     menu.close()
                     elements = {}
                     table.insert(elements, {label = "Uredi koordinatu", value = "koord"})
+                    table.insert(elements, {label = "Uredi vozila", value = "vozila"})
                     table.insert(elements, {label = "Promijeni cijenu", value = "cijena"})
                     table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
                     table.insert(elements, {label = "Sef", value = "sef"})
@@ -131,6 +134,136 @@ RegisterCommand("uredirent", function(source, args, raw)
                                 local koord = GetEntityCoords(PlayerPedId())
                                 TriggerServerEvent("rent:UrediKoord", rID, koord)
                                 ESX.ShowNotification("Promijenili ste koordinate renta")
+                            elseif data2.current.value == "vozila" then
+                                elements = {}
+                                if Rent[id].vozila ~= nil then
+                                    elements = Rent[id].vozila
+                                    -- for v = 1, #Rent[id].vozila do
+                                    --     table.insert(elements, {label = Rent[id].vozila[v].label, value = Rent[id].vozila[v].value})
+                                    -- end
+                                end
+                                table.insert(elements, {label = "Dodaj vozilo", value = "dodaj"})
+                                ESX.UI.Menu.Open(
+                                    'default', GetCurrentResourceName(), 'urentv',
+                                    {
+                                        title    = "Izaberite opciju",
+                                        align    = 'top-left',
+                                        elements = elements,
+                                    },
+                                    function(data3, menu3)
+                                        if data3.current.value == "dodaj" then
+                                            ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'imvoz', {
+                                                title = "Upisite ime(label) vozila",
+                                            }, function (datar, menur)
+                                                local ime = datar.value
+                                                if ime == nil then
+                                                    ESX.ShowNotification('Greska.')
+                                                else
+                                                    menur.close()
+                                                    ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'imvoz2', {
+                                                        title = "Upisite spawn ime vozila (npr. bmwm8)",
+                                                    }, function (datar2, menur2)
+                                                        local sime = datar2.value
+                                                        if sime == nil then
+                                                            ESX.ShowNotification('Greska.')
+                                                        else
+                                                            menur2.close()
+                                                            ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'imvoz3', {
+                                                                title = "Upisite cijenu renta",
+                                                            }, function (datar3, menur3)
+                                                                local cij = tonumber(datar3.value)
+                                                                if cij == nil then
+                                                                    ESX.ShowNotification('Greska.')
+                                                                else
+                                                                    menur3.close()
+                                                                    menu3.close()
+                                                                    TriggerServerEvent("rent:SpremiVozilo", rID, ime, sime, cij)
+                                                                end
+                                                            end, function (datar3, menur3)
+                                                                menur3.close()
+                                                            end)
+                                                        end
+                                                    end, function (datar2, menur2)
+                                                        menur2.close()
+                                                    end)
+                                                end
+                                            end, function (datar, menur)
+                                                menur.close()
+                                            end)
+                                        else
+                                            elements = {}
+                                            table.insert(elements, {label = "Uredi cijenu", value = "cijena"})
+                                            table.insert(elements, {label = "Uredi ime", value = "ime"})
+                                            table.insert(elements, {label = "Uredi spawn ime", value = "sime"})
+                                            table.insert(elements, {label = "Obrisi vozilo", value = "obrisi"})
+                                            ESX.UI.Menu.Open(
+                                                'default', GetCurrentResourceName(), 'uvozbla',
+                                                {
+                                                    title    = "Izaberite opciju",
+                                                    align    = 'top-left',
+                                                    elements = elements,
+                                                },
+                                                function(data4, menu4)
+                                                    if data4.current.value == "cijena" then
+                                                        ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'imvoz3', {
+                                                            title = "Upisite cijenu renta",
+                                                        }, function (datar3, menur3)
+                                                            local cij = tonumber(datar3.value)
+                                                            if cij == nil then
+                                                                ESX.ShowNotification('Greska.')
+                                                            else
+                                                                menur3.close()
+                                                                TriggerServerEvent("rent:SpremiVCijenu", rID, data3.current.value, cij)
+                                                            end
+                                                        end, function (datar3, menur3)
+                                                            menur3.close()
+                                                        end)
+                                                    elseif data4.current.value == "ime" then
+                                                        ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'imvoz', {
+                                                            title = "Upisite ime(label) vozila",
+                                                        }, function (datar, menur)
+                                                            local ime = datar.value
+                                                            if ime == nil then
+                                                                ESX.ShowNotification('Greska.')
+                                                            else
+                                                                menur.close()
+                                                                TriggerServerEvent("rent:SpremiVIme", rID, data3.current.value, ime)
+                                                            end
+                                                        end, function (datar, menur)
+                                                            menur.close()
+                                                        end)
+                                                    elseif data4.current.value == "sime" then
+                                                        ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'imvoz2', {
+                                                            title = "Upisite spawn ime vozila (npr. bmwm8)",
+                                                        }, function (datar2, menur2)
+                                                            local sime = datar2.value
+                                                            if sime == nil then
+                                                                ESX.ShowNotification('Greska.')
+                                                            else
+                                                                menur2.close()
+                                                                TriggerServerEvent("rent:SpremiVsIme", rID, data3.current.value, sime)
+                                                                menu4.close()
+                                                                menu3.close()
+                                                            end
+                                                        end, function (datar2, menur2)
+                                                            menur2.close()
+                                                        end)
+                                                    elseif data4.current.value == "obrisi" then
+                                                        menu4.close()
+                                                        menu3.close()
+                                                        TriggerServerEvent("rent:ObrisiVozilo", rID, data3.current.value)
+                                                    end
+                                                end, 
+                                            function (data4, menu4)
+                                                menu4.close()
+                                            end)   
+                                        end
+                                    end,
+                                    function(data3, menu3)
+                                        menu3.close()
+                                        --ExecuteCommand("uredirent")
+                                    end
+                                )
                             elseif data2.current.value == "cijena" then
                                 ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijrent', {
                                     title = "Upisite cijenu firme",
@@ -338,7 +471,43 @@ function OpenRentMenu(rid)
         },
         function(data, menu)
             if data.current.value == "vozilo" then
-
+                if not Rentao then
+                    elements = {}
+                    if Rent[id].vozila ~= nil then
+                        local voz = Rent[id].vozila
+                        for i = 1, #voz do
+                            if voz[i] ~= nil then
+                                table.insert(elements, {label = voz[i].label.." $"..voz[i].cijena, value = voz[i].value})
+                            end
+                        end
+                        ESX.UI.Menu.Open(
+                            'default', GetCurrentResourceName(), 'rentajga',
+                            {
+                                title    = "Izaberite vozilo",
+                                align    = 'top-left',
+                                elements = elements,
+                            },
+                            function(data3, menu3)
+                                ESX.TriggerServerCallback('rent:RentajVozilo', function(morel)
+                                    if morel then
+                                        Rentao = true
+                                        ESX.Game.SpawnVehicle(data3.current.value, Rent[id].koord, 0.0, function (vehicle)
+                                            TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+                                            RVozilo = vehicle
+                                        end)
+                                    end
+                                end, rid, data3.current.value)
+                            end,
+                            function(data3, menu3)
+                                menu3.close()
+                            end
+                        )
+                    else
+                        ESX.ShowNotification("Ovaj rent nema vozila.")
+                    end
+                else
+                    ESX.ShowNotification("Vec rentate vozilo. Vratite vozilo s komandom /unrent")
+                end
             elseif data.current.value == "kupi" then
 
             end
@@ -348,3 +517,14 @@ function OpenRentMenu(rid)
         end
     )
 end
+
+RegisterCommand('unrent', function()
+    if Rentao then
+        Rentao = false
+        ESX.ShowNotification("Unrentali ste vozilo.")
+        ESX.Game.DeleteVehicle(RVozilo)
+        RVozilo = nil
+    else
+        ESX.ShowNotification("Nemate rentano vozilo.")
+    end
+end, false)
