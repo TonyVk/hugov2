@@ -139,7 +139,6 @@
 	};
 
 	window.onData = (data) => {
-		console.log(data.action);
 		switch (data.action) {
 			case 'setHUDDisplay': {
 				ESX.setHUDDisplay(data.opacity);

@@ -39,7 +39,7 @@ em {
 
 .chat-window {
   position: absolute;
-  top: 1.5%;
+  top: 6.5%;
   left: 0.8%;
   width: 38%;
   height: 22%;
@@ -63,7 +63,7 @@ em {
   font-size: 1.65vh;
   position: absolute;
 
-  top: 23.8%;
+  top: 28.8%;
   left: 0.8%;
   width: 38%;
   max-width: 1000px;
