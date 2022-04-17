@@ -109,7 +109,7 @@ AddEventHandler('kuce:RentajKucu', function(id)
 			if xPlayer.getMoney() >= v['rentCijena'] then
                 xPlayer.removeMoney(v['rentCijena'])
                 xPlayer.showNotification("Iznajmili ste kucu za $"..v['rentCijena'])
-                MySQL.Async.execute("UPDATE users SET rentKuca=@rent WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@rent'] = id})
+                MySQL.Async.execute("UPDATE users SET rentKuca=@rent, rentDatum = NOW() WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@rent'] = id})
             else
                 xPlayer.showNotification("Nemate dovoljno novca kod sebe!")
             end
@@ -258,11 +258,34 @@ AddEventHandler('loaf_housing:ObrisiKucu', function(id)
 end)
 
 ESX.RegisterServerCallback('loaf_housing:DohvatiZadnjuKucu', function(source, cb)
-	local xPlayer = ESX.GetPlayerFromId(source)
-	MySQL.Async.fetchScalar('SELECT last_house FROM users WHERE ID = @id', {
+    local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	MySQL.Async.fetchAll('SELECT last_house, rentKuca, DATEDIFF(NOW(), rentDatum) as datum FROM users WHERE ID = @id', {
 		['@id'] = xPlayer.getID()
 	}, function(result)
-		cb(result, Config.Houses)
+        if result[1].rentKuca ~= nil then
+            if result[1].datum >= 1 then
+                for ka, v in pairs(Config.Houses) do
+                    local k = v['ID']
+                    if k == result[1].rentKuca then
+                        if xPlayer.getBank() >= v['rentCijena'] then
+                            xPlayer.showNotification("Platili ste rent kuce $"..v['rentCijena'])
+                            xPlayer.showNotification("Da prestanete rentati kucu upisite /unrentkucu")
+                            xPlayer.removeBank(v['rentCijena'])
+                            MySQL.Async.execute("UPDATE users SET rentDatum=NOW() WHERE ID=@id", {['@id'] = xPlayer.getID()})
+                        else
+                            xPlayer.showNotification("Niste imali novca na banci pa ste izbaceni iz kuce.")
+                            MySQL.Async.execute("UPDATE users SET rentKuca=null WHERE ID=@id", {['@id'] = xPlayer.getID()})
+                            local h2 = {owns = false, furniture = {}, houseId = 0}
+                            TriggerClientEvent("kuce:UpdateRentKucu", src, h2)
+                            TriggerClientEvent('loaf_housing:reloadHouses', src)
+                        end
+                        break
+                    end
+                end
+            end
+        end
+		cb(result[1].last_house, Config.Houses)
     end)
 end)
 
@@ -626,6 +649,40 @@ AddEventHandler('loaf_housing:furnish', function(house, furniture)
     local xPlayer = ESX.GetPlayerFromId(src)
     MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@house'] = json.encode(house)}) 
     MySQL.Async.execute("UPDATE users SET bought_furniture=@bought_furniture WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@bought_furniture'] = json.encode(furniture)}) 
+end)
+
+RegisterServerEvent('kuce:IzbaciStanara')
+AddEventHandler('kuce:IzbaciStanara', function(id)
+    local xPlayer = ESX.GetPlayerFromDbId(id)
+	if xPlayer then
+        xPlayer.showNotification("Izbaceni ste iz kuce.")
+        local h2 = {owns = false, furniture = {}, houseId = 0}
+        TriggerClientEvent("kuce:UpdateRentKucu", xPlayer.source, h2)
+        TriggerClientEvent('loaf_housing:reloadHouses', xPlayer.source)
+    end
+    MySQL.Async.execute("UPDATE users SET rentKuca=null WHERE ID=@id", {['@id'] = id})
+end)
+
+RegisterServerEvent('kuce:UnrentKucu')
+AddEventHandler('kuce:UnrentKucu', function()
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer then
+        MySQL.Async.execute("UPDATE users SET rentKuca=null WHERE ID=@id", {['@id'] = xPlayer.getID()})
+        local h2 = {owns = false, furniture = {}, houseId = 0}
+        TriggerClientEvent("kuce:UpdateRentKucu", src, h2)
+        TriggerClientEvent('loaf_housing:reloadHouses', src)
+    end
+end)
+
+ESX.RegisterServerCallback('kuce:DajStanare', function(source, cb, id)
+    MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE rentKuca = @id", {['@id'] = id}, function(result)
+        local elem = {}
+        for i=1, #result, 1 do
+            table.insert(elem, {label = result[i].firstname.." "..result[i].lastname, value = result[i].ID})
+        end
+        cb(elem)
+    end)
 end)
 
 ESX.RegisterServerCallback('loaf_housing:hasGuests', function(source, cb)

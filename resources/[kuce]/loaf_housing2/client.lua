@@ -1,4 +1,4 @@
---Placanje renta (na koji nacin, koliko cesto), provjere da nema svoju kucu i da ne renta vec, unrentkucu komanda i u menu
+--Placanje renta (na koji nacin, koliko cesto)
 -- AreCoordsCollidingWithExterior()
 local OwnedHouse = nil
 local RentHouse = nil
@@ -37,6 +37,20 @@ AddEventHandler('esx_property:ProsljediVozilo', function(voz, bl)
 	end
 	GarazaV = voz
 	Vblip = bl
+end)
+
+RegisterCommand('unrentkucu', function()
+    if RentHouse.houseId > 0 then
+        ESX.ShowNotification("Unrentali ste kucu.")
+        TriggerServerEvent("kuce:UnrentKucu")
+    else
+        ESX.ShowNotification("Ne rentate kucu.")
+    end
+end, false)
+
+RegisterNetEvent('kuce:UpdateRentKucu')
+AddEventHandler('kuce:UpdateRentKucu', function(h2)
+	RentHouse = h2
 end)
 
 RegisterCommand("uredikuce", function(source, args, raw)
@@ -483,6 +497,8 @@ Citizen.CreateThread(function()
 		IzrastiTravo()
 	end
 
+    local bmenu = false
+
     while true do
         Citizen.Wait(1500)
         for ka, v in pairs(Config.Houses) do
@@ -503,238 +519,271 @@ Citizen.CreateThread(function()
                             text = (Strings['Press_E']):format(Strings['Knock_House'])
                         end
                     end
-                    HelpText(text, v['door'])
-                    if IsControlJustReleased(0, 38) then
-                        if OwnedHouse.houseId == k or RentHouse.houseId == k then
-                            ESX.UI.Menu.CloseAll()
-                            elements = {
-                                {label = Strings['Enter_House'], value = 'enter'},
-                                --{label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'},
-                                --{label = "Prodaj kucu igracu", value = 'sell2'},
-                            }
-                            if OwnedHouse.houseId == k then
-                                table.insert(elements, {label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'})
-                                table.insert(elements, {label = "Prodaj kucu igracu", value = 'sell2'})
-                            end
-                            if Config.EnableGarage then
-                                table.insert(elements, {label = Strings['Garage'], value = 'garage'})
-                            end
-							if Config.Trava[OwnedHouse.houseId] ~= nil then
-								if Kosim == false then
-									table.insert(elements, {label = "Pokosite travu", value = 'trava'})
-								else
-									table.insert(elements, {label = "Prestanite kositi", value = 'trava2'})
-								end
-							end
-                            ESX.UI.Menu.Open(
-                                    'default', GetCurrentResourceName(), 'manage_house',
-                                {
-                                    title = Strings['Manage_House'],
-                                    align = 'top-left',
-                                    elements = elements
-                                },
-                                function(data, menu)
-                                    if data.current.value == 'enter' then
-										if Kosim == false then
-											TriggerServerEvent('loaf_housing:enterHouse', k, ka)
-											menu.close()
-										else
-											ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
-										end
-                                    elseif data.current.value == 'garage' then
-										if Kosim == false then
-											local coords = Config.Houses[ka]['door']
-											local found, coords, heading = GetClosestVehicleNodeWithHeading(coords.x, coords.y, coords.z, 4, 10.0, 0)
-											if found then
-												ESX.UI.Menu.CloseAll()
-												--TriggerServerEvent('esx_garage:viewVehicles', coords, heading, 'housing')
-												OpenGarageMenu(coords,heading)
-												return
-											else
-												ESX.ShowNotification(Strings['No_Spawn'])
-											end
-										else
-											ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
-										end
-                                    elseif data.current.value == 'sell' then
-										if Kosim == false then
-											if v['prodaja'] == 0 then
-												ESX.UI.Menu.Open(
-													'default', GetCurrentResourceName(), 'sell',
-												{
-													title = (Strings['Sell_Confirm']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))),
-													align = 'top-left',
-													elements = {
-														{label = Strings['yes'], value = 'yes'},
-														{label = Strings['no'], value = 'no'}
-													},
-												},
-												function(data2, menu2)
-													if data2.current.value == 'yes' then
-														if Izrasla then
-															for i=1, #Config.Trava[OwnedHouse.houseId], 1 do
-																ESX.Game.DeleteObject(Objekti[i])
-															end
-															Objekti = {}
-															Izrasla = false
-														end
-														OwnedHouse.houseId = 0
-														Kosim = false
-														TriggerServerEvent('loaf_housing:sellHouse')
-														ESX.UI.Menu.CloseAll()
-														Wait(5000)
-													else
-														menu2.close()
-													end
-												end, 
-													function(data2, menu2)
-													menu2.close()
-												end)
-											else
-												ESX.ShowNotification("Ne mozete prodati kucu koju imate na svom zemljistu!")
-											end
-										else
-											ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
-										end
-                                    elseif data.current.value == 'sell2' then
-										if Kosim == false then
-											if v['prodaja'] == 0 then
-                                                menu.close()
-                                                ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijkucpl', {
-                                                    title = "Upisite cijenu kuce",
-                                                }, function (datar, menur)
-                                                    local cij = tonumber(datar.value)
-                                                    if cij == nil or cij <= 0 then
-                                                        ESX.ShowNotification('Greska.')
-                                                    else
-                                                        menur.close()
-                                                        local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-                                                        if closestPlayer ~= -1 and closestDistance <= 3.0 then
-                                                            TriggerServerEvent("kuce:PonudiIgracu", GetPlayerServerId(closestPlayer), cij)
-                                                        else
-                                                            ESX.ShowNotification("Nema igraca u blizini!")
-                                                        end
-                                                    end
-                                                end, function (datar, menur)
-                                                    menur.close()
-                                                end)
-											else
-												ESX.ShowNotification("Ne mozete prodati kucu koju imate na svom zemljistu!")
-											end
-										else
-											ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
-										end
-									elseif data.current.value == 'trava' then
-                                        if Izrasla and Kosim == false then
-											ESX.UI.Menu.CloseAll()
-											local x,y,z = table.unpack(Config.Trava[OwnedHouse.houseId][8])
-											SetEntityCoords(PlayerPedId(), x,y,z, false, false, false, true)
-											Kosim = true
-											if prop_ent ~= nil then
-												DeleteObject(prop_ent)
-											end
-											ESX.Streaming.RequestAnimDict("anim@heists@box_carry@", function()
-												TaskPlayAnim(PlayerPedId(),"anim@heists@box_carry@", "idle", 8.0, 8.0, -1, 50)
-											end)
-											local modele = "prop_lawnmower_01"
-											ESX.Streaming.RequestModel(modele)
-											prop_ent = CreateObject(GetHashKey(modele), GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, -5.0), true, false, false)
-											AttachEntityToEntityPhysically(prop_ent, PlayerPedId(), 0, GetEntityBoneIndexByName(PlayerPedId(), "SKEL_Pelvis"), 0.175, 0.90, -0.86, -0.075, 0.90, -0.86, 0.0, 0.5, 181.0, 10000.0, true, true, true, false, 2)
-											SetModelAsNoLongerNeeded(modele)
-											SendNUIMessage({
-												start = true
-											})
-											ESX.ShowNotification("Da prestanete kositi upisite /zavrsikosenje")
-											PokreniProvjeru()
-										else
-											ESX.ShowNotification("Trava nije izrasla ili vec kosite!")
-										end
-									elseif data.current.value == 'trava2' then
-                                        if Kosim == true then
-											ESX.UI.Menu.CloseAll()
-											Kosim = false
-											if prop_ent ~= nil then
-												DeleteObject(prop_ent)
-												prop_ent = nil
-											end
-											ClearPedSecondaryTask(PlayerPedId())
-											ESX.ShowNotification("Prestali ste kositi!")
-										else
-											ESX.ShowNotification("Ne kosite travu!")
-										end
-                                    end
-                                end,
-                            function(data, menu)
-                                menu.close()
-                            end)
-                        else
-                            if not AvailableHouses[k] and OwnedHouse.houseId == 0 and RentHouse.houseId == 0 then
+                    if not bmenu then
+                        HelpText(text, v['door'])
+                        if IsControlJustReleased(0, 38) then
+                            if OwnedHouse.houseId == k or RentHouse.houseId == k then
                                 ESX.UI.Menu.CloseAll()
-                                ESX.UI.Menu.Open(
-                                    'default', GetCurrentResourceName(), 'buy',
-                                {
-                                    title = (Strings['Buy_House_Confirm']):format(k, v['price']),
-                                    align = 'top-left',
-                                    elements = {
-                                        {label = Strings['yes'], value = 'yes'},
-                                        {label = Strings['no'], value = 'no'}
-                                    },
-                                },
-                                function(data, menu)
-                                    if data.current.value == 'yes' then
-										ESX.TriggerServerCallback('zemljista:ImalZemljiste', function(imal)
-											if not imal then
-												TriggerServerEvent('loaf_housing:buyHouse', k, ka)
-												ESX.UI.Menu.CloseAll()
-												Wait(5000)
-												SetTimeout(Config.RastTrave, IzrastiTravo)
-											else
-												ESX.ShowNotification("Vec imate kupljeno zemljiste!")
-												ESX.UI.Menu.CloseAll()
-											end
-										end)
+                                elements = {
+                                    {label = Strings['Enter_House'], value = 'enter'},
+                                    --{label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'},
+                                    --{label = "Prodaj kucu igracu", value = 'sell2'},
+                                }
+                                if OwnedHouse.houseId == k then
+                                    table.insert(elements, {label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'})
+                                    table.insert(elements, {label = "Prodaj kucu igracu", value = 'sell2'})
+                                end
+                                if Config.EnableGarage then
+                                    table.insert(elements, {label = Strings['Garage'], value = 'garage'})
+                                end
+                                if Config.Trava[OwnedHouse.houseId] ~= nil then
+                                    if Kosim == false then
+                                        table.insert(elements, {label = "Pokosite travu", value = 'trava'})
                                     else
-                                        menu.close()
+                                        table.insert(elements, {label = "Prestanite kositi", value = 'trava2'})
                                     end
-                                end, 
+                                end
+                                bmenu = true
+                                ESX.UI.Menu.Open(
+                                        'default', GetCurrentResourceName(), 'manage_house',
+                                    {
+                                        title = Strings['Manage_House'],
+                                        align = 'top-left',
+                                        elements = elements
+                                    },
                                     function(data, menu)
+                                        if data.current.value == 'enter' then
+                                            if Kosim == false then
+                                                TriggerServerEvent('loaf_housing:enterHouse', k, ka)
+                                                menu.close()
+                                                bmenu = false
+                                            else
+                                                ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
+                                            end
+                                        elseif data.current.value == 'garage' then
+                                            if Kosim == false then
+                                                local coords = Config.Houses[ka]['door']
+                                                local found, coords, heading = GetClosestVehicleNodeWithHeading(coords.x, coords.y, coords.z, 4, 10.0, 0)
+                                                if found then
+                                                    ESX.UI.Menu.CloseAll()
+                                                    bmenu = false
+                                                    --TriggerServerEvent('esx_garage:viewVehicles', coords, heading, 'housing')
+                                                    OpenGarageMenu(coords,heading)
+                                                    return
+                                                else
+                                                    ESX.ShowNotification(Strings['No_Spawn'])
+                                                end
+                                            else
+                                                ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
+                                            end
+                                        elseif data.current.value == 'sell' then
+                                            if Kosim == false then
+                                                if v['prodaja'] == 0 then
+                                                    ESX.UI.Menu.Open(
+                                                        'default', GetCurrentResourceName(), 'sell',
+                                                    {
+                                                        title = (Strings['Sell_Confirm']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))),
+                                                        align = 'top-left',
+                                                        elements = {
+                                                            {label = Strings['yes'], value = 'yes'},
+                                                            {label = Strings['no'], value = 'no'}
+                                                        },
+                                                    },
+                                                    function(data2, menu2)
+                                                        if data2.current.value == 'yes' then
+                                                            if Izrasla then
+                                                                for i=1, #Config.Trava[OwnedHouse.houseId], 1 do
+                                                                    ESX.Game.DeleteObject(Objekti[i])
+                                                                end
+                                                                Objekti = {}
+                                                                Izrasla = false
+                                                            end
+                                                            OwnedHouse.houseId = 0
+                                                            Kosim = false
+                                                            TriggerServerEvent('loaf_housing:sellHouse')
+                                                            ESX.UI.Menu.CloseAll()
+                                                            bmenu = false
+                                                            Wait(5000)
+                                                        else
+                                                            menu2.close()
+                                                        end
+                                                    end, 
+                                                        function(data2, menu2)
+                                                        menu2.close()
+                                                    end)
+                                                else
+                                                    ESX.ShowNotification("Ne mozete prodati kucu koju imate na svom zemljistu!")
+                                                end
+                                            else
+                                                ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
+                                            end
+                                        elseif data.current.value == 'sell2' then
+                                            if Kosim == false then
+                                                if v['prodaja'] == 0 then
+                                                    menu.close()
+                                                    ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijkucpl', {
+                                                        title = "Upisite cijenu kuce",
+                                                    }, function (datar, menur)
+                                                        local cij = tonumber(datar.value)
+                                                        if cij == nil or cij <= 0 then
+                                                            ESX.ShowNotification('Greska.')
+                                                        else
+                                                            menur.close()
+                                                            bmenu = false
+                                                            local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+                                                            if closestPlayer ~= -1 and closestDistance <= 3.0 then
+                                                                TriggerServerEvent("kuce:PonudiIgracu", GetPlayerServerId(closestPlayer), cij)
+                                                            else
+                                                                ESX.ShowNotification("Nema igraca u blizini!")
+                                                            end
+                                                        end
+                                                    end, function (datar, menur)
+                                                        menur.close()
+                                                        bmenu = false
+                                                    end)
+                                                else
+                                                    ESX.ShowNotification("Ne mozete prodati kucu koju imate na svom zemljistu!")
+                                                end
+                                            else
+                                                ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
+                                            end
+                                        elseif data.current.value == 'trava' then
+                                            if Izrasla and Kosim == false then
+                                                ESX.UI.Menu.CloseAll()
+                                                bmenu = false
+                                                local x,y,z = table.unpack(Config.Trava[OwnedHouse.houseId][8])
+                                                SetEntityCoords(PlayerPedId(), x,y,z, false, false, false, true)
+                                                Kosim = true
+                                                if prop_ent ~= nil then
+                                                    DeleteObject(prop_ent)
+                                                end
+                                                ESX.Streaming.RequestAnimDict("anim@heists@box_carry@", function()
+                                                    TaskPlayAnim(PlayerPedId(),"anim@heists@box_carry@", "idle", 8.0, 8.0, -1, 50)
+                                                end)
+                                                local modele = "prop_lawnmower_01"
+                                                ESX.Streaming.RequestModel(modele)
+                                                prop_ent = CreateObject(GetHashKey(modele), GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, -5.0), true, false, false)
+                                                AttachEntityToEntityPhysically(prop_ent, PlayerPedId(), 0, GetEntityBoneIndexByName(PlayerPedId(), "SKEL_Pelvis"), 0.175, 0.90, -0.86, -0.075, 0.90, -0.86, 0.0, 0.5, 181.0, 10000.0, true, true, true, false, 2)
+                                                SetModelAsNoLongerNeeded(modele)
+                                                SendNUIMessage({
+                                                    start = true
+                                                })
+                                                ESX.ShowNotification("Da prestanete kositi upisite /zavrsikosenje")
+                                                PokreniProvjeru()
+                                            else
+                                                ESX.ShowNotification("Trava nije izrasla ili vec kosite!")
+                                            end
+                                        elseif data.current.value == 'trava2' then
+                                            if Kosim == true then
+                                                ESX.UI.Menu.CloseAll()
+                                                bmenu = false
+                                                Kosim = false
+                                                if prop_ent ~= nil then
+                                                    DeleteObject(prop_ent)
+                                                    prop_ent = nil
+                                                end
+                                                ClearPedSecondaryTask(PlayerPedId())
+                                                ESX.ShowNotification("Prestali ste kositi!")
+                                            else
+                                                ESX.ShowNotification("Ne kosite travu!")
+                                            end
+                                        end
+                                    end,
+                                function(data, menu)
+                                    bmenu = false
                                     menu.close()
                                 end)
                             else
-                                if AvailableHouses[k] then
-                                    elements = {
-                                        {label = "Pokucajte na vrata", value = 'kucaj'}
-                                    }
-                                    if v['rentanje'] then
-                                        table.insert(elements, {label = "Rentajte kucu ($"..v['rentCijena']..")", value = 'rent'})
-                                    end
+                                if not AvailableHouses[k] and OwnedHouse.houseId == 0 and RentHouse.houseId == 0 then
+                                    ESX.UI.Menu.CloseAll()
+                                    bmenu = false
                                     ESX.UI.Menu.Open(
-                                        'default', GetCurrentResourceName(), 'izb_kuca',
-                                        {
-                                            title = "Izaberite opciju",
-                                            align = 'top-left',
-                                            elements = elements
+                                        'default', GetCurrentResourceName(), 'buy',
+                                    {
+                                        title = (Strings['Buy_House_Confirm']):format(k, v['price']),
+                                        align = 'top-left',
+                                        elements = {
+                                            {label = Strings['yes'], value = 'yes'},
+                                            {label = Strings['no'], value = 'no'}
                                         },
-                                        function(data2, menu2)
-                                            if data2.current.value == "kucaj" then
-                                                menu2.close()
-                                                TriggerServerEvent('loaf_housing:knockDoor', ka)
-                                                while Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 4.5 do Wait(0) HelpText(Strings['Waiting_Owner'], v['door']) end
-                                                TriggerServerEvent('loaf_housing:unKnockDoor', ka)
-                                            elseif data2.current.value == "rent" then
-                                                menu2.close()
-                                                TriggerServerEvent('kuce:RentajKucu', v['ID'])
-                                            end
-                                        end,
-                                    function(data2, menu2)
-                                        menu2.close()
+                                    },
+                                    function(data, menu)
+                                        if data.current.value == 'yes' then
+                                            ESX.TriggerServerCallback('zemljista:ImalZemljiste', function(imal)
+                                                if not imal then
+                                                    TriggerServerEvent('loaf_housing:buyHouse', k, ka)
+                                                    ESX.UI.Menu.CloseAll()
+                                                    Wait(5000)
+                                                    SetTimeout(Config.RastTrave, IzrastiTravo)
+                                                else
+                                                    ESX.ShowNotification("Vec imate kupljeno zemljiste!")
+                                                    ESX.UI.Menu.CloseAll()
+                                                end
+                                            end)
+                                        else
+                                            menu.close()
+                                        end
+                                    end, 
+                                        function(data, menu)
+                                        bmenu = false
+                                        menu.close()
                                     end)
+                                else
+                                    if AvailableHouses[k] then
+                                        elements = {
+                                            {label = "Pokucajte na vrata", value = 'kucaj'}
+                                        }
+                                        if v['rentanje'] then
+                                            table.insert(elements, {label = "Rentajte kucu ($"..v['rentCijena']..")", value = 'rent'})
+                                        end
+                                        if RentHouse.houseId == v['ID'] then
+                                            table.insert(elements, {label = "Unrent kucu", value = 'unrent'})
+                                        end
+                                        ESX.UI.Menu.Open(
+                                            'default', GetCurrentResourceName(), 'izb_kuca',
+                                            {
+                                                title = "Izaberite opciju",
+                                                align = 'top-left',
+                                                elements = elements
+                                            },
+                                            function(data2, menu2)
+                                                if data2.current.value == "kucaj" then
+                                                    menu2.close()
+                                                    TriggerServerEvent('loaf_housing:knockDoor', ka)
+                                                    while Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 4.5 do Wait(0) HelpText(Strings['Waiting_Owner'], v['door']) end
+                                                    TriggerServerEvent('loaf_housing:unKnockDoor', ka)
+                                                elseif data2.current.value == "rent" then
+                                                    menu2.close()
+                                                    if OwnedHouse.houseId == 0 then
+                                                        if RentHouse.houseId == 0 then
+                                                            TriggerServerEvent('kuce:RentajKucu', v['ID'])
+                                                        else
+                                                            ESX.ShowNotification("Vec rentate kucu!")
+                                                        end
+                                                    else
+                                                        ESX.ShowNotification("Imate svoju kucu.")
+                                                    end
+                                                elseif data2.current.value == "unrent" then
+                                                    menu2.close()
+                                                    ESX.ShowNotification("Unrentali ste kucu.")
+                                                    TriggerServerEvent("kuce:UnrentKucu")
+                                                end
+                                            end,
+                                        function(data2, menu2)
+                                            bmenu = false
+                                            menu2.close()
+                                        end)
+                                    end
                                 end
                             end
+                            Wait(5000)
                         end
-                        Wait(5000)
                     end
                     Wait(0)
+                end
+                if bmenu then
+                    ESX.UI.Menu.CloseAll()
+                    bmenu = false
                 end
             else
                 if OwnedHouse.houseId == k or RentHouse.houseId == k then
@@ -1187,6 +1236,7 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
                     table.insert(elements, {label = Strings['Furnish'], value = 'furnish'})
                     table.insert(elements, {label = "Rentanje kuce ("..rent..")", value = 'rent'})
                     table.insert(elements, {label = "Cijena renta ($"..Config.Houses[ida]['rentCijena']..")", value = 'rentcij'})
+                    table.insert(elements, {label = "Stanari", value = 'stanari'})
                     table.insert(elements, {label = Strings['Re_Furnish'], value = 'refurnish'})
                 end
 
@@ -1217,6 +1267,42 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
                         end
                         TriggerServerEvent("kuce:OdobriRent", OwnedHouse.houseId, rentic)
                         menu.close()
+                    elseif data.current.value == 'stanari' then
+                        menu.close()
+                        ESX.TriggerServerCallback('kuce:DajStanare', function(stanari)
+                            ESX.UI.Menu.Open(
+                                'default', GetCurrentResourceName(), 'manage_doorfdsf',
+                            {
+                                title = "Odaberite stanara",
+                                align = 'top-left',
+                                elements = stanari,
+                            },
+                            function(data2, menu2)
+                                local stanar = data2.current.value
+                                ESX.UI.Menu.Open(
+                                'default', GetCurrentResourceName(), 'manage_doorfdsfaa',
+                                {
+                                    title = "Zelite li izbaciti stanara?",
+                                    align = 'top-left',
+                                    elements = {
+                                        {label = "Da", value = 1},
+                                        {label = "Ne", value = 0}
+                                    },
+                                },
+                                function(data3, menu3)
+                                    menu3.close()
+                                    if data3.current.value == 1 then
+                                        menu2.close()
+                                        TriggerServerEvent("kuce:IzbaciStanara", stanar)
+                                        ESX.ShowNotification("Izbacili ste stanara "..data2.current.label)
+                                    end
+                                end, function (data3, menu3)
+                                    menu3.close()
+                                end)
+                            end, function (data2, menu2)
+                                menu2.close()
+                            end)
+                        end, OwnedHouse.houseId)
                     elseif data.current.value == 'rentcij' then
                         menu.close()
                         ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijrentkuc12', {
@@ -1666,8 +1752,6 @@ end)
 
 RegisterNetEvent('loaf_housing:setHouse')
 AddEventHandler('loaf_housing:setHouse', function(house, purchasedHouses, rent)
-    print(json.encode(house))
-    print(json.encode(rent))
     OwnedHouse = house
     RentHouse = rent
 
