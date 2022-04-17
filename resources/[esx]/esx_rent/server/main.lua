@@ -1,6 +1,7 @@
 ESX = nil
 local Rent = {}
 local Ucitao = false
+local Vozila = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -396,6 +397,34 @@ AddEventHandler('rent:PrihvatiPonudu', function(orgIgr, id, cij)
         xPlayer.showNotification("Nemate dovoljno novca kod sebe.")
         vlPlayer.showNotification("Igrac nema dovoljno novca.")
     end
+end)
+
+RegisterNetEvent('rent:SpremiVozilo')
+AddEventHandler('rent:SpremiVozilo', function(nid)
+    local src = source
+    table.insert(Vozila, {netid = nid, source = src})
+end)
+
+RegisterNetEvent('rent:MakniVozilo')
+AddEventHandler('rent:MakniVozilo', function()
+    local src = source
+    for i=1, #Vozila, 1 do
+		if Vozila[i] ~= nil and Vozila[i].source == src then
+            table.remove(Vozila, i)
+            break
+        end
+    end
+end)
+
+AddEventHandler('playerDropped', function()
+	for i=1, #Vozila, 1 do
+		if Vozila[i] ~= nil and Vozila[i].source == source then
+            local ent = NetworkGetEntityFromNetworkId(Vozila[i].netid)
+			DeleteEntity(ent)
+            table.remove(Vozila, i)
+			break
+		end
+	end
 end)
 
 RegisterNetEvent('rent:OdbijPonudu')

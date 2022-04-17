@@ -555,6 +555,8 @@ function OpenRentMenu(rid)
                                             RVozilo = vehicle
                                             RentID = rid
                                             RentIDVozilo = data3.current.value
+                                            local netid = VehToNet(vehicle)
+                                            TriggerServerEvent("rent:SpremiVozilo", netid)
                                             SetTimeout(Config.Interval, UzmiLovu)
                                         end)
                                         ESX.UI.Menu.CloseAll()
@@ -701,6 +703,7 @@ RegisterCommand('unrent', function()
         RVozilo = nil
         RentID = nil
         RentIDVozilo = nil
+        TriggerServerEvent("rent:MakniVozilo")
     else
         ESX.ShowNotification("Nemate rentano vozilo.")
     end
