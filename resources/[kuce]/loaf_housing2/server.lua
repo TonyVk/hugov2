@@ -8,10 +8,11 @@ RegisterServerEvent('loaf_housing:enterHouse')
 AddEventHandler('loaf_housing:enterHouse', function(id, ka)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchAll("SELECT house, bought_furniture FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
+    MySQL.Async.fetchAll("SELECT house, rentKuca, bought_furniture FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
         local house = json.decode(result[1].house)
+        local rent = result[1].rentKuca
         local furniture = json.decode(result[1]['bought_furniture'])
-        if house.houseId == id then
+        if house.houseId == id or rent == id then
             for k, v in pairs(Config.HouseSpawns) do
                 if not v['taken'] then
 					MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@house'] = id})
@@ -30,10 +31,10 @@ AddEventHandler('loaf_housing:enterHouse', function(id, ka)
 end)
 
 MySQL.ready(function ()
-	MySQL.Async.fetchAll('SELECT ID, prop, door, price, prodaja, vlasnik FROM kuce left join bought_houses on bought_houses.houseid=kuce.ID', {}, function(result)
+	MySQL.Async.fetchAll('SELECT ID, prop, door, price, prodaja, vlasnik, rentanje, rentCijena FROM kuce left join bought_houses on bought_houses.houseid=kuce.ID', {}, function(result)
 		for i=1, #result, 1 do
 			local data = json.decode(result[i].door)
-			table.insert(Config.Houses, {['ID'] = result[i].ID, ['prop'] = result[i].prop, ['door'] = vector3(data.x, data.y, data.z), ['price'] = result[i].price, ['prodaja'] = result[i].prodaja, ['vlasnik'] = result[i].vlasnik})
+			table.insert(Config.Houses, {['ID'] = result[i].ID, ['prop'] = result[i].prop, ['door'] = vector3(data.x, data.y, data.z), ['price'] = result[i].price, ['prodaja'] = result[i].prodaja, ['vlasnik'] = result[i].vlasnik, ['rentanje'] = tonumber(result[i].rentanje), ['rentCijena'] = tonumber(result[i].rentCijena)})
 		end
 		Wait(1000)
 		TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
@@ -66,6 +67,55 @@ AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, 
     end)
     Wait(1500)
     TriggerClientEvent('loaf_housing:reloadHouses', -1)
+end)
+
+RegisterNetEvent('kuce:OdobriRent')
+AddEventHandler('kuce:OdobriRent', function(id, rent)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    MySQL.Async.execute("UPDATE kuce SET rentanje=@rent WHERE ID=@id", {['@id'] = id, ['@rent'] = rent}) 
+    for k, v in pairs(Config.Houses) do
+		if v['ID'] == id then
+			v['rentanje'] = rent
+			break
+		end
+	end
+    if rent == 0 then
+        xPlayer.showNotification("Zabranili ste rentanje kuce!")
+    else
+        xPlayer.showNotification("Odobrili ste rentanje kuce!")
+    end
+	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
+end)
+
+RegisterNetEvent('kuce:StaviRentCijenu')
+AddEventHandler('kuce:StaviRentCijenu', function(id, cij)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    MySQL.Async.execute("UPDATE kuce SET rentCijena=@rent WHERE ID=@id", {['@id'] = id, ['@rent'] = cij}) 
+    for k, v in pairs(Config.Houses) do
+		if v['ID'] == id then
+			v['rentCijena'] = cij
+			break
+		end
+	end
+    xPlayer.showNotification("Postavili ste cijenu renta kuce na $"..cij)
+	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
+end)
+
+RegisterNetEvent('kuce:RentajKucu')
+AddEventHandler('kuce:RentajKucu', function(id)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    for k, v in pairs(Config.Houses) do
+		if v['ID'] == id then
+			if xPlayer.getMoney() >= v['rentCijena'] then
+                xPlayer.removeMoney(v['rentCijena'])
+                xPlayer.showNotification("Iznajmili ste kucu za $"..v['rentCijena'])
+                MySQL.Async.execute("UPDATE users SET rentKuca=@rent WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@rent'] = id})
+            else
+                xPlayer.showNotification("Nemate dovoljno novca kod sebe!")
+            end
+			break
+		end
+	end
 end)
 
 RegisterNetEvent('kuce:NovaKuca')
@@ -278,7 +328,7 @@ AddEventHandler('loaf_housing:buy_furniture', function(category, id)
                 xPlayer.removeMoney(Config.Furniture[Config.Furniture['Categories'][category][1]][id][3])
                 hadMoney = true
             else
-                TriggerClientEvent('esx:showNotifciation', xPlayer.source, Strings['no_money'])
+                TriggerClientEvent('esx:showNotification', xPlayer.source, Strings['no_money'])
             end
         end
     else
@@ -556,10 +606,16 @@ RegisterServerEvent('loaf_housing:getOwned')
 AddEventHandler('loaf_housing:getOwned', function()
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchScalar("SELECT house FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
-        local house = json.decode(result)
+    MySQL.Async.fetchAll("SELECT house, rentKuca FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
+        local house = json.decode(result[1].house)
+        local h2 = json.decode(result[1].house)
+        if result[1].rentKuca ~= nil then
+            h2.houseId = result[1].rentKuca
+        else
+            h2.houseId = 0
+        end
         MySQL.Async.fetchAll("SELECT houseid FROM bought_houses", {}, function(result2)
-            TriggerClientEvent('loaf_housing:setHouse', xPlayer.source, house, result2)
+            TriggerClientEvent('loaf_housing:setHouse', xPlayer.source, house, result2, h2)
         end)
     end)
 end)

@@ -1,5 +1,7 @@
+--Placanje renta (na koji nacin, koliko cesto), provjere da nema svoju kucu i da ne renta vec, unrentkucu komanda i u menu
 -- AreCoordsCollidingWithExterior()
 local OwnedHouse = nil
+local RentHouse = nil
 local AvailableHouses = {}
 local blips = {}
 local Knockings = {}
@@ -213,8 +215,8 @@ function OpenGarageMenu(co,he)
 
  	for _,v in pairs(vehicles) do
 		if v.brod == 0 then
-			ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
-				if not br then
+			-- ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
+			-- 	if not br then
 					local hashVehicule = v.model
 					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 					local labelvehicle
@@ -226,8 +228,8 @@ function OpenGarageMenu(co,he)
 						labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
 					end    
 					table.insert(elements, {label =labelvehicle , value = v})
-				end
-			end)
+			-- 	end
+			-- end)
         end
    	 end
 		Wait(500)
@@ -488,11 +490,11 @@ Citizen.CreateThread(function()
             if Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 2.5 then
                 local text = 'error'
                 while Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 2.5 do
-                    if OwnedHouse.houseId == k then
+                    if OwnedHouse.houseId == k or RentHouse.houseId == k then
                         text = (Strings['Press_E']):format(Strings['Manage_House'])
                     else
                         if not AvailableHouses[k] then
-                            if OwnedHouse.houseId ~= 0 then
+                            if OwnedHouse.houseId ~= 0 or RentHouse.houseId ~= 0 then
                                 text = Strings['Must_Sell']
                             else
                                 text = (Strings['Press_E']):format((Strings['Buy_House']):format(k, v['price']))
@@ -503,13 +505,17 @@ Citizen.CreateThread(function()
                     end
                     HelpText(text, v['door'])
                     if IsControlJustReleased(0, 38) then
-                        if OwnedHouse.houseId == k then
+                        if OwnedHouse.houseId == k or RentHouse.houseId == k then
                             ESX.UI.Menu.CloseAll()
                             elements = {
                                 {label = Strings['Enter_House'], value = 'enter'},
-                                {label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'},
-                                {label = "Prodaj kucu igracu", value = 'sell2'},
+                                --{label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'},
+                                --{label = "Prodaj kucu igracu", value = 'sell2'},
                             }
+                            if OwnedHouse.houseId == k then
+                                table.insert(elements, {label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'})
+                                table.insert(elements, {label = "Prodaj kucu igracu", value = 'sell2'})
+                            end
                             if Config.EnableGarage then
                                 table.insert(elements, {label = Strings['Garage'], value = 'garage'})
                             end
@@ -662,7 +668,7 @@ Citizen.CreateThread(function()
                                 menu.close()
                             end)
                         else
-                            if not AvailableHouses[k] and OwnedHouse.houseId == 0 then
+                            if not AvailableHouses[k] and OwnedHouse.houseId == 0 and RentHouse.houseId == 0 then
                                 ESX.UI.Menu.CloseAll()
                                 ESX.UI.Menu.Open(
                                     'default', GetCurrentResourceName(), 'buy',
@@ -696,9 +702,33 @@ Citizen.CreateThread(function()
                                 end)
                             else
                                 if AvailableHouses[k] then
-                                    TriggerServerEvent('loaf_housing:knockDoor', ka)
-                                    while Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 4.5 do Wait(0) HelpText(Strings['Waiting_Owner'], v['door']) end
-                                    TriggerServerEvent('loaf_housing:unKnockDoor', ka)
+                                    elements = {
+                                        {label = "Pokucajte na vrata", value = 'kucaj'}
+                                    }
+                                    if v['rentanje'] then
+                                        table.insert(elements, {label = "Rentajte kucu ($"..v['rentCijena']..")", value = 'rent'})
+                                    end
+                                    ESX.UI.Menu.Open(
+                                        'default', GetCurrentResourceName(), 'izb_kuca',
+                                        {
+                                            title = "Izaberite opciju",
+                                            align = 'top-left',
+                                            elements = elements
+                                        },
+                                        function(data2, menu2)
+                                            if data2.current.value == "kucaj" then
+                                                menu2.close()
+                                                TriggerServerEvent('loaf_housing:knockDoor', ka)
+                                                while Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 4.5 do Wait(0) HelpText(Strings['Waiting_Owner'], v['door']) end
+                                                TriggerServerEvent('loaf_housing:unKnockDoor', ka)
+                                            elseif data2.current.value == "rent" then
+                                                menu2.close()
+                                                TriggerServerEvent('kuce:RentajKucu', v['ID'])
+                                            end
+                                        end,
+                                    function(data2, menu2)
+                                        menu2.close()
+                                    end)
                                 end
                             end
                         end
@@ -707,7 +737,7 @@ Citizen.CreateThread(function()
                     Wait(0)
                 end
             else
-                if OwnedHouse.houseId == k then
+                if OwnedHouse.houseId == k or RentHouse.houseId == k then
                     local coords = v['door']
                     local found, coords, heading = GetClosestVehicleNodeWithHeading(coords.x, coords.y, coords.z, 4, 10.0, 0)
                     if found then
@@ -737,7 +767,7 @@ RegisterNUICallback(
 		local br = data.br
 		local args = data.args
 		if br == 1 then
-            if OwnedHouse == nil or OwnedHouse.houseId == 0 then
+            if OwnedHouse == nil or (OwnedHouse.houseId == 0 and RentHouse.houseId == 0) then
 			    TriggerServerEvent("kuce:PrihvatiPonudu", args.orgIgr, args.id, args.cijena)
             else
                 TriggerServerEvent("kuce:OdbijPonudu", args.orgIgr, 2)
@@ -993,17 +1023,23 @@ end)
 RegisterNetEvent('loaf_housing:spawnHouse')
 AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
 	local ida = 0
+    local furn
 	for ka, v in pairs(Config.Houses) do
 		local k = v['ID']
 		if k == OwnedHouse.houseId then
 			ida = ka
+            furn = OwnedHouse['furniture']
+			break
+        elseif k == RentHouse.houseId then
+			ida = ka
+            furn = RentHouse['furniture']
 			break
 		end
 	end
     local prop = Config.Houses[ida]['prop']
     local house = EnterHouse(Config.Props[prop], coords)
     local placed_furniture = {}
-    for k, v in pairs(OwnedHouse['furniture']) do
+    for k, v in pairs(furn) do
         local model = GetHashKey(v['object'])
         while not HasModelLoaded(model) do RequestModel(model) Wait(0) end
         local object = CreateObject(model, GetOffsetFromEntityInWorldCoords(house, vector3(v['offset'][1], v['offset'][2], v['offset'][3])), false, false, false)
@@ -1016,7 +1052,7 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
     SetEntityHeading(house, 0.0)
     local exit = GetOffsetFromEntityInWorldCoords(house, Config.Offsets[prop]['door'])
     local storage = GetOffsetFromEntityInWorldCoords(house, Config.Offsets[prop]['storage'])
-    TriggerServerEvent('loaf_housing:setInstanceCoords', exit, coords, prop, OwnedHouse['furniture'])
+    TriggerServerEvent('loaf_housing:setInstanceCoords', exit, coords, prop, furn)
     DoScreenFadeOut(750)
     while not IsScreenFadedOut() do Wait(0) end
     for i = 1, 25 do
@@ -1133,13 +1169,26 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
             HelpText((Strings['Press_E']):format(Strings['Manage_Door']), exit)
             if IsControlJustReleased(0, 38) then
                 ESX.UI.Menu.CloseAll()
-
+                local rent = "Ne"
+                if Config.Houses[ida]['rentanje'] == 1 then
+                    rent = "Da"
+                end
                 local elements = {
-                    {label = Strings['Accept'], value = 'accept'},
-                    {label = Strings['Furnish'], value = 'furnish'},
-                    {label = Strings['Re_Furnish'], value = 'refurnish'},
+                    -- {label = Strings['Accept'], value = 'accept'},
+                    -- {label = Strings['Furnish'], value = 'furnish'},
+                    -- {label = "Rentanje kuce ("..rent..")", value = 'rent'},
+                    -- {label = "Cijena renta ($"..Config.Houses[ida]['rentCijena']..")", value = 'rentcij'},
+                    -- {label = Strings['Re_Furnish'], value = 'refurnish'},
                     {label = Strings['Exit'], value = 'exit'},
                 }
+
+                if k == OwnedHouse.houseId then
+                    table.insert(elements, {label = Strings['Accept'], value = 'accept'})
+                    table.insert(elements, {label = Strings['Furnish'], value = 'furnish'})
+                    table.insert(elements, {label = "Rentanje kuce ("..rent..")", value = 'rent'})
+                    table.insert(elements, {label = "Cijena renta ($"..Config.Houses[ida]['rentCijena']..")", value = 'rentcij'})
+                    table.insert(elements, {label = Strings['Re_Furnish'], value = 'refurnish'})
+                end
 
                 ESX.UI.Menu.Open(
                     'default', GetCurrentResourceName(), 'manage_door',
@@ -1161,6 +1210,28 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
                                 ESX.ShowNotification(Strings['Guests'])
                             end
                         end, OwnedHouse.houseId)
+                    elseif data.current.value == 'rent' then
+                        local rentic = 1
+                        if Config.Houses[ida]['rentanje'] == 1 then
+                            rentic = 0
+                        end
+                        TriggerServerEvent("kuce:OdobriRent", OwnedHouse.houseId, rentic)
+                        menu.close()
+                    elseif data.current.value == 'rentcij' then
+                        menu.close()
+                        ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijrentkuc12', {
+                            title = "Upisite cijenu renta",
+                        }, function (datar, menur)
+                            local cij = tonumber(datar.value)
+                            if cij == nil or cij <= 0 then
+                                ESX.ShowNotification('Greska.')
+                            else
+                                menur.close()
+                                TriggerServerEvent("kuce:StaviRentCijenu", OwnedHouse.houseId, cij)
+                            end
+                        end, function (datar, menur)
+                            menur.close()
+                        end)
                     elseif data.current.value == 'refurnish' then
                         ESX.TriggerServerCallback('loaf_housing:hasGuests', function(has)
                             if not has then
@@ -1594,8 +1665,11 @@ AddEventHandler('loaf_housing:removeDoorKnock', function(src)
 end)
 
 RegisterNetEvent('loaf_housing:setHouse')
-AddEventHandler('loaf_housing:setHouse', function(house, purchasedHouses)
+AddEventHandler('loaf_housing:setHouse', function(house, purchasedHouses, rent)
+    print(json.encode(house))
+    print(json.encode(rent))
     OwnedHouse = house
+    RentHouse = rent
 
     for k, v in pairs(blips) do
         RemoveBlip(v)
@@ -1611,6 +1685,8 @@ AddEventHandler('loaf_housing:setHouse', function(house, purchasedHouses)
 		local k = v['ID']
         if OwnedHouse.houseId == k then
             CreateBlip(v['door'], 40, 3, 0.75, Strings['Your_House'])
+        elseif RentHouse.houseId == k then
+            CreateBlip(v['door'], 40, 3, 0.75, "Rentana kuca")
         else
             if not AvailableHouses[k] then
                 if Config.AddHouseBlips then

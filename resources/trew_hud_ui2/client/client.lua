@@ -1089,7 +1089,6 @@ function Status()
 			if glad > 0 then
 				glad = glad-1
 			else
-				print(IsEntityDead(ped))
 				if not IsEntityDead(ped) then
 					SetEntityHealth(ped, GetEntityHealth(ped)-5)
 					ESX.ShowNotification("Umirete zbog toga sto ste gladni!")

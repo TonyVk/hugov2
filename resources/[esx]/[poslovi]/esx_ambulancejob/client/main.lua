@@ -92,6 +92,8 @@ AddEventHandler('playerSpawned', function()
 
 		if FirstSpawn then
 			exports.spawnmanager:setAutoSpawn(false) -- disable respawn
+			SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+			SetPlayerHealthRechargeLimit(PlayerId(), 0)
 			FirstSpawn = false
 
 			if Config.AntiCombatLog then
