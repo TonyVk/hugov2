@@ -508,6 +508,7 @@ Citizen.CreateThread(function()
                             elements = {
                                 {label = Strings['Enter_House'], value = 'enter'},
                                 {label = (Strings['Sell_House']):format(math.floor(Config.Houses[ka]['price']*(Config.SellPercentage/100))), value = 'sell'},
+                                {label = "Prodaj kucu igracu", value = 'sell2'},
                             }
                             if Config.EnableGarage then
                                 table.insert(elements, {label = Strings['Garage'], value = 'garage'})
@@ -583,6 +584,34 @@ Citizen.CreateThread(function()
 													function(data2, menu2)
 													menu2.close()
 												end)
+											else
+												ESX.ShowNotification("Ne mozete prodati kucu koju imate na svom zemljistu!")
+											end
+										else
+											ESX.ShowNotification("Zavrsite sa kosenjem prvo!")
+										end
+                                    elseif data.current.value == 'sell2' then
+										if Kosim == false then
+											if v['prodaja'] == 0 then
+                                                menu.close()
+                                                ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijkucpl', {
+                                                    title = "Upisite cijenu kuce",
+                                                }, function (datar, menur)
+                                                    local cij = tonumber(datar.value)
+                                                    if cij == nil or cij <= 0 then
+                                                        ESX.ShowNotification('Greska.')
+                                                    else
+                                                        menur.close()
+                                                        local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+                                                        if closestPlayer ~= -1 and closestDistance <= 3.0 then
+                                                            TriggerServerEvent("kuce:PonudiIgracu", GetPlayerServerId(closestPlayer), cij)
+                                                        else
+                                                            ESX.ShowNotification("Nema igraca u blizini!")
+                                                        end
+                                                    end
+                                                end, function (datar, menur)
+                                                    menur.close()
+                                                end)
 											else
 												ESX.ShowNotification("Ne mozete prodati kucu koju imate na svom zemljistu!")
 											end
@@ -701,6 +730,23 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
+RegisterNUICallback(
+    "zatvoriupit",
+    function(data, cb)
+		local br = data.br
+		local args = data.args
+		if br == 1 then
+            if OwnedHouse == nil or OwnedHouse.houseId == 0 then
+			    TriggerServerEvent("kuce:PrihvatiPonudu", args.orgIgr, args.id, args.cijena)
+            else
+                TriggerServerEvent("kuce:OdbijPonudu", args.orgIgr, 2)
+            end
+        else
+            TriggerServerEvent("kuce:OdbijPonudu", args.orgIgr, 1)
+		end
+    end
+)
 
 Citizen.CreateThread(function()
     while OwnedHouse == nil do Wait(0) end

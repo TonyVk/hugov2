@@ -8,13 +8,13 @@ RegisterServerEvent('loaf_housing:enterHouse')
 AddEventHandler('loaf_housing:enterHouse', function(id, ka)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchAll("SELECT house, bought_furniture FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+    MySQL.Async.fetchAll("SELECT house, bought_furniture FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
         local house = json.decode(result[1].house)
         local furniture = json.decode(result[1]['bought_furniture'])
         if house.houseId == id then
             for k, v in pairs(Config.HouseSpawns) do
                 if not v['taken'] then
-					MySQL.Async.execute("UPDATE users SET last_house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = id})
+					MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@house'] = id})
                     TriggerClientEvent('loaf_housing:spawnHouse', xPlayer.source, v['coords'], furniture)
                     instances[src] = {['id'] = ka, ['owner'] = src, ['coords'] = v['coords'], ['housespawn'] = k, ['players'] = {}}
                     instances[src]['players'][src] = src
@@ -46,13 +46,13 @@ AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, 
 	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
         local house = json.decode(result)
         if house.houseId == 0 then
             MySQL.Async.fetchScalar("SELECT houseid FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = id}, function(result)
                 local newHouse = ('{"owns":false,"furniture":[],"houseId":%s}'):format(id)
                 if not result then
-                    MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = newHouse}) 
+                    MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@house'] = newHouse}) 
 					MySQL.Sync.execute("INSERT INTO bought_houses (houseid, vlasnik) VALUES (@houseid, @vlasnik)", {['houseid'] = id, ['vlasnik'] = xPlayer.getID()})
                     for k, v in pairs(Config.Houses) do
                         if v['ID'] == id then
@@ -209,8 +209,8 @@ end)
 
 ESX.RegisterServerCallback('loaf_housing:DohvatiZadnjuKucu', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	MySQL.Async.fetchScalar('SELECT last_house FROM users WHERE identifier = @identifier', {
-		['@identifier'] = xPlayer.identifier
+	MySQL.Async.fetchScalar('SELECT last_house FROM users WHERE ID = @id', {
+		['@id'] = xPlayer.getID()
 	}, function(result)
 		cb(result, Config.Houses)
     end)
@@ -286,14 +286,14 @@ AddEventHandler('loaf_housing:buy_furniture', function(category, id)
     end
 
     if hadMoney then
-        MySQL.Async.fetchScalar("SELECT bought_furniture FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+        MySQL.Async.fetchScalar("SELECT bought_furniture FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
             local furniture = json.decode(result)
             if furniture[Config.Furniture[Config.Furniture['Categories'][category][1]][id][2]] then 
                 furniture[Config.Furniture[Config.Furniture['Categories'][category][1]][id][2]]['amount'] = furniture[Config.Furniture[Config.Furniture['Categories'][category][1]][id][2]]['amount'] + 1
             else
                 furniture[Config.Furniture[Config.Furniture['Categories'][category][1]][id][2]] = {['amount'] = 1, ['name'] = Config.Furniture[Config.Furniture['Categories'][category][1]][id][1]}
             end
-            MySQL.Async.execute("UPDATE users SET bought_furniture=@bought_furniture WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@bought_furniture'] = json.encode(furniture)}) 
+            MySQL.Async.execute("UPDATE users SET bought_furniture=@bought_furniture WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@bought_furniture'] = json.encode(furniture)}) 
             TriggerClientEvent('esx:showNotification', xPlayer.source, (Strings['Bought_Furniture']):format(Config.Furniture[Config.Furniture['Categories'][category][1]][id][1], Config.Furniture[Config.Furniture['Categories'][category][1]][id][3]))
         end)
     end
@@ -312,7 +312,7 @@ AddEventHandler('loaf_housing:leaveHouse', function(house)
             end
         end
         instances[houses[house]]['players'] = newPlayers
-		MySQL.Async.execute("UPDATE users SET last_house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = 0})
+		MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = 0})
     end
 end)
 
@@ -320,7 +320,7 @@ RegisterServerEvent('loaf_housing:MakniSpremljenuKucu')
 AddEventHandler('loaf_housing:MakniSpremljenuKucu', function()
     local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	MySQL.Async.execute("UPDATE users SET last_house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = 0})
+	MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = 0})
 end)
 
 RegisterServerEvent('loaf_housing:deleteInstance')
@@ -331,7 +331,7 @@ AddEventHandler('loaf_housing:deleteInstance', function()
         for k, v in pairs(instances[src]['players']) do
             TriggerClientEvent('loaf_housing:leaveHouse', v, instances[src]['id'])
 			local xPlayer = ESX.GetPlayerFromId(v)
-			MySQL.Async.execute("UPDATE users SET last_house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = 0})
+			MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = 0})
         end
         instances[src] = {}
     end
@@ -348,7 +348,7 @@ AddEventHandler('loaf_housing:letIn', function(plr, storage)
             local spawnpos = instances[src]['housecoords']
             local furniture = instances[src]['furniture']
             TriggerClientEvent('loaf_housing:knockAccept', plr, instances[src]['coords'], instances[src]['id'], storage, spawnpos, furniture, src)
-			MySQL.Async.execute("UPDATE users SET last_house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = instances[src]['id']})
+			MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = instances[src]['id']})
         end
     end
 end)
@@ -398,14 +398,14 @@ AddEventHandler('loaf_housing:exitHouse', function(id)
             end
         end
     end
-	MySQL.Async.execute("UPDATE users SET last_house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = 0})
+	MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = 0})
 end)
 
 RegisterServerEvent('loaf_housing:buyHouse')
 AddEventHandler('loaf_housing:buyHouse', function(id, ka)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE ID = @identifier", {['@identifier'] = xPlayer.getID()}, function(result)
         local house = json.decode(result)
         if house.houseId == 0 then
             MySQL.Async.fetchScalar("SELECT houseid FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = id}, function(result)
@@ -413,25 +413,27 @@ AddEventHandler('loaf_housing:buyHouse', function(id, ka)
                 if not result then
                     if xPlayer.getAccount('bank').money >= Config.Houses[ka]['price'] then
                         xPlayer.removeAccountMoney('bank', Config.Houses[ka]['price'])
-                        MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = newHouse}) 
+                        MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = newHouse}) 
                         MySQL.Sync.execute("INSERT INTO bought_houses (houseid, vlasnik) VALUES (@houseid, @vlasnik)", {['houseid'] = id, ['vlasnik'] = xPlayer.getID()})
-                        for k, v in pairs(Config.Houses) do
-                            if v['ID'] == id then
-                                v['vlasnik'] = xPlayer.getID()
+                        for i=1, #Config.Houses, 1 do
+                            if Config.Houses[i].ID == id then
+                                Config.Houses[i].vlasnik = xPlayer.getID()
                                 break
                             end
                         end
+                        TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
                     else
                         if xPlayer.getMoney() >= Config.Houses[ka]['price'] then
                             xPlayer.removeMoney(Config.Houses[ka]['price'])
                             MySQL.Sync.execute("INSERT INTO bought_houses (houseid, vlasnik) VALUES (@houseid, @vlasnik)", {['houseid'] = id, ['vlasnik'] = xPlayer.getID()})
-                            MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = newHouse}) 
-                            for k, v in pairs(Config.Houses) do
-                                if v['ID'] == id then
-                                    v['vlasnik'] = xPlayer.getID()
+                            MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = newHouse}) 
+                            for i=1, #Config.Houses, 1 do
+                                if Config.Houses[i].ID == id then
+                                    Config.Houses[i].vlasnik = xPlayer.getID()
                                     break
                                 end
                             end
+                            TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
                         else
                             TriggerClientEvent('esx:showNotification', xPlayer.source, Strings['No_Money'])
                         end
@@ -447,7 +449,7 @@ end)
 ESX.RegisterServerCallback('loaf_housing:ImalKucu', function(source, cb)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE ID = @identifier", {['@identifier'] = xPlayer.getID()}, function(result)
         local house = json.decode(result)
         if house.houseId == 0 then
 			cb(false)
@@ -484,11 +486,77 @@ AddEventHandler('loaf_housing:sellHouse', function()
     TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
+RegisterNetEvent('kuce:PonudiIgracu')
+AddEventHandler('kuce:PonudiIgracu', function(igrID, cij)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE ID = @identifier", {['@identifier'] = xPlayer.getID()}, function(result)
+        local house = json.decode(result)
+        for ka, v in pairs(Config.Houses) do
+            local k = v['ID']
+            if k == house.houseId then
+                xPlayer.showNotification("Poslali ste ponudu igracu.")
+                TriggerClientEvent("upit:OtvoriPitanje", igrID, "loaf_housing2", "Kupovina kuce", "Zelite li kupiti kucu #"..k.." za $"..cij.." ?", {cijena = cij, id = k, orgIgr = src})
+                break
+            end
+        end
+    end)
+end)
+
+RegisterNetEvent('kuce:PrihvatiPonudu')
+AddEventHandler('kuce:PrihvatiPonudu', function(orgIgr, id, cij)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local vlPlayer = ESX.GetPlayerFromId(orgIgr)
+    if xPlayer.getMoney() >= cij then
+        for i=1, #Config.Houses, 1 do
+            local k = Config.Houses[i].ID
+            if k == id then
+                if Config.Houses[i].vlasnik == vlPlayer.getID() then
+                    xPlayer.removeMoney(cij)
+                    vlPlayer.addMoney(cij)
+                    MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = vlPlayer.getID(), ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
+                    local newHouse = ('{"owns":false,"furniture":[],"houseId":%s}'):format(id)
+                    MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = newHouse})
+                    MySQL.Async.execute("UPDATE bought_houses SET vlasnik=@vl WHERE houseid=@houseid", {['@vl'] = xPlayer.getID(), ['@houseid'] = id})
+                    Config.Houses[i].vlasnik = xPlayer.getID()
+                    TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
+                    xPlayer.showNotification("Kupili ste kucu #"..id.." za $"..cij)
+                    vlPlayer.showNotification("Prodali ste kucu #"..id.." za $"..cij)
+                    Wait(1500)
+                    TriggerClientEvent('loaf_housing:reloadHouses', -1)
+                else
+                    xPlayer.showNotification("Igrac nije vlasnik kuce!")
+                    vlPlayer.showNotification("Niste vlasnik kuce!")
+                end
+                break
+            end
+        end
+    else
+        xPlayer.showNotification("Nemate dovoljno novca kod sebe.")
+        vlPlayer.showNotification("Igrac nema dovoljno novca.")
+    end
+end)
+
+RegisterNetEvent('kuce:OdbijPonudu')
+AddEventHandler('kuce:OdbijPonudu', function(orgIgr, vr)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local vlPlayer = ESX.GetPlayerFromId(orgIgr)
+    if vr == 1 then
+        xPlayer.showNotification("Odbili ste ponudu!")
+        vlPlayer.showNotification("Igrac je odbio ponudu!")
+    elseif vr == 2 then
+        xPlayer.showNotification("Vec imate kucu!")
+        vlPlayer.showNotification("Igrac vec ima kucu!")
+    end
+end)
+
 RegisterServerEvent('loaf_housing:getOwned')
 AddEventHandler('loaf_housing:getOwned', function()
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.fetchScalar("SELECT house FROM users WHERE identifier = @identifier", {['@identifier'] = xPlayer.identifier}, function(result)
+    MySQL.Async.fetchScalar("SELECT house FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
         local house = json.decode(result)
         MySQL.Async.fetchAll("SELECT houseid FROM bought_houses", {}, function(result2)
             TriggerClientEvent('loaf_housing:setHouse', xPlayer.source, house, result2)
@@ -500,8 +568,8 @@ RegisterServerEvent('loaf_housing:furnish')
 AddEventHandler('loaf_housing:furnish', function(house, furniture)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = json.encode(house)}) 
-    MySQL.Async.execute("UPDATE users SET bought_furniture=@bought_furniture WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@bought_furniture'] = json.encode(furniture)}) 
+    MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@house'] = json.encode(house)}) 
+    MySQL.Async.execute("UPDATE users SET bought_furniture=@bought_furniture WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@bought_furniture'] = json.encode(furniture)}) 
 end)
 
 ESX.RegisterServerCallback('loaf_housing:hasGuests', function(source, cb)
