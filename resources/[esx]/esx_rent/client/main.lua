@@ -1,5 +1,3 @@
---Zavrsi uzimanje vozila, kupovinu renta, dodaj blipove na mapu, kupovina vozila od strane vlasnika i postavljanje cijene???
-
 ESX                             = nil
 local perm 						= 0
 local Rent                      = {}
@@ -57,23 +55,31 @@ end
 function SpawnBlipove()
 	if #Blipovi > 0 then
 		for i=1, #Blipovi, 1 do
-		  	if Blipovi[i] ~= nil then
+            if DoesBlipExist(Blipovi[i]) then
                 RemoveBlip(Blipovi[i])
-		  	end
+            end
 		end
 	end
 	Blipovi = {}
-	for i=1, #Rent, 1 do
-		Blipovi[i] = AddBlipForCoord(Rent[i].koord)
-        SetBlipSprite(Blipovi[i], 85)
-        SetBlipDisplay(Blipovi[i], 4)
-        SetBlipScale(Blipovi[i], 1.0)
-        SetBlipColour(Blipovi[i], 2)
-        SetBlipAsShortRange(Blipovi[i], true)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString("Rent auta")
-        EndTextCommandSetBlipName(Blipovi[i])
-	end
+    ESX.TriggerServerCallback('rent:DajID', function(br)
+        for i=1, #Rent, 1 do
+            local blip
+            blip = AddBlipForCoord(Rent[i].koord)
+            SetBlipSprite(blip, 85)
+            SetBlipDisplay(blip, 4)
+            SetBlipScale(blip, 1.0)
+            if Rent[i].vlasnik ~= nil and Rent[i].vlasnik == br then
+                SetBlipColour(blip, 3)
+            else
+                SetBlipColour(blip, 2)
+            end
+            SetBlipAsShortRange(blip, true)
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentString("Rent auta")
+            EndTextCommandSetBlipName(blip)
+            table.insert(Blipovi, blip)
+        end
+    end)
 end
 
 AddEventHandler("playerSpawned", function()
@@ -392,6 +398,31 @@ AddEventHandler('rent:VratiRent', function(vr)
     SpawnBlipove()
 end)
 
+RegisterNetEvent('rent:UpdateSef')
+AddEventHandler('rent:UpdateSef', function(id, sef)
+	for i=1, #Rent, 1 do
+        if Rent[i] ~= nil then
+            if Rent[i].ID == id then
+                Rent[i].sef = sef
+                break
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('rent:UpdateVlasnika')
+AddEventHandler('rent:UpdateVlasnika', function(id, vl)
+	for i=1, #Rent, 1 do
+        if Rent[i] ~= nil then
+            if Rent[i].ID == id then
+                Rent[i].vlasnik = vl
+                break
+            end
+        end
+    end
+    SpawnBlipove()
+end)
+
 -- Display markers 
 Citizen.CreateThread(function()
 	local waitara = 500
@@ -485,7 +516,9 @@ function OpenRentMenu(rid)
 
     table.insert(elements, {label = "Izaberite vozilo", value = "vozilo"})
     if Rent[id].vlasnik == nil then
-        table.insert(elements, {label = "Kupite firmu", value = "kupi"})
+        table.insert(elements, {label = "Kupite firmu $"..Rent[id].cijena, value = "kupi"})
+    else
+        table.insert(elements, {label = "Izbornik firme", value = "vlasnik"})
     end
 
     ESX.UI.Menu.Open(
@@ -524,6 +557,7 @@ function OpenRentMenu(rid)
                                             RentIDVozilo = data3.current.value
                                             SetTimeout(Config.Interval, UzmiLovu)
                                         end)
+                                        ESX.UI.Menu.CloseAll()
                                     end
                                 end, rid, data3.current.value)
                             end,
@@ -538,7 +572,19 @@ function OpenRentMenu(rid)
                     ESX.ShowNotification("Vec rentate vozilo. Vratite vozilo s komandom /unrent")
                 end
             elseif data.current.value == "kupi" then
-
+                ESX.TriggerServerCallback('rent:KupiFirmu', function(morel)
+                    menu.close()
+                    Wait(200)
+                    OpenRentMenu(rid)
+                end, rid)
+            elseif data.current.value == "vlasnik" then
+                ESX.TriggerServerCallback('rent:DajID', function(pid)
+                    if pid == Rent[id].vlasnik then
+                        OtvoriVlasnikMenu(rid)
+                    else
+                        ESX.ShowNotification("Niste vlasnik!")
+                    end
+                end)
             end
         end,
         function(data, menu)
@@ -546,6 +592,106 @@ function OpenRentMenu(rid)
         end
     )
 end
+
+function OtvoriVlasnikMenu(rid)
+    local id
+    for i = 1, #Rent do
+        if Rent[i].ID == rid then
+            id = i
+            break
+        end
+    end
+    local elements = {}
+
+    table.insert(elements, {label = "Sef", value = "sef"})
+    table.insert(elements, {label = "Prodaj drzavi ($"..math.ceil(Rent[id].cijena/2)..")", value = "prodaj"})
+    table.insert(elements, {label = "Prodaj igracu", value = "prodaj2"})
+
+    ESX.UI.Menu.Open(
+        'default', GetCurrentResourceName(), 'vlmen',
+        {
+            title    = "Izaberite opciju",
+            align    = 'top-left',
+            elements = elements,
+        },
+        function(data, menu)
+            if data.current.value == "sef" then
+                elements = {}
+                table.insert(elements, {label = "Stanje sefa", value = "stanje"})
+                table.insert(elements, {label = "Uzmi iz sefa", value = "uzmi"})
+                ESX.UI.Menu.Open(
+                    'default', GetCurrentResourceName(), 'uzmikurac',
+                    {
+                        title    = "Izaberite opciju",
+                        align    = 'top-left',
+                        elements = elements,
+                    },
+                    function(data3, menu3)
+                        if data3.current.value == "stanje" then
+                            ESX.ShowNotification("U sefu se nalazi $"..Rent[id].sef)
+                        elseif data3.current.value == "uzmi" then
+                            ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijrent54', {
+                                title = "Upisite kolicinu",
+                            }, function (datar, menur)
+                                local cij = tonumber(datar.value)
+                                if cij == nil or cij <= 0 then
+                                    ESX.ShowNotification('Greska.')
+                                else
+                                    menur.close()
+                                    TriggerServerEvent("rent:UzmiIzSefa", rid, cij)
+                                end
+                            end, function (datar, menur)
+                                menur.close()
+                            end)
+                        end
+                    end,
+                    function(data3, menu3)
+                        menu3.close()
+                    end
+                )
+            elseif data.current.value == "prodaj" then
+                ESX.UI.Menu.CloseAll()
+                TriggerServerEvent("rent:ProdajFirmu", rid)
+            elseif data.current.value == "prodaj2" then
+                ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijrent57', {
+                    title = "Upisite cijenu",
+                }, function (datar, menur)
+                    local cij = tonumber(datar.value)
+                    if cij == nil or cij <= 0 then
+                        ESX.ShowNotification('Greska.')
+                    else
+                        menur.close()
+                        local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+                        if closestPlayer ~= -1 and closestDistance <= 3.0 then
+                            TriggerServerEvent("rent:PonudiIgracu", rid, cij, GetPlayerServerId(closestPlayer))
+                            ESX.UI.Menu.CloseAll()
+                        else
+                            ESX.ShowNotification("Nema igraca u blizini!")
+                        end
+                    end
+                end, function (datar, menur)
+                    menur.close()
+                end)
+            end
+        end,
+        function(data, menu)
+            menu.close()
+        end
+    )  
+end
+
+RegisterNUICallback(
+    "zatvoriupit",
+    function(data, cb)
+		local br = data.br
+		local args = data.args
+		if br == 1 then
+			TriggerServerEvent("rent:PrihvatiPonudu", args.orgIgr, args.id, args.cijena)
+        else
+            TriggerServerEvent("rent:OdbijPonudu", args.orgIgr)
+		end
+    end
+)
 
 RegisterCommand('unrent', function()
     if Rentao then

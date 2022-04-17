@@ -52,6 +52,7 @@ ESX.RegisterServerCallback('rent:RentajVozilo', function(source, cb, id, sime)
                                     ['@sef'] = Rent[i].sef,
                                     ['@id'] = id
                                 })
+                                TriggerClientEvent("rent:UpdateSef", -1, id, Rent[i].sef)
                                 cb(true)
                             else
                                 xPlayer.showNotification("Nemate dovoljno novca.")
@@ -85,12 +86,14 @@ ESX.RegisterServerCallback('rent:UzmiLovu', function(source, cb, id, sime)
                             if xPlayer.getMoney() >= voz[v].cijena then
                                 xPlayer.removeMoney(voz[v].cijena)
                                 xPlayer.showNotification("Platili ste rent vozila $"..voz[v].cijena)
+                                xPlayer.showNotification("Da prestanete rentati upisite /unrent")
                                 local sefCifra = voz[v].cijena*0.60
                                 Rent[i].sef = Rent[i].sef+sefCifra
                                 MySQL.Async.execute('UPDATE rent SET `sef` = @sef WHERE ID = @id',{
                                     ['@sef'] = Rent[i].sef,
                                     ['@id'] = id
                                 })
+                                TriggerClientEvent("rent:UpdateSef", -1, id, Rent[i].sef)
                                 cb(true)
                             else
                                 xPlayer.showNotification("Nemate dovoljno novca za nastavak rentanja vozila.")
@@ -106,6 +109,57 @@ ESX.RegisterServerCallback('rent:UzmiLovu', function(source, cb, id, sime)
                 end
             end
         end
+    end
+end)
+
+ESX.RegisterServerCallback('rent:KupiFirmu', function(source, cb, id)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if xPlayer then
+        local naso = false
+        for i=1, #Rent, 1 do
+            if Rent[i] ~= nil then
+                if Rent[i].ID == id then
+                    naso = true
+                    if Rent[i].vlasnik == nil then
+                        if xPlayer.getMoney() >= Rent[i].cijena then
+                            xPlayer.removeMoney(Rent[i].cijena)
+                            xPlayer.showNotification("Kupili ste "..Rent[i].ime)
+                            Rent[i].vlasnik = xPlayer.getID()
+                            MySQL.Async.execute('UPDATE rent SET `vlasnik` = @vl WHERE ID = @id',{
+                                ['@vl'] = xPlayer.getID(),
+                                ['@id'] = id
+                            })
+                            TriggerClientEvent("rent:UpdateVlasnika", -1, id, Rent[i].vlasnik)
+                            cb(true)
+                        else
+                            xPlayer.showNotification("Nemate dovoljno novca. Fali vam $"..(Rent[i].cijena-xPlayer.getMoney()))
+                            cb(false)
+                        end
+                    else
+                        xPlayer.showNotification("Firma je vec kupljena!")
+                        cb(false)
+                    end
+                    break
+                end
+            end
+        end
+        if not naso then
+            xPlayer.showNotification("Firma nije pronadjena!")
+            cb(false)
+        end
+    else
+        cb(false)
+    end
+end)
+
+ESX.RegisterServerCallback('rent:DajID', function(source, cb)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if xPlayer then
+        cb(xPlayer.getID())
+    else
+        cb(0)
     end
 end)
 
@@ -231,15 +285,126 @@ AddEventHandler('rent:UzmiIzSefaAdm', function(id, kol)
             if Rent[i] ~= nil then
                 if Rent[i].ID == id then
                     Rent[i].sef = Rent[i].sef-kol
+                    TriggerClientEvent("rent:UpdateSef", -1, id, Rent[i].sef)
                     xPlayer.showNotification("Uzeli ste iz sefa $"..kol)
                     break
                 end
             end
         end
-        TriggerClientEvent("rent:VratiRent", -1, Rent)
+        --TriggerClientEvent("rent:VratiRent", -1, Rent)
     else
         xPlayer.showNotification("Niste admin.")
     end
+end)
+
+RegisterNetEvent('rent:UzmiIzSefa')
+AddEventHandler('rent:UzmiIzSefa', function(id, kol)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    for i=1, #Rent, 1 do
+        if Rent[i] ~= nil then
+            if Rent[i].ID == id then
+                if Rent[i].vlasnik == xPlayer.getID() then
+                    if Rent[i].sef >= kol then
+                        MySQL.Async.execute('UPDATE rent SET `sef` = sef-@sef WHERE ID = @id',{
+                            ['@sef'] = kol,
+                            ['@id'] = id
+                        })
+                        Rent[i].sef = Rent[i].sef-kol
+                        TriggerClientEvent("rent:UpdateSef", -1, id, Rent[i].sef)
+                        xPlayer.addMoney(kol)
+                        xPlayer.showNotification("Uzeli ste iz sefa $"..kol)
+                    else
+                        xPlayer.showNotification("Nemate toliko novca u sefu.")
+                    end
+                end
+                break
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('rent:ProdajFirmu')
+AddEventHandler('rent:ProdajFirmu', function(id)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    for i=1, #Rent, 1 do
+        if Rent[i] ~= nil then
+            if Rent[i].ID == id then
+                if Rent[i].vlasnik == xPlayer.getID() then
+                    MySQL.Async.execute('UPDATE rent SET `vlasnik` = @vl WHERE ID = @id',{
+                        ['@vl'] = nil,
+                        ['@id'] = id
+                    })
+                    Rent[i].vlasnik = nil
+                    xPlayer.showNotification("Prodali ste "..Rent[i].ime.." drzavi za $"..math.ceil(Rent[i].cijena/2))
+                    xPlayer.addMoney(math.ceil(Rent[i].cijena/2))
+                    TriggerClientEvent("rent:UpdateVlasnika", -1, id, Rent[i].vlasnik)
+                end
+                break
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('rent:PonudiIgracu')
+AddEventHandler('rent:PonudiIgracu', function(id, cij, prIgr)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    for i=1, #Rent, 1 do
+        if Rent[i] ~= nil then
+            if Rent[i].ID == id then
+                if Rent[i].vlasnik == xPlayer.getID() then
+                    xPlayer.showNotification("Poslali ste ponudu igracu.")
+                    TriggerClientEvent("upit:OtvoriPitanje", prIgr, "esx_rent", "Kupovina firme", "Zelite li kupiti "..Rent[i].ime.." za $"..cij.." ?", {cijena = cij, id = id, orgIgr = src})
+                end
+                break
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('rent:PrihvatiPonudu')
+AddEventHandler('rent:PrihvatiPonudu', function(orgIgr, id, cij)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local vlPlayer = ESX.GetPlayerFromId(orgIgr)
+    if xPlayer.getMoney() >= cij then
+        for i=1, #Rent, 1 do
+            if Rent[i] ~= nil then
+                if Rent[i].ID == id then
+                    if Rent[i].vlasnik == vlPlayer.getID() then
+                        xPlayer.removeMoney(cij)
+                        vlPlayer.addMoney(cij)
+                        MySQL.Async.execute('UPDATE rent SET `vlasnik` = @vl WHERE ID = @id',{
+                            ['@vl'] = xPlayer.getID(),
+                            ['@id'] = id
+                        })
+                        Rent[i].vlasnik = xPlayer.getID()
+                        TriggerClientEvent("rent:UpdateVlasnika", -1, id, Rent[i].vlasnik)
+                        xPlayer.showNotification("Kupili ste "..Rent[i].ime.." za $"..cij)
+                        vlPlayer.showNotification("Prodali ste "..Rent[i].ime.." za $"..cij)
+                    else
+                        xPlayer.showNotification("Igrac nije vlasnik firme!")
+                        vlPlayer.showNotification("Niste vlasnik firme!")
+                    end
+                    break
+                end
+            end
+        end
+    else
+        xPlayer.showNotification("Nemate dovoljno novca kod sebe.")
+        vlPlayer.showNotification("Igrac nema dovoljno novca.")
+    end
+end)
+
+RegisterNetEvent('rent:OdbijPonudu')
+AddEventHandler('rent:OdbijPonudu', function(orgIgr)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local vlPlayer = ESX.GetPlayerFromId(orgIgr)
+    xPlayer.showNotification("Odbili ste ponudu!")
+    vlPlayer.showNotification("Igrac je odbio ponudu!")
 end)
 
 RegisterNetEvent('rent:OstaviUSefAdm')
@@ -255,12 +420,13 @@ AddEventHandler('rent:OstaviUSefAdm', function(id, kol)
             if Rent[i] ~= nil then
                 if Rent[i].ID == id then
                     Rent[i].sef = Rent[i].sef+kol
+                    TriggerClientEvent("rent:UpdateSef", -1, id, Rent[i].sef)
                     xPlayer.showNotification("Ostavili ste u sef $"..kol)
                     break
                 end
             end
         end
-        TriggerClientEvent("rent:VratiRent", -1, Rent)
+        --TriggerClientEvent("rent:VratiRent", -1, Rent)
     else
         xPlayer.showNotification("Niste admin.")
     end
