@@ -1182,7 +1182,7 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
                     {label = Strings['Exit'], value = 'exit'},
                 }
 
-                if k == OwnedHouse.houseId then
+                if Config.Houses[ida]['ID'] == OwnedHouse.houseId then
                     table.insert(elements, {label = Strings['Accept'], value = 'accept'})
                     table.insert(elements, {label = Strings['Furnish'], value = 'furnish'})
                     table.insert(elements, {label = "Rentanje kuce ("..rent..")", value = 'rent'})
