@@ -386,6 +386,14 @@ function CreateExtendedPlayer(player, accounts, inventory, job, posao, loadout, 
 		end
 	end
 
+	self.getInventoryItemByID = function(id)
+		for i=1, #self.inventory, 1 do
+			if self.inventory[i].ID == id then
+				return self.inventory[i]
+			end
+		end
+	end
+
 	self.addInventoryItem = function(name, count)
 		local item     = self.getInventoryItem(name)
 		local newCount = item.count + count

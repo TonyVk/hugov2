@@ -1,4 +1,4 @@
---Placanje renta (na koji nacin, koliko cesto)
+--Spremanje/uzimanje stvari, oruzja, odjeca?, sef za rent lovu
 -- AreCoordsCollidingWithExterior()
 local OwnedHouse = nil
 local RentHouse = nil
@@ -1150,9 +1150,9 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
                 },
                 function(data, menu)
                     if data.current.value == 'i' then
-                        itemStorage(OwnedHouse.houseId)
+                        itemStorage(Config.Houses[ida]['ID'])
                     elseif data.current.value == 'w' then
-                        weaponStorage(OwnedHouse.houseId)
+                        weaponStorage(Config.Houses[ida]['ID'])
 					elseif data.current.value == 'odjeca' then
                         ESX.TriggerServerCallback('esx_property:getPlayerDressing', function(dressing)
 							local elements = {}

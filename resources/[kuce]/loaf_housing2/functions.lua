@@ -129,6 +129,7 @@ itemStorage = function(id)
                             ESX.ShowNotification(Strings['Invalid_Amount'])
                         else
                             if amount >= 0 then
+                                print("aaa")
                                 TriggerServerEvent('loaf_housing:storeItem', data2.current.type, data2.current.value, tonumber(data3.value), id)
                                 menu3.close()
                                 menu2.close()
@@ -150,8 +151,8 @@ itemStorage = function(id)
                 local elements = {}
 
                 for k, v in pairs(inv['items']) do
-                    if v['count'] > 0 then
-                        table.insert(elements, {label = ('x%s %s'):format(v['count'], v['label']), value = v['name']})
+                    if tonumber(v['kolicina']) > 0 then
+                        table.insert(elements, {label = ('x%s %s'):format(v['kolicina'], v['label']), value = v['ID'], item = v['item']})
                     end
                 end
 
@@ -172,9 +173,9 @@ itemStorage = function(id)
 									torba = skin['bags_1']
 								end)
 								if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-									TriggerServerEvent('loaf_housing:withdrawItem', 'item', data2.current.value, tonumber(data3.value), id, true)
+									TriggerServerEvent('loaf_housing:withdrawItem', 'item', data2.current.value, tonumber(data3.value), id, true, data2.current.item)
 								else
-									TriggerServerEvent('loaf_housing:withdrawItem', 'item', data2.current.value, tonumber(data3.value), id, false)
+									TriggerServerEvent('loaf_housing:withdrawItem', 'item', data2.current.value, tonumber(data3.value), id, false, data2.current.item)
 								end
                                 menu3.close()
                                 menu2.close()

@@ -44,6 +44,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 						if item then
 							table.insert(userData.inventory, {
+								ID = item.ID,
 								name = inventory[i].item,
 								count = inventory[i].count,
 								label = item.label,
@@ -69,6 +70,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 						if not found then
 							table.insert(userData.inventory, {
+								ID = ESX.Items[k].ID,
 								name = k,
 								count = 0,
 								label = ESX.Items[k].label,

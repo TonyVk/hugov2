@@ -68,8 +68,11 @@ MySQL.ready(function()
 end)
 
 function GetInventory(name, owner)
+	print("aaaa")
 	for i=1, #Inventories[name], 1 do
+		print(Inventories[name][i])
 		if Inventories[name][i].owner == owner then
+			print("naso")
 			return Inventories[name][i]
 		end
 	end

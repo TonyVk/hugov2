@@ -23,6 +23,7 @@ MySQL.ready(function()
 	MySQL.Async.fetchAll('SELECT * FROM items', {}, function(result)
 		for i=1, #result, 1 do
 			ESX.Items[result[i].name] = {
+				ID        = result[i].ID,
 				label     = result[i].label,
 				limit     = result[i].limit,
 				rare      = (result[i].rare       == 1 and true or false),

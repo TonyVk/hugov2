@@ -744,49 +744,45 @@ ESX.RegisterServerCallback('loaf_housing:getHouseInv', function(source, cb, owne
     
     if houses[owner] then
         if instances[houses[owner]] then
-            local identifier = ESX.GetPlayerFromId(houses[owner])['identifier']
-
-            TriggerEvent('esx_addoninventory:getInventory', 'housing', identifier, function(inventory)
-                items = inventory.items
+            MySQL.Async.fetchAll("SELECT kuce_stvari.ID, items.name, kolicina, owner, kuca, label FROM kuce_stvari inner join items on items.ID = kuce_stvari.item WHERE owner = @own and kuca = @ku", {['@own'] = xPlayer.getID(), ['@ku'] = owner}, function(result)
+                cb({['items'] = result, ['weapons'] = weapons})
             end)
 
-            TriggerEvent('esx_datastore:getDataStore', 'housing', identifier, function(storage)
-                weapons = storage.get('weapons') or {}
-            end)
+            -- TriggerEvent('esx_datastore:getDataStore', 'housing', identifier, function(storage)
+            --     weapons = storage.get('weapons') or {}
+            -- end)
 
-            cb({['items'] = items, ['weapons'] = weapons})
+            --cb({['items'] = items, ['weapons'] = weapons})
         end
     end
 end)
 
 RegisterServerEvent('loaf_housing:withdrawItem')
-AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner, torba)
+AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner, torba, iime)
 	local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
 
     if houses[owner] then
         if instances[houses[owner]] then
-            local identifier = ESX.GetPlayerFromId(houses[owner])['identifier']
             if type == 'item' then
-
-                TriggerEvent('esx_addoninventory:getInventory', 'housing', identifier, function(inventory)
-                    if inventory.getItem(item)['count'] >= amount then
-						local xItem = xPlayer.getInventoryItem(item)
+                MySQL.Async.fetchAll("SELECT kolicina FROM kuce_stvari WHERE ID = @id", {['@id'] = item}, function(result)
+                    if tonumber(result[1].kolicina) >= amount then
+						local xItem = xPlayer.getInventoryItemByID(iime)
 						if torba then
 							if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
 								TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
 							else
-								TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
+								xPlayer.showNotification("Uzeli ste "..amount.."x "..xItem.label)
 								xPlayer.addInventoryItem(item, amount)
-								inventory.removeItem(item, amount)
+								MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina-@kol WHERE ID=@id", {['@id'] = result[1].ID, ['@kol'] = amount})
 							end
 						else
 							if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
 								TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
 							else
-								TriggerClientEvent('esx:showNotification', src, (Strings['You_Withdrew']):format(amount, inventory.getItem(item)['label']))
+								xPlayer.showNotification("Uzeli ste "..amount.."x "..xItem.label)
 								xPlayer.addInventoryItem(item, amount)
-								inventory.removeItem(item, amount)
+                                MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina-@kol WHERE ID=@id", {['@id'] = result[1].ID, ['@kol'] = amount})
 							end
 						end
                     else
@@ -818,21 +814,30 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner,
 end)
 
 RegisterServerEvent('loaf_housing:storeItem')
-AddEventHandler('loaf_housing:storeItem', function(type, item, amount, owner)
+AddEventHandler('loaf_housing:storeItem', function(type, item, amount, kuca)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-
-    if houses[owner] then
-        if instances[houses[owner]] then
-            local identifier = ESX.GetPlayerFromId(houses[owner])['identifier']
+    print("odje sam")
+    if houses[kuca] then
+        print("eto kurca")
+        if instances[houses[kuca]] then
+            print("vamo nisam a")
             if type == 'item' then
-
                 if xPlayer.getInventoryItem(item)['count'] >= amount then
-                    TriggerEvent('esx_addoninventory:getInventory', 'housing', identifier, function(inventory)
-                        xPlayer.removeInventoryItem(item, amount)
-                        inventory.addItem(item, amount)
-                        TriggerClientEvent('esx:showNotification', src, (Strings['You_Stored']):format(amount, inventory.getItem(item)['label']))
+                    MySQL.Async.fetchAll("SELECT ID FROM kuce_stvari WHERE item = @item and owner = @own and kuca = @ku", {['@item'] = item, ['@own'] = xPlayer.getID(), ['@ku'] = kuca}, function(result)
+                        if #result > 0 then
+                            MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina+@kol WHERE ID=@id", {['@id'] = result[1].ID, ['@kol'] = amount})
+                        else
+                            MySQL.Async.insert('insert into kuce_stvari(item, kolicina, owner, kuca) values(@it, @kol, @ow, @ku)', {
+                                ['@it'] = item,
+                                ['@kol'] = amount,
+                                ['@ow'] = xPlayer.getID(),
+                                ['@ku'] = kuca
+                            })
+                        end
                     end)
+                    xPlayer.removeInventoryItem(item, amount)
+                    xPlayer.showNotification("Uspjesno ste spremili stvar.")
                 else
                     TriggerClientEvent('esx:showNotification', src, Strings['Not_Enough'])
                 end
