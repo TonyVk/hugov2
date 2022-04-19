@@ -21,7 +21,7 @@ weaponStorage = function(id)
         local elements = {}
 
         for k, v in pairs(inv['weapons']) do
-            table.insert(elements, {label = v['label'], weapon = v['name'], ammo = v['ammo']})            
+            table.insert(elements, {label = GetLabelText(v['ime']), weapon = v['ime'], ammo = v['kolicina']})            
         end
         
     end)
@@ -69,7 +69,7 @@ weaponStorage = function(id)
                 local elements = {}
 
                 for k, v in pairs(inv['weapons']) do
-                    table.insert(elements, {label = ('%s | x%s %s'):format(ESX.GetWeaponLabel(v['name']), v['ammo'], Strings['bullets']), weapon = v['name'], ammo = v['ammo']})
+                    table.insert(elements, {label = ('%s | x%s %s'):format(ESX.GetWeaponLabel(v['ime']), v['kolicina'], Strings['bullets']), value = v['ID'], weapon = v['ime'], ammo = v['kolicina']})
                 end
 
                 ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'withdrawItem', {
@@ -77,7 +77,7 @@ weaponStorage = function(id)
                     align = 'top-left',
                     elements = elements
                 }, function(data2, menu2)
-                    TriggerServerEvent('loaf_housing:withdrawItem', 'weapon', data2.current.weapon, data2.current.ammo, id)
+                    TriggerServerEvent('loaf_housing:withdrawItem', 'weapon', data2.current.value, data2.current.ammo, id, false, data2.current.weapon)
                     menu2.close()
                 end, function(data2, menu2)
                     menu2.close()
@@ -129,7 +129,6 @@ itemStorage = function(id)
                             ESX.ShowNotification(Strings['Invalid_Amount'])
                         else
                             if amount >= 0 then
-                                print("aaa")
                                 TriggerServerEvent('loaf_housing:storeItem', data2.current.type, data2.current.value, tonumber(data3.value), id)
                                 menu3.close()
                                 menu2.close()
@@ -152,7 +151,7 @@ itemStorage = function(id)
 
                 for k, v in pairs(inv['items']) do
                     if tonumber(v['kolicina']) > 0 then
-                        table.insert(elements, {label = ('x%s %s'):format(v['kolicina'], v['label']), value = v['ID'], item = v['item']})
+                        table.insert(elements, {label = ('x%s %s'):format(v['kolicina'], v['label']), value = v['ID'], item = v['name']})
                     end
                 end
 

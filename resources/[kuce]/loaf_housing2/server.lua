@@ -740,19 +740,13 @@ end)
 
 ESX.RegisterServerCallback('loaf_housing:getHouseInv', function(source, cb, owner)
 	local xPlayer = ESX.GetPlayerFromId(source)
-    local items, weapons = {}, {}
-    
     if houses[owner] then
         if instances[houses[owner]] then
-            MySQL.Async.fetchAll("SELECT kuce_stvari.ID, items.name, kolicina, owner, kuca, label FROM kuce_stvari inner join items on items.ID = kuce_stvari.item WHERE owner = @own and kuca = @ku", {['@own'] = xPlayer.getID(), ['@ku'] = owner}, function(result)
-                cb({['items'] = result, ['weapons'] = weapons})
+            MySQL.Async.fetchAll("SELECT kuce_stvari.ID, items.name, kolicina, owner, kuca, label FROM kuce_stvari inner join items on items.ID = kuce_stvari.item WHERE owner = @own and kuca = @ku", {['@own'] = xPlayer.getID(), ['@ku'] = owner}, function(items)
+                MySQL.Async.fetchAll("SELECT kuce_oruzja.ID, ime, kolicina, owner, kuca FROM kuce_oruzja WHERE owner = @own and kuca = @ku", {['@own'] = xPlayer.getID(), ['@ku'] = owner}, function(weapons)
+                    cb({['items'] = items, ['weapons'] = weapons})
+                end)
             end)
-
-            -- TriggerEvent('esx_datastore:getDataStore', 'housing', identifier, function(storage)
-            --     weapons = storage.get('weapons') or {}
-            -- end)
-
-            --cb({['items'] = items, ['weapons'] = weapons})
         end
     end
 end)
@@ -767,22 +761,30 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner,
             if type == 'item' then
                 MySQL.Async.fetchAll("SELECT kolicina FROM kuce_stvari WHERE ID = @id", {['@id'] = item}, function(result)
                     if tonumber(result[1].kolicina) >= amount then
-						local xItem = xPlayer.getInventoryItemByID(iime)
+						local xItem = xPlayer.getInventoryItem(iime)
 						if torba then
 							if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit*2 then
 								TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
 							else
 								xPlayer.showNotification("Uzeli ste "..amount.."x "..xItem.label)
-								xPlayer.addInventoryItem(item, amount)
-								MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina-@kol WHERE ID=@id", {['@id'] = result[1].ID, ['@kol'] = amount})
+								xPlayer.addInventoryItem(iime, amount)
+                                if tonumber(result[1].kolicina)-amount == 0 then
+                                    MySQL.Async.execute("DELETE FROM kuce_stvari WHERE ID=@id", {['@id'] = item})
+                                else
+								    MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina-@kol WHERE ID=@id", {['@id'] = item, ['@kol'] = amount})
+                                end
 							end
 						else
 							if xItem.limit ~= -1 and (xItem.count + amount) > xItem.limit then
 								TriggerClientEvent('esx:showNotification', xPlayer.source, "Ne stane vam vise u inventory!")
 							else
 								xPlayer.showNotification("Uzeli ste "..amount.."x "..xItem.label)
-								xPlayer.addInventoryItem(item, amount)
-                                MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina-@kol WHERE ID=@id", {['@id'] = result[1].ID, ['@kol'] = amount})
+								xPlayer.addInventoryItem(iime, amount)
+                                if tonumber(result[1].kolicina)-amount == 0 then
+                                    MySQL.Async.execute("DELETE FROM kuce_stvari WHERE ID=@id", {['@id'] = item})
+                                else
+                                    MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina-@kol WHERE ID=@id", {['@id'] = item, ['@kol'] = amount})
+                                end
 							end
 						end
                     else
@@ -791,21 +793,26 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner,
                 end)
 
             elseif type == 'weapon' then
-
-                TriggerEvent('esx_datastore:getDataStore', 'housing', identifier, function(weapons)
-                    local loadout = weapons.get('weapons') or {}
-
-                    for i = 1, #loadout do
-                        if loadout[i]['name'] == item then
-                            
-                            table.remove(loadout, i)
-                            weapons.set('weapons', loadout)
-                            xPlayer.addWeapon(item, amount)
-
-                            break
-                        end
+                local loadout, hasweapon = xPlayer.getLoadout(), false
+                for k, v in pairs(loadout) do
+                    if v['name'] == iime then
+                        hasweapon = true
+                        break
                     end
-                end)
+                end
+
+                if not hasweapon then
+                    MySQL.Async.fetchAll("SELECT kolicina FROM kuce_oruzja WHERE ID = @id", {['@id'] = item}, function(result)
+                        if #result > 0 then
+                            MySQL.Async.execute("DELETE FROM kuce_oruzja WHERE ID=@id", {['@id'] = item})
+                            xPlayer.addWeapon(iime, amount)
+                        else
+                            TriggerClientEvent('esx:showNotification', src, "Tog oruzja nema u sefu kuce!")
+                        end
+                    end)
+                else
+                    xPlayer.showNotification("Vec imate to oruzje!")
+                end
             end
         end
 
@@ -817,19 +824,17 @@ RegisterServerEvent('loaf_housing:storeItem')
 AddEventHandler('loaf_housing:storeItem', function(type, item, amount, kuca)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-    print("odje sam")
     if houses[kuca] then
-        print("eto kurca")
         if instances[houses[kuca]] then
-            print("vamo nisam a")
             if type == 'item' then
-                if xPlayer.getInventoryItem(item)['count'] >= amount then
-                    MySQL.Async.fetchAll("SELECT ID FROM kuce_stvari WHERE item = @item and owner = @own and kuca = @ku", {['@item'] = item, ['@own'] = xPlayer.getID(), ['@ku'] = kuca}, function(result)
+                local xItem = xPlayer.getInventoryItem(item)
+                if xItem.count >= amount then
+                    MySQL.Async.fetchAll("SELECT ID FROM kuce_stvari WHERE item = @item and owner = @own and kuca = @ku", {['@item'] = xItem.ID, ['@own'] = xPlayer.getID(), ['@ku'] = kuca}, function(result)
                         if #result > 0 then
                             MySQL.Async.execute("UPDATE kuce_stvari SET kolicina=kolicina+@kol WHERE ID=@id", {['@id'] = result[1].ID, ['@kol'] = amount})
                         else
                             MySQL.Async.insert('insert into kuce_stvari(item, kolicina, owner, kuca) values(@it, @kol, @ow, @ku)', {
-                                ['@it'] = item,
+                                ['@it'] = xItem.ID,
                                 ['@kol'] = amount,
                                 ['@ow'] = xPlayer.getID(),
                                 ['@ku'] = kuca
@@ -853,14 +858,13 @@ AddEventHandler('loaf_housing:storeItem', function(type, item, amount, kuca)
                 end
 
                 if hasweapon then
-                    TriggerEvent('esx_datastore:getDataStore', 'housing', identifier, function(weapons)
-                        local storage = weapons.get('weapons') or {}
-
-                        table.insert(storage, {name = item, ammo = amount})
-
-                        weapons.set('weapons', storage)
-                        xPlayer.removeWeapon(item)
-                    end)
+                    MySQL.Async.insert('insert into kuce_oruzja(kolicina, owner, kuca, ime) values(@kol, @ow, @ku, @im)', {
+                        ['@im'] = item,
+                        ['@kol'] = amount,
+                        ['@ow'] = xPlayer.getID(),
+                        ['@ku'] = kuca
+                    })
+                    xPlayer.removeWeapon(item)
                 else
                     TriggerClientEvent('esx:showNotification', src, Strings['No_Weapon'])
                 end
