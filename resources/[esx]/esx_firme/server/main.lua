@@ -40,7 +40,7 @@ MySQL.ready(function()
 	-- 		table.insert(Kraftanje, {ID = result[i].ID, Firma = result[i].Firma, Item = result[i].Item, Vrijeme = result[i].Vrijeme })
 	-- 	end
 	-- end)
-	MySQL.Async.fetchAll('SELECT ID, Ime, Label, Tip, Kupovina, Ulaz, Izlaz, VlasnikKoord, Vlasnik, Sef, Cijena, Zakljucana, Posao, Skladiste, Proizvodi FROM firme', {}, function(result)
+	MySQL.Async.fetchAll('SELECT ID, Ime, Label, Tip, Kupovina, Ulaz, Izlaz, VlasnikKoord, Vlasnik, Sef, Cijena, Zakljucana, Posao, Skladiste, Proizvodi FROM firme order by ID', {}, function(result)
 		Firme = {}
 		for i=1, #result, 1 do
 			local proiz = json.decode(result[i].Proizvodi)
@@ -350,20 +350,11 @@ AddEventHandler('esx_clotheshop:saveOutfit', function(label, skin)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
-	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		local dressing = store.get('dressing')
-
-		if dressing == nil then
-			dressing = {}
-		end
-
-		table.insert(dressing, {
-			label = label,
-			skin  = skin
-		})
-
-		store.set('dressing', dressing)
-	end)
+	MySQL.Async.insert('insert into kuce_outfit(ime, skin, owner) values(@im, @sk, @ow)', {
+		['@im'] = label,
+		['@sk'] = json.encode(skin),
+		['@ow'] = xPlayer.getID()
+	})
 end)
 
 ESX.RegisterServerCallback('roba:KaeTuljani', function(source, cb, id)
@@ -390,13 +381,13 @@ end)
 
 ESX.RegisterServerCallback('esx_clotheshop:checkPropertyDataStore', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local foundStore = false
-
-	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		foundStore = true
+	MySQL.Async.fetchAll('SELECT houseid FROM bought_houses where vlasnik = @vl', {['@vl'] = xPlayer.getID()}, function(result)
+		if #result > 0 then
+			cb(true)
+		else
+			cb(false)
+		end
 	end)
-
-	cb(foundStore)
 end)
 
 RegisterNetEvent('firme:PromjeniIme')

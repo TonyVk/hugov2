@@ -292,17 +292,9 @@ end)
 ESX.RegisterServerCallback('esx_property:getPlayerDressing', function(source, cb)
 	local xPlayer  = ESX.GetPlayerFromId(source)
 
-	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		local count  = store.count('dressing')
-		local labels = {}
-
-		for i=1, count, 1 do
-			local entry = store.get('dressing', i)
-			table.insert(labels, entry.label)
-		end
-
-		cb(labels)
-	end)
+    MySQL.Async.fetchAll("SELECT ID, ime, skin FROM kuce_outfit WHERE owner = @own", {['@own'] = xPlayer.getID()}, function(outfit)
+        cb(outfit)
+    end)
 end)
 
 RegisterNetEvent('kuce:SpawnVozilo')
@@ -327,15 +319,8 @@ ESX.RegisterServerCallback('esx_property:getPlayerOutfit', function(source, cb, 
 end)
 
 RegisterServerEvent('esx_property:removeOutfit')
-AddEventHandler('esx_property:removeOutfit', function(label)
-	local xPlayer = ESX.GetPlayerFromId(source)
-
-	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
-		local dressing = store.get('dressing') or {}
-
-		table.remove(dressing, label)
-		store.set('dressing', dressing)
-	end)
+AddEventHandler('esx_property:removeOutfit', function(id)
+    MySQL.Async.execute("DELETE FROM kuce_outfit WHERE ID=@id", {['@id'] = id})
 end)
 
 RegisterServerEvent('loaf_housing:buy_furniture')

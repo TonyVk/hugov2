@@ -1159,8 +1159,8 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
 
 							for i=1, #dressing, 1 do
 								table.insert(elements, {
-									label = dressing[i],
-									value = i
+									label = dressing[i].ime,
+									value = json.decode(dressing[i].skin)
 								})
 							end
 
@@ -1170,14 +1170,12 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
 								elements = elements
 							}, function(data2, menu2)
 								TriggerEvent('skinchanger:getSkin', function(skin)
-									ESX.TriggerServerCallback('esx_property:getPlayerOutfit', function(clothes)
-										TriggerEvent('skinchanger:loadClothes', skin, clothes)
-										TriggerEvent('esx_skin:setLastSkin', skin)
+                                    TriggerEvent('skinchanger:loadClothes', skin, data2.current.value)
+                                    TriggerEvent('esx_skin:setLastSkin', skin)
 
-										TriggerEvent('skinchanger:getSkin', function(skin)
-											TriggerServerEvent('esx_skin:save', skin)
-										end)
-									end, data2.current.value)
+                                    TriggerEvent('skinchanger:getSkin', function(skin)
+                                        TriggerServerEvent('esx_skin:save', skin)
+                                    end)
 								end)
 							end, function(data2, menu2)
 								menu2.close()
@@ -1189,8 +1187,8 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
 
 							for i=1, #dressing, 1 do
 								table.insert(elements, {
-									label = dressing[i],
-									value = i
+									label = dressing[i].ime,
+									value = dressing[i].ID
 								})
 							end
 
