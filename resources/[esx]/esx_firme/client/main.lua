@@ -154,8 +154,8 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 									table.insert(elements, {label = "Postavi trgovinu", value = "1"})
 									table.insert(elements, {label = "Postavi frizerski", value = "2"})
 									table.insert(elements, {label = "Postavi odjecu", value = "3"})
-									table.insert(elements, {label = "Postavi tuning shop", value = "4"})
-									table.insert(elements, {label = "Postavi rudarsku firmu", value = "5"})
+									--table.insert(elements, {label = "Postavi tuning shop", value = "4"})
+									--table.insert(elements, {label = "Postavi rudarsku firmu", value = "5"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -459,6 +459,11 @@ AddEventHandler('firme:PosaljiFirme', function(fir)
 	Firme = fir
 	SpawnCpove()
 	ReloadBlip()
+end)
+
+RegisterNetEvent('firme:ObrisiBlip')
+AddEventHandler('firme:ObrisiBlip', function(ime)
+	RemoveBlip(blip[ime])
 end)
 
 RegisterNetEvent('trgovine:PitajProdaju')

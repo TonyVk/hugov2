@@ -466,6 +466,7 @@ AddEventHandler('firme:ObrisiFirmu', function(maf)
 				end
 			end
 		end
+		TriggerClientEvent('firme:ObrisiBlip', -1, maf)
 		TriggerClientEvent("firme:PosaljiFirme", -1, Firme)
 		TriggerClientEvent('esx:showNotification', source, 'Firma '..maf..' uspjesno obrisana!')
 	else

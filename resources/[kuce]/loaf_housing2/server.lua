@@ -264,7 +264,7 @@ ESX.RegisterServerCallback('loaf_housing:DohvatiZadnjuKucu', function(source, cb
 		['@id'] = xPlayer.getID()
 	}, function(result)
         if result[1].rentKuca ~= nil then
-            if result[1].datum >= 1 then
+            if result[1].datum == nil or result[1].datum >= 1 then
                 for ka, v in pairs(Config.Houses) do
                     local k = v['ID']
                     if k == result[1].rentKuca then
@@ -618,13 +618,18 @@ AddEventHandler('loaf_housing:getOwned', function()
         local house = json.decode(result[1].house)
         local h2 = json.decode(result[1].house)
         if result[1].rentKuca ~= nil then
-            h2.houseId = result[1].rentKuca
+            MySQL.Async.fetchAll("SELECT vlasnik, users.house from bought_houses inner join users on users.ID = bought_houses.vlasnik where bought_houses.houseid = @house", {['@house'] = result[1].rentKuca}, function(result3)
+                h2 = json.decode(result3[1].house)
+                MySQL.Async.fetchAll("SELECT houseid FROM bought_houses", {}, function(result2)
+                    TriggerClientEvent('loaf_housing:setHouse', xPlayer.source, house, result2, h2)
+                end)
+            end)
         else
             h2.houseId = 0
+            MySQL.Async.fetchAll("SELECT houseid FROM bought_houses", {}, function(result2)
+                TriggerClientEvent('loaf_housing:setHouse', xPlayer.source, house, result2, h2)
+            end)
         end
-        MySQL.Async.fetchAll("SELECT houseid FROM bought_houses", {}, function(result2)
-            TriggerClientEvent('loaf_housing:setHouse', xPlayer.source, house, result2, h2)
-        end)
     end)
 end)
 

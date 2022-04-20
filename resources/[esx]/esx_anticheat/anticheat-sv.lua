@@ -804,7 +804,7 @@ end
 
 function loadBanList()
   MySQL.Async.fetchAll(
-    'SELECT identifier, license, liveid, xblid, discord, playerip, reason, expiration, permanent FROM banlist',
+    'SELECT identifier, license, liveid, xblid, discord, playerip, reason, expiration, permanent, targetplayername FROM banlist',
     {},
     function (data)
       BanList = {}
@@ -819,7 +819,8 @@ function loadBanList()
 			playerip   = data[i].playerip,
 			reason     = data[i].reason,
 			expiration = data[i].expiration,
-			permanent  = data[i].permanent
+			permanent  = data[i].permanent,
+			ime        = data[i].targetplayername
           })
       end
     end
@@ -914,7 +915,7 @@ AddEventHandler('playerConnecting', function (playerName,setKickReason)
 
 			if (tonumber(BanList[i].permanent)) == 1 then
 
-				setKickReason(_U('you_have_been_permabanned') .. BanList[i].reason)
+				setKickReason("Steam ime: "..BanList[i].ime.." | ".. _U('you_have_been_permabanned') .. BanList[i].reason)
 				CancelEvent()
 				break
 
@@ -928,7 +929,7 @@ AddEventHandler('playerConnecting', function (playerName,setKickReason)
 					local txtday     = math.floor(day)
 					local txthrs     = math.floor(hrs)
 					local txtminutes = math.ceil(minutes)
-						setKickReason(_U('you_have_been_banned') .. BanList[i].reason .. _U('time_left') .. txtday .. _U('days') ..txthrs .. _U('hours') ..txtminutes .. _U('minutes'))
+						setKickReason("Steam ime: "..BanList[i].ime.." | ".. _U('you_have_been_banned') .. BanList[i].reason .. _U('time_left') .. txtday .. _U('days') ..txthrs .. _U('hours') ..txtminutes .. _U('minutes'))
 						CancelEvent()
 						break
 				elseif tempsrestant >= 60 and tempsrestant < 1440 then
@@ -938,14 +939,14 @@ AddEventHandler('playerConnecting', function (playerName,setKickReason)
 					local txtday     = math.floor(day)
 					local txthrs     = math.floor(hrs)
 					local txtminutes = math.ceil(minutes)
-						setKickReason(_U('you_have_been_banned') .. BanList[i].reason .. _U('time_left') .. txtday .. _U('days') .. txthrs .. _U('hours') .. txtminutes .. _U('minutes'))
+						setKickReason("Steam ime: "..BanList[i].ime.." | ".. _U('you_have_been_banned') .. BanList[i].reason .. _U('time_left') .. txtday .. _U('days') .. txthrs .. _U('hours') .. txtminutes .. _U('minutes'))
 						CancelEvent()
 						break
 				elseif tempsrestant < 60 then
 					local txtday     = 0
 					local txthrs     = 0
 					local txtminutes = math.ceil(tempsrestant)
-						setKickReason(_U('you_have_been_banned') .. BanList[i].reason .. _U('time_left') .. txtday .. _U('days') .. txthrs .. _U('hours') .. txtminutes .. _U('minutes'))
+						setKickReason("Steam ime: "..BanList[i].ime.." | ".. _U('you_have_been_banned') .. BanList[i].reason .. _U('time_left') .. txtday .. _U('days') .. txthrs .. _U('hours') .. txtminutes .. _U('minutes'))
 						CancelEvent()
 						break
 				end
