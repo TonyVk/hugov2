@@ -1,12 +1,21 @@
 local Jobs = {}
 local LastTime = nil
 
-function RunAt(h, m, cb)
-	table.insert(Jobs, {
-		h  = h,
-		m  = m,
-		cb = cb
-	})
+function RunAt(h, m, ime, cb)
+    local naso = false
+    for i=1, #Jobs, 1 do
+        if Jobs[i].ime == ime then
+            naso = true
+        end
+    end
+    if not naso then
+        table.insert(Jobs, {
+            h  = h,
+            m  = m,
+            ime = ime,
+            cb = cb
+        })
+    end
 end
 
 function GetTime()
@@ -42,6 +51,15 @@ LastTime = GetTime()
 
 Tick()
 
-AddEventHandler('cron:runAt', function(h, m, cb)
-	RunAt(h, m, cb)
+AddEventHandler('cron:runAt', function(h, m, ime, cb)
+    RunAt(h, m, ime, cb)
+end)
+
+AddEventHandler('cron:Edit', function(h, m, ime)
+    for i=1, #Jobs, 1 do
+        if Jobs[i].ime == ime then
+            Jobs[i].h = h
+            Jobs[i].m = m
+        end
+    end
 end)

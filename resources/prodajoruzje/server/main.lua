@@ -665,7 +665,7 @@ function CronTask(d, h, m)
 		MySQL.Async.execute('DELETE FROM minute', {})
 	end
 end
-TriggerEvent('cron:runAt', 0, 0, CronTask)
+TriggerEvent('cron:runAt', 0, 0, "BrisiMinute", CronTask)
 
 RegisterNetEvent("minute:SpremiIh")
 AddEventHandler('minute:SpremiIh', function(minute)

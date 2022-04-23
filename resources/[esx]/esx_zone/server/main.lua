@@ -87,6 +87,7 @@ AddEventHandler('zone:UrediNovacVrijeme', function(sat, minuta)
 				['@min'] = minuta
 			})
 		end
+		TriggerEvent('cron:Edit', sat, minuta, "DajPare")
     end)
 end)
 
@@ -296,7 +297,7 @@ function UcitajZone()
         end
       end
     )
-	TriggerEvent('cron:runAt', Sat, Min, DajPare)
+	TriggerEvent('cron:runAt', Sat, Min, "DajPare", DajPare)
 end
 
 function DajPare(d, h, m)

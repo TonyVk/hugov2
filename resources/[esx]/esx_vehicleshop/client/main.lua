@@ -491,7 +491,7 @@ RegisterNUICallback(
 		FreezeEntityPosition(playerPed, false)
 		SetEntityVisible(playerPed, true)
 		if not Brod then
-			SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
+			SetEntityCoords(playerPed, -34.360958099365, -1103.3577880859, 25.422327041626)
 		else
 			SetEntityCoords(playerPed, Config.Zones.ShopEntering2.Pos)
 		end

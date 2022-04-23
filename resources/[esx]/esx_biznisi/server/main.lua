@@ -308,4 +308,4 @@ end
 
 SetTimeout(300000, SpremiPare)
 
-TriggerEvent('cron:runAt', 0, 0, BrisiZaposlenike)
+TriggerEvent('cron:runAt', 0, 0, "BrisiZaposlenike", BrisiZaposlenike)
