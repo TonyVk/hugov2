@@ -3,6 +3,9 @@ local states = {}
 states.frozen = false
 states.frozenPos = nil
 local noclipEntity = nil
+local noclipSpeed = 2.0
+local noclip = false
+local nevidljivost = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -27,6 +30,16 @@ end)
 -- 	end
 -- end)
 
+RegisterCommand('+adminmenu2', function()
+    ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			SetNuiFocus(true, true)
+			SendNUIMessage({type = 'openQuick'})
+		end
+	end)
+end, false)
+RegisterKeyMapping('+adminmenu2', 'Otvori quick admin menu', 'keyboard', 'F2')
+
 RegisterCommand('+adminmenu', function()
     ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
@@ -46,6 +59,127 @@ RegisterNUICallback('close', function(data, cb)
 	SetNuiFocus(false)
 end)
 
+RegisterNUICallback('ADuznost', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ExecuteCommand("aduty")
+		end
+	end)
+end)
+
+RegisterNUICallback('Nevidljiv', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			if nevidljivost == false then
+				SetEntityVisible(PlayerPedId(), false)
+				ESX.ShowNotification("Nevidjlivost je uključena!")
+				nevidljivost = true
+			  else
+				SetEntityVisible(PlayerPedId(), true)
+				ESX.ShowNotification("Nevidjlivost je isključena!")
+				nevidljivost = false
+			  end
+		end
+	end)
+end)
+
+RegisterNUICallback('Vozilo', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			local koord = GetEntityCoords(PlayerPedId())
+			local head = GetEntityHeading(PlayerPedId())
+			ESX.Game.SpawnVehicle("sultanrs", koord, head, function(vehicle)
+				TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+			end)
+		end
+	end)
+end)
+
+RegisterNUICallback('Marker', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ExecuteCommand("tpm")
+		end
+	end)
+end)
+
+RegisterNUICallback('Heal', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ExecuteCommand("heal")
+		end
+	end)
+end)
+
+RegisterNUICallback('ObrisiVozilo', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ExecuteCommand("dv")
+		end
+	end)
+end)
+
+RegisterNUICallback('PopraviVozilo', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			ExecuteCommand("fix")
+		end
+	end)
+end)
+
+RegisterNUICallback('Ubij', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			SetEntityHealth(PlayerPedId(), 0)
+		end
+	end)
+end)
+
+RegisterNUICallback('NoClip', function(data, cb)
+	SetNuiFocus(false)
+	SendNUIMessage({type = 'closeQuick'})
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if br == 1 then
+			noclipSpeed = data.speed
+			local msg = "upaljen"
+			if(noclip == false)then
+				noclip_pos = GetEntityCoords(PlayerPedId(), false)
+			end
+
+			noclip = not noclip
+
+			if(not noclip)then
+				msg = "ugasen"
+				SetEntityCollision(noclipEntity, true, true)
+				FreezeEntityPosition(PlayerPedId(-1), false)
+				SetEntityInvincible(PlayerPedId(-1), false)
+			end
+
+			TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Noclip je ^2^*" .. msg)
+		end
+	end)
+end)
+
+RegisterNUICallback('noclipBrzina', function(data, cb)
+	noclipSpeed = data.speed
+end)
+
 RegisterNUICallback('quick', function(data, cb)
 	if data.type == "slay_all" or data.type == "bring_all" or data.type == "slap_all" then
 		TriggerServerEvent('es_admin:all', data.type)
@@ -57,7 +191,6 @@ end)
 RegisterNUICallback('set', function(data, cb)
 	TriggerServerEvent('es_admin:set', data.type, data.user, data.param)
 end)
-local noclip = false
 
 --test
 RegisterNetEvent('es_admin:viewname')
@@ -176,7 +309,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		if(noclip)then
-			local currentSpeed = 2
+			local currentSpeed = noclipSpeed
 			noclipEntity =
             IsPedInAnyVehicle(PlayerPedId(-1), false) and GetVehiclePedIsUsing(PlayerPedId(-1)) or PlayerPedId(-1)
             FreezeEntityPosition(PlayerPedId(-1), true)

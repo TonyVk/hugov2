@@ -1,8 +1,8 @@
-fx_version 'bodacious'
+fx_version 'cerulean'
 game 'gta5'
 
 
-description 'Admin tool for ES'
+description 'Admin tool for ESX'
 
 client_script 'client.lua'
 server_script 'server.lua'

@@ -1,0 +1,306 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="style.css">
+	<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+
+	<style>#admin,#exist,#server { display: none; }</style>
+	<script src="https://kit.fontawesome.com/ddef4731b0.js" crossorigin="anonymous"></script>
+
+	<script type="text/javascript">
+		let selected = 0;
+		$(function () {
+			$(document).keyup(function (e) {
+				if (e.keyCode == 27) {
+					$("#admin").fadeOut();
+					$.post('https://admin_menu/close', JSON.stringify({}));
+					$('#str2').css('display', 'none');
+					$('#mainD').css('display', 'none');
+				}else if (e.keyCode == 113) {
+					$.post('https://admin_menu/close', JSON.stringify({}));
+					$('#str2').css('display', 'none');
+					$('#mainD').css('display', 'none');
+				}
+			});
+
+			window.addEventListener('message', function (event) {
+				if (event.data.type == "open") {
+					$('#notexist').css('display', 'block');
+					$('#exist').css('display', 'none');
+					$("#admin").fadeIn();
+					$('input').val("");
+
+					$('#list').empty();
+					for (let i in event.data.players) {
+						let player = event.data.players[i];
+						$('#list').append('<div class="player" id="player_' + player.id + '">' + player.name + '</div>');
+					}
+
+					$(".player").click(function () {
+						let id = $(this).attr('id').replace('player_', '');
+						selected = parseInt(id);
+
+						$('.player').removeClass('selected');
+						$(this).addClass('selected');
+
+						$('#exist').find('h1').text(selected + ", " + $(this).text());
+
+						$('#notexist').css('display', 'none');
+						$('#exist').css('display', 'block');
+					});
+				}else if (event.data.type == "openQuick") {
+					$('#mainD').css('display', 'block');
+					$('#str1').css('display', 'block');
+				}else if (event.data.type == "closeQuick") {
+					$('#mainD').css('display', 'none');
+					$('#str2').css('display', 'none');
+				}
+			});
+
+			$("#close").click(() => {
+				$("#admin").fadeOut();
+				$.post('https://admin_menu/close', JSON.stringify({}));
+			});
+
+			$("#select_users").click(() => {
+				$('#server').css('display', 'none');
+				$('#users').css('display', 'block');
+				$(".tab").removeClass("selected");
+				$("#select_users").addClass("selected");
+				$("#select_users").blur();
+			});
+
+			$("#select_server").click(() => {
+				$('#users').css('display', 'none');
+				$('#server').css('display', 'block');
+				$(".tab").removeClass("selected");
+				$("#select_server").addClass("selected");
+				$("#select_server").blur();
+			});
+
+			$("#slay_all").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'slay_all' })); $(this).blur(); });
+			$("#bring_all").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'bring_all' })); $(this).blur(); });
+			$("#slap_all").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'slap_all' })); $(this).blur(); });
+
+
+			$("#slay").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'slay' })); $(this).blur(); });
+			$("#kick").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'kick' })); $(this).blur(); });
+			$("#noclip").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'noclip' })); $(this).blur(); });
+			$("#freeze").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'freeze' })); $(this).blur(); });
+			$("#bring").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'bring' })); $(this).blur(); });
+			$("#goto").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'goto' })); $(this).blur(); });
+			$("#slap").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'slap' })); $(this).blur(); });
+			$("#crash").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'crash' })); $(this).blur(); });
+			$("#ban").click(function () { $.post('https://admin_menu/quick', JSON.stringify({ id: selected, type: 'ban' })); $(this).blur(); });
+			$("#setgroup").click(function () { $.post('https://admin_menu/set', JSON.stringify({ user: selected, type: 'group', param: $("#newgroup").val() })); $(this).blur(); });
+			$("#setlevel").click(function () { $.post('https://admin_menu/set', JSON.stringify({ user: selected, type: 'level', param: $("#newlevel").val() })); $(this).blur(); });
+			$("#setmoney").click(function () { $.post('https://admin_menu/set', JSON.stringify({ user: selected, type: 'money', param: $("#newmoney").val() })); $(this).blur(); });
+			$("#setbank").click(function () { $.post('https://admin_menu/set', JSON.stringify({ user: selected, type: 'bank', param: $("#newbank").val() })); $(this).blur(); });
+
+			$('button').click(function () { $(this).blur(); });
+		});
+	</script>
+</head>
+
+<body>
+	<div id="admin">
+		<div class="topbar">
+			<p>es_admin</p>
+			<div id="close">&#10060;</div>
+		</div>
+
+		<div id="tabs">
+			<button id="select_users" class="tab selected">Users</button>
+			<button id="select_server" class="tab">Server</button>
+		</div>
+
+		<div id="main">
+			<div id="users">
+				<div id="list">
+				</div>
+				<div id="selected">
+					<div id="notexist">
+						<h1>Select a player</h1>
+					</div>
+					<div id="exist">
+						<h1>Kanersps</h1>
+						<div id="quick">
+							<h3>Quick Options</h3>
+							<button class="quick" id="slay">Slay</button>
+							<button class="quick" id="kick">Kick</button>
+							<button class="quick" id="noclip">Noclip</button>
+							<button class="quick" id="freeze">Freeze</button>
+							<button class="quick" id="bring">Bring</button>
+							<button class="quick" id="goto">Goto</button>
+							<button class="quick" id="slap">Slap</button>
+							<button class="quick" id="crash">Crash</button>
+							<button class="quick" id="ban">Ban</button>
+						</div>
+						<div id="set">
+							<h3>Attributes</h3>
+							<div class="group_set">
+								<label>Group</label>
+								<input id="newgroup" type="text" placeholder="new group"></input>
+								<button id="setgroup">Set</button>
+							</div>
+							<div class="group_set">
+								<label>Permission Level</label>
+								<input id="newlevel" type="text" placeholder="new level"></input>
+								<button id="setlevel">Set</button>
+							</div>
+							<div class="group_set">
+								<label>Money</label>
+								<input id="newmoney" type="text" placeholder="new money"></input>
+								<button id="setmoney">Set</button>
+							</div>
+							<div class="group_set">
+								<label>Bank</label>
+								<input id="newbank" type="text" placeholder="new bank"></input>
+								<button id="setbank">Set</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="server">
+				<h3>Quick Options</h3>
+				<button class="quick" id="slay_all">Slay</button>
+				<button class="quick" id="bring_all">Bring</button>
+				<button class="quick" id="slap_all">Slap</button>
+			</div>
+		</div>
+	</div>
+	<div id="mainD">
+		<div id="naslov">Admin panel</div>
+		<div id="str1">
+			<button onclick="ADuznost()">
+				<i class="fa-solid fa-user-clock"></i>
+				ADuznost
+			</button>
+			<button onclick="OtvoriNoClip(1)">
+				<i class="fa-solid fa-dove"></i>
+				NoClip
+			</button>
+			<button onclick="Nevidljiv()">
+				<i class="fa-solid fa-eye-slash"></i>
+				Nevidljiv
+			</button>
+			<button onclick="Vozilo()">
+				<i class="fa-solid fa-car"></i>
+				Vozilo
+			</button>
+			<button onclick="Marker()">
+				<i class="fa-solid fa-location-dot"></i>
+				Marker
+			</button>
+			<button onclick="Heal()">
+				<i class="fa-solid fa-briefcase-medical"></i>
+				Heal
+			</button>
+			<button onclick="ObrisiVozilo()">
+				<i class="fa-solid fa-trash"></i>
+				Obrisi vozilo
+			</button>
+			<button onclick="PopraviVozilo()">
+				<i class="fa-solid fa-wrench"></i>
+				Popravi vozilo
+			</button>
+			<button onclick="Ubij()">
+				<i class="fa-solid fa-face-dizzy"></i>
+				Ubij
+			</button>
+		</div>
+		<div id="str2">
+			<button id="backB" onclick="OtvoriNoClip(2)">
+				<i class="fa-solid fa-angle-left" style="font-size: 18px;"></i>
+			</button>
+			<div class="length range__slider" data-min="0.2" data-max="3.0">
+				<div class="length__title field-title" data-length='0'>Brzina:</div>
+				<input id="slider" type="range" min="0.2" max="3.0" value="2.0" step="0.2" />
+			</div>
+		
+			<button class="noclip" onclick="NoClip()">Upali/ugasi noclip</button>
+		</div>
+	</div>
+	<script>
+		let skripta = "admin_menu"
+		let brzina = 2.0;
+		function OtvoriNoClip(br){
+			if(br == 1){
+				let elem = document.getElementById("str1");
+				elem.style.display = "none";
+				let elem2 = document.getElementById("str2");
+				elem2.style.display = "block";
+			}else{
+				let elem = document.getElementById("str1");
+				elem.style.display = "block";
+				let elem2 = document.getElementById("str2");
+				elem2.style.display = "none"; 
+			}
+		}
+		function ADuznost(){
+			$.post("https://"+skripta+"/ADuznost", JSON.stringify({}));
+		}
+		function Nevidljiv(){
+			$.post("https://"+skripta+"/Nevidljiv", JSON.stringify({}));
+		}
+		function Vozilo(){
+			$.post("https://"+skripta+"/Vozilo", JSON.stringify({}));
+		}
+		function Marker(){
+			$.post("https://"+skripta+"/Marker", JSON.stringify({}));
+		}
+		function Heal(){
+			$.post("https://"+skripta+"/Heal", JSON.stringify({}));
+		}
+		function ObrisiVozilo(){
+			$.post("https://"+skripta+"/ObrisiVozilo", JSON.stringify({}));
+		}
+		function PopraviVozilo(){
+			$.post("https://"+skripta+"/PopraviVozilo", JSON.stringify({}));
+		}
+		function Ubij(){
+			$.post("https://"+skripta+"/Ubij", JSON.stringify({}));
+		}
+		function NoClip(){
+			$.post("https://"+skripta+"/NoClip", JSON.stringify({
+				speed: brzina
+			}));
+		}
+		// Range Slider Properties.
+		// Fill : The trailing color that you see when you drag the slider.
+		// background : Default Range Slider Background
+		const sliderProps = {
+			fill: "#0B1EDF",
+			background: "rgba(255, 255, 255, 0.214)",
+		};
+
+		// Selecting the Range Slider container which will effect the LENGTH property of the password.
+		const slider = document.querySelector(".range__slider");
+
+		// Text which will show the value of the range slider.
+		const sliderValue = document.querySelector(".length__title");
+
+		// Using Event Listener to apply the fill and also change the value of the text.
+		slider.querySelector("input").addEventListener("input", event => {
+			sliderValue.setAttribute("data-length", event.target.value);
+			applyFill(event.target);
+		});
+		// Selecting the range input and passing it in the applyFill func.
+		applyFill(slider.querySelector("input"));
+		// This function is responsible to create the trailing color and setting the fill.
+		function applyFill(slider) {
+			const percentage = (100 * (slider.value - slider.min)) / (slider.max - slider.min);
+			const bg = `linear-gradient(90deg, ${sliderProps.fill} ${percentage}%, ${sliderProps.background} ${percentage +
+					0.1}%)`;
+			slider.style.background = bg;
+			sliderValue.setAttribute("data-length", slider.value);
+			brzina = slider.value;
+			$.post('https://admin_menu/noclipBrzina', JSON.stringify({
+				speed: brzina
+			}));
+		}
+	</script>
+</body>
+
+</html>
