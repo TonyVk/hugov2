@@ -19,8 +19,9 @@ RegisterServerEvent('zone:DodajZonu')
 AddEventHandler('zone:DodajZonu', function(koord, vel, rot)
 	local str = "zona"..BrZone
 	BrZone = BrZone+1
-	table.insert(Zone, {ID = nil, Ime = str, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil, Label = nil, Vrijeme = 0, Vrijednost = 30000})
-	TriggerClientEvent("zone:SpawnZonu", -1, str, koord, vel, rot)
+	table.insert(Zone, {ID = nil, Ime = str, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil, Label = nil, Vrijeme = 0, 
+	Vrijednost = 30000, Ped = nil, PedKoord = nil, PedHead = nil})
+	TriggerClientEvent("zone:SpawnZonu", -1, str, koord, vel, rot, nil, nil)
 	MySQL.Async.fetchScalar('SELECT idzone FROM zpostavke', {}, function(result)
 		if result == nil then
 			MySQL.Async.execute('INSERT INTO zpostavke (idzone, mafije, vrijeme) VALUES (@id, "{}", 1)',{
@@ -238,6 +239,40 @@ AddEventHandler('zone:Premjesti', function(ime, koord, rot)
 	})
 end)
 
+RegisterServerEvent('zone:PostaviPeda')
+AddEventHandler('zone:PostaviPeda', function(ime, koord, head)
+	for i=1, #Zone, 1 do
+		if Zone[i].Ime == ime then
+			Zone[i].PedKoord = koord
+			Zone[i].PedHead = head
+			break
+		end
+	end
+	TriggerClientEvent("zone:DodajPeda", -1, ime, koord, head)
+	MySQL.Async.execute('UPDATE zone SET pedkoord = @koord, pedhead = @head WHERE ime = @ime',{
+		['@ime'] = ime,
+		['@koord'] = json.encode(koord),
+		['@head'] = head
+	})
+end)
+
+RegisterServerEvent('zone:ObrisiPeda')
+AddEventHandler('zone:ObrisiPeda', function(ime)
+	for i=1, #Zone, 1 do
+		if Zone[i].Ime == ime then
+			Zone[i].PedKoord = nil
+			Zone[i].PedHead = nil
+			break
+		end
+	end
+	TriggerClientEvent("zone:ObrisiPeda", -1, ime)
+	MySQL.Async.execute('UPDATE zone SET pedkoord = @koord, pedhead = @head WHERE ime = @ime',{
+		['@ime'] = ime,
+		['@koord'] = nil,
+		['@head'] = nil
+	})
+end)
+
 RegisterServerEvent('zone:Obrisi')
 AddEventHandler('zone:Obrisi', function(ime)
 	for i=1, #Zone, 1 do
@@ -292,8 +327,15 @@ function UcitajZone()
         for i=1, #result, 1 do
 			local tabla = json.decode(result[i].koord)
 			local a = vector3(tabla.x, tabla.y, tabla.z)
-			table.insert(Zone, {ID = nil, Ime = result[i].ime, Koord = a, Velicina = result[i].velicina, Rotacija = result[i].rotacija, Boja = result[i].boja, Vlasnik = result[i].vlasnik, Label = result[i].label, Vrijeme = result[i].vrijeme, Vrijednost = result[i].vrijednost})
-			TriggerClientEvent("zone:SpawnZonu", -1, result[i].ime, a, result[i].velicina, result[i].rotacija)
+			local kurac = nil
+			if result[i].PedKoord ~= nil then
+				local ktable = json.decode(result[i].PedKoord)
+				kurac = vector3(ktable.x, ktable.y, ktable.z)
+			end
+			table.insert(Zone, {ID = nil, Ime = result[i].ime, Koord = a, Velicina = result[i].velicina, Rotacija = result[i].rotacija, 
+			Boja = result[i].boja, Vlasnik = result[i].vlasnik, Label = result[i].label, Vrijeme = result[i].vrijeme, 
+			Vrijednost = result[i].vrijednost, Ped = nil, PedKoord = kurac, PedHead = result[i].PedHead})
+			TriggerClientEvent("zone:SpawnZonu", -1, result[i].ime, a, result[i].velicina, result[i].rotacija, kurac, result[i].PedHead)
         end
       end
     )

@@ -46,6 +46,40 @@ function ProvjeriPosao()
 	end
 	Wait(5000)
 	SpawnBlipove()
+	SpawnNpcove()
+end
+
+function SpawnNpcove()
+	local pedmodel = GetHashKey("s_m_y_dealer_01")
+	LoadModel(pedmodel)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil and Zone[i].PedKoord ~= nil and Zone[i].Ped == nil then
+			Zone[i].Ped = CreatePed(0, pedmodel, Zone[i].PedKoord - vector3(0.0, 0.0, 1.0), Zone[i].PedHead, false, true)
+			SetEntityInvincible(Zone[i].Ped, true)
+			SetBlockingOfNonTemporaryEvents(Zone[i].Ped, true)
+			SetPedDiesWhenInjured(Zone[i].Ped, false)
+			SetPedFleeAttributes(Zone[i].Ped, 2)
+			FreezeEntityPosition(Zone[i].Ped, true)
+			SetPedCanPlayAmbientAnims(Zone[i].Ped, false)
+			SetPedCanRagdollFromPlayerImpact(Zone[i].Ped, false)
+			exports.qtarget:AddEntityZone(Zone[i].Ime, Zone[i].Ped, 
+			{
+				name=(Zone[i].Ime).."_ped",
+				debugPoly=false,
+				useZ = true
+			}, {
+				options = {
+					{
+						event = "zone:ProdajDrogu",
+						icon = "far fa-comment",
+						label = "Prodajte drogu"
+					}
+				},
+				distance = 2.5
+			})
+		end
+	end
+	SetModelAsNoLongerNeeded(pedmodel)
 end
 
 if Config.DinamicneMafije then
@@ -110,8 +144,8 @@ AddEventHandler('zone:VratiOsvajanje', function(br)
 end)
 
 RegisterNetEvent("zone:SpawnZonu")
-AddEventHandler('zone:SpawnZonu', function(ime, koord, vel, rot)
-	table.insert(Zone, {ID = nil, Ime = ime, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil, Label = nil, Vrijeme = 0, Vrijednost = 30000})
+AddEventHandler('zone:SpawnZonu', function(ime, koord, vel, rot, pkord, phead)
+	table.insert(Zone, {ID = nil, Ime = ime, Koord = koord, Velicina = vel, Rotacija = rot, Boja = 0, Vlasnik = nil, Label = nil, Vrijeme = 0, Vrijednost = 30000, Ped = nil, PedKoord = pkord, PedHead = phead})
 	if PlayerData.job ~= nil then
 		SpawnBlipove()
 	end
@@ -156,6 +190,76 @@ AddEventHandler('zone:UpdateZonu', function(ime, koord, rot)
 				if naso then
 					SetBlipRotation(Zone[i].ID, rot)
 					SetBlipCoords(Zone[i].ID, koord.x, koord.y, koord.z)
+				end
+				break
+			end
+		end
+	end
+end)
+
+LoadModel = function(model)
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Wait(10)
+	end
+end
+
+RegisterNetEvent("zone:DodajPeda")
+AddEventHandler('zone:DodajPeda', function(ime, koord, head)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil then
+			if Zone[i].Ime == ime then
+				Zone[i].PedKoord = koord
+				Zone[i].PedHead = head
+				if Zone[i].Ped == nil then
+					local pedmodel = GetHashKey("s_m_y_dealer_01")
+					LoadModel(pedmodel)
+					Zone[i].Ped = CreatePed(0, pedmodel, koord - vector3(0.0, 0.0, 1.0), head, false, true)
+					SetModelAsNoLongerNeeded(pedmodel)
+					SetEntityInvincible(Zone[i].Ped, true)
+					SetBlockingOfNonTemporaryEvents(Zone[i].Ped, true)
+					SetPedDiesWhenInjured(Zone[i].Ped, false)
+					SetPedFleeAttributes(Zone[i].Ped, 2)
+					FreezeEntityPosition(Zone[i].Ped, true)
+					SetPedCanPlayAmbientAnims(Zone[i].Ped, false)
+					SetPedCanRagdollFromPlayerImpact(Zone[i].Ped, false)
+					exports.qtarget:AddEntityZone(ime, Zone[i].Ped, 
+					{
+						name=ime.."_ped",
+						debugPoly=false,
+						useZ = true
+					}, {
+						options = {
+							{
+								event = "zone:ProdajDrogu",
+								icon = "far fa-comment",
+								label = "Prodajte drogu"
+							}
+						},
+						distance = 2.5
+					})
+				else
+					SetEntityCoords(Zone[i].Ped, koord - vector3(0.0, 0.0, 1.0))
+					SetEntityHeading(Zone[i].Ped, head)
+				end
+				break
+			end
+		end
+	end
+end)
+
+RegisterNetEvent("zone:ObrisiPeda")
+AddEventHandler('zone:ObrisiPeda', function(ime)
+	for i=1, #Zone, 1 do
+		if Zone[i] ~= nil then
+			if Zone[i].Ime == ime then
+				Zone[i].PedKoord = nil
+				Zone[i].PedHead = nil
+				if Zone[i].Ped ~= nil then
+					DeleteEntity(Zone[i].Ped)
+					exports.qtarget:RemoveZone(ime.."_ped")
+					Zone[i].Ped = nil
 				end
 				break
 			end
@@ -316,6 +420,9 @@ RegisterCommand("uredizone", function(source, args, raw)
 								local elements = {
 									{label = "Premjesti zonu", value = "premj"},
 									{label = "Promjeni vrijednost", value = "vrij"},
+									{label = "Port do zone", value = "port"},
+									{label = "Postavi peda za prodaju", value = "ped"},
+									{label = "Obrisi peda za prodaju", value = "pedbr"},
 									{label = "Obrisi zonu", value = "brisi"}
 								}
 								ESX.UI.Menu.Open(
@@ -337,6 +444,28 @@ RegisterCommand("uredizone", function(source, args, raw)
 											menu3.close()
 											menu2.close()
 											ESX.ShowNotification("Obrisali ste zonu "..data2.current.value)
+										elseif data3.current.value == "ped" then
+											local koord = GetEntityCoords(PlayerPedId())
+											local head = GetEntityHeading(PlayerPedId())
+											TriggerServerEvent("zone:PostaviPeda", data2.current.value, koord, head)
+											menu3.close()
+											menu2.close()
+											ESX.ShowNotification("Postavili ste peda za prodaju droge u zonu "..data2.current.value)
+										elseif data3.current.value == "port" then
+											for i=1, #Zone, 1 do
+												if Zone[i] ~= nil and Zone[i].Ime == data2.current.value and Zone[i].Koord ~= nil then
+													SetEntityCoords(PlayerPedId(), Zone[i].Koord)
+													break
+												end
+											end
+											menu3.close()
+											menu2.close()
+											ESX.ShowNotification("Portali ste se do "..data2.current.value)
+										elseif data3.current.value == "pedbr" then
+											TriggerServerEvent("zone:ObrisiPeda", data2.current.value)
+											menu3.close()
+											menu2.close()
+											ESX.ShowNotification("Obrisali ste peda za prodaju droge u zoni "..data2.current.value)
 										else
 											menu3.close()
 											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'vrzone', {

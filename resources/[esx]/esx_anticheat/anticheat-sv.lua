@@ -744,7 +744,8 @@ function ban(source,identifier,license,liveid,xblid,discord,playerip,targetplaye
 			playerip   = playerip,
 			reason     = reason,
 			expiration = expiration,
-			permanent  = permanent
+			permanent  = permanent,
+			ime 	   = targetplayername
           })
 
 
