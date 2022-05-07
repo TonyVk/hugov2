@@ -16,9 +16,15 @@ function UcitajDroge()
       function(result)
         for i=1, #result, 1 do
 			local data = json.decode(result[i].branje)
-            local branje = vector3(data.x, data.y, data.z)
+			local branje = nil
+			if data ~= nil then
+            	branje = vector3(data.x, data.y, data.z)
+			end
             local data2 = json.decode(result[i].prerada)
-            local prerada = vector3(data2.x, data2.y, data2.z)
+			local prerada = nil
+			if data2 ~= nil then
+            	prerada = vector3(data2.x, data2.y, data2.z)
+			end
 			table.insert(Droge, {ID = result[i].ID, vrsta = result[i].vrsta, branje = branje, prerada = prerada})
         end
         Ucitao = true
@@ -86,30 +92,39 @@ RegisterServerEvent("Heroin:get")
 AddEventHandler("Heroin:get", function(torba)
     local _source = source	
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	
-	if torba then
-		if xPlayer.getInventoryItem('gljive').count < 30*2 then
-			local randa = math.random(1,3)
-			if xPlayer.getInventoryItem('gljive').count+randa > 30*2 then
-				xPlayer.addInventoryItem("gljive", 1)
+	for i=1, #Droge, 1 do
+		if Droge[i].vrsta == 1 and Droge[i].branje ~= nil then
+			if #(GetEntityCoords(GetPlayerPed(_source))-Droge[i].branje) <= 200 then
+				if torba then
+					if xPlayer.getInventoryItem('gljive').count < 30*2 then
+						local randa = math.random(1,3)
+						if xPlayer.getInventoryItem('gljive').count+randa > 30*2 then
+							xPlayer.addInventoryItem("gljive", 1)
+						else
+							xPlayer.addInventoryItem("gljive", randa)
+						end
+					else
+						TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
+					end
+				else
+					if xPlayer.getInventoryItem('gljive').count < 30 then
+						local randa = math.random(1,3)
+						if xPlayer.getInventoryItem('gljive').count+randa > 30 then
+							xPlayer.addInventoryItem("gljive", 1)
+						else
+							xPlayer.addInventoryItem("gljive", randa)
+						end
+					else
+						TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
+					end
+				end	
 			else
-				xPlayer.addInventoryItem("gljive", randa)
+				TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za dobijanje listova kokaina, a nije blizu lokacije!")
+				TriggerEvent("AntiCheat:Citer", _source)
 			end
-		else
-			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
+			break
 		end
-	else
-		if xPlayer.getInventoryItem('gljive').count < 30 then
-			local randa = math.random(1,3)
-			if xPlayer.getInventoryItem('gljive').count+randa > 30 then
-				xPlayer.addInventoryItem("gljive", 1)
-			else
-				xPlayer.addInventoryItem("gljive", randa)
-			end
-		else
-			TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
-		end
-	end	
+	end
 end)
 
 ESX.RegisterUsableItem('heroin', function(source)
@@ -160,32 +175,74 @@ AddEventHandler('heroin:ProdajHeroin', function()
 	end
 end)
 
-ESX.RegisterServerCallback('Heroin:process', function (source, cb, torba)
-	local _source = source
-	local xPlayer  = ESX.GetPlayerFromId(_source)
-			
-	if xPlayer.getInventoryItem('gljive').count >= 3 then
-		if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-			if xPlayer.getInventoryItem('heroin').count < 10*2 then 
-				xPlayer.removeInventoryItem('gljive', 3) 
-				xPlayer.addInventoryItem('heroin', 1) 
-				cb(true)
+RegisterServerEvent("esx_drogica:get")
+AddEventHandler("esx_drogica:get", function(torba)
+    local _source = source
+	for i=1, #Droge, 1 do
+		if Droge[i].vrsta == 2 and Droge[i].branje ~= nil then
+			if #(GetEntityCoords(GetPlayerPed(_source))-Droge[i].branje) <= 200 then
+				local xPlayer = ESX.GetPlayerFromId(_source)
+				local list = xPlayer.getInventoryItem('coke')
+				if torba then
+					if list.count < list.limit*2 then
+						local randa = math.random(1,2)
+						if list.count+randa > list.limit*2 then
+							xPlayer.addInventoryItem("coke", 1)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x 1"
+							TriggerEvent("SpremiLog", por)
+						else
+							xPlayer.addInventoryItem("coke", randa)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x "..randa
+							TriggerEvent("SpremiLog", por)
+						end
+					else
+						TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')
+					end
+				else
+					if list.count < list.limit then
+						local randa = math.random(1,2)
+						if list.count+randa > list.limit then
+							xPlayer.addInventoryItem("coke", 1)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x 1"
+							TriggerEvent("SpremiLog", por)
+						else
+							xPlayer.addInventoryItem("coke", randa)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item coke x "..randa
+							TriggerEvent("SpremiLog", por)
+						end
+					else
+						TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete imati vise listova koke')
+					end
+				end	
 			else
-				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prostora')
-				cb(false)
+				TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za dobijanje listova kokaina, a nije blizu lokacije!")
+				TriggerEvent("AntiCheat:Citer", _source)
 			end
-		else
-			if xPlayer.getInventoryItem('heroin').count < 10 then 
-				xPlayer.removeInventoryItem('gljive', 3) 
-				xPlayer.addInventoryItem('heroin', 1) 
-				cb(true)
-			else
-				TriggerClientEvent('esx:showNotification', source, '~r~Nemate vise prrostora')
-				cb(false)
-			end
+			break
 		end
-	else
-		TriggerClientEvent('esx:showNotification', source, '~r~Nemate dosta gljiva')
-		cb(false)
 	end
+end)
+
+ESX.RegisterUsableItem('cocaine', function(source)
+	--local xPlayer = ESX.GetPlayerFromId(source)
+	--xPlayer.removeInventoryItem('cocaine', 1)
+	
+	TriggerClientEvent('esx_drogica:useItem', source, 'cocaine')
+
+	Citizen.Wait(1000)
+end)
+
+ESX.RegisterServerCallback('esx_drogica:getItemAmount', function(source, cb, item)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local quantity = xPlayer.getInventoryItem(item).count
+
+	cb(quantity)
+end)
+
+RegisterServerEvent('esx_drogica:removeItem')
+AddEventHandler('esx_drogica:removeItem', function(item)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+
+	xPlayer.removeInventoryItem(item, 1)
 end)

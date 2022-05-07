@@ -534,11 +534,17 @@ AddEventHandler('mafije:NapraviMafiju', function(maf, lab)
 			table.insert(Mafije, {Ime = maf, Label = lab, Posao = 0})
 			TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
 			
-			MySQL.Async.execute('INSERT INTO jobs (name, label, whitelisted) VALUES (@ime, @lab, @white)',{
-				['@ime'] = maf,
+			MySQL.Async.insert('INSERT INTO jobs (name, label, whitelisted) VALUES (@ime, @lab, @white)',{
+                ['@ime'] = maf,
 				['@lab'] = label,
 				['@white'] = 1
-			})
+            }, function(insertId)
+				MySQL.Async.execute('INSERT INTO addon_inventory (name, label, shared) VALUES (@ime, @lab, @sh)',{
+					['@ime'] = insertId,
+					['@lab'] = label,
+					['@sh'] = 1
+				})
+			end)
 			
 			local soc = "society_"..maf
 			
@@ -549,12 +555,6 @@ AddEventHandler('mafije:NapraviMafiju', function(maf, lab)
 			})
 			
 			MySQL.Async.execute('INSERT INTO datastore (name, label, shared) VALUES (@ime, @lab, @sh)',{
-				['@ime'] = soc,
-				['@lab'] = label,
-				['@sh'] = 1
-			})
-			
-			MySQL.Async.execute('INSERT INTO addon_inventory (name, label, shared) VALUES (@ime, @lab, @sh)',{
 				['@ime'] = soc,
 				['@lab'] = label,
 				['@sh'] = 1
@@ -1085,6 +1085,36 @@ AddEventHandler('mafije:ObrisiRank', function(id, maf)
 			TriggerEvent("RefreshSociety")
 			TriggerClientEvent('esx:showNotification', source, 'Rank '..id..' uspjesno obrisan mafiji '..maf..'!')
 		end
+end)
+
+RegisterServerEvent('mafije:depositMoney')
+AddEventHandler('mafije:depositMoney', function(maf, amount)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local society = "society_"..maf
+	amount = ESX.Math.Round(tonumber(amount))
+
+	if amount > 0 and xPlayer.getMoney() >= amount then
+		TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
+			xPlayer.removeMoney(amount)
+			account.addMoney(amount)
+			account.save()
+			ESX.SavePlayer(xPlayer, function() 
+			end)
+		end)
+
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Ostavili ste u sef $"..ESX.Math.GroupDigits(amount))
+	else
+		TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
+	end
+end)
+
+RegisterServerEvent('mafije:dajStanje')
+AddEventHandler('mafije:dajStanje', function(maf)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local society = "society_"..maf
+	TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
+		xPlayer.showNotification("U sefu imate $"..account.money)
+	end)
 end)
 
 RegisterNetEvent('mafije:NapraviRank')
@@ -1810,7 +1840,7 @@ end)
 
 RegisterServerEvent('mafije:getStockItem')
 AddEventHandler('mafije:getStockItem', function(itemName, count, maf, torba)
-  local soc = "society_"..maf
+  local soc = maf
   local xPlayer = ESX.GetPlayerFromId(source)
   local sourceItem = xPlayer.getInventoryItem(itemName)
 
@@ -1912,7 +1942,9 @@ end)
 
 RegisterServerEvent('mafije:putStockItems')
 AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
-  local soc = "society_"..maf
+	print("jel ti dodes ovdje uopce")
+  local soc = maf
+  local kol = tonumber(count)
   local xPlayer = ESX.GetPlayerFromId(source)
   if xPlayer ~= nil then
 	  local sourceItem = xPlayer.getInventoryItem(itemName)
@@ -1920,15 +1952,16 @@ AddEventHandler('mafije:putStockItems', function(itemName, count, maf)
 	  TriggerEvent('esx_addoninventory:getSharedInventory', soc, function(inventory)
 
 		local item = inventory.getItem(itemName)
-
-		if sourceItem.count >= count and count > 0 then
-		  xPlayer.removeInventoryItem(itemName, count)
-		  inventory.addItem(itemName, count)
-		  TriggerClientEvent('esx:showNotification', xPlayer.source, "Dodali ste x" .. count .. ' ' .. item.label)
+		print("koji je ovo kurac")
+		print(sourceItem.count)
+		print(kol)
+		if sourceItem.count >= kol and kol > 0 then
+		  xPlayer.removeInventoryItem(itemName, kol)
+		  inventory.addItem(itemName, kol)
+		  TriggerClientEvent('esx:showNotification', xPlayer.source, "Dodali ste x" .. kol .. ' ' .. item.label)
 		else
 		  TriggerClientEvent('esx:showNotification', xPlayer.source, "Krivi iznos")
 		end
-
 	  end)
   else
 	TriggerClientEvent('esx:showNotification', source, "Greska! Pokusajte ponovno ili odite relog!")
@@ -2417,7 +2450,7 @@ ESX.RegisterServerCallback('mafije:piku4', function(source, cb, amount, maf)
 end)
 
 ESX.RegisterServerCallback('mafije:getStockItems', function(source, cb, maf)
-  local soc = "society_"..maf
+  local soc = maf
   TriggerEvent('esx_addoninventory:getSharedInventory', soc, function(inventory)
     cb(inventory.items)
   end)

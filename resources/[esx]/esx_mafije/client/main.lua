@@ -3078,9 +3078,9 @@ function OpenGetStocksMenu()
 				torba = skin['bags_1']
 			  end)
 			  if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-				TriggerServerEvent('mafije:getStockItem', itemName, count, PlayerData.job.name, true)
+				TriggerServerEvent('mafije:getStockItem', itemName, count, PlayerData.job.id, true)
 			  else
-				TriggerServerEvent('mafije:getStockItem', itemName, count, PlayerData.job.name, false)
+				TriggerServerEvent('mafije:getStockItem', itemName, count, PlayerData.job.id, false)
 			  end
 			  OpenGetStocksMenu()
             end
@@ -3097,7 +3097,7 @@ function OpenGetStocksMenu()
       end
     )
 
-  end, PlayerData.job.name)
+  end, PlayerData.job.id)
 
 end
 
@@ -3148,7 +3148,8 @@ function OpenPutStocksMenu()
 						menu2.close()
 						menu.close()
 						if string.find(itemName, "weapon") == nil then
-							TriggerServerEvent('mafije:putStockItems', itemName, count, PlayerData.job.name)
+							print("sta jede govna ovo")
+							TriggerServerEvent('mafije:putStockItems', itemName, count, PlayerData.job.id)
 							Wait(200)
 							OpenPutStocksMenu()
 						else
@@ -4023,7 +4024,8 @@ function OtvoriBossMenu()
 		align    = 'top-left',
 		elements = {
 			{label = "Zaposlenici", value = 'zaposlenici'},
-			{label = "Place", value = 'place'}
+			{label = "Place", value = 'place'},
+			{label = "Sef", value = 'sef'}
 	}}, function(data, menu)
 		if data.current.value == 'zaposlenici' then
 			local elements = {
@@ -4072,6 +4074,34 @@ function OtvoriBossMenu()
 					menu2.close()
 				end)
 			end, PlayerData.job.name)
+		elseif data.current.value == 'sef' then
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'meh_boss2', {
+				title    = 'Sef',
+				align    = 'top-left',
+				elements = {
+					{label = "Stanje sefa", value = 'stanje'},
+					{label = "Ostavi novac", value = 'ostavi'}
+			}}, function(data2, menu2)
+				if data2.current.value == 'stanje' then
+					TriggerServerEvent('mafije:dajStanje', PlayerData.job.name)
+				elseif data2.current.value == 'ostavi' then
+					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'deposit_money_amount', {
+						title = "Ostavite novac u sef"
+					}, function(data3, menu3)
+						local amount = tonumber(data3.value)
+						if amount == nil then
+							ESX.ShowNotification("Krivi iznos")
+						else
+							menu3.close()
+							TriggerServerEvent('mafije:depositMoney', PlayerData.job.name, amount)
+						end
+					end, function(data3, menu3)
+						menu3.close()
+					end)
+				end
+			end, function(data2, menu2)
+				menu2.close()
+			end)
 		end
 	end, function(data, menu)
 		menu.close()

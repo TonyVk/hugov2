@@ -23,6 +23,9 @@ local menuOpen = false
 local process = true
 local Droge = {}
 
+local spawned2 = false
+local locations2 = {}
+
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -40,6 +43,11 @@ AddEventHandler('droge:VratiDroge', function(vr)
         locations = {}
     end
     spawned = false
+
+    if spawned2 then
+        locations2 = {}
+    end
+    spawned2 = false
 end)
 
 RegisterCommand("uredidroge", function(source, args, raw)
@@ -47,7 +55,8 @@ RegisterCommand("uredidroge", function(source, args, raw)
 		if perm == 69 then
 			ESX.UI.Menu.CloseAll()
 			local elements = {
-				{label = "Heroin", value = "heroin"}
+				{label = "Heroin", value = "heroin"},
+                {label = "Kokain", value = "kokain"}
 			}
 
 			ESX.UI.Menu.Open(
@@ -60,8 +69,7 @@ RegisterCommand("uredidroge", function(source, args, raw)
 				function(data, menu)
 					if data.current.value == "heroin" then
                         elements = {
-                            {label = "Postavite koordinate skupljanja", value = 1},
-                            {label = "Postavite koordinate prerade", value = 2}
+                            {label = "Postavite koordinate skupljanja", value = 1}
                         }
             
                         ESX.UI.Menu.Open(
@@ -74,6 +82,29 @@ RegisterCommand("uredidroge", function(source, args, raw)
                             function(data2, menu2)
                                 local koord = GetEntityCoords(PlayerPedId())
                                 TriggerServerEvent("droge:PostaviKoord", 1, data2.current.value, koord-vector3(0.0, 0.0, 1.0))
+                                menu2.close()
+                                menu.close()
+                            end,
+                            function(data2, menu2)
+                                menu2.close()
+                                menu.close()
+                            end
+                        )
+                    elseif data.current.value == "kokain" then
+                        elements = {
+                            {label = "Postavite koordinate skupljanja", value = 1}
+                        }
+            
+                        ESX.UI.Menu.Open(
+                            'default', GetCurrentResourceName(), 'udkor',
+                            {
+                                title    = "Izaberite opciju",
+                                align    = 'top-left',
+                                elements = elements,
+                            },
+                            function(data2, menu2)
+                                local koord = GetEntityCoords(PlayerPedId())
+                                TriggerServerEvent("droge:PostaviKoord", 2, data2.current.value, koord-vector3(0.0, 0.0, 1.0))
                                 menu2.close()
                                 menu.close()
                             end,
@@ -136,7 +167,7 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 		ClearAllPedProps(GetPlayerPed(-1), true)
 		SetPedMotionBlur(GetPlayerPed(-1), false)
 		ESX.ShowNotification('Utjecaj droge popusta')
-    onDrugs = false
+        onDrugs = false
 	end
 end)
 
@@ -219,76 +250,31 @@ Citizen.CreateThread(function()
         Citizen.Wait(waitara)
         local naso2 = 0
         local kordic = GetEntityCoords(PlayerPedId())
-        
-        local isInMarker  = false
-        local currentZone = nil
-
-        if isInMarker and not hasAlreadyEnteredMarker then
-            hasAlreadyEnteredMarker = true
-            lastZone                = currentZone
-            TriggerEvent('heroin:hasEnteredMarker', currentZone)
-        end
-
-        if not isInMarker and hasAlreadyEnteredMarker then
-            hasAlreadyEnteredMarker = false
-            TriggerEvent('heroin:hasExitedMarker', lastZone)
-        end
         if ESX ~= nil then
-            for k in pairs(locations) do
-                if #(locations[k]-kordic) < 150 then
-                --if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1))) < 150 then
-                    waitara = 0
-                    naso2 = 1
-                    DrawMarker(3, locations[k], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
-                    if #(locations[k]-kordic) < 1.0 then
-                    --if GetDistanceBetweenCoords(locations[k].x, locations[k].y, locations[k].z, GetEntityCoords(GetPlayerPed(-1)), false) < 1.0 then
-                        TriggerEvent('Heroin:new', k)
-                        TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
-                        Citizen.Wait(2000)
-                        ClearPedTasks(PlayerPedId())
-                        ClearPedTasksImmediately(PlayerPedId())
-                        local torba = 0
-                        TriggerEvent('skinchanger:getSkin', function(skin)
-                            torba = skin['bags_1']
-                        end)
-                        if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-                            TriggerServerEvent('Heroin:get', true)
-                        else
-                            TriggerServerEvent('Heroin:get', false)
-                        end
-                    end
-                
-                end
-            end
-            for i=1, #Droge, 1 do
-                if Droge[i].vrsta == 1 and Droge[i].prerada ~= nil then
-                    if #(Droge[i].prerada-kordic) < 150 then
+            if not IsPedInAnyVehicle(PlayerPedId()) then
+                for k in pairs(locations) do
+                    if #(locations[k]-kordic) < 150 then
                         waitara = 0
                         naso2 = 1
-                        DrawMarker(1, Droge[i].prerada, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.3, 1.3, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
-                        if #(Droge[i].prerada-kordic) < 2 then
-                            Draw3DText( Droge[i].prerada.x, Droge[i].prerada.y, Droge[i].prerada.z, "~w~Proizvodnja Heroina~y~\nPritisnite [~b~E~y~] da krenete sa proizvodnjom heroina",4,0.15,0.1)
-                            if IsControlJustReleased(0, Keys['E']) then
-                                Citizen.CreateThread(function()
-                                    Process()
-                                end)
+                        DrawMarker(3, locations[k], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
+                        if #(locations[k]-kordic) < 1.0 then
+                            TriggerEvent('Heroin:new', k)
+                            TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
+                            Citizen.Wait(2000)
+                            ClearPedTasks(PlayerPedId())
+                            ClearPedTasksImmediately(PlayerPedId())
+                            local torba = 0
+                            TriggerEvent('skinchanger:getSkin', function(skin)
+                                torba = skin['bags_1']
+                            end)
+                            if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+                                TriggerServerEvent('Heroin:get', true)
+                            else
+                                TriggerServerEvent('Heroin:get', false)
                             end
                         end
-                        if (#(Droge[i].prerada-kordic) < 5) and (#(Droge[i].prerada-kordic) > 3) then
-                            process = false
-                        end
+                    
                     end
-                end
-            end
-        end
-        if CurrentAction ~= nil then
-            SetTextComponentFormat('STRING')
-            AddTextComponentString(CurrentActionMsg)
-            DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-            if IsControlJustPressed(0, 38) then
-                if CurrentAction == 'prodaj' then
-                    CurrentAction = nil
-                    TriggerServerEvent("heroin:ProdajHeroin")
                 end
             end
         end
@@ -297,51 +283,6 @@ Citizen.CreateThread(function()
         end
     end
 end)
-
-function Draw3DText(x,y,z,textInput,fontId,scaleX,scaleY)
-         local px,py,pz=table.unpack(GetGameplayCamCoords())
-         local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)    
-         local scale = (1/dist)*20
-         local fov = (1/GetGameplayCamFov())*100
-         local scale = scale*fov   
-         SetTextScale(scaleX*scale, scaleY*scale)
-         SetTextFont(fontId)
-         SetTextProportional(1)
-		 if inDist then
-			SetTextColour(0, 190, 0, 220)		-- You can change the text color here
-		 else
-		 	SetTextColour(220, 0, 0, 220)		-- You can change the text color here
-		 end
-         SetTextDropshadow(1, 1, 1, 1, 255)
-         SetTextEdge(2, 0, 0, 0, 150)
-         SetTextDropShadow()
-         SetTextOutline()
-         SetTextEntry("STRING")
-         SetTextCentre(1)
-         AddTextComponentString(textInput)
-         SetDrawOrigin(x,y,z+2, 0)
-         DrawText(0.0, 0.0)
-         ClearDrawOrigin()
-end
-
-function Process()
-	ESX.Streaming.RequestAnimDict("mini@repair", function()
-            TaskPlayAnim(PlayerPedId(), "mini@repair", "fixing_a_ped", 8.0, -8.0, -1, 32, 0, false, false, false)
-	end)
-	process = true
-	local making = true
-	while making and process do
-		TriggerEvent('esx:showNotification', '~g~Pocetak ~g~proizvodnje ~w~heroina')
-		local torba = 0
-		TriggerEvent('skinchanger:getSkin', function(skin)
-			torba = skin['bags_1']
-		end)
-		Citizen.Wait(5000)
-		ESX.TriggerServerCallback('Heroin:process', function(output)
-			making = output
-		end, torba)
-	end
-end
 
 RegisterNetEvent('Heroin:start')
 AddEventHandler('Heroin:start', function()
@@ -400,3 +341,192 @@ function DisplayHelpText(str)
 	AddTextComponentString(str)
 	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
+
+--Kokain
+RegisterNetEvent('esx_drogica:useItem')
+AddEventHandler('esx_drogica:useItem', function(itemName)
+	if onDrugs == false then
+		ESX.UI.Menu.CloseAll()
+
+		if itemName == 'cocaine' then
+			onDrugs = true
+			local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
+			local playerPed = PlayerPedId()
+			ESX.ShowNotification('Osjecate kako vam zivci pocinju raditi protiv vas...')
+			TriggerServerEvent("esx_drogica:removeItem", "cocaine")
+			local playerPed = PlayerPedId()
+			SetEntityHealth(playerPed, GetEntityMaxHealth(playerPed))
+			SetPedArmour(playerPed, 100)
+			ESX.Streaming.RequestAnimDict(lib, function()
+				TaskPlayAnim(playerPed, lib, anim, 8.0, -8.0, -1, 32, 0, false, false, false)
+
+				Citizen.Wait(500)
+				while IsEntityPlayingAnim(playerPed, lib, anim, 3) do
+					Citizen.Wait(0)
+					DisableAllControlActions(0)
+				end
+
+				TriggerEvent('esx_drogica:runMan')
+			end)
+		end
+	else
+		ESX.ShowNotification("Vec ste nadrogirani!")
+	end
+end)
+
+-- Cocaine effect (Run really fast)
+RegisterNetEvent('esx_drogica:runMan')
+AddEventHandler('esx_drogica:runMan', function()
+    RequestAnimSet("move_m@hurry_butch@b")
+    while not HasAnimSetLoaded("move_m@hurry_butch@b") do
+        Citizen.Wait(0)
+    end
+	count = 0
+    DoScreenFadeOut(1000)
+    Citizen.Wait(1000)
+    SetPedMotionBlur(GetPlayerPed(-1), true)
+    SetTimecycleModifier("spectator5")
+    SetPedMovementClipset(GetPlayerPed(-1), "move_m@hurry_butch@b", true)
+	SetRunSprintMultiplierForPlayer(PlayerId(), runspeed)
+    DoScreenFadeIn(1000)
+	repeat
+		ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.1)
+		TaskJump(GetPlayerPed(-1), false, true, false)
+		Citizen.Wait(5000)
+		count = count  + 1
+	until count == 6
+    DoScreenFadeOut(1000)
+    Citizen.Wait(1000)
+    DoScreenFadeIn(1000)
+    ClearTimecycleModifier()
+    ResetPedMovementClipset(GetPlayerPed(-1), 0)
+	SetRunSprintMultiplierForPlayer(PlayerId(),1.0)
+    ClearAllPedProps(GetPlayerPed(-1), true)
+    SetPedMotionBlur(GetPlayerPed(-1), false)
+    ESX.ShowNotification('Dolazite sebi...')
+    onDrugs = false
+end)
+
+Citizen.CreateThread( function()
+	Citizen.Wait(10000)
+	while true do
+		Citizen.Wait(1000)
+        for i=1, #Droge, 1 do
+            if Droge[i].vrsta == 2 and Droge[i].branje ~= nil then
+                if #(GetEntityCoords(PlayerPedId())-Droge[i].branje) <= 200 then
+                    if spawned2 == false then
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        TriggerEvent('esx_drogica:start')
+                        spawned2 = true
+                    end
+                else
+                    if spawned2 then
+                        locations2 = {}
+                    end
+                    spawned2 = false
+                end
+            end
+        end
+	end
+end)
+
+Citizen.CreateThread(function()
+	local waitara = 500
+    while true do
+		Citizen.Wait(waitara)
+		if ESX ~= nil then
+            if not IsPedInAnyVehicle(PlayerPedId()) then
+                local kordic = GetEntityCoords(PlayerPedId())
+                for k in pairs(locations2) do
+                    if locations2[k] ~= nil and #(kordic-locations2[k]) < 150 then
+                        waitara = 0
+                        naso2 = 1
+                        DrawMarker(3, locations2[k], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 200, 0, 110, 0, 1, 0, 0)	
+                        if #(kordic-locations2[k]) < 1.0 then
+                            local kordara = locations2[k]
+                            TriggerEvent('esx_drogica:new', k)
+                            TaskStartScenarioInPlace(PlayerPedId(), 'world_human_gardener_plant', 0, false)
+                            Citizen.Wait(2000)
+                            ClearPedTasks(PlayerPedId())
+                            ClearPedTasksImmediately(PlayerPedId())
+                            kordic = GetEntityCoords(PlayerPedId())
+                            if not IsEntityDead(PlayerPedId()) and #(kordic-kordara) < 1.5 then
+                                local torba = 0
+                                TriggerEvent('skinchanger:getSkin', function(skin)
+                                    torba = skin['bags_1']
+                                end)
+                                if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+                                    TriggerServerEvent('esx_drogica:get', true)
+                                else
+                                    TriggerServerEvent('esx_drogica:get', false)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+		end
+		if naso2 == 0 then
+			waitara = 500
+		end
+    end
+end)
+
+RegisterNetEvent('esx_drogica:start')
+AddEventHandler('esx_drogica:start', function()
+	local set = false
+    local kord = nil
+	Citizen.Wait(10)
+	for i=1, #Droge, 1 do
+        if Droge[i].vrsta == 2 and Droge[i].branje ~= nil then
+            kord = Droge[i].branje
+            break
+        end
+    end
+    if kord ~= nil then
+        local x,y,z = table.unpack(kord)
+        
+        local rnX = x + math.random(-35, 35)
+        local rnY = y + math.random(-35, 35)
+        
+        local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
+        
+        local vect = vector3(rnX, rnY, Z+0.3)
+        table.insert(locations2, vect);
+    end
+end)
+
+RegisterNetEvent('esx_drogica:new')
+AddEventHandler('esx_drogica:new', function(id)
+	local set = false
+    local kord = nil
+	Citizen.Wait(10)
+	for i=1, #Droge, 1 do
+        if Droge[i].vrsta == 2 and Droge[i].branje ~= nil then
+            kord = Droge[i].branje
+            break
+        end
+    end
+    if kord ~= nil then
+        local x,y,z = table.unpack(kord)
+        
+        local rnX = x + math.random(-35, 35)
+        local rnY = y + math.random(-35, 35)
+        
+        local u, Z = GetGroundZFor_3dCoord(rnX ,rnY ,300.0,0)
+        
+        local vect = vector3(rnX, rnY, Z+0.3)
+        
+        locations2[id] = vect
+        ClearPedTasks(PlayerPedId())
+    end
+end)
