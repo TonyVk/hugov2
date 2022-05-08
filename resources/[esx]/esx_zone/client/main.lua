@@ -130,7 +130,7 @@ function SpawnBlipove()
 					SetBlipColour (VBlip, Zone[i].Boja)
 					SetBlipAlpha(VBlip, 115)
 					SetBlipAsShortRange(VBlip, true)
-					SetBlipDisplay(VBlip, 8)
+					SetBlipDisplay(VBlip, 3)
 					Zone[i].ID = VBlip
 				end
 			end
@@ -673,7 +673,7 @@ AddEventHandler('esx:setJob', function(job)
 					SetBlipColour (VBlip, Zone[i].Boja)
 					SetBlipAlpha(VBlip, 115)
 					SetBlipAsShortRange(VBlip, true)
-					SetBlipDisplay(VBlip, 8)
+					SetBlipDisplay(VBlip, 3)
 					Zone[i].ID = VBlip
 				end
 			end

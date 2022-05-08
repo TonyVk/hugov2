@@ -38,6 +38,7 @@ local Oruzja = {}
 local Blipovi = {}
 local Boje = {}
 local SBlipovi = {}
+local S2Blipovi = {}
 local OruzarnicaMenu = false
 local Vratio = nil
 local GarazaV 					= nil
@@ -53,6 +54,7 @@ local tObj2 					= nil
 local tObj3 					= nil
 local UnutarLabosa 				= false
 local JebenaKanta				= nil
+local UnutarLabosa2 		    = false
 
 --Legala
 local posaov = nil
@@ -415,6 +417,57 @@ function SpawnBlipove()
 				end
 			end
 		end
+		if Koord[i] ~= nil and Koord[i].Ime == "Heroin" then
+			if Koord[i].Mafija == PlayerData.job.name then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if x ~= 0 and x ~= nil then
+					local kupljeno = false
+					for j=1, #Mafije, 1 do
+						if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
+							if Mafije[j].Skladiste2 == 1 then
+								kupljeno = true
+							end
+							break
+						end
+					end
+					if kupljeno then
+						S2Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+
+						SetBlipSprite (S2Blipovi[Koord[i].Mafija], 357)
+						SetBlipDisplay(S2Blipovi[Koord[i].Mafija], 4)
+						SetBlipScale  (S2Blipovi[Koord[i].Mafija], 1.2)
+						for a=1, #Boje, 1 do
+							if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+								SetBlipColour(S2Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+								break
+							end
+						end
+						SetBlipAsShortRange(S2Blipovi[Koord[i].Mafija], true)
+
+						BeginTextCommandSetBlipName("STRING")
+						AddTextComponentString("Heroin lab")
+						EndTextCommandSetBlipName(S2Blipovi[Koord[i].Mafija])
+					else
+						S2Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+
+						SetBlipSprite (S2Blipovi[Koord[i].Mafija], 369)
+						SetBlipDisplay(S2Blipovi[Koord[i].Mafija], 4)
+						SetBlipScale  (S2Blipovi[Koord[i].Mafija], 1.2)
+						for a=1, #Boje, 1 do
+							if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+								SetBlipColour(S2Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+								break
+							end
+						end
+						SetBlipAsShortRange(S2Blipovi[Koord[i].Mafija], true)
+
+						BeginTextCommandSetBlipName("STRING")
+						AddTextComponentString("Heroin lab na prodaju!")
+						EndTextCommandSetBlipName(S2Blipovi[Koord[i].Mafija])
+					end
+				end
+			end
+		end
 		if Koord[i] ~= nil and Koord[i].Ime == "Posao" then
 			if Koord[i].Mafija == PlayerData.job.name then
 				local x,y,z = table.unpack(Koord[i].Coord)
@@ -526,6 +579,60 @@ function SpawnBlip()
 				end
 			end
 		end
+		if Koord[i] ~= nil and Koord[i].Ime == "Heroin" then
+			if DoesBlipExist(S2Blipovi[Koord[i].Mafija]) then
+				RemoveBlip(S2Blipovi[Koord[i].Mafija])
+			end
+			if Koord[i].Mafija == PlayerData.job.name then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if x ~= 0 and x ~= nil then
+					local kupljeno = false
+					for j=1, #Mafije, 1 do
+						if Mafije[j] ~= nil and Mafije[j].Ime == Koord[i].Mafija then
+							if Mafije[j].Skladiste2 == 1 then
+								kupljeno = true
+							end
+							break
+						end
+					end
+					if kupljeno then
+						S2Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+
+						SetBlipSprite (S2Blipovi[Koord[i].Mafija], 357)
+						SetBlipDisplay(S2Blipovi[Koord[i].Mafija], 4)
+						SetBlipScale  (S2Blipovi[Koord[i].Mafija], 1.2)
+						for a=1, #Boje, 1 do
+							if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+								SetBlipColour(S2Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+								break
+							end
+						end
+						SetBlipAsShortRange(S2Blipovi[Koord[i].Mafija], true)
+
+						BeginTextCommandSetBlipName("STRING")
+						AddTextComponentString("Heroin lab")
+						EndTextCommandSetBlipName(S2Blipovi[Koord[i].Mafija])
+					else
+						S2Blipovi[Koord[i].Mafija] = AddBlipForCoord(x,y,z)
+
+						SetBlipSprite (S2Blipovi[Koord[i].Mafija], 369)
+						SetBlipDisplay(S2Blipovi[Koord[i].Mafija], 4)
+						SetBlipScale  (S2Blipovi[Koord[i].Mafija], 1.2)
+						for a=1, #Boje, 1 do
+							if Boje[a] ~= nil and Boje[a].Mafija == Koord[i].Mafija and Boje[a].Ime == "Blip" then
+								SetBlipColour(S2Blipovi[Koord[i].Mafija], tonumber(Boje[a].Boja))
+								break
+							end
+						end
+						SetBlipAsShortRange(S2Blipovi[Koord[i].Mafija], true)
+
+						BeginTextCommandSetBlipName("STRING")
+						AddTextComponentString("Heroin lab na prodaju!")
+						EndTextCommandSetBlipName(S2Blipovi[Koord[i].Mafija])
+					end
+				end
+			end
+		end
 		if Koord[i] ~= nil and Koord[i].Ime == "Posao" then
 			if DoesBlipExist(blipcic) then
 				RemoveBlip(blipcic)
@@ -593,6 +700,32 @@ AddEventHandler('mafije:PosaljiObavijest', function(posao, odg)
 				for i=1, #Skladiste, 1 do
 					if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
 						local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
+						local model = GetHashKey('ex_prop_crate_narc_bc')
+						RequestModel(model)
+						while not HasModelLoaded(model) do
+							Wait(1)
+						end
+						for i = 1, brojic, 1 do
+							if Kutije[i] ~= nil then
+								local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+								table.insert(Kutijice, objikt)
+							end
+						end
+						SetModelAsNoLongerNeeded(model)
+						break
+					end
+				end
+			end
+			if UnutarLabosa2 then
+				for i = 1, #Kutijice, 1 do
+					if Kutijice[i] ~= nil then
+						DeleteEntity(Kutijice[i])
+					end
+				end
+				Kutijice = {}
+				for i=1, #Skladiste, 1 do
+					if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
+						local brojic = math.floor((Skladiste[i].Heroin/100)+0.5)
 						local model = GetHashKey('ex_prop_crate_narc_bc')
 						RequestModel(model)
 						while not HasModelLoaded(model) do
@@ -1048,7 +1181,7 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 									table.insert(elements, {label = "Postavi koordinate spawna plovila", value = "9"})
 									table.insert(elements, {label = "Postavi koordinate brisanja plovila", value = "10"})
 									table.insert(elements, {label = "Postavi koordinate labosa za kokain", value = "11"})
-									table.insert(elements, {label = "Postavi koordinate spawna kamiona za prodaju", value = "12"})
+									table.insert(elements, {label = "Postavi koordinate spawna kamiona za prodaju kokaina", value = "12"})
 									for i=1, #Mafije, 1 do
 										if Mafije[i] ~= nil and Mafije[i].Ime == ImeMafije then
 											if Mafije[i].Posao == 1 then
@@ -1058,6 +1191,8 @@ RegisterCommand("uredimafiju", function(source, args, raw)
 											break
 										end
 									end
+									table.insert(elements, {label = "Postavi koordinate labosa za heroin", value = "15"})
+									table.insert(elements, {label = "Postavi koordinate spawna kamiona za prodaju heroina", value = "16"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -1296,6 +1431,56 @@ function OpenSPitajMenu()
 			menu.close()
 
 			CurrentAction     = 'menu_ulazkupi'
+			CurrentActionMsg  = "Pritisnite E da kupite skladiste"
+			CurrentActionData = {}
+		  end
+		)
+	else
+		ESX.ShowNotification("Niste lider!")
+	end
+end
+
+function OpenS2PitajMenu()
+	if PlayerData.job.grade_name == "boss" then
+		local elements = {
+			{label = "Da (500000$)", value = 'da'},
+			{label = "Ne", value = 'ne'}
+		}
+
+		ESX.UI.Menu.Open(
+		  'default', GetCurrentResourceName(), 'kskl2',
+		  {
+			title    = "Zelite li kupiti skladiste za $500000?",
+			align    = 'top-left',
+			elements = elements,
+		  },
+		  function(data, menu)
+			if data.current.value == 'da' then
+				menu.close()
+				ESX.TriggerServerCallback('mafije:KupiSkladiste2', function(mozel)
+					if mozel then
+						ESX.ShowNotification("Kupili ste skladiste za $500000!")
+						CurrentAction     = 'menu_ulazh'
+						CurrentActionMsg  = "Pritisnite E da udjete u labos"
+						CurrentActionData = {}
+					else
+						ESX.ShowNotification("Nemate dovoljno novca u sefu mafije!")
+					end
+				end, PlayerData.job.name)
+			end
+
+			if data.current.value == 'ne' then
+				menu.close()
+				CurrentAction     = 'menu_ulazkupi2'
+				CurrentActionMsg  = "Pritisnite E da kupite skladiste"
+				CurrentActionData = {}
+			end
+		  end,
+		  function(data, menu)
+
+			menu.close()
+
+			CurrentAction     = 'menu_ulazkupi2'
 			CurrentActionMsg  = "Pritisnite E da kupite skladiste"
 			CurrentActionData = {}
 		  end
@@ -1991,12 +2176,227 @@ function StockVehicleMenu()
 
 end
 
+function OpenHeroinMenu()
+    local elements = {}
+	table.insert(elements, {label = "Stanje", value = 'skl_stanje'})
+	table.insert(elements, {label = "Ostavi gljive", value = 'ost_gljive'})
+	table.insert(elements, {label = "Ostavi heroin", value = 'ost_heroin'})
+    table.insert(elements, {label = "Uzmi heroin", value = 'uzm_heroin'})
+	table.insert(elements, {label = 'Prodaj heroin',  value = 'her_prodaj'})
+
+    ESX.UI.Menu.Open(
+      'default', GetCurrentResourceName(), 'hizb_menu',
+      {
+        title    = "Izaberite opciju",
+        align    = 'top-left',
+        elements = elements,
+      },
+      function(data, menu)
+		if data.current.value == 'skl_stanje' then
+			TriggerServerEvent("mafije:StanjeSkladista", PlayerData.job.name, 2)
+        end
+
+        if data.current.value == 'ost_gljive' then
+			OpenHOstaviMenu()
+			menu.close()
+        end
+		
+		if data.current.value == 'ost_heroin' then
+			OpenHOstaviHMenu()
+			menu.close()
+        end
+
+		if data.current.value == 'uzm_heroin' then
+			OpenHUzmiHMenu()
+			menu.close()
+        end
+		
+		-- if data.current.value == 'her_prodaj' then
+		-- 	if not ProdajeKokain then
+		-- 		for i=1, #Koord, 1 do
+		-- 			if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
+		-- 				if Koord[i].Ime == "KamionK" then
+		-- 					local x,y,z,h = table.unpack(Koord[i].Coord)
+		-- 					if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+		-- 						local rand = math.random(100, 300)
+		-- 						Wait(rand)
+		-- 						ESX.TriggerServerCallback('mafije:MorelProdaja', function(odg)
+		-- 							if odg then
+		-- 								TriggerServerEvent("mafije:BucketajGa", 0)
+		-- 								while Bucketo == false do
+		-- 									Wait(100)
+		-- 								end
+		-- 								for i = 1, #Kutijice, 1 do
+		-- 									if Kutijice[i] ~= nil then
+		-- 										DeleteEntity(Kutijice[i])
+		-- 									end
+		-- 								end
+		-- 								Kutijice = {}
+		-- 								if JebenaKanta ~= nil then
+		-- 									DeleteEntity(JebenaKanta)
+		-- 									JebenaKanta = nil
+		-- 								end
+		-- 								local model = GetHashKey("benson")
+		-- 								RequestModel(model)
+		-- 								while not HasModelLoaded(model) do
+		-- 									Wait(1)
+		-- 								end
+		-- 								SetEntityCoords(PlayerPedId(), x, y, z)
+		-- 								KVozilo = CreateVehicle(model, x, y, z, h, true, true)
+		-- 								SetModelAsNoLongerNeeded(model)
+		-- 								TaskWarpPedIntoVehicle(PlayerPedId(), KVozilo, -1)
+		-- 								local prop_name = GetHashKey("ex_prop_crate_closed_bc")
+		-- 								RequestModel(prop_name)
+		-- 								while not HasModelLoaded(prop_name) do
+		-- 									Wait(0)
+		-- 								end
+		-- 								local ent = GetEntityBoneIndexByName(KVozilo, "chassis_dummy")
+		-- 								local playerPed = PlayerPedId()
+		-- 								local x,y,z = table.unpack(GetEntityCoords(playerPed))
+		-- 								tObj = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
+		-- 								AttachEntityToEntity(tObj, KVozilo, ent, -0.03, -0.5, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
+		-- 								tObj2 = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
+		-- 								AttachEntityToEntity(tObj2, KVozilo, ent, -0.03, -2.0, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
+		-- 								tObj3 = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
+		-- 								AttachEntityToEntity(tObj3, KVozilo, ent, -0.03, -3.5, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
+		-- 								SetModelAsNoLongerNeeded(prop_name)
+		-- 								local KVoziloNet = VehToNet(KVozilo)
+		-- 								local KObj1 = ObjToNet(tObj)
+		-- 								local KObj2 = ObjToNet(tObj2)
+		-- 								local KObj3 = ObjToNet(tObj3)
+		-- 								ESX.ShowNotification("Zapoceli ste prodaju kokaina!")
+		-- 								ESX.ShowNotification("Odvezite kokain na oznacenu lokaciju kako bi ste ga prodali!")
+		-- 								ProdajeKokain = true
+		-- 								DostavaID = math.random(1,#dostave)
+		-- 								KBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
+		-- 								SetBlipSprite(KBlip, 1)
+		-- 								SetBlipColour (KBlip, 5)
+		-- 								SetBlipAlpha(KBlip, 255)
+		-- 								SetBlipRoute(KBlip,  true)
+		-- 								TriggerServerEvent("mafije:ProsljediKamion", KVoziloNet, DostavaID, KObj1, KObj2, KObj3)
+		-- 								Bucketo = false
+		-- 								Citizen.CreateThread(function()
+		-- 									while ProdajeKokain and KVozilo ~= nil do
+		-- 										Citizen.Wait(1000)
+		-- 										if GetVehicleEngineHealth(KVozilo) <= 0 then
+		-- 											ESX.Game.DeleteVehicle(KVozilo)
+		-- 											KVozilo = nil
+		-- 											ProdajeKokain = false
+		-- 											if DoesBlipExist(KBlip) then
+		-- 												RemoveBlip(KBlip)
+		-- 												KBlip = nil
+		-- 											end
+		-- 										end
+		-- 									end
+		-- 								end)
+		-- 							else
+		-- 								ESX.ShowNotification("[Skladiste] Nemate dovoljno za prodati (min 300kg)")
+		-- 							end
+		-- 						end, PlayerData.job.name)
+		-- 						break
+		-- 					else
+		-- 						ESX.ShowNotification("Nisu vam jos postavljene koordinate spawna kamiona, javite se adminima!")
+		-- 					end
+		-- 				end
+		-- 			end
+		-- 		end
+		-- 	else
+		-- 		ESX.ShowNotification("Vec prodajete kokain!")
+		-- 	end
+        -- end
+      end,
+      function(data, menu)
+        menu.close()
+      end
+    )
+end
+
+function OpenHOstaviMenu()
+	ESX.UI.Menu.Open(
+          'dialog', GetCurrentResourceName(), 'heroin_menu_get_item_count',
+          {
+            title = _U('quantity')
+          },
+          function(data2, menu2)
+
+            local count = tonumber(data2.value)
+
+            if count == nil then
+				ESX.ShowNotification(_U('quantity_invalid'))
+            else
+				menu2.close()
+				TriggerServerEvent('mafije:OstaviGljive', count, PlayerData.job.name)
+				OpenHeroinMenu()
+            end
+          end,
+        function(data2, menu2)
+            menu2.close()
+        end
+    )
+end
+
+function OpenHOstaviHMenu()
+	ESX.UI.Menu.Open(
+          'dialog', GetCurrentResourceName(), 'heroin2_menu_get_item_count',
+          {
+            title = _U('quantity')
+          },
+          function(data2, menu2)
+
+            local count = tonumber(data2.value)
+
+            if count == nil then
+				ESX.ShowNotification(_U('quantity_invalid'))
+            else
+				menu2.close()
+				TriggerServerEvent('mafije:OstaviHeroin', count, PlayerData.job.name)
+				OpenHeroinMenu()
+            end
+          end,
+        function(data2, menu2)
+            menu2.close()
+        end
+    )
+end
+
+function OpenHUzmiHMenu()
+	ESX.UI.Menu.Open(
+          'dialog', GetCurrentResourceName(), 'heroin3_menu_get_item_count',
+          {
+            title = _U('quantity')
+          },
+          function(data2, menu2)
+
+            local count = tonumber(data2.value)
+
+            if count == nil then
+				ESX.ShowNotification(_U('quantity_invalid'))
+            else
+				menu2.close()
+                local torba = 0
+				TriggerEvent('skinchanger:getSkin', function(skin)
+					torba = skin['bags_1']
+				end)
+				if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+                   	TriggerServerEvent('mafije:UzmiHeroin', count, PlayerData.job.name, true)
+				else
+			        TriggerServerEvent('mafije:UzmiHeroin', count, PlayerData.job.name, false)
+				end
+				OpenHeroinMenu()
+            end
+          end,
+        function(data2, menu2)
+            menu2.close()
+        end
+    )
+end
+
 function OpenKokainMenu()
     local elements = {}
 	table.insert(elements, {label = "Stanje", value = 'skl_stanje'})
 	table.insert(elements, {label = "Ostavi listove", value = 'ost_list'})
 	table.insert(elements, {label = "Ostavi kokain", value = 'ost_koka'})
-        table.insert(elements, {label = "Uzmi kokain", value = 'uzm_koka'})
+    table.insert(elements, {label = "Uzmi kokain", value = 'uzm_koka'})
 	table.insert(elements, {label = 'Prodaj kokain',  value = 'kok_prodaj'})
 
 
@@ -2009,7 +2409,7 @@ function OpenKokainMenu()
       },
       function(data, menu)
 		if data.current.value == 'skl_stanje' then
-			TriggerServerEvent("mafije:StanjeSkladista", PlayerData.job.name)
+			TriggerServerEvent("mafije:StanjeSkladista", PlayerData.job.name, 1)
         end
 
         if data.current.value == 'ost_list' then
@@ -2022,7 +2422,7 @@ function OpenKokainMenu()
 			menu.close()
         end
 
-if data.current.value == 'uzm_koka' then
+		if data.current.value == 'uzm_koka' then
 			OpenKUzmiKMenu()
 			menu.close()
         end
@@ -2189,15 +2589,14 @@ function OpenKUzmiKMenu()
 				ESX.ShowNotification(_U('quantity_invalid'))
             else
 				menu2.close()
-                                local torba = 0
+                local torba = 0
 				TriggerEvent('skinchanger:getSkin', function(skin)
 				  torba = skin['bags_1']
 				end)
 				if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-				   TriggerServerEvent('esx_biser:startHarvestKoda', true)
-                                   TriggerServerEvent('mafije:UzmiKoku', count, PlayerData.job.name, true)
+                 	TriggerServerEvent('mafije:UzmiKoku', count, PlayerData.job.name, true)
 				else
-			            TriggerServerEvent('mafije:UzmiKoku', count, PlayerData.job.name, false)
+			        TriggerServerEvent('mafije:UzmiKoku', count, PlayerData.job.name, false)
 				end
 				OpenKokainMenu()
             end
@@ -3118,7 +3517,7 @@ function OpenPutStocksMenu()
     end
 
     ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'stocks_menu',
+      'default', GetCurrentResourceName(), 'stocks_menuee',
       {
         title    = _U('inventory'),
 		align    = 'top-left',
@@ -3127,16 +3526,19 @@ function OpenPutStocksMenu()
       function(data, menu)
 
         local itemName = data.current.value
-
+		menu.close()
+		print("opaa")
         ESX.UI.Menu.Open(
-          'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count',
+          'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_countaa',
           {
             title = _U('quantity')
           },
           function(data2, menu2)
-
+			print("nema me")
             local count = tonumber(data2.value)
+			print(count)
 			if count == nil then
+				print("picko")
 				ESX.ShowNotification(_U('quantity_invalid'))
 			else
 				for i=1, #inventory.items, 1 do
@@ -3455,6 +3857,23 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 		end
 	end
   end
+
+  if part == 'UlazUHeroin' then
+	for i=1, #Mafije, 1 do
+		if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
+			if Mafije[i].Skladiste2 == 1 then
+				CurrentAction     = 'menu_ulazh'
+				CurrentActionMsg  = "Pritisnite E da udjete u labos"
+				CurrentActionData = {station = station, partNum = partNum}
+			else
+				CurrentAction     = 'menu_ulazkupi2'
+				CurrentActionMsg  = "Pritisnite E da kupite skladiste"
+				CurrentActionData = {station = station, partNum = partNum}
+			end
+			break
+		end
+	end
+  end
   
   if part == 'UlazUSkladiste' then
 	CurrentAction     = 'menu_ulazsk'
@@ -3482,6 +3901,12 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
   
   if part == 'IzlazIzKokain' then
 	CurrentAction     = 'menu_izlazk'
+	CurrentActionMsg  = "Pritisnite E da izadjete iz labosa"
+	CurrentActionData = {station = station, partNum = partNum}
+  end
+
+  if part == 'IzlazIzHeroin' then
+	CurrentAction     = 'menu_izlazh'
 	CurrentActionMsg  = "Pritisnite E da izadjete iz labosa"
 	CurrentActionData = {station = station, partNum = partNum}
   end
@@ -3670,19 +4095,49 @@ AddEventHandler('mafije:UpdateSkladista', function(skl)
 		Kutijice = {}
 		for i=1, #Skladiste, 1 do
 			if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-				local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
-				local model = GetHashKey('ex_prop_crate_narc_bc')
-				RequestModel(model)
-				while not HasModelLoaded(model) do
-					Wait(1)
-				end
-				for i = 1, brojic, 1 do
-					if Kutije[i] ~= nil then
-						local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
-						table.insert(Kutijice, objikt)
+				if Skladiste[i].Kokain then
+					local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
+					local model = GetHashKey('ex_prop_crate_narc_bc')
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						Wait(1)
 					end
+					for i = 1, brojic, 1 do
+						if Kutije[i] ~= nil then
+							local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+							table.insert(Kutijice, objikt)
+						end
+					end
+					SetModelAsNoLongerNeeded(model)
 				end
-				SetModelAsNoLongerNeeded(model)
+				break
+			end
+		end
+	end
+	if UnutarLabosa2 then
+		for i = 1, #Kutijice, 1 do
+			if Kutijice[i] ~= nil then
+				DeleteEntity(Kutijice[i])
+			end
+		end
+		Kutijice = {}
+		for i=1, #Skladiste, 1 do
+			if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
+				if Skladiste[i].Heroin then
+					local brojic = math.floor((Skladiste[i].Heroin/100)+0.5)
+					local model = GetHashKey('ex_prop_crate_narc_bc')
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						Wait(1)
+					end
+					for i = 1, brojic, 1 do
+						if Kutije[i] ~= nil then
+							local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+							table.insert(Kutijice, objikt)
+						end
+					end
+					SetModelAsNoLongerNeeded(model)
+				end
 				break
 			end
 		end
@@ -3716,6 +4171,7 @@ AddEventHandler('mafije:UpdateBoje', function(br, maf, boj)
 					if Boje[i] ~= nil and Boje[i].Mafija == maf and Boje[i].Ime == "Blip" then
 						SetBlipColour (Blipovi[maf], tonumber(Boje[i].Boja))
 						SetBlipColour (SBlipovi[maf], tonumber(Boje[i].Boja))
+						SetBlipColour (S2Blipovi[maf], tonumber(Boje[i].Boja))
 						SetBlipColour (blipcic, tonumber(Boje[i].Boja))
 						break
 					end
@@ -3726,6 +4182,8 @@ AddEventHandler('mafije:UpdateBoje', function(br, maf, boj)
 				Blipovi[maf] = nil
 				RemoveBlip(SBlipovi[maf])
 				SBlipovi[maf] = nil
+				RemoveBlip(S2Blipovi[maf])
+				S2Blipovi[maf] = nil
 				RemoveBlip(blipcic)
 				blipcic = nil
 			end
@@ -3755,6 +4213,27 @@ AddEventHandler('mafije:UpdateSBlip', function(maf)
 			BeginTextCommandSetBlipName("STRING")
 			AddTextComponentString("Kokain lab")
 			EndTextCommandSetBlipName(SBlipovi[maf])
+		end
+	end
+end)
+
+RegisterNetEvent('mafije:UpdateS2Blip')
+AddEventHandler('mafije:UpdateS2Blip', function(maf)
+	if Config.Blipovi == true then
+		if maf == PlayerData.job.name then
+			SetBlipSprite (S2Blipovi[maf], 357)
+			SetBlipDisplay(S2Blipovi[maf], 4)
+			SetBlipScale  (S2Blipovi[maf], 1.2)
+			for a=1, #Boje, 1 do
+				if Boje[a] ~= nil and Boje[a].Mafija == maf and Boje[a].Ime == "Blip" then
+					SetBlipColour(S2Blipovi[maf], tonumber(Boje[a].Boja))
+					break
+				end
+			end
+			SetBlipAsShortRange(S2Blipovi[maf], true)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString("Heroin lab")
+			EndTextCommandSetBlipName(S2Blipovi[maf])
 		end
 	end
 end)
@@ -3844,7 +4323,7 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf, br)
 						EndTextCommandSetBlipName(SBlipovi[maf])
 					end
 				end
-			else
+			elseif br == 3 then
 				local x,y,z = table.unpack(co)
 				if blipcic~= nil then
 					RemoveBlip(blipcic)
@@ -3864,6 +4343,58 @@ AddEventHandler('mafije:KreirajBlip', function(co, maf, br)
 					BeginTextCommandSetBlipName("STRING")
 					AddTextComponentString("Dostava pića/vozila")
 					EndTextCommandSetBlipName(blipcic)
+				end
+			elseif br == 4 then
+				local x,y,z = table.unpack(co)
+				if S2Blipovi[maf] ~= nil then
+					RemoveBlip(S2Blipovi[maf])
+					S2Blipovi[maf] = nil
+				end
+				if x ~= 0 and x ~= nil then
+					local kupljeno = false
+					for j=1, #Mafije, 1 do
+						if Mafije[j] ~= nil and Mafije[j].Ime == maf then
+							if Mafije[j].Skladiste2 == 1 then
+								kupljeno = true
+							end
+							break
+						end
+					end
+					if kupljeno then
+						S2Blipovi[maf] = AddBlipForCoord(x,y,z)
+
+						SetBlipSprite (S2Blipovi[maf], 357)
+						SetBlipDisplay(S2Blipovi[maf], 4)
+						SetBlipScale  (S2Blipovi[maf], 1.2)
+						for a=1, #Boje, 1 do
+							if Boje[a] ~= nil and Boje[a].Mafija == maf and Boje[a].Ime == "Blip" then
+								SetBlipColour(S2Blipovi[maf], tonumber(Boje[a].Boja))
+								break
+							end
+						end
+						SetBlipAsShortRange(S2Blipovi[maf], true)
+
+						BeginTextCommandSetBlipName("STRING")
+						AddTextComponentString("Heroin lab")
+						EndTextCommandSetBlipName(S2Blipovi[maf])
+					else
+						S2Blipovi[maf] = AddBlipForCoord(x,y,z)
+
+						SetBlipSprite (S2Blipovi[maf], 369)
+						SetBlipDisplay(S2Blipovi[maf], 4)
+						SetBlipScale  (S2Blipovi[maf], 1.2)
+						for a=1, #Boje, 1 do
+							if Boje[a] ~= nil and Boje[a].Mafija == maf and Boje[a].Ime == "Blip" then
+								SetBlipColour(S2Blipovi[maf], tonumber(Boje[a].Boja))
+								break
+							end
+						end
+						SetBlipAsShortRange(S2Blipovi[maf], true)
+
+						BeginTextCommandSetBlipName("STRING")
+						AddTextComponentString("Heroin lab na prodaju!")
+						EndTextCommandSetBlipName(S2Blipovi[maf])
+					end
 				end
 			end
 		end
@@ -4159,6 +4690,10 @@ Citizen.CreateThread(function()
 			OpenSPitajMenu()
         end
 
+		if CurrentAction == 'menu_ulazkupi2' then
+			OpenS2PitajMenu()
+        end
+
 		if CurrentAction == 'menu_posao' then
 			OpenPosaoMenu()
 		end
@@ -4224,6 +4759,54 @@ Citizen.CreateThread(function()
 					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
 					TriggerServerEvent("kuce:UKuci", false)
 				end
+			end 
+        end
+
+		if CurrentAction == 'menu_ulazh' then
+			TriggerServerEvent("mafije:BucketajGa", CurrentActionData.partNum)
+			SetEntityCoords(PlayerPedId(), 996.81433105469, -3200.6875, -37.393699645996, false, false, false, true)
+			SetEntityHeading(PlayerPedId(), 272.01)
+			FreezeEntityPosition(PlayerPedId(), true)
+			TriggerServerEvent("kuce:UKuci", true)
+			UnutarLabosa2 = true
+			Wait(3000)
+			FreezeEntityPosition(PlayerPedId(), false)
+			-- if JebenaKanta ~= nil then
+			-- 	DeleteEntity(JebenaKanta)
+			-- 	JebenaKanta = nil
+			-- end
+			-- local model2 = GetHashKey('bkr_ware03_bin2')
+			-- RequestModel(model2)
+			-- while not HasModelLoaded(model2) do
+			-- 	Wait(1)
+			-- end
+			-- JebenaKanta = CreateObject(model2, 1102.112, -3198.685, -39.51907-0.83, false, false, false)
+			-- SetModelAsNoLongerNeeded(model2)
+			-- for i = 1, #Kutijice, 1 do
+			-- 	if Kutijice[i] ~= nil then
+			-- 		DeleteEntity(Kutijice[i])
+			-- 	end
+			-- end
+			Kutijice = {}
+			for i=1, #Skladiste, 1 do
+				if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
+					if Skladiste[i].Heroin then
+						local brojic = math.floor((Skladiste[i].Heroin/100)+0.5)
+						local model = GetHashKey('ex_prop_crate_narc_bc')
+						RequestModel(model)
+						while not HasModelLoaded(model) do
+							Wait(1)
+						end
+						for i = 1, brojic, 1 do
+							if Kutije[i] ~= nil then
+								local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+								table.insert(Kutijice, objikt)
+							end
+						end
+						SetModelAsNoLongerNeeded(model)
+					end
+					break
+				end
 			end
         end
 		
@@ -4255,19 +4838,21 @@ Citizen.CreateThread(function()
 			Kutijice = {}
 			for i=1, #Skladiste, 1 do
 				if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
-					local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
-					local model = GetHashKey('ex_prop_crate_narc_bc')
-					RequestModel(model)
-					while not HasModelLoaded(model) do
-						Wait(1)
-					end
-					for i = 1, brojic, 1 do
-						if Kutije[i] ~= nil then
-							local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
-							table.insert(Kutijice, objikt)
+					if Skladiste[i].Kokain then
+						local brojic = math.floor((Skladiste[i].Kokain/100)+0.5)
+						local model = GetHashKey('ex_prop_crate_narc_bc')
+						RequestModel(model)
+						while not HasModelLoaded(model) do
+							Wait(1)
 						end
+						for i = 1, brojic, 1 do
+							if Kutije[i] ~= nil then
+								local objikt = CreateObject(model, Kutije[i].x, Kutije[i].y, Kutije[i].z-0.2, false, false, false)
+								table.insert(Kutijice, objikt)
+							end
+						end
+						SetModelAsNoLongerNeeded(model)
 					end
-					SetModelAsNoLongerNeeded(model)
 					break
 				end
 			end
@@ -4282,11 +4867,19 @@ Citizen.CreateThread(function()
         end
 		
 		if CurrentAction == 'menu_izlazsk' then
-			SetEntityCoords(PlayerPedId(), 1103.3603515625, -3196.0068359375, -39.993453979492, false, false, false, true)
-			SetEntityHeading(PlayerPedId(), 87.79)
-			FreezeEntityPosition(PlayerPedId(), true)
-			Wait(3000)
-			FreezeEntityPosition(PlayerPedId(), false)
+			if UnutarLabosa then
+				SetEntityCoords(PlayerPedId(), 1103.3603515625, -3196.0068359375, -39.993453979492, false, false, false, true)
+				SetEntityHeading(PlayerPedId(), 87.79)
+				FreezeEntityPosition(PlayerPedId(), true)
+				Wait(3000)
+				FreezeEntityPosition(PlayerPedId(), false)
+			elseif UnutarLabosa2 then
+				SetEntityCoords(PlayerPedId(), 1011.8562011719, -3202.6240234375, -39.993160247803, false, false, false, true)
+				SetEntityHeading(PlayerPedId(), 357.50)
+				FreezeEntityPosition(PlayerPedId(), true)
+				Wait(3000)
+				FreezeEntityPosition(PlayerPedId(), false)
+			end
         end
 		
 		if CurrentAction == 'menu_izlazk' then
@@ -4311,9 +4904,36 @@ Citizen.CreateThread(function()
 				end
 			end
         end
+
+		if CurrentAction == 'menu_izlazh' then
+			for i=1, #Koord, 1 do
+				if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "Heroin" then
+					local x,y,z = table.unpack(Koord[i].Coord)
+					TriggerServerEvent("mafije:BucketajGa", 0)
+					SetEntityCoords(PlayerPedId(), x, y, z, false, false, false, true)
+					TriggerServerEvent("kuce:UKuci", false)
+					UnutarLabosa2 = false
+					for i = 1, #Kutijice, 1 do
+						if Kutijice[i] ~= nil then
+							DeleteEntity(Kutijice[i])
+						end
+					end
+					Kutijice = {}
+					-- if JebenaKanta ~= nil then
+					-- 	DeleteEntity(JebenaKanta)
+					-- 	JebenaKanta = nil
+					-- end
+					break
+				end
+			end
+        end
 		
 		if CurrentAction == 'menu_kokain' then
-			OpenKokainMenu()
+			if UnutarLabosa then
+				OpenKokainMenu()
+			elseif UnutarLabosa2 then
+				OpenHeroinMenu()
+			end
         end
 
         if CurrentAction == 'menu_vehicle_spawner' then
@@ -4513,6 +5133,22 @@ Citizen.CreateThread(function()
 					end
 				end
 			end
+			if Koord[i].Ime == "Heroin" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+						waitara = 0
+						naso = 1
+						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+					end
+					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+						isInMarker     = true
+						currentStation = 4
+						currentPart    = 'UlazUHeroin'
+						currentPartNum = i
+					end
+				end
+			end
 			if Koord[i].Ime == "Posao" then
 				local x,y,z = table.unpack(Koord[i].Coord)
 				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
@@ -4545,6 +5181,18 @@ Citizen.CreateThread(function()
 			currentPartNum = 1
 		end
 	end
+
+	if GetDistanceBetweenCoords(coords, 996.81433105469, -3200.6875, -37.393699645996, true) < 100.0 then
+		waitara = 0
+		naso = 1
+		DrawMarker(1, 996.81433105469, -3200.6875, -37.393699645996, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	end
+	if GetDistanceBetweenCoords(coords, 996.81433105469, -3200.6875, -37.393699645996, true) < 1.5 then
+		isInMarker     = true
+		currentStation = 4
+		currentPart    = 'IzlazIzHeroin'
+		currentPartNum = 1
+	end
 	
 	if GetDistanceBetweenCoords(coords, 1088.7263183594, -3187.4624023438, -39.993450164795, true) < 100.0 then
 		waitara = 0
@@ -4564,6 +5212,18 @@ Citizen.CreateThread(function()
 		DrawMarker(1, 1103.3603515625, -3196.0068359375, -39.993453979492, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
 	end
 	if GetDistanceBetweenCoords(coords, 1103.3603515625, -3196.0068359375, -39.993453979492, true) < 1.5 then
+		isInMarker     = true
+		currentStation = 4
+		currentPart    = 'UlazUSkladiste'
+		currentPartNum = 1
+	end
+
+	if GetDistanceBetweenCoords(coords, 1011.8562011719, -3202.6240234375, -39.993160247803, true) < 100.0 then --skladiste ulaz
+		waitara = 0
+		naso = 1
+		DrawMarker(1, 1011.8562011719, -3202.6240234375, -39.993160247803, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	end
+	if GetDistanceBetweenCoords(coords, 1011.8562011719, -3202.6240234375, -39.993160247803, true) < 1.5 then
 		isInMarker     = true
 		currentStation = 4
 		currentPart    = 'UlazUSkladiste'

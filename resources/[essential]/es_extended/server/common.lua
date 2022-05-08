@@ -10,6 +10,7 @@ ESX.Pickups              = {}
 ESX.PickupId             = 0
 ESX.Jobs                 = {}
 ESX.Poslovi              = {}
+ESX.JobsHelper           = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)
@@ -59,6 +60,8 @@ MySQL.ready(function()
 		if next(v.grades) == nil then
 			ESX.Jobs[tonumber(v.pID)] = nil
 			print(('es_extended: ignoring job "%s" due to missing job grades!'):format(v.name))
+		else
+			table.insert(ESX.JobsHelper, {ID = v.pID, Label = v.label})
 		end
 	end
 end)
@@ -66,6 +69,7 @@ end)
 RegisterServerEvent('RefreshPoslove')
 AddEventHandler('RefreshPoslove', function()
 	ESX.Jobs = {}
+	ESX.JobsHelper = {}
 	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
 
 	for i=1, #result do
@@ -87,6 +91,8 @@ AddEventHandler('RefreshPoslove', function()
 		if next(v.grades) == nil then
 			ESX.Jobs[tonumber(v.pID)] = nil
 			print(('es_extended: ignoring job "%s" due to missing job grades!'):format(v.name))
+		else
+			table.insert(ESX.JobsHelper, {ID = v.pID, Label = v.label})
 		end
 	end
 end)
