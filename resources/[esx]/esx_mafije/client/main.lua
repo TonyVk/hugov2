@@ -55,6 +55,9 @@ local tObj3 					= nil
 local UnutarLabosa 				= false
 local JebenaKanta				= nil
 local UnutarLabosa2 		    = false
+local HVozilo					= nil
+local ProdajeHeroin 			= false
+local HBlip 					= nil
 
 --Legala
 local posaov = nil
@@ -141,36 +144,69 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 			if NetworkDoesEntityExistWithNetworkId(Kamioni[i].NetID) then
 				if currentVehicle == NetToVeh(Kamioni[i].NetID) then
 					if PlayerData.job.name ~= "police" and PlayerData.job.name ~= "ambulance" and PlayerData.job.name ~= "mechanic" then
-						ESX.ShowNotification("Ostavite kamion na oznacenu lokaciju kako bih ste prodali kokain!")
-						ProdajeKokain = true
-						KVozilo = currentVehicle
-						tObj = NetToObj(Kamioni[i].Obj1)
-						tObj2 = NetToObj(Kamioni[i].Obj2)
-						tObj3 = NetToObj(Kamioni[i].Obj3)
-						DostavaID = Kamioni[i].Dostava
-						if DoesBlipExist(KBlip) then
-							RemoveBlip(KBlip)
-							KBlip = nil
-						end
-						KBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
-						SetBlipSprite(KBlip, 1)
-						SetBlipColour (KBlip, 5)
-						SetBlipAlpha(KBlip, 255)
-						SetBlipRoute(KBlip,  true)
-						Citizen.CreateThread(function()
-							while ProdajeKokain and KVozilo ~= nil do
-								Citizen.Wait(1000)
-								if GetVehicleEngineHealth(KVozilo) <= 0 then
-									ESX.Game.DeleteVehicle(KVozilo)
-									KVozilo = nil
-									ProdajeKokain = false
-									if DoesBlipExist(KBlip) then
-										RemoveBlip(KBlip)
-										KBlip = nil
+						if Kamioni[i].Vrsta == 1 then
+							ESX.ShowNotification("Ostavite kamion na oznacenu lokaciju kako bih ste prodali kokain!")
+							ProdajeKokain = true
+							KVozilo = currentVehicle
+							tObj = NetToObj(Kamioni[i].Obj1)
+							tObj2 = NetToObj(Kamioni[i].Obj2)
+							tObj3 = NetToObj(Kamioni[i].Obj3)
+							DostavaID = Kamioni[i].Dostava
+							if DoesBlipExist(KBlip) then
+								RemoveBlip(KBlip)
+								KBlip = nil
+							end
+							KBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
+							SetBlipSprite(KBlip, 1)
+							SetBlipColour (KBlip, 5)
+							SetBlipAlpha(KBlip, 255)
+							SetBlipRoute(KBlip,  true)
+							Citizen.CreateThread(function()
+								while ProdajeKokain and KVozilo ~= nil do
+									Citizen.Wait(1000)
+									if GetVehicleEngineHealth(KVozilo) <= 0 then
+										ESX.Game.DeleteVehicle(KVozilo)
+										KVozilo = nil
+										ProdajeKokain = false
+										if DoesBlipExist(KBlip) then
+											RemoveBlip(KBlip)
+											KBlip = nil
+										end
 									end
 								end
+							end)
+						elseif Kamioni[i].Vrsta == 2 then
+							ESX.ShowNotification("Ostavite kamion na oznacenu lokaciju kako bih ste prodali heroin!")
+							ProdajeHeroin = true
+							HVozilo = currentVehicle
+							tObj = NetToObj(Kamioni[i].Obj1)
+							tObj2 = NetToObj(Kamioni[i].Obj2)
+							tObj3 = NetToObj(Kamioni[i].Obj3)
+							DostavaID = Kamioni[i].Dostava
+							if DoesBlipExist(HBlip) then
+								RemoveBlip(HBlip)
+								HBlip = nil
 							end
-						end)
+							HBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
+							SetBlipSprite(HBlip, 1)
+							SetBlipColour (HBlip, 5)
+							SetBlipAlpha(HBlip, 255)
+							SetBlipRoute(HBlip,  true)
+							Citizen.CreateThread(function()
+								while ProdajeHeroin and HVozilo ~= nil do
+									Citizen.Wait(1000)
+									if GetVehicleEngineHealth(HVozilo) <= 0 then
+										ESX.Game.DeleteVehicle(HVozilo)
+										HVozilo = nil
+										ProdajeHeroin = false
+										if DoesBlipExist(HBlip) then
+											RemoveBlip(HBlip)
+											HBlip = nil
+										end
+									end
+								end
+							end)
+						end
 					end
 					break
 				end
@@ -301,16 +337,29 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 		if Kamioni[i] ~= nil then
 			if NetworkDoesEntityExistWithNetworkId(Kamioni[i].NetID) then
 				if currentVehicle == NetToVeh(Kamioni[i].NetID) then
-					if DoesBlipExist(KBlip) then
-						RemoveBlip(KBlip)
-						KBlip = nil
+					if Kamioni[i].Vrsta == 1 then
+						if DoesBlipExist(KBlip) then
+							RemoveBlip(KBlip)
+							KBlip = nil
+						end
+						tObj = nil
+						tObj2 = nil
+						tObj3 = nil
+						ProdajeKokain = false
+						KVozilo = nil
+						DostavaID = 0
+					elseif Kamioni[i].Vrsta == 2 then
+						if DoesBlipExist(HBlip) then
+							RemoveBlip(HBlip)
+							HBlip = nil
+						end
+						tObj = nil
+						tObj2 = nil
+						tObj3 = nil
+						ProdajeHeroin = false
+						HVozilo = nil
+						DostavaID = 0
 					end
-					tObj = nil
-					tObj2 = nil
-					tObj3 = nil
-					ProdajeKokain = false
-					KVozilo = nil
-					DostavaID = 0
 					break
 				end
 			end
@@ -2211,99 +2260,99 @@ function OpenHeroinMenu()
 			menu.close()
         end
 		
-		-- if data.current.value == 'her_prodaj' then
-		-- 	if not ProdajeKokain then
-		-- 		for i=1, #Koord, 1 do
-		-- 			if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
-		-- 				if Koord[i].Ime == "KamionK" then
-		-- 					local x,y,z,h = table.unpack(Koord[i].Coord)
-		-- 					if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-		-- 						local rand = math.random(100, 300)
-		-- 						Wait(rand)
-		-- 						ESX.TriggerServerCallback('mafije:MorelProdaja', function(odg)
-		-- 							if odg then
-		-- 								TriggerServerEvent("mafije:BucketajGa", 0)
-		-- 								while Bucketo == false do
-		-- 									Wait(100)
-		-- 								end
-		-- 								for i = 1, #Kutijice, 1 do
-		-- 									if Kutijice[i] ~= nil then
-		-- 										DeleteEntity(Kutijice[i])
-		-- 									end
-		-- 								end
-		-- 								Kutijice = {}
-		-- 								if JebenaKanta ~= nil then
-		-- 									DeleteEntity(JebenaKanta)
-		-- 									JebenaKanta = nil
-		-- 								end
-		-- 								local model = GetHashKey("benson")
-		-- 								RequestModel(model)
-		-- 								while not HasModelLoaded(model) do
-		-- 									Wait(1)
-		-- 								end
-		-- 								SetEntityCoords(PlayerPedId(), x, y, z)
-		-- 								KVozilo = CreateVehicle(model, x, y, z, h, true, true)
-		-- 								SetModelAsNoLongerNeeded(model)
-		-- 								TaskWarpPedIntoVehicle(PlayerPedId(), KVozilo, -1)
-		-- 								local prop_name = GetHashKey("ex_prop_crate_closed_bc")
-		-- 								RequestModel(prop_name)
-		-- 								while not HasModelLoaded(prop_name) do
-		-- 									Wait(0)
-		-- 								end
-		-- 								local ent = GetEntityBoneIndexByName(KVozilo, "chassis_dummy")
-		-- 								local playerPed = PlayerPedId()
-		-- 								local x,y,z = table.unpack(GetEntityCoords(playerPed))
-		-- 								tObj = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
-		-- 								AttachEntityToEntity(tObj, KVozilo, ent, -0.03, -0.5, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
-		-- 								tObj2 = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
-		-- 								AttachEntityToEntity(tObj2, KVozilo, ent, -0.03, -2.0, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
-		-- 								tObj3 = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
-		-- 								AttachEntityToEntity(tObj3, KVozilo, ent, -0.03, -3.5, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
-		-- 								SetModelAsNoLongerNeeded(prop_name)
-		-- 								local KVoziloNet = VehToNet(KVozilo)
-		-- 								local KObj1 = ObjToNet(tObj)
-		-- 								local KObj2 = ObjToNet(tObj2)
-		-- 								local KObj3 = ObjToNet(tObj3)
-		-- 								ESX.ShowNotification("Zapoceli ste prodaju kokaina!")
-		-- 								ESX.ShowNotification("Odvezite kokain na oznacenu lokaciju kako bi ste ga prodali!")
-		-- 								ProdajeKokain = true
-		-- 								DostavaID = math.random(1,#dostave)
-		-- 								KBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
-		-- 								SetBlipSprite(KBlip, 1)
-		-- 								SetBlipColour (KBlip, 5)
-		-- 								SetBlipAlpha(KBlip, 255)
-		-- 								SetBlipRoute(KBlip,  true)
-		-- 								TriggerServerEvent("mafije:ProsljediKamion", KVoziloNet, DostavaID, KObj1, KObj2, KObj3)
-		-- 								Bucketo = false
-		-- 								Citizen.CreateThread(function()
-		-- 									while ProdajeKokain and KVozilo ~= nil do
-		-- 										Citizen.Wait(1000)
-		-- 										if GetVehicleEngineHealth(KVozilo) <= 0 then
-		-- 											ESX.Game.DeleteVehicle(KVozilo)
-		-- 											KVozilo = nil
-		-- 											ProdajeKokain = false
-		-- 											if DoesBlipExist(KBlip) then
-		-- 												RemoveBlip(KBlip)
-		-- 												KBlip = nil
-		-- 											end
-		-- 										end
-		-- 									end
-		-- 								end)
-		-- 							else
-		-- 								ESX.ShowNotification("[Skladiste] Nemate dovoljno za prodati (min 300kg)")
-		-- 							end
-		-- 						end, PlayerData.job.name)
-		-- 						break
-		-- 					else
-		-- 						ESX.ShowNotification("Nisu vam jos postavljene koordinate spawna kamiona, javite se adminima!")
-		-- 					end
-		-- 				end
-		-- 			end
-		-- 		end
-		-- 	else
-		-- 		ESX.ShowNotification("Vec prodajete kokain!")
-		-- 	end
-        -- end
+		if data.current.value == 'her_prodaj' then
+			if not ProdajeHeroin then
+				for i=1, #Koord, 1 do
+					if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
+						if Koord[i].Ime == "KamionH" then
+							local x,y,z,h = table.unpack(Koord[i].Coord)
+							if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+								local rand = math.random(100, 300)
+								Wait(rand)
+								ESX.TriggerServerCallback('mafije:MorelProdaja2', function(odg)
+									if odg then
+										TriggerServerEvent("mafije:BucketajGa", 0)
+										while Bucketo == false do
+											Wait(100)
+										end
+										for i = 1, #Kutijice, 1 do
+											if Kutijice[i] ~= nil then
+												DeleteEntity(Kutijice[i])
+											end
+										end
+										Kutijice = {}
+										if JebenaKanta ~= nil then
+											DeleteEntity(JebenaKanta)
+											JebenaKanta = nil
+										end
+										local model = GetHashKey("benson")
+										RequestModel(model)
+										while not HasModelLoaded(model) do
+											Wait(1)
+										end
+										SetEntityCoords(PlayerPedId(), x, y, z)
+										HVozilo = CreateVehicle(model, x, y, z, h, true, true)
+										SetModelAsNoLongerNeeded(model)
+										TaskWarpPedIntoVehicle(PlayerPedId(), HVozilo, -1)
+										local prop_name = GetHashKey("ex_prop_crate_closed_bc")
+										RequestModel(prop_name)
+										while not HasModelLoaded(prop_name) do
+											Wait(0)
+										end
+										local ent = GetEntityBoneIndexByName(HVozilo, "chassis_dummy")
+										local playerPed = PlayerPedId()
+										local x,y,z = table.unpack(GetEntityCoords(playerPed))
+										tObj = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
+										AttachEntityToEntity(tObj, HVozilo, ent, -0.03, -0.5, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
+										tObj2 = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
+										AttachEntityToEntity(tObj2, HVozilo, ent, -0.03, -2.0, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
+										tObj3 = CreateObject(prop_name, x, y, z + 0.2, true, true, false)
+										AttachEntityToEntity(tObj3, HVozilo, ent, -0.03, -3.5, 0.1, 0.0, 0.0, 0.0, 1, 0, 1, 0, 2, 1)
+										SetModelAsNoLongerNeeded(prop_name)
+										local KVoziloNet = VehToNet(HVozilo)
+										local KObj1 = ObjToNet(tObj)
+										local KObj2 = ObjToNet(tObj2)
+										local KObj3 = ObjToNet(tObj3)
+										ESX.ShowNotification("Zapoceli ste prodaju heroina!")
+										ESX.ShowNotification("Odvezite heroin na oznacenu lokaciju kako bi ste ga prodali!")
+										ProdajeHeroin = true
+										DostavaID = math.random(1,#dostave)
+										HBlip = AddBlipForCoord(dostave[DostavaID].x, dostave[DostavaID].y, dostave[DostavaID].z)
+										SetBlipSprite(HBlip, 1)
+										SetBlipColour (HBlip, 5)
+										SetBlipAlpha(HBlip, 255)
+										SetBlipRoute(HBlip,  true)
+										TriggerServerEvent("mafije:ProsljediKamion", KVoziloNet, DostavaID, KObj1, KObj2, KObj3, 2)
+										Bucketo = false
+										Citizen.CreateThread(function()
+											while ProdajeHeroin and HVozilo ~= nil do
+												Citizen.Wait(1000)
+												if GetVehicleEngineHealth(HVozilo) <= 0 then
+													ESX.Game.DeleteVehicle(HVozilo)
+													HVozilo = nil
+													ProdajeHeroin = false
+													if DoesBlipExist(HBlip) then
+														RemoveBlip(HBlip)
+														HBlip = nil
+													end
+												end
+											end
+										end)
+									else
+										ESX.ShowNotification("[Skladiste] Nemate dovoljno za prodati (min 300kg)")
+									end
+								end, PlayerData.job.name)
+								break
+							else
+								ESX.ShowNotification("Nisu vam jos postavljene koordinate spawna kamiona, javite se adminima!")
+							end
+						end
+					end
+				end
+			else
+				ESX.ShowNotification("Vec prodajete heroin!")
+			end
+        end
       end,
       function(data, menu)
         menu.close()
@@ -2489,7 +2538,7 @@ function OpenKokainMenu()
 										SetBlipColour (KBlip, 5)
 										SetBlipAlpha(KBlip, 255)
 										SetBlipRoute(KBlip,  true)
-										TriggerServerEvent("mafije:ProsljediKamion", KVoziloNet, DostavaID, KObj1, KObj2, KObj3)
+										TriggerServerEvent("mafije:ProsljediKamion", KVoziloNet, DostavaID, KObj1, KObj2, KObj3, 1)
 										Bucketo = false
 										Citizen.CreateThread(function()
 											while ProdajeKokain and KVozilo ~= nil do
@@ -3752,51 +3801,99 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
   end
   
   if part == 'Dostava' then
+	if ProdajeKokain then
 		if KVozilo == GetVehiclePedIsIn(PlayerPedId(), false) then
-                     if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId() then
-			if DoesBlipExist(KBlip) then
-				RemoveBlip(KBlip)
-				KBlip = nil
-			end
-			ProdajeKokain = false
-			DostavaID = 0
-			FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), true)
-			ESX.ShowNotification("Istovar..")
-			Wait(5000)
-			FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
-			local naso = false
-			for i=1, #Mafije, 1 do
-				if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
-					TriggerServerEvent("mafije:IsplatiSve", PlayerData.job.name)
-					naso = true
-					break
+            if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId() then
+				if DoesBlipExist(KBlip) then
+					RemoveBlip(KBlip)
+					KBlip = nil
+				end
+				ProdajeKokain = false
+				DostavaID = 0
+				FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), true)
+				ESX.ShowNotification("Istovar..")
+				Wait(5000)
+				FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
+				local naso = false
+				for i=1, #Mafije, 1 do
+					if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
+						TriggerServerEvent("mafije:IsplatiSve", PlayerData.job.name)
+						naso = true
+						break
+					end
+				end
+				if not naso then
+					TriggerServerEvent("mafije:IsplatiSve", nil)
+				end
+				ESX.ShowNotification("Zavrsili ste prodaju kokaina!")
+				TriggerServerEvent("mafije:MakniKamion", VehToNet(KVozilo))
+				if DoesEntityExist(tObj) then
+					ESX.Game.DeleteObject(tObj)
+					tObj = nil
+				end
+				if DoesEntityExist(tObj2) then
+					ESX.Game.DeleteObject(tObj2)
+					tObj2 = nil
+				end
+				if DoesEntityExist(tObj3) then
+					ESX.Game.DeleteObject(tObj3)
+					tObj3 = nil
+				end
+				if DoesEntityExist(KVozilo) then
+					ESX.Game.DeleteVehicle(KVozilo)
+					KVozilo = nil
 				end
 			end
-			if not naso then
-				TriggerServerEvent("mafije:IsplatiSve", nil)
-			end
-			ESX.ShowNotification("Zavrsili ste prodaju kokaina!")
-			TriggerServerEvent("mafije:MakniKamion", VehToNet(KVozilo))
-			if DoesEntityExist(tObj) then
-				ESX.Game.DeleteObject(tObj)
-				tObj = nil
-			end
-			if DoesEntityExist(tObj2) then
-				ESX.Game.DeleteObject(tObj2)
-				tObj2 = nil
-			end
-			if DoesEntityExist(tObj3) then
-				ESX.Game.DeleteObject(tObj3)
-				tObj3 = nil
-			end
-			if DoesEntityExist(KVozilo) then
-				ESX.Game.DeleteVehicle(KVozilo)
-				KVozilo = nil
-			end
-                    end
 		else
 			ESX.ShowNotification("Niste u vozilu za prodaju kokaina!")
 		end
+	elseif ProdajeHeroin then
+		if HVozilo == GetVehiclePedIsIn(PlayerPedId(), false) then
+            if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId() then
+				if DoesBlipExist(HBlip) then
+					RemoveBlip(HBlip)
+					HBlip = nil
+				end
+				ProdajeHeroin = false
+				DostavaID = 0
+				FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), true)
+				ESX.ShowNotification("Istovar..")
+				Wait(5000)
+				FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
+				local naso = false
+				for i=1, #Mafije, 1 do
+					if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
+						TriggerServerEvent("mafije:IsplatiSve2", PlayerData.job.name)
+						naso = true
+						break
+					end
+				end
+				if not naso then
+					TriggerServerEvent("mafije:IsplatiSve2", nil)
+				end
+				ESX.ShowNotification("Zavrsili ste prodaju heroina!")
+				TriggerServerEvent("mafije:MakniKamion", VehToNet(HVozilo))
+				if DoesEntityExist(tObj) then
+					ESX.Game.DeleteObject(tObj)
+					tObj = nil
+				end
+				if DoesEntityExist(tObj2) then
+					ESX.Game.DeleteObject(tObj2)
+					tObj2 = nil
+				end
+				if DoesEntityExist(tObj3) then
+					ESX.Game.DeleteObject(tObj3)
+					tObj3 = nil
+				end
+				if DoesEntityExist(HVozilo) then
+					ESX.Game.DeleteVehicle(HVozilo)
+					HVozilo = nil
+				end
+			end
+		else
+			ESX.ShowNotification("Niste u vozilu za prodaju heroina!")
+		end
+	end
   end
   
   if part == 'Drop' then
@@ -4769,24 +4866,24 @@ Citizen.CreateThread(function()
 			FreezeEntityPosition(PlayerPedId(), true)
 			TriggerServerEvent("kuce:UKuci", true)
 			UnutarLabosa2 = true
+			if JebenaKanta ~= nil then
+				DeleteEntity(JebenaKanta)
+				JebenaKanta = nil
+			end
+			local model2 = GetHashKey('v_med_trolley')
+			RequestModel(model2)
+			while not HasModelLoaded(model2) do
+				Wait(1)
+			end
+			JebenaKanta = CreateObject(model2, 1004.133, -3197.208, -39.99356, false, false, false)
+			SetModelAsNoLongerNeeded(model2)
 			Wait(3000)
 			FreezeEntityPosition(PlayerPedId(), false)
-			-- if JebenaKanta ~= nil then
-			-- 	DeleteEntity(JebenaKanta)
-			-- 	JebenaKanta = nil
-			-- end
-			-- local model2 = GetHashKey('bkr_ware03_bin2')
-			-- RequestModel(model2)
-			-- while not HasModelLoaded(model2) do
-			-- 	Wait(1)
-			-- end
-			-- JebenaKanta = CreateObject(model2, 1102.112, -3198.685, -39.51907-0.83, false, false, false)
-			-- SetModelAsNoLongerNeeded(model2)
-			-- for i = 1, #Kutijice, 1 do
-			-- 	if Kutijice[i] ~= nil then
-			-- 		DeleteEntity(Kutijice[i])
-			-- 	end
-			-- end
+			for i = 1, #Kutijice, 1 do
+				if Kutijice[i] ~= nil then
+					DeleteEntity(Kutijice[i])
+				end
+			end
 			Kutijice = {}
 			for i=1, #Skladiste, 1 do
 				if Skladiste[i] ~= nil and Skladiste[i].Mafija == PlayerData.job.name then
@@ -5168,7 +5265,7 @@ Citizen.CreateThread(function()
 		end
 	end
 	
-	if ProdajeKokain and DostavaID ~= 0 then
+	if (ProdajeKokain or ProdajeHeroin) and DostavaID ~= 0 then
 		if #(coords-dostave[DostavaID]) < 100 then
 			waitara = 0
 			naso = 1

@@ -149,8 +149,8 @@ AddEventHandler('mafije:ImalKoga', function(id, id2)
 end)
 
 RegisterNetEvent('mafije:ProsljediKamion')
-AddEventHandler('mafije:ProsljediKamion', function(netid, dostid, ob1, ob2, ob3)
-	table.insert(Kamioni, {NetID = netid, Dostava = dostid, Obj1 = ob1, Obj2 = ob2, Obj3 = ob3})
+AddEventHandler('mafije:ProsljediKamion', function(netid, dostid, ob1, ob2, ob3, vrsta)
+	table.insert(Kamioni, {NetID = netid, Dostava = dostid, Obj1 = ob1, Obj2 = ob2, Obj3 = ob3, Vrsta = vrsta})
 	TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
 end)
 
@@ -1271,6 +1271,24 @@ AddEventHandler('mafije:IsplatiSve', function(maf)
 	end
 end)
 
+RegisterNetEvent('mafije:IsplatiSve2')
+AddEventHandler('mafije:IsplatiSve2', function(maf)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	xPlayer.addMoney(25000)
+	xPlayer.showNotification("Dobili ste 25000$ od dostave heroina!")
+	if maf ~= nil then
+		local societyAccount = nil
+		local soc = "society_"..maf
+		TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+			societyAccount = account
+		end)
+		societyAccount.addMoney(160000)
+		societyAccount.save()
+		xPlayer.showNotification("Vasa mafija je dobila 160000$ od prodaje 300kg heroina!")
+	end
+end)
+
 RegisterNetEvent('mafije:ObrisiRank')
 AddEventHandler('mafije:ObrisiRank', function(id, maf)
 		local Postoji = 0
@@ -1440,6 +1458,28 @@ ESX.RegisterServerCallback('mafije:MorelProdaja', function(source, cb, maf)
 				Skladiste[i].Kokain = Skladiste[i].Kokain-300
 				MySQL.Async.execute('UPDATE mskladiste SET kokain = @kok WHERE ime = @maf',{
 					['@kok'] = Skladiste[i].Kokain,
+					['@maf'] = Skladiste[i].Mafija
+				})
+				TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+				cb(true)
+			end
+			break
+		end
+	end
+	if not naso then
+		cb(false)
+	end
+end)
+
+ESX.RegisterServerCallback('mafije:MorelProdaja2', function(source, cb, maf)
+	local naso = false
+	for i=1, #Skladiste, 1 do
+		if Skladiste[i].Mafija == maf then
+			if Skladiste[i].Heroin >= 300 then
+				naso = true
+				Skladiste[i].Heroin = Skladiste[i].Heroin-300
+				MySQL.Async.execute('UPDATE mskladiste SET heroin = @her WHERE ime = @maf',{
+					['@her'] = Skladiste[i].Heroin,
 					['@maf'] = Skladiste[i].Mafija
 				})
 				TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
