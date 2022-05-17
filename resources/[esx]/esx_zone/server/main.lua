@@ -361,6 +361,32 @@ ESX.RegisterServerCallback('zone:DohvatiZone', function(source, cb)
 	cb(vracaj)
 end)
 
+ESX.RegisterServerCallback('zone:ProdajListove', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local xItem = xPlayer.getInventoryItem("coke")
+	if xItem.count > 0 then
+		local cij = xItem.count*15
+		xPlayer.removeInventoryItem("coke", xItem.count)
+		xPlayer.addMoney(cij)
+		cb(true, xItem.count, cij)
+	else
+		cb(false, nil, nil)
+	end
+end)
+
+ESX.RegisterServerCallback('zone:ProdajGljive', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local xItem = xPlayer.getInventoryItem("gljive")
+	if xItem.count > 0 then
+		local cij = xItem.count*16
+		xPlayer.removeInventoryItem("gljive", xItem.count)
+		xPlayer.addMoney(cij)
+		cb(true, xItem.count, cij)
+	else
+		cb(false, nil, nil)
+	end
+end)
+
 local brojcic = 0
 function Odbrojavaj()
 	brojcic = brojcic+1

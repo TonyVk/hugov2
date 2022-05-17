@@ -70,9 +70,14 @@ function SpawnNpcove()
 			}, {
 				options = {
 					{
-						event = "zone:ProdajDrogu",
+						event = "zone:ProdajListove",
 						icon = "far fa-comment",
-						label = "Prodajte drogu"
+						label = "Prodaj listove kokaina"
+					},
+					{
+						event = "zone:ProdajGljive",
+						icon = "far fa-comment",
+						label = "Prodaj gljive"
 					}
 				},
 				distance = 2.5
@@ -81,6 +86,28 @@ function SpawnNpcove()
 	end
 	SetModelAsNoLongerNeeded(pedmodel)
 end
+
+RegisterNetEvent("zone:ProdajListove")
+AddEventHandler('zone:ProdajListove', function()
+	ESX.TriggerServerCallback('zone:ProdajListove', function(br, kol, cij)
+		if br then
+			ESX.ShowNotification("Prodali ste "..kol.." listova kokaina za $"..cij)
+		else
+			ESX.ShowNotification("Nemate listova kokaina za prodati!")
+		end
+	end)
+end)
+
+RegisterNetEvent("zone:ProdajGljive")
+AddEventHandler('zone:ProdajGljive', function()
+	ESX.TriggerServerCallback('zone:ProdajGljive', function(br, kol, cij)
+		if br then
+			ESX.ShowNotification("Prodali ste "..kol.." gljiva za $"..cij)
+		else
+			ESX.ShowNotification("Nemate gljiva za prodati!")
+		end
+	end)
+end)
 
 if Config.DinamicneMafije then
 	RegisterNetEvent('mafije:UpdateMafije')
@@ -232,9 +259,14 @@ AddEventHandler('zone:DodajPeda', function(ime, koord, head)
 					}, {
 						options = {
 							{
-								event = "zone:ProdajDrogu",
+								event = "zone:ProdajListove",
 								icon = "far fa-comment",
-								label = "Prodajte drogu"
+								label = "Prodaj listove kokaina"
+							},
+							{
+								event = "zone:ProdajGljive",
+								icon = "far fa-comment",
+								label = "Prodaj gljive"
 							}
 						},
 						distance = 2.5
