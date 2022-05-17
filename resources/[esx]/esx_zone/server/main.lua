@@ -304,7 +304,7 @@ end)
 function UcitajZone()
 	Zone = {}
 	Mafije = {}
-	local postavke = MySQL.Sync.fetchAll('SELECT * FROM zpostavke', {})
+	local postavke = MySQL.Sync.fetchAll('SELECT id, idzone, mafije, vrijeme, sat, minuta, zauzimanje FROM zpostavke', {})
     for i=1, #postavke, 1 do
 		BrZone = postavke[i].idzone
 		Vrijeme = postavke[i].vrijeme

@@ -13,7 +13,7 @@ function UcitajZemljista()
 	Zemljista = {}
 	Koord = {}
 	MySQL.Async.fetchAll(
-      'SELECT * FROM zemljista',
+      'SELECT ID, Ime, Koord1, Koord2, Cijena, Vlasnik, Kuca, KKoord, MKoord, KucaID FROM zemljista',
       {},
       function(result)
         for i=1, #result, 1 do
