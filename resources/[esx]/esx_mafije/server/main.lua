@@ -149,8 +149,8 @@ AddEventHandler('mafije:ImalKoga', function(id, id2)
 end)
 
 RegisterNetEvent('mafije:ProsljediKamion')
-AddEventHandler('mafije:ProsljediKamion', function(netid, dostid, ob1, ob2, ob3, vrsta)
-	table.insert(Kamioni, {NetID = netid, Dostava = dostid, Obj1 = ob1, Obj2 = ob2, Obj3 = ob3, Vrsta = vrsta})
+AddEventHandler('mafije:ProsljediKamion', function(netid, dostid, ob1, ob2, ob3, vrsta, job)
+	table.insert(Kamioni, {NetID = netid, Dostava = dostid, Obj1 = ob1, Obj2 = ob2, Obj3 = ob3, Vrsta = vrsta, Posao = job})
 	TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
 end)
 
@@ -589,6 +589,49 @@ AddEventHandler('mafije:OstaviHeroin', function(br, maf)
 		end
 	else
 		xPlayer.showNotification("Nemate toliko heroina/ne stane vam toliko u skladiste!")
+	end
+end)
+
+RegisterNetEvent('mafije:OstHerProd')
+AddEventHandler('mafije:OstHerProd', function(maf)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local naso = false
+	local br = 300
+	for i=1, #Skladiste, 1 do
+		if Skladiste[i].Mafija == maf then
+			naso = true
+			if (Skladiste[i].Heroin+br) > 1200 then
+				br = 1200-Skladiste[i].Heroin
+			end
+			Skladiste[i].Heroin = Skladiste[i].Heroin+br
+			xPlayer.showNotification("Dobili ste "..br.."kg heroina u skladiste!")
+			TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+			MySQL.Async.fetchScalar('SELECT ime FROM mskladiste WHERE ime = @maf', {
+				['@maf'] = maf
+			}, function(result)
+				if result == nil then
+					MySQL.Async.execute('INSERT INTO mskladiste (ime, gljive, heroin) VALUES (@maf, 0, @her)',{
+						['@maf'] = maf,
+						['@her'] = Skladiste[i].Heroin
+					})
+				else
+					MySQL.Async.execute('UPDATE mskladiste SET heroin = @her WHERE ime = @maf',{
+						['@her'] = Skladiste[i].Heroin,
+						['@maf'] = maf
+					})
+				end
+			end)
+			break
+		end
+	end
+	if not naso then
+		table.insert(Skladiste, {Mafija = maf, Gljive = 0, Heroin = br, Kokain = 0, Listovi = 0})
+		TriggerClientEvent("mafije:UpdateSkladista", -1, Skladiste)
+		xPlayer.showNotification("Dobili ste "..br.."kg heroina u skladiste!")
+		MySQL.Async.execute('INSERT INTO mskladiste (ime, gljive, heroin) VALUES (@maf, 0, @her)',{
+			['@maf'] = maf,
+			['@her'] = br
+		})
 	end
 end)
 
@@ -1272,20 +1315,35 @@ AddEventHandler('mafije:IsplatiSve', function(maf)
 end)
 
 RegisterNetEvent('mafije:IsplatiSve2')
-AddEventHandler('mafije:IsplatiSve2', function(maf)
+AddEventHandler('mafije:IsplatiSve2', function(maf, vr)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	xPlayer.addMoney(25000)
-	xPlayer.showNotification("Dobili ste 25000$ od dostave heroina!")
-	if maf ~= nil then
-		local societyAccount = nil
-		local soc = "society_"..maf
-		TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-			societyAccount = account
-		end)
-		societyAccount.addMoney(160000)
-		societyAccount.save()
-		xPlayer.showNotification("Vasa mafija je dobila 160000$ od prodaje 300kg heroina!")
+	if vr == 1 then
+		xPlayer.addMoney(25000)
+		xPlayer.showNotification("Dobili ste 25000$ od dostave heroina!")
+		if maf ~= nil then
+			local societyAccount = nil
+			local soc = "society_"..maf
+			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+				societyAccount = account
+			end)
+			societyAccount.addMoney(160000)
+			societyAccount.save()
+			xPlayer.showNotification("Vasa mafija je dobila 160000$ od prodaje 300kg heroina!")
+		end
+	elseif vr == 2 then
+		xPlayer.addMoney(55000)
+		xPlayer.showNotification("Dobili ste 55000$ od dostave heroina!")
+		if maf ~= nil then
+			local societyAccount = nil
+			local soc = "society_"..maf
+			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+				societyAccount = account
+			end)
+			societyAccount.addMoney(200000)
+			societyAccount.save()
+			xPlayer.showNotification("Vasa mafija je dobila 200000$ od prodaje 300kg heroina!")
+		end
 	end
 end)
 
