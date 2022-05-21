@@ -157,6 +157,7 @@ AddEventHandler('kontenjer:Pretrazi', function(data)
 end)
 
 RegisterCommand("testkurac", function(source, args, raw)
+	DoScreenFadeIn(100)
 	ESX.ShowPBar(args[1], tonumber(args[2]), function()
 		ESX.ShowNotification("You are good to go")
 	end)

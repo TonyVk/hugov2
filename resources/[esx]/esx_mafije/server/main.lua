@@ -68,7 +68,7 @@ function UcitajMafije()
 			TriggerEvent("RefreshAddone")
 			TriggerEvent("RefreshSociety")
 			TriggerEvent('esx_society:registerSociety', result[i].Ime, result[i].Label, soc, soc, soc, {type = 'public'})
-			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label, Gradonacelnik = result[i].Gradonacelnik, Skladiste2 = result[i].Skladiste2, Skladiste = result[i].Skladiste, Posao = result[i].Posao})
+			table.insert(Mafije, {Ime = result[i].Ime, Label = result[i].Label, Gradonacelnik = result[i].Gradonacelnik, Skladiste2 = result[i].Skladiste2, Skladiste = result[i].Skladiste, Posao = result[i].Posao, Avion = result[i].Avion})
 			local data = json.decode(result[i].Rankovi)
 			if data ~= nil then
 				for a=1, #data do
@@ -790,7 +790,7 @@ AddEventHandler('mafije:NapraviMafiju', function(maf, lab)
 				['@lab'] = label
 			})
 			
-			table.insert(Mafije, {Ime = maf, Label = lab, Posao = 0, Skladiste = 0, Skladiste2 = 0})
+			table.insert(Mafije, {Ime = maf, Label = lab, Posao = 0, Skladiste = 0, Skladiste2 = 0, Avion = 0})
 			TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
 			
 			MySQL.Async.insert('INSERT INTO jobs (name, label, whitelisted) VALUES (@ime, @lab, @white)',{
@@ -1408,6 +1408,35 @@ AddEventHandler('mafije:dajStanje', function(maf)
 	TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
 		xPlayer.showNotification("U sefu imate $"..account.money)
 	end)
+end)
+
+RegisterServerEvent('mafije:kupiAvion')
+AddEventHandler('mafije:kupiAvion', function(maf)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local society = "society_"..maf
+	for i=1, #Mafije, 1 do
+		if Mafije[i].Ime == maf then
+			if Mafije[i].Avion == 0 then
+				TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
+					if account.money >= 500000 then
+						account.removeMoney(500000)
+						account.save()
+						xPlayer.showNotification("Kupili ste avion za $500000!")
+						Mafije[i].Avion = 1
+						MySQL.Async.execute('UPDATE mafije SET Avion = 1 WHERE Ime = @maf',{
+							['@maf'] = maf
+						})
+						TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
+					else
+						xPlayer.showNotification("Nemate dovoljno novca u sefu!")
+					end
+				end)
+			else
+				xPlayer.showNotification("Vec imate avion!")
+			end
+			break
+		end
+	end
 end)
 
 RegisterNetEvent('mafije:NapraviRank')

@@ -61,6 +61,10 @@ ESX.ShowNotification = function(msg, ms)
 end
 
 ESX.ShowPBar = function(msg, ms, cb)
+	local sec = 3000
+	if ms then
+		sec = ms
+	end
 	SendNUIMessage({
 		action = 'showPBar',
 		mess    = msg,
