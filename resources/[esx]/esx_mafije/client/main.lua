@@ -1,5 +1,6 @@
 --[[
 -Dodat isto na kokain
+-Eksplozija vozila
 -Provjera dali je igrac vozac vozila
 ]]
 
@@ -880,7 +881,7 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 			end
 		end
 	end
-	if ProdajeKokain then
+	/*if ProdajeKokain then
 		if DoesBlipExist(KBlip) then
 			RemoveBlip(KBlip)
 			KBlip = nil
@@ -903,7 +904,7 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 		ProdajeHeroin = false
 		HVozilo = nil
 		DostavaID = 0
-	end
+	end*/
 end)
 
 function ProvjeriPosao()
