@@ -163,6 +163,10 @@ RegisterCommand("testkurac", function(source, args, raw)
 	end)
 end)
 
+RegisterCommand("kamerapoz", function(source, args, raw)
+	print(GetGameplayCamCoord())
+end)
+
 local UzmiMotor = vector3(-322.66125488281, -136.4533996582, 38.10968170166)
 local oGuma = {}
 RegisterCommand("testrot", function(source, args, raw)
