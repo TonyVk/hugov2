@@ -483,6 +483,7 @@ RegisterNUICallback(
     "zatvori",
     function()
 		SetNuiFocus(false)
+		TriggerEvent("MakniHud", false)
 		local playerPed = PlayerPedId()
 		SBroj = 1
 		
@@ -535,6 +536,7 @@ RegisterNUICallback(
 			SendNUIMessage({
 				prikazi = true
 			})
+			TriggerEvent("MakniHud", false)
 			CurrentAction     = 'shop_pregled'
 			CurrentActionMsg  = "Pritisnite ~INPUT_FRONTEND_RRIGHT~ da izadjete iz pregleda vozila!"
 			CurrentActionData = {}
@@ -603,6 +605,7 @@ RegisterNUICallback(
 			ESX.Game.DeleteVehicle(currentDisplayVehicle)
 			currentDisplayVehicle = nil
 		end
+		Wait(100)
 		if not Brod then
 			ESX.Game.SpawnLocalVehicle(vehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function(vehicle)
 				currentDisplayVehicle = vehicle
@@ -713,6 +716,7 @@ RegisterNUICallback(
 		SendNUIMessage({
 			prikazi = true
 		})
+		TriggerEvent("MakniHud", false)
 		local playerPed = PlayerPedId()
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_izaberiga', {
 			title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price)),
@@ -891,7 +895,8 @@ RegisterNUICallback(
 							SendNUIMessage({
 								dodajkat = true,
 								ime = category.name,
-								label = category.label
+								label = category.label,
+								slika = category.slika
 							})
 						end
 					end
@@ -901,7 +906,8 @@ RegisterNUICallback(
 							SendNUIMessage({
 								dodajkat = true,
 								ime = category.name,
-								label = category.label
+								label = category.label,
+								slika = category.slika
 							})
 						end
 					end
@@ -910,6 +916,7 @@ RegisterNUICallback(
 			SendNUIMessage({
 				prikazi = true
 			})
+			TriggerEvent("MakniHud", true)
 			SetNuiFocus(true, true)
 		end)
     end
@@ -928,6 +935,7 @@ RegisterNUICallback(
 				ESX.Game.DeleteVehicle(currentDisplayVehicle)
 				currentDisplayVehicle = nil
 			end
+			Wait(100)
 			if not Brod then
 				ESX.Game.SpawnLocalVehicle(vehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function(vehicle)
 					currentDisplayVehicle = vehicle
@@ -970,6 +978,7 @@ RegisterNUICallback(
 				ESX.Game.DeleteVehicle(currentDisplayVehicle)
 				currentDisplayVehicle = nil
 			end
+			Wait(100)
 			if not Brod then
 				ESX.Game.SpawnLocalVehicle(vehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function(vehicle)
 					currentDisplayVehicle = vehicle
@@ -1042,9 +1051,12 @@ function OpenShopMenu()
 		end)
 	end
 	local NasoGa = false
+	local autoBr = 0
+	local brodBr = 0
 	for i=1, #Categories, 1 do
 		if not Brod then
 			if Categories[i].brod == 0 then
+				autoBr = autoBr+1
 				local category         = Categories[i]
 				local categoryVehicles = vehiclesByCategory[category.name]
 				local options          = {}
@@ -1064,8 +1076,15 @@ function OpenShopMenu()
 					SendNUIMessage({
 						dodajkat = true,
 						ime = category.name,
-						label = category.label
+						label = category.label,
+						slika = category.slika
 					})
+					if autoBr == 1 then
+						SendNUIMessage({
+							postavisliku = true,
+							slika = category.slika
+						})
+					end
 					table.insert(elements, {
 						name    = category.name,
 						label   = category.label,
@@ -1078,6 +1097,7 @@ function OpenShopMenu()
 			end
 		else
 			if Categories[i].brod == 1 then
+				brodBr = brodBr+1
 				local category         = Categories[i]
 				local categoryVehicles = vehiclesByCategory[category.name]
 				local options          = {}
@@ -1097,8 +1117,15 @@ function OpenShopMenu()
 					SendNUIMessage({
 						dodajkat = true,
 						ime = category.name,
-						label = category.label
+						label = category.label,
+						slika = category.slika
 					})
+					if brodBr == 1 then
+						SendNUIMessage({
+							postavisliku = true,
+							slika = category.slika
+						})
+					end
 					table.insert(elements, {
 						name    = category.name,
 						label   = category.label,
@@ -1119,6 +1146,7 @@ function OpenShopMenu()
 		ESX.Game.DeleteVehicle(currentDisplayVehicle)
 		currentDisplayVehicle = nil
 	end
+	Wait(100)
 	if not Brod then
 		ESX.Game.SpawnLocalVehicle(firstVehicleData.model, Config.Zones.ShopInside.Pos, Config.Zones.ShopInside.Heading, function(vehicle)
 			currentDisplayVehicle = vehicle
@@ -1147,6 +1175,7 @@ function OpenShopMenu()
 	SendNUIMessage({
 		prikazi = true
 	})
+	TriggerEvent("MakniHud", true)
 	SetNuiFocus(true, true)
 
 	--[[ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop', {
@@ -2626,7 +2655,8 @@ Citizen.CreateThread(function()
 									SendNUIMessage({
 										dodajkat = true,
 										ime = category.name,
-										label = category.label
+										label = category.label,
+										slika = category.slika
 									})
 								end
 							end
@@ -2636,7 +2666,8 @@ Citizen.CreateThread(function()
 									SendNUIMessage({
 										dodajkat = true,
 										ime = category.name,
-										label = category.label
+										label = category.label,
+										slika = category.slika
 									})
 								end
 							end
@@ -2645,6 +2676,7 @@ Citizen.CreateThread(function()
 					SendNUIMessage({
 						prikazi = true
 					})
+					TriggerEvent("MakniHud", true)
 					SetNuiFocus(true, true)
 					CurrentAction = nil
 				end

@@ -11,12 +11,11 @@ function GetPedVehicleSeat(ped)
     return -2
 end
 
-local zvao = false
-
 AddEventHandler('gameEventTriggered', function (name, data)
-    if name == "CEventNetworkPlayerEnteredVehicle" and not zvao then
+    if name == "CEventNetworkPlayerEnteredVehicle" then
 		if data[1] == 128 then
-			zvao = true
+			isInVehicle = false
+			Wait(200)
 			isInVehicle = true
 			currentVehicle = data[2]
 			currentSeat = GetPedVehicleSeat(PlayerPedId())
@@ -29,7 +28,6 @@ AddEventHandler('gameEventTriggered', function (name, data)
 					local ped = PlayerPedId()
 					if not IsPedInAnyVehicle(ped, false) or IsPlayerDead(PlayerId()) or currentSeat ~= GetPedVehicleSeat(PlayerPedId()) or currentVehicle ~= GetVehiclePedIsIn(PlayerPedId(), false) then
 						-- bye, vehicle
-						zvao = false
 						local model = GetEntityModel(currentVehicle)
 						local name = GetDisplayNameFromVehicleModel()
 						local netId = VehToNet(currentVehicle)

@@ -25,10 +25,11 @@
 			overflow: scroll;
 			overflow-x: hidden;
 			overflow-y: auto;
-			position: relative;
+			position: absolute;
 			left: 0;
 			margin: 0;
-			background-color: #c3c3c3;
+			top: 0;
+			background-color: #132639;
 			padding-left: 0px;
 			padding-right: 0px;
 			padding-top: 0px;
@@ -36,7 +37,7 @@
 		
 		.container2 {
 			width: 340px;
-			background-color: #c3c3c3;
+			background-color: #132639;
 			padding: 15px;
 		}
 
@@ -78,11 +79,11 @@
 			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
 		}
 		::-webkit-scrollbar-thumb {
-			background: rgb(69, 13, 143);; 
+			background: #0e1d2b; 
 			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 		}
 		::-webkit-scrollbar-thumb:window-inactive {
-			background: rgb(69, 13, 143);;
+			background: #0e1d2b;
 		}
 		.modal{
 			top: 120px !important;
@@ -100,7 +101,10 @@
 		{
 			margin-top: -12px !important;
 			margin-right: 3px;
-			width: 35px !important;
+			height: 25px;
+			width: 32.35px;
+			border: 0;
+			display: inline-block;
 		}
 		#glavni
 		{
@@ -112,12 +116,12 @@
 		#glavni2
 		{
 			position: absolute;
-			top: 0px;
-			left: 50%;
-			transform: translate(-50%,0);
+			bottom: 20px;
+			right: 20px;
 		}
 		#salon{
 			display:none;
+			color: white;
 		}
 		.vertical-center {
 			display:none;
@@ -166,6 +170,69 @@
 		.btn-block + .btn-block {
 			margin-top: 0px;
 		}
+		#crta-gore{
+			width: 100%;
+    		height: 20px;
+    		background-color: #132639;
+		}
+		#crta-desno{
+			width: 20px;
+			height: 100%;
+			top: 0;
+			right: 0;
+			position: absolute;
+			background-color: #132639;
+		}
+		#crta-dole{
+			width: 100%;
+			height: 20px;
+			background-color: #132639;
+			position: absolute;
+			bottom: 0;
+		}
+		.bKat{
+			width: 100%;
+			height: 53px;
+			color: white;
+			background-color: #132639;
+			border: 0;
+		}
+		.bKat:hover{
+			background-color: #0e1d2b;
+		}
+		#logo{
+			width: 186px;
+			right: 20px;
+			position: absolute;
+		}
+		.bOpcije{
+			color: white;
+			background-color: #091622;
+			border: 0;
+			height: 32px;
+		}
+		.bOpcije:hover{
+			background-color: #12416d;
+		}
+		.active{
+			background-color: #0e1d2b;
+		}
+		#xbutton{
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			width: 30px;
+			height: 30px;
+			font-size: 21px;
+			color: white;
+			z-index: 1;
+			text-align: center;
+			font-weight: bold;
+			cursor: pointer;
+		}
+		#xbutton:hover{
+			background-color:#091622;
+		}
 	</style>
 </head>
 	<body id = "tijelo">
@@ -183,11 +250,17 @@
 			</div>
 		</div>
 		<div id = "salon" style="overflow: hidden;height: 100%;">
-			<div class="container">
-			<div class="jumbotron text-center" style="border-radius: 0;"><h2>Autosalon</h2></div>
-			  <div class="card-deck mb-3 text-center" id="maindivic">
-				
-			  </div>
+			<div id="xbutton" onclick="Zatvori()">X</div>
+			<div id="crta-gore"></div>
+			<div id="crta-desno"></div>
+			<div id="crta-dole"></div>
+			<div id="logo">
+				<div class="jumbotron text-center" style="border-radius: 0;background-color: #0e1d2b;">
+					<img src="slike/bmw.png" id="salonSlika" style = "width: 105px !important; max-width: 105px;">
+				</div>
+			</div>
+			<div class="container" id="maindivic">
+
 			</div>
 			<div id="glavni2">
 				<div class="container2" style="border-top-left-radius: 0px;border-top-right-radius: 0px;">
@@ -199,29 +272,27 @@
 			<div id="glavni">
 				<div class="container2" style="border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;margin-bottom: -12px;">
 				  <div class="card-deck mb-3 text-center">
-					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 65px;float: left; margin-top:0px;" onclick="Pogled()"><i class="fa fa-eye" style=" font-size: 20px;"></i></button>
-					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 155px; margin-top:0px;" onclick="Zamjeni()"><i id="slicica" class="fa fa-toggle-off" style=" font-size: 20px; "></i></button>
-					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 70px;float: right; margin-top:0px;" onclick="Svijetla()"><i class="fa fa-lightbulb-o" style=" font-size: 20px; "></i></button>
+					<button type="button" id="bdodaj" class="bOpcije" style="width: 65px;float: left; margin-top:0px;" onclick="Pogled()"><i class="fa fa-eye" style=" font-size: 20px;"></i></button>
+					<button type="button" id="bdodaj" class="bOpcije" style="width: 155px; margin-top:0px;" onclick="Zamjeni()"><i id="slicica" class="fa fa-toggle-off" style=" font-size: 20px; "></i></button>
+					<button type="button" id="bdodaj" class="bOpcije" style="width: 70px;float: right; margin-top:0px;" onclick="Svijetla()"><i class="fa fa-lightbulb-o" style=" font-size: 20px; "></i></button>
 				  </div>
 				</div>
 				<div class="container2" style="border-radius: 0px;">
 				  <div class="card-deck mb-3 text-center">
-					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 65px;float: left; margin-top:0px;" onclick="Lijevo()"><i class="fa fa-toggle-left" style=" font-size: 20px; "></i></button>
-					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 155px; margin-top:0px;font-size: 16px;" onclick="Kupi()">Kupi vozilo</button>
-					<button type="button" id="bdodaj" class="btn btn-primary" style="width: 70px;float: right; margin-top:0px;" onclick="Desno()"><i class="fa fa-toggle-right" style=" font-size: 20px; "></i></button>
+					<button type="button" id="bdodaj" class="bOpcije" style="width: 65px;float: left; margin-top:0px;" onclick="Lijevo()"><i class="fa fa-toggle-left" style=" font-size: 20px; "></i></button>
+					<button type="button" id="bdodaj" class="bOpcije" style="width: 155px; margin-top:0px;font-size: 16px;" onclick="Kupi()">Kupi vozilo</button>
+					<button type="button" id="bdodaj" class="bOpcije" style="width: 70px;float: right; margin-top:0px;" onclick="Desno()"><i class="fa fa-toggle-right" style=" font-size: 20px; "></i></button>
 				  </div>
 				</div>
 				<div class="container2" style="border-top-left-radius: 0px;border-top-right-radius: 0px;border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;">
-				  <div class="card-deck mb-3 text-center">
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('crvena')" style="float: left;margin-top:0px;height: 25px;background-color: red;border-color: red;"></button>
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('bijela')" style="float: left;margin-top:0px;height: 25px;background-color: white;border-color: white;"></button>
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('plava')" style="float: left;margin-top:0px;height: 25px;background-color: blue;border-color: blue;"></button>
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('orange')" style="float: left;margin-top:0px;height: 25px;background-color: orange;border-color: orange;"></button>
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('zuta')" style="margin-top: -21px !important;height: 25px;background-color: yellow;border-color: yellow;"></button>
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('siva')" style="float: left;margin-top:0px;height: 25px;background-color: grey;border-color: grey;"></button>
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('zelena')" style="float: left;margin-top:0px;height: 25px;background-color: green;border-color: green;"></button>
-					<button type="button" id="boje" class="btn btn-primary boje" onclick="Boja('crna')" style="float: left;margin-top:0px;height: 25px;background-color: #000;border-color: black;"></button>
-				  </div>
+					<button type="button" id="boje" class="boje" onclick="Boja('crvena')" style="background-color: red;border-color: red;"></button>
+					<button type="button" id="boje" class="boje" onclick="Boja('bijela')" style="background-color: white;border-color: white;"></button>
+					<button type="button" id="boje" class="boje" onclick="Boja('plava')" style="background-color: blue;border-color: blue;"></button>
+					<button type="button" id="boje" class="boje" onclick="Boja('orange')" style="background-color: orange;border-color: orange;"></button>
+					<button type="button" id="boje" class="boje" onclick="Boja('zuta')" style="background-color: yellow;border-color: yellow;"></button>
+					<button type="button" id="boje" class="boje" onclick="Boja('siva')" style="background-color: grey;border-color: grey;"></button>
+					<button type="button" id="boje" class="boje" onclick="Boja('zelena')" style="background-color: green;border-color: green;"></button>
+					<button type="button" id="boje" class="boje" onclick="Boja('crna')" style="background-color: #000;border-color: black;"></button>
 				</div>
 			</div>
 		</div>
@@ -234,11 +305,14 @@
 				if (item.dodajkat) {
 					var maindiv = document.getElementById('maindivic');
 					var div = document.createElement('button');
-					div.className = 'btn btn-lg btn-block btn-primary';
+					div.className = 'bKat';
 					div.id = item.ime;
 					div.innerHTML = item.label;
-					div.onclick = function() { PostaviAuto(item.ime); };
+					div.onclick = function() { PostaviAuto(item.ime, this, item.slika); };
 					maindiv.appendChild(div);
+				}
+				if (item.postavisliku) {
+					$("#salonSlika").attr("src","slike/"+item.slika);
 				}
 				if (item.prikazi) {
 					var x = document.getElementById("tijelo");
@@ -369,11 +443,14 @@
 					ime: ime
 				}));
 			}
-			function PostaviAuto(ime)
+			function PostaviAuto(ime, klasa, slika)
 			{
+				$('button.active').removeClass('active');
+        		$(klasa).addClass('active');
 				Jeste = false;
 				document.getElementById("slicica").className = "fa fa-toggle-off";
 				svij = false;
+				$("#salonSlika").attr("src","slike/"+slika);
 				$.post("http://esx_vehicleshop/spawnauto", JSON.stringify({
 					naziv: ime
 				}));

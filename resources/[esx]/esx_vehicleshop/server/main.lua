@@ -27,7 +27,7 @@ function RemoveOwnedVehicle(plate)
 end
 
 MySQL.ready(function()
-	MySQL.Async.fetchAll('SELECT name, label, brod FROM vehicle_categories', {}, function(_categories)
+	MySQL.Async.fetchAll('SELECT name, label, brod, slika FROM vehicle_categories', {}, function(_categories)
 		categories = _categories
 
 		MySQL.Async.fetchAll('SELECT name, model, price, category, brod FROM vehicles', {}, function(_vehicles)
