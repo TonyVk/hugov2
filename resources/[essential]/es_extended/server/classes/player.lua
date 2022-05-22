@@ -1,4 +1,4 @@
-function CreateExtendedPlayer(player, accounts, inventory, job, posao, loadout, name, lastPosition, broj, id, ime, firma, status, perm)
+function CreateExtendedPlayer(player, accounts, inventory, job, posao, loadout, name, lastPosition, broj, id, ime, firma, status, perm, rpime, rpprezime)
 	local self = {}
 
 	self.player       = player
@@ -15,6 +15,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, posao, loadout, 
 	self.firma 		  = firma
 	self.status 	  = status
 	self.perm         = perm
+	self.rpime        = rpime
+	self.rpprezime    = rpprezime
 
 	self.source     = self.player.get('source')
 	self.identifier = self.player.get('identifier')
@@ -55,6 +57,14 @@ function CreateExtendedPlayer(player, accounts, inventory, job, posao, loadout, 
 
 	self.getRPName = function()
 		return self.ime
+	end
+
+	self.getFirstname = function()
+		return self.rpime
+	end
+
+	self.getLastname = function()
+		return self.rpprezime
 	end
 
 	self.getFirma = function()

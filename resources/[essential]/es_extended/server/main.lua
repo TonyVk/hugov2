@@ -211,6 +211,10 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 					userData.ime = result[1].firstname.." "..result[1].lastname
 
+					userData.firstname = result[1].firstname
+
+					userData.lastname = result[1].lastname
+
 					userData.firma = result[1].firma
 
 					userData.status = json.decode(result[1].status)
@@ -228,7 +232,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 		-- Run Tasks
 		Async.parallel(tasks, function(results)
-			local xPlayer = CreateExtendedPlayer(player, userData.accounts, userData.inventory, userData.job, userData.posao, userData.loadout, userData.playerName, userData.lastPosition, userData.number, userData.ID, userData.ime, userData.firma, userData.status, userData.perm)
+			local xPlayer = CreateExtendedPlayer(player, userData.accounts, userData.inventory, userData.job, userData.posao, userData.loadout, userData.playerName, userData.lastPosition, userData.number, userData.ID, userData.ime, userData.firma, userData.status, userData.perm, userData.firstname, userData.lastname)
 
 			--xPlayer.getMissingAccounts(function(missingAccounts)
 				--[[if #missingAccounts > 0 then
