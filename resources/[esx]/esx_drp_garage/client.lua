@@ -162,46 +162,49 @@ function OpenMenuGarage(PointType)
 
 	
 	if PointType == 'spawn' then
-		table.insert(elements,{label = _U('list_vehicles'), value = 'list_vehicles'})
+		--table.insert(elements,{label = _U('list_vehicles'), value = 'list_vehicles'})
+		ListVehiclesMenu()
 	end
 
 	if PointType == 'delete' then
-		table.insert(elements,{label = _U('stock_vehicle'), value = 'stock_vehicle'})
+		--table.insert(elements,{label = _U('stock_vehicle'), value = 'stock_vehicle'})
+		StockVehicleMenu()
 	end
 
 	if PointType == 'pound' then
-		table.insert(elements,{label = _U('return_vehicle', Config.Price), value = 'return_vehicle'})
+		--table.insert(elements,{label = _U('return_vehicle', Config.Price), value = 'return_vehicle'})
+		ReturnVehicleMenu()
 	end
 
-	ESX.UI.Menu.Open(
-		'default', GetCurrentResourceName(), 'garage_menu',
-		{
-			title    = _U('garage'),
-			align    = 'top-left',
-			elements = elements,
-		},
-		function(data, menu)
+	-- ESX.UI.Menu.Open(
+	-- 	'default', GetCurrentResourceName(), 'garage_menu',
+	-- 	{
+	-- 		title    = _U('garage'),
+	-- 		align    = 'top-left',
+	-- 		elements = elements,
+	-- 	},
+	-- 	function(data, menu)
 
-			menu.close()
-			if(data.current.value == 'list_vehicles') then
-				ListVehiclesMenu()
-			end
-			if(data.current.value == 'stock_vehicle') then
-				StockVehicleMenu()
-			end
-			if(data.current.value == 'return_vehicle') then
-				ReturnVehicleMenu()
-			end
+	-- 		menu.close()
+	-- 		if(data.current.value == 'list_vehicles') then
+	-- 			ListVehiclesMenu()
+	-- 		end
+	-- 		if(data.current.value == 'stock_vehicle') then
+	-- 			StockVehicleMenu()
+	-- 		end
+	-- 		if(data.current.value == 'return_vehicle') then
+	-- 			ReturnVehicleMenu()
+	-- 		end
 
-			--local playerPed = GetPlayerPed(-1)
-			--SpawnVehicle(data.current.value)
+	-- 		--local playerPed = GetPlayerPed(-1)
+	-- 		--SpawnVehicle(data.current.value)
 
-		end,
-		function(data, menu)
-			menu.close()
+	-- 	end,
+	-- 	function(data, menu)
+	-- 		menu.close()
 			
-		end
-	)	
+	-- 	end
+	-- )	
 end
 
 
