@@ -61,7 +61,7 @@ function DohvatiOglase()
 			})
         end
 	end)
-    SetTimeout(300000, DohvatiOglase)
+    SetTimeout(3600000, DohvatiOglase) --1h
 end
 
 MySQL.ready(function ()
