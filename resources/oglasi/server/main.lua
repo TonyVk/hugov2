@@ -20,7 +20,7 @@ AddEventHandler('oglasi:DodajOglas', function(tekst)
                 local broj = 0
                 for i=1, #result, 1 do
                     if result[i] and result[i].id == insertId then
-                        broj = math.floor(tonumber(result[i].br)/12)
+                        broj = math.floor(tonumber(result[i].br)/16)
                         break
                     end
                 end
@@ -52,7 +52,7 @@ end)
 
 function DohvatiOglase()
     Oglasi = {}
-    MySQL.Async.fetchAll("select id, phone_number as broj, firstname, lastname, message as tekst from yellow_tweets where novine = 0 limit 12", {}, function(result)
+    MySQL.Async.fetchAll("select id, phone_number as broj, firstname, lastname, message as tekst from yellow_tweets where novine = 0 limit 16", {}, function(result)
 		Oglasi = result
         TriggerClientEvent('chat:addMessage', -1, { args = { 'Novine ', "Izašo je novi broj oglasnika!" } })
         for i=1, #result, 1 do

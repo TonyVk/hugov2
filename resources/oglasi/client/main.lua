@@ -75,7 +75,7 @@ AddEventHandler('oglasi:OtvoriNovine', function()
     SetNuiFocus(true, true)
     TriggerEvent("MakniHud", true)
     ESX.TriggerServerCallback('oglasi:DajOglase', function(ogl)
-        for i=1, 12, 1 do
+        for i=1, 16, 1 do
             if ogl[i] ~= nil then
                 SendNUIMessage({
                     dodajoglas = true,
