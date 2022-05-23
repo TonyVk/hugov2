@@ -200,6 +200,7 @@
         .the-grid-section .the-grid {
             margin-bottom: 40px;
             transition: all 0.5s;
+            justify-content: center;
         }
         .the-grid-section .the-grid .the-grid-content p {
             display: -webkit-box;
@@ -310,6 +311,7 @@
             {
                 x.style.display = "none";
                 Prikazan = false;
+                $('#maindivic').empty();
             }
         }
     });
@@ -319,6 +321,7 @@
             var x = document.getElementById("tijelo");
             x.style.display = "none";
             Prikazan = false;
+            $('#maindivic').empty();
             $.post("https://oglasi/zatvori", JSON.stringify({}));
         }
     });
