@@ -11,6 +11,7 @@ local EnableLicenses = true
 local Kutije = {}
 local Skladiste = {}
 local Kamioni = {}
+local Guardiani = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -152,6 +153,12 @@ RegisterNetEvent('mafije:ProsljediKamion')
 AddEventHandler('mafije:ProsljediKamion', function(netid, dostid, ob1, ob2, ob3, vrsta, job)
 	table.insert(Kamioni, {NetID = netid, Dostava = dostid, Obj1 = ob1, Obj2 = ob2, Obj3 = ob3, Vrsta = vrsta, Posao = job})
 	TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
+end)
+
+RegisterNetEvent('mafije:NarudzbeOruzja')
+AddEventHandler('mafije:NarudzbeOruzja', function(vehid, objid, job, oruz)
+	table.insert(Guardiani, {VehID = vehid, ObjID = objid, Posao = job, Oruzja = oruz})
+	TriggerClientEvent("mafije:VratiGuardiane", -1, Guardiani)
 end)
 
 RegisterNetEvent('mafija:OdeJedan')
@@ -2589,7 +2596,6 @@ end)
 ESX.RegisterServerCallback('mafije:getArmoryWeapons', function(source, cb, mafija)
   local soc = "society_"..mafija
   TriggerEvent('esx_datastore:getSharedDataStore', soc, function(store)
-
     local weapons = store.get('weapons')
 
     if weapons == nil then

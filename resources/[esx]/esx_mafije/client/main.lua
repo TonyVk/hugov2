@@ -1,6 +1,5 @@
 --[[
--Dodat isto na kokain
--Fix vise pritisaka kod prodaje (menu)
+-Dodati upit prije kupovine oruzja, ne uzimat lovu dok ne pritisnu "Zapocni dostavu"
 ]]
 
 local Keys = {
@@ -103,8 +102,9 @@ local Kutije = {
 }
 
 local Kutijice = {}
+local Guardiani = {}
 
-local parachute, crate, pickup, blipa, soundID
+local parachute, crate, pickup, blipa, soundID, cVozilo
 local requiredModels = {"p_cargo_chute_s", "ex_prop_adv_case_sm", "prop_box_wood05a"} -- parachute, pickup case, plane, pilot, crate
 
 ESX                             = nil
@@ -138,6 +138,11 @@ AddEventHandler('mafije:VratiKamione', function(kam)
 	Kamioni = kam
 end)
 
+RegisterNetEvent('mafije:VratiGuardiane')
+AddEventHandler('mafije:VratiGuardiane', function(gua)
+	Guardiani = gua
+end)
+
 RegisterNetEvent('mafije:OdradioBucket')
 AddEventHandler('mafije:OdradioBucket', function()
 	Bucketo = true
@@ -145,7 +150,6 @@ end)
 
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
-	print("uso u kamion")
 	if currentSeat == -1 then
 		for i=1, #Kamioni, 1 do
 			if Kamioni[i] ~= nil then
@@ -962,6 +966,32 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 				end
 			end
 		end
+		for i=1, #Guardiani, 1 do
+			if Guardiani[i] ~= nil then
+				if NetworkDoesEntityExistWithNetworkId(Guardiani[i].VehID) then
+					if currentVehicle == NetToVeh(Guardiani[i].VehID) then
+						if PlayerData.job.name ~= "unemployed" and PlayerData.job.name ~= "ambulance" and PlayerData.job.name ~= "mechanic" then
+							local x,y,z,he
+							for i=1, #Koord, 1 do
+								if Koord[i] ~= nil then
+									if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "DeleteV" then
+										x,y,z,he = table.unpack(Koord[i].Coord)
+										break
+									end
+								end
+							end
+							DostavaBlip = AddBlipForCoord(x,y,z)
+							SetBlipSprite(DostavaBlip, 1)
+							SetBlipRoute(DostavaBlip,  true)
+							ESX.ShowNotification("Odvezite kamion do označene lokacije kako bih ste spremili oružje u sef!")
+							crate = NetToObj(Guardiani[i].ObjID)
+							ZatrazioOruzje = Guardiani[i].Oruzja
+							PokupioCrate = true
+						end
+					end
+				end
+			end
+		end
 	end
 end)
 
@@ -1118,6 +1148,13 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 					end
 				end
 			end
+		end
+		if PokupioCrate then
+			PokupioCrate = false
+			if DoesBlipExist(DostavaBlip) then
+				RemoveBlip(DostavaBlip)
+			end
+			ZatrazioOruzje =  {}
 		end
 	end
 end)
@@ -2553,9 +2590,7 @@ function OpenArmoryMenu(br)
 
 		if br == 0 then
 			if PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik' then
-				if PlayerData.job.name == Config.Tijelo then
-					table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
-				end
+				table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
 			end
 		else
 			table.insert(elements, {label = _U('buy_weapons'), value = 'buy_weapons'})
@@ -3031,6 +3066,7 @@ function OpenHeroinMenu()
 						if Koord[i].Ime == "KamionH" then
 							local x,y,z,h = table.unpack(Koord[i].Coord)
 							if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+								menu.close()
 								local rand = math.random(100, 300)
 								Wait(rand)
 								ESX.TriggerServerCallback('mafije:MorelProdaja2', function(odg)
@@ -3135,6 +3171,7 @@ function OpenHeroinMenu()
 							if Koord[i].Ime == "KamionH" then
 								local x,y,z,h = table.unpack(Koord[i].Coord)
 								if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+									menu.close()
 									local rand = math.random(100, 300)
 									Wait(rand)
 									ESX.TriggerServerCallback('mafije:MorelProdaja2', function(odg)
@@ -3593,6 +3630,7 @@ function OpenKokainMenu()
 						if Koord[i].Ime == "KamionK" then
 							local x,y,z,h = table.unpack(Koord[i].Coord)
 							if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+								menu.close()
 								local rand = math.random(100, 300)
 								Wait(rand)
 								ESX.TriggerServerCallback('mafije:MorelProdaja', function(odg)
@@ -4413,9 +4451,8 @@ end
 function OpenBuyWeaponsMenu(br)
 
   ESX.TriggerServerCallback('mafije:getArmoryWeapons', function(weapons)
-
     local elements = {}
-
+	table.insert(elements, {label = 'Zapocni dostavu', value = "dostava", price = 0})
     for i=1, #Oruzja, 1 do
 		if Oruzja[i].Mafija == PlayerData.job.name then
 			local weapon = Oruzja[i]
@@ -4445,28 +4482,58 @@ function OpenBuyWeaponsMenu(br)
 				ESX.ShowNotification("Vec imate naruceno 10 oruzja!")
 			else
 				local x,y,z
+				local sX, sY, sZ, sH
 				for i=1, #Koord, 1 do
-					if Koord[i].Mafija == PlayerData.job.name and Koord[i].Ime == "CrateDrop" then
-						x,y,z = table.unpack(Koord[i].Coord)
-						break
+					if Koord[i].Mafija == PlayerData.job.name then
+						if Koord[i].Ime == "CrateDrop" then
+							x,y,z = table.unpack(Koord[i].Coord)
+						end
+						if Koord[i].Ime == "LokVozila" then
+							sX,sY,sZ,sH = table.unpack(Koord[i].Coord)
+						end
 					end
 				end
-				if x ~= nil then
-					ESX.TriggerServerCallback('mafije:piku4', function(hasEnoughMoney)
-						if hasEnoughMoney then
-							ZatrazioOruzje[ZOBr] = data.current.value
-							ZOBr = ZOBr+1
-							TriggerServerEvent('mafije:SpremiIme', PlayerData.job.name, ZatrazioOruzje, ZOBr)
-							if ZOBr == 1 then
-								ESX.ShowNotification("Uzmite Big 4x4(Guardian) i odite na zeleni kofer oznacen na mapi kako bi ste pokupili paket")
-								CrateDrop("weapon_pistol", 55, 400.0, {["x"] = x, ["y"] = y, ["z"] = z})
+				if x ~= nil and sX ~= nil then
+					if data.current.value == "dostava" then
+						if ZOBr >= 1 then
+							ESX.ShowNotification("Odite na zeleni kofer oznacen na mapi kako bih ste pokupili paket")
+							local model = GetHashKey("prop_box_wood05a")
+							RequestModel(model)
+							
+							while not HasModelLoaded(model) do
+								Wait(1)
 							end
+							crate = CreateObject(model, vector3(x, y, z), true, true, false)
+							local modele = GetHashKey("guardian")
+							RequestModel(modele)
+							while not HasModelLoaded(modele) do
+								Wait(1)
+							end
+							cVozilo = CreateVehicle(modele, sX, sY, sZ, sH, true, true)
+							TaskWarpPedIntoVehicle(PlayerPedId(), cVozilo, -1)
+							--Wait(500)
+							SetModelAsNoLongerNeeded(modele)
+							--local vehNet = VehToNet(cVozilo)
+							--local kutijaNet = ObjToNet(crate)
+							--TriggerServerEvent("mafije:NarudzbeOruzja", vehNet, kutijaNet, PlayerData.job.name, ZatrazioOruzje)
+							CrateDrop(vector3(x, y, z), crate)
 						else
-							ESX.ShowNotification(_U('not_enough_money'))
+							ESX.ShowNotification("Niste odabrali oruzje!")
 						end
-					end, data.current.price, PlayerData.job.name)
+					else
+						ESX.TriggerServerCallback('mafije:piku4', function(hasEnoughMoney)
+							if hasEnoughMoney then
+								ZatrazioOruzje[ZOBr] = data.current.value
+								ZOBr = ZOBr+1
+								ESX.ShowNotification("Narucili ste 1x"..ESX.GetWeaponLabel(data.current.value))
+								--TriggerServerEvent('mafije:SpremiIme', PlayerData.job.name, ZatrazioOruzje, ZOBr)
+							else
+								ESX.ShowNotification(_U('not_enough_money'))
+							end
+						end, data.current.price, PlayerData.job.name)
+					end
 				else
-					ESX.ShowNotification("Vasoj mafiji jos nisu postavljene koordinate spawna crate dropa, javite adminima!")
+					ESX.ShowNotification("Vasoj mafiji jos nisu postavljene koordinate spawna crate dropa ili spawna vozila, javite adminima!")
 				end
 			end
 		else
@@ -4482,20 +4549,13 @@ function OpenBuyWeaponsMenu(br)
 
 end
 
-function CrateDrop(weapon, ammo, planeSpawnDistance, dropCoords)
-    local crateSpawn = vector3(dropCoords.x, dropCoords.y, dropCoords.z)
-	TriggerServerEvent('mafije:SaljiCrate', crateSpawn, PlayerData.job.name)
-end
+-- function CrateDrop(weapon, ammo, planeSpawnDistance, dropCoords)
+--     local crateSpawn = vector3(dropCoords.x, dropCoords.y, dropCoords.z)
+-- 	TriggerServerEvent('mafije:SaljiCrate', crateSpawn, PlayerData.job.name)
+-- end
 
-function CrateDrop2(parachute)
+function CrateDrop(parachute, crate)
     --Citizen.CreateThread(function()
-		local model = GetHashKey("prop_box_wood05a")
-		RequestModel(model)
-		
-		while not HasModelLoaded(model) do
-			Wait(1)
-		end
-		crate = CreateObject(model, parachute, false, false, false)
         soundID = GetSoundId()
         PlaySoundFromEntity(soundID, "Crate_Beeps", crate, "MP_CRATE_DROP_SOUNDS", true, 0)
 		local x,y,z = table.unpack(parachute)
@@ -4513,8 +4573,8 @@ function CrateDrop2(parachute)
             Wait(0)
         end
 		
-		local id = GetPlayerServerId(PlayerId())
-		TriggerServerEvent('mafije:BrisiCrate', id, PlayerData.job.name)
+		ESX.Game.DeleteObject(crate)
+		--TriggerServerEvent('mafije:BrisiCrate', PlayerData.job.name)
 
         if DoesBlipExist(blipa) then
             RemoveBlip(blipa)
@@ -4687,18 +4747,14 @@ function OpenPutStocksMenu()
 
         local itemName = data.current.value
 		menu.close()
-		print("opaa")
         ESX.UI.Menu.Open(
           'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_countaa',
           {
             title = _U('quantity')
           },
           function(data2, menu2)
-			print("nema me")
             local count = tonumber(data2.value)
-			print(count)
 			if count == nil then
-				print("picko")
 				ESX.ShowNotification(_U('quantity_invalid'))
 			else
 				for i=1, #inventory.items, 1 do
@@ -4710,7 +4766,6 @@ function OpenPutStocksMenu()
 						menu2.close()
 						menu.close()
 						if string.find(itemName, "weapon") == nil then
-							print("sta jede govna ovo")
 							TriggerServerEvent('mafije:putStockItems', itemName, count, PlayerData.job.id)
 							Wait(200)
 							OpenPutStocksMenu()
@@ -5023,9 +5078,12 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 				while not HasModelLoaded(model) do
 					Wait(1)
 				end
-				crate = CreateObject(model, crateSpawn, true, true, false)
-				local nid = NetworkGetNetworkIdFromEntity(crate)
-				TriggerServerEvent("mafije:SpremiNetID", nid, PlayerData.job.name)
+				local korda = GetEntityCoords(PlayerPedId())
+				crate = CreateObject(model, korda.x, korda.y, korda.z, true, true, false)
+				while not DoesEntityExist(crate) do
+					Wait(1)
+				end
+				--TriggerServerEvent("mafije:SpremiNetID", nid, PlayerData.job.name)
 				local veh = GetVehiclePedIsIn(PlayerPedId(), false)
 				local ent = GetEntityBoneIndexByName(veh, "boot")
 				AttachEntityToEntity(crate, GetVehiclePedIsIn(PlayerPedId(), false), ent, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1, 0, 0, 0, 2, 1)
@@ -5036,8 +5094,12 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 						DostavaBlip = AddBlipForCoord(x,y,z)
 						SetBlipSprite(DostavaBlip, 1)
 						SetBlipRoute(DostavaBlip,  true)
+						break
 					end
 				end
+				local vehNet = VehToNet(cVozilo)
+				local kutijaNet = ObjToNet(crate)
+				TriggerServerEvent("mafije:NarudzbeOruzja", vehNet, kutijaNet, PlayerData.job.name, ZatrazioOruzje)
 			end
 		end
 	end
@@ -5133,6 +5195,7 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 			if GetPedInVehicleSeat(vehara, -1) == PlayerPedId() then
 				PokupioCrate = false
 				DeleteEntity(crate)
+				ESX.Game.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId(), false))
 				RemoveBlip(DostavaBlip)
 				ESX.ShowNotification("Oruzje vam je dodano u sef mafije!")
 				for i=0, 10, 1 do
@@ -5144,7 +5207,8 @@ AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
 					end
 					Wait(100)
 				end
-				TriggerServerEvent('mafije:ResetirajOruzje', PlayerData.job.name)
+				--TriggerServerEvent('mafije:ResetirajOruzje', PlayerData.job.name)
+				ZatrazioOruzje = {}
 				ZOBr = 0
 			end
 		else
