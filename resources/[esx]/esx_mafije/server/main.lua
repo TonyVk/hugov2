@@ -220,6 +220,24 @@ AddEventHandler('mafije:MakniKamion', function(netid)
 	TriggerClientEvent("mafije:VratiKamione", -1, Kamioni)
 end)
 
+ESX.RegisterServerCallback('mafija:DohvatiProdaje', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local posao = xPlayer.getJob().name
+	local naso = false
+	for i=1, #Kamioni, 1 do
+		if Kamioni[i] ~= nil then
+			if Kamioni[i].Posao == posao then
+				naso = true
+				cb(true)
+				break
+			end
+		end
+	end
+	if not naso then
+		cb(false)
+	end
+end)
+
 ESX.RegisterServerCallback('mafije:OsobnoVozilo', function(source, cb, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 

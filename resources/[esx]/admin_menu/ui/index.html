@@ -10,7 +10,7 @@
 	<script type="text/javascript">
 		let selected = 0;
 		$(function () {
-			$(document).keyup(function (e) {
+			$(document).keydown(function (e) {
 				if (e.keyCode == 27) {
 					$("#admin").fadeOut();
 					$.post('https://admin_menu/close', JSON.stringify({}));
