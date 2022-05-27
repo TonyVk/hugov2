@@ -9,7 +9,7 @@ version '1.0.1'
 server_scripts {
   '@es_extended/locale.lua',
   'locales/hr.lua',
-  '@mysql-async/lib/MySQL.lua',
+  '@oxmysql/lib/MySQL.lua',
   'config.lua',
   'server/main.lua'
 }

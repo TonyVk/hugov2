@@ -20,7 +20,7 @@ client_scripts {
 server_scripts {
 	'@es_extended/locale.lua',
 	'@async/async.lua',
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'locales/en.lua',
 	'config.lua',
     'anticheat-sv.lua'

@@ -7,7 +7,7 @@ description 'ESX Ambulance Job'
 version '1.2.0'
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'locales/br.lua',
 	'locales/en.lua',

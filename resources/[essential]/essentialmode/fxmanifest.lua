@@ -9,7 +9,7 @@ game 'gta5'
 description 'EssentialMode by Kanersps.'
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'config.lua',
 	'server/util.lua',
 	'server/main.lua',

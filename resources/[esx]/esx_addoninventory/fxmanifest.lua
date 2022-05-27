@@ -7,7 +7,7 @@ description 'ESX Addon Inventory'
 version '1.1.0'
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'server/classes/addoninventory.lua',
 	'server/main.lua'
 }

@@ -23,7 +23,7 @@ server_scripts {
   'locales/fr.lua',
   'locales/es.lua',
   'locales/hr.lua',
-  '@mysql-async/lib/MySQL.lua',
+  '@oxmysql/lib/MySQL.lua',
   'config.lua',
   'server/main.lua'
 }

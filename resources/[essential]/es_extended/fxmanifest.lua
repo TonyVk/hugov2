@@ -8,7 +8,7 @@ version '1.1.0'
 
 server_scripts {
 	'@async/async.lua',
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 
 	'locale.lua',
 	'locales/de.lua',
@@ -97,7 +97,6 @@ server_exports {
 }
 
 dependencies {
-	'mysql-async',
 	'essentialmode',
 	'esplugin_mysql',
 	'async'

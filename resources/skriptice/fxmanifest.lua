@@ -14,7 +14,7 @@ files {
 
 server_scripts {
   '@es_extended/locale.lua',
-  '@mysql-async/lib/MySQL.lua',
+  '@oxmysql/lib/MySQL.lua',
   'locales/hr.lua',
   'server/main.lua',
   'config.lua'

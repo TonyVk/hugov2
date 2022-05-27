@@ -10,13 +10,12 @@ description 'A MySQL plugin for EssentialMode'
 }]]
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	--'@fxmigrant/helper.lua',
 	'server.lua'
 }
 
 dependencies {
 	'essentialmode',
-	'mysql-async'
 	--'fxmigrant'
 }

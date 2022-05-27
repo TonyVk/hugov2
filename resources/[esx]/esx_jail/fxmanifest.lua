@@ -11,7 +11,7 @@ game 'gta5'
 description "Jail Script With Working Job"
 
 server_scripts {
-	"@mysql-async/lib/MySQL.lua",
+	"@oxmysql/lib/MySQL.lua",
 	"config.lua",
 	"server/server.lua"
 }
