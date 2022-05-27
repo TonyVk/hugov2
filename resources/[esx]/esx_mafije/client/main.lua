@@ -1,7 +1,3 @@
---[[
--Dodati upit prije kupovine oruzja, ne uzimat lovu dok ne pritisnu "Zapocni dostavu"
-]]
-
 local Keys = {
   ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
   ["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
@@ -2736,8 +2732,8 @@ function OpenGarageMenu()
 	ESX.TriggerServerCallback('eden_garage:getVehicles', function(vehicles)
  	for _,v in pairs(vehicles) do
 		if v.brod == 0 then
-			ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
-				if not br then
+			-- ESX.TriggerServerCallback('pijaca:JelNaProdaju', function(br)
+			-- 	if not br then
 					local hashVehicule = v.model
 					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 					local labelvehicle
@@ -2749,8 +2745,8 @@ function OpenGarageMenu()
 						labelvehicle = vehicleName..' <font color="red">Izvan garaze</font>'
 					end    
 					table.insert(elements, {label =labelvehicle , value = v})
-				end
-			end)
+			-- 	end
+			-- end)
         end
    	 end
 		Wait(500)
@@ -2816,16 +2812,28 @@ function OpenGarageMenu()
 	end)
 end
 
+-- function SpawnVehicle(vehicle, co, he)
+-- 	if GarazaV ~= nil then
+-- 		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
+-- 		GarazaV = nil
+-- 		if Vblip ~= nil then
+-- 			RemoveBlip(Vblip)
+-- 			Vblip = nil
+-- 		end
+-- 	end
+-- 	TriggerServerEvent("mafije:SpawnVozilo", vehicle, co, he)
+-- end
+
 function SpawnVehicle(vehicle, co, he)
-	if GarazaV ~= nil then
-		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-		GarazaV = nil
-		if Vblip ~= nil then
-			RemoveBlip(Vblip)
-			Vblip = nil
-		end
-	end
-	TriggerServerEvent("mafije:SpawnVozilo", vehicle, co, he)
+	ESX.Game.SpawnVehicle(vehicle.model, co, he, function (vehicle2)
+		TaskWarpPedIntoVehicle(PlayerPedId(), vehicle2, -1)
+		ESX.Game.SetVehicleProperties(vehicle2, vehicle)
+		local plate = GetVehicleNumberPlateText(vehicle2)
+		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
+		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
+		TriggerServerEvent("ls:mainCheck", plate, vehicle2, true)
+		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)
+	end)
 end
 
 RegisterNetEvent('mafije:VratiVozilo')
@@ -2989,12 +2997,12 @@ function StockVehicleMenu()
 									owned = true
 									GarazaV = nil
 									Vblip = nil
-									if engineHealth < 1000 then
-										local fraisRep= math.floor((1000 - engineHealth)*Config.RepairMultiplier)
-										reparation(fraisRep,current,vehicleProps)
-									else
+									-- if engineHealth < 1000 then
+									-- 	local fraisRep= math.floor((1000 - engineHealth)*Config.RepairMultiplier)
+									-- 	reparation(fraisRep,current,vehicleProps)
+									-- else
 										ranger(current,vehicleProps)
-									end
+									-- end
 								else
 									--TriggerEvent("playradio", "https://www.youtube.com/watch?v=LIDKQmT0dCs")
 									--Wait(10000)
@@ -4468,7 +4476,7 @@ function OpenBuyWeaponsMenu(br)
 			table.insert(elements, {label = 'x' .. count .. ' ' .. ESX.GetWeaponLabel(weapon.Ime) .. ' $' .. weapon.Cijena, value = weapon.Ime, price = weapon.Cijena})
 		end
     end
-
+	local krajnjaCijena = 0
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'armory_buy_weapons',
       {
@@ -4496,36 +4504,18 @@ function OpenBuyWeaponsMenu(br)
 				if x ~= nil and sX ~= nil then
 					if data.current.value == "dostava" then
 						if ZOBr >= 1 then
-							ESX.ShowNotification("Odite na zeleni kofer oznacen na mapi kako bih ste pokupili paket")
-							local model = GetHashKey("prop_box_wood05a")
-							RequestModel(model)
-							
-							while not HasModelLoaded(model) do
-								Wait(1)
-							end
-							crate = CreateObject(model, vector3(x, y, z), true, true, false)
-							local modele = GetHashKey("guardian")
-							RequestModel(modele)
-							while not HasModelLoaded(modele) do
-								Wait(1)
-							end
-							cVozilo = CreateVehicle(modele, sX, sY, sZ, sH, true, true)
-							TaskWarpPedIntoVehicle(PlayerPedId(), cVozilo, -1)
-							--Wait(500)
-							SetModelAsNoLongerNeeded(modele)
-							--local vehNet = VehToNet(cVozilo)
-							--local kutijaNet = ObjToNet(crate)
-							--TriggerServerEvent("mafije:NarudzbeOruzja", vehNet, kutijaNet, PlayerData.job.name, ZatrazioOruzje)
-							CrateDrop(vector3(x, y, z), crate)
+							menu.close()
+							TriggerEvent("upit:OtvoriPitanje", "esx_mafije", "Narudzba oruzja", "Zelite li naruciti oruzje za $"..krajnjaCijena.."?", {cijena = krajnjaCijena})
 						else
 							ESX.ShowNotification("Niste odabrali oruzje!")
 						end
 					else
 						ESX.TriggerServerCallback('mafije:piku4', function(hasEnoughMoney)
 							if hasEnoughMoney then
+								krajnjaCijena = krajnjaCijena+data.current.price
 								ZatrazioOruzje[ZOBr] = data.current.value
 								ZOBr = ZOBr+1
-								ESX.ShowNotification("Narucili ste 1x"..ESX.GetWeaponLabel(data.current.value))
+								ESX.ShowNotification("Narucili ste 1x"..ESX.GetWeaponLabel(data.current.value).." za $"..data.current.price)
 								--TriggerServerEvent('mafije:SpremiIme', PlayerData.job.name, ZatrazioOruzje, ZOBr)
 							else
 								ESX.ShowNotification(_U('not_enough_money'))
@@ -4548,6 +4538,56 @@ function OpenBuyWeaponsMenu(br)
   end, PlayerData.job.name)
 
 end
+
+RegisterNUICallback(
+    "zatvoriupit",
+    function(data, cb)
+		local br = data.br
+		local arg = data.args
+		if br == 1 then
+			ESX.TriggerServerCallback('mafije:piku5', function(hasEnoughMoney)
+				if hasEnoughMoney then
+					local x,y,z
+					local sX, sY, sZ, sH
+					for i=1, #Koord, 1 do
+						if Koord[i].Mafija == PlayerData.job.name then
+							if Koord[i].Ime == "CrateDrop" then
+								x,y,z = table.unpack(Koord[i].Coord)
+							end
+							if Koord[i].Ime == "LokVozila" then
+								sX,sY,sZ,sH = table.unpack(Koord[i].Coord)
+							end
+						end
+					end
+					ESX.ShowNotification("Odite na zeleni kofer oznacen na mapi kako bih ste pokupili paket")
+					local model = GetHashKey("prop_box_wood05a")
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						Wait(1)
+					end
+					crate = CreateObject(model, vector3(x, y, z), true, true, false)
+					local modele = GetHashKey("guardian")
+					RequestModel(modele)
+					while not HasModelLoaded(modele) do
+						Wait(1)
+					end
+					cVozilo = CreateVehicle(modele, sX, sY, sZ, sH, true, true)
+					TaskWarpPedIntoVehicle(PlayerPedId(), cVozilo, -1)
+					SetModelAsNoLongerNeeded(modele)
+					CrateDrop(vector3(x, y, z), crate)
+				else
+					ESX.ShowNotification("Nemate dovoljno novca u sefu mafije.")
+					ZatrazioOruzje = {}
+					ZOBr = 0
+				end	
+			end, arg.cijena)
+		else
+			ESX.ShowNotification("Odbili ste narudzbu oruzja!")
+			ZatrazioOruzje = {}
+			ZOBr = 0
+		end
+    end
+)
 
 -- function CrateDrop(weapon, ammo, planeSpawnDistance, dropCoords)
 --     local crateSpawn = vector3(dropCoords.x, dropCoords.y, dropCoords.z)

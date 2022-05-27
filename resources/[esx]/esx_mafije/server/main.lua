@@ -2852,18 +2852,27 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 end)
 
 ESX.RegisterServerCallback('mafije:piku4', function(source, cb, amount, maf)
-  local soc = "society_"..maf
-  TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+	local soc = "society_"..maf
+	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+		if account.money >= amount then
+			cb(true)
+		else
+			cb(false)
+		end
+	end)
+end)
 
-    if account.money >= amount then
-      account.removeMoney(amount)
-      cb(true)
-    else
-      cb(false)
-    end
-
-  end)
-
+ESX.RegisterServerCallback('mafije:piku5', function(source, cb, amount)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local soc = "society_"..xPlayer.getJob().name
+	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+		if account.money >= amount then
+			account.removeMoney(amount)
+			cb(true)
+		else
+			cb(false)
+		end
+	end)
 end)
 
 ESX.RegisterServerCallback('mafije:getStockItems', function(source, cb, maf)
