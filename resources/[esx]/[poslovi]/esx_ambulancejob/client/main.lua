@@ -478,6 +478,7 @@ function RemoveItemsAfterRPDeath()
 				local retval = GetHashKey(hashVehicule)
 				voza = CreateVehicle(hashVehicule, -1721.3801269531, -254.02830505371, 50.666568756104, 125.25465393066, false, false)
 				SetVehicleEngineOn(voza, true, true, false)
+				SetModelAsNoLongerNeeded(hashVehicule)
 				pilot = CreatePedInsideVehicle(voza, 6, pilotModel, -1, false, false)
 				--TaskWarpPedIntoVehicle(ped,  voza,  0)
 				SetVehicleDoorsLocked(voza, 4)
@@ -505,15 +506,17 @@ function RemoveItemsAfterRPDeath()
 					}, function(obj)
 					SetEntityHeading(obj, 330.0)
 					PlaceObjectOnGroundProperly(obj)
+					SetModelAsNoLongerNeeded(GetHashKey('prop_coffin_01'))
 					lijesic = obj
 				end)
 				for i=1, #peds, 1 do
 					if DoesEntityExist(Pedovi[i]) then
 						DeleteEntity(Pedovi[i])
 					end
-					local model = RequestModel(peds[i].ped)
-					while not HasModelLoaded(peds[i].ped) do
-						Wait(1)
+					local model = GetHashKey(peds[i].ped)
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						Citizen.Wait(1)
 					end
 					Pedovi[i] = CreatePed(5, model, peds[i].x, peds[i].y, peds[i].z , peds[i].h, false, true)
 					SetModelAsNoLongerNeeded(model)
