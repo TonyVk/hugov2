@@ -141,7 +141,7 @@ ESX.StartPayCheck = function()
 					ESX.SavePlayer(xPlayer, function()
 					end)
 					--end)
-					MySQL.Async.fetchAll("SELECT kredit, rata, brplaca, exp, level FROM users WHERE identifier = @iden", { ['@iden'] = xPlayer.identifier }, function (result6)
+					MySQL.Async.fetchAll("SELECT kredit, rata, brplaca, exp, level FROM users WHERE ID = @iden", { ['@iden'] = xPlayer.getID() }, function (result6)
 						if result6 ~= nil then
 							local kredit = result6[1].kredit
 							local rata = result6[1].rata
@@ -161,7 +161,7 @@ ESX.StartPayCheck = function()
 								if kredit > rata then
 									xPlayer.removeAccountMoney('bank', rata)
 									kredit = kredit-rata
-									MySQL.Async.execute("UPDATE users SET kredit=@kr WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@kr'] = kredit})
+									MySQL.Async.execute("UPDATE users SET kredit=@kr WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@kr'] = kredit})
 									local tekste = "Platili ste ratu kredita od $"..rata.."! Za vratit vam je ostalo jos $"..kredit.."."
 									TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, 'Banka',
 									'Kredit',
@@ -170,7 +170,7 @@ ESX.StartPayCheck = function()
 								else
 									xPlayer.removeAccountMoney('bank', kredit)
 									kredit = 0
-									MySQL.Async.execute("UPDATE users SET kredit=0, rata=0 WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier})
+									MySQL.Async.execute("UPDATE users SET kredit=0, rata=0 WHERE ID=@identifier", {['@identifier'] = xPlayer.getID()})
 									TriggerClientEvent('esx:showNotification', xPlayer.source, "[Banka] Otplatili ste kredit!")
 									TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, 'Banka',
 									'Kredit',
@@ -179,7 +179,7 @@ ESX.StartPayCheck = function()
 								end
 							end
 							place = place+1
-							MySQL.Async.execute("UPDATE users SET brplaca=@brpl, exp=@exp, level=@lvl WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@brpl'] = place, ['@exp'] = exper, ['@lvl'] = level})
+							MySQL.Async.execute("UPDATE users SET brplaca=@brpl, exp=@exp, level=@lvl WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@brpl'] = place, ['@exp'] = exper, ['@lvl'] = level})
 						end
 					end)
 				end

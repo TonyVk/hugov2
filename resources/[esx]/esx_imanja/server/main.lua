@@ -345,7 +345,7 @@ AddEventHandler('imanja:ProdajImanje', function(ime)
 			MySQL.Async.execute('DELETE FROM kuce WHERE ID = @id', {
 				['@id'] = Imanja[i].KucaID
 			})
-			MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
+			MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
             MySQL.Async.execute("DELETE FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = Imanja[i].KucaID})
 			TriggerEvent('loaf_housing:ObrisiKucu', Imanja[i].KucaID)
 			Imanja[i].KucaID = nil
@@ -378,7 +378,7 @@ AddEventHandler('imanja:SrusiKucu', function(ime)
 				MySQL.Async.execute('DELETE FROM kuce WHERE ID = @id', {
 					['@id'] = Imanja[i].KucaID
 				})
-				MySQL.Async.execute("UPDATE users SET house=@house WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
+				MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
 				MySQL.Async.execute("DELETE FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = Imanja[i].KucaID})
 				TriggerEvent('loaf_housing:ObrisiKucu', Imanja[i].KucaID)
 			end

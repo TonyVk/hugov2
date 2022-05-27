@@ -10,7 +10,7 @@ function FaturaGetBilling (accountId, cb)
   local xPlayer = ESX.GetPlayerFromId(source)
     MySQL.Async.fetchAll([===[
       SELECT * FROM billing WHERE identifier = @identifier
-      ]===], { ['@identifier'] = xPlayer.identifier }, cb)
+      ]===], { ['@identifier'] = xPlayer.getID() }, cb)
   end 
 
 function getUserFatura(phone_number, firstname, cb)

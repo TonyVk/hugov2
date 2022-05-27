@@ -116,7 +116,7 @@ RegisterNetEvent('skriptice:SpremiLogin')
 AddEventHandler('skriptice:SpremiLogin', function()
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	MySQL.Async.execute("UPDATE users SET zadnji_login=@datum WHERE identifier=@identifier", {['@identifier'] = xPlayer.identifier, ['@datum'] = os.date("%d/%m/%Y %X")})
+	MySQL.Async.execute("UPDATE users SET zadnji_login=@datum WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@datum'] = os.date("%d/%m/%Y %X")})
 end)
 
 RegisterNetEvent('esx_repairkit:removeKit')

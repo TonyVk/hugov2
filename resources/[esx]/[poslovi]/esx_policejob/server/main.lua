@@ -127,9 +127,9 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
  
     elseif itemType == 'item_account' then
         targetXPlayer.removeMoney(amount)
-		MySQL.Async.execute('UPDATE users SET `money` = @money WHERE identifier = @identifier', {
+		MySQL.Async.execute('UPDATE users SET `money` = @money WHERE ID = @identifier', {
 					['@money']      = targetXPlayer.getMoney(),
-					['@identifier'] = targetXPlayer.identifier
+					['@identifier'] = targetXPlayer.getID()
 				}, function(rowsChanged)
 		end)
 		local societyAccount = nil
@@ -411,8 +411,8 @@ end)
 ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, cb, target)
 	if Config.EnableESXIdentity then
 		local xPlayer = ESX.GetPlayerFromId(target)
-		local result = MySQL.Sync.fetchAll('SELECT firstname, lastname, money, sex, dateofbirth, height FROM users WHERE identifier = @identifier', {
-			['@identifier'] = xPlayer.identifier
+		local result = MySQL.Sync.fetchAll('SELECT firstname, lastname, money, sex, dateofbirth, height FROM users WHERE ID = @identifier', {
+			['@identifier'] = xPlayer.getID()
 		})
 
 		local firstname = result[1].firstname

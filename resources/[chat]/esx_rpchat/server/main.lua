@@ -131,8 +131,8 @@ AddEventHandler('rpchat:PogleMute', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer ~= nil then
-		MySQL.Async.fetchScalar('SELECT mute FROM users WHERE identifier = @identifier', {
-			['@identifier'] = xPlayer.identifier
+		MySQL.Async.fetchScalar('SELECT mute FROM users WHERE ID = @identifier', {
+			['@identifier'] = xPlayer.getID()
 		}, function(result)
 			local mi = result
 			if mi <= 0 then
@@ -158,9 +158,9 @@ AddEventHandler('esx_rpchat:UnmuteGa', function(idic)
 		TriggerEvent("report:Mutan", id, nil)
 		TriggerClientEvent('chat:addMessage', id, { args = { '^1SYSTEM ', " Unmuteani ste od strane admina!" } })
 		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Unmute ste igraca "..GetPlayerName(id).."("..id..")!" } })
-		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE identifier = @identifier', {
+		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE ID = @id', {
 			['@mut']        = 0,
-			['@identifier'] = xPlayer.identifier
+			['@id'] = xPlayer.getID()
 		})
 	else
 		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Igrac nije online!" } })
@@ -180,9 +180,9 @@ AddEventHandler('esx_rpchat:MuteGa', function(idic, mi)
 		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Utisali ste igraca "..GetPlayerName(id).."("..id..") na "..mi.." minuta!" } })
 		local xPlayer = ESX.GetPlayerFromId(id)
 
-		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE identifier = @identifier', {
+		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE ID = @identifier', {
 			['@mut']        = mi,
-			['@identifier'] = xPlayer.identifier
+			['@identifier'] = xPlayer.getID()
 		})
 	else
 		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM ', " Igrac nije online!" } })
@@ -196,16 +196,16 @@ AddEventHandler('esx_rpchat:VratiMinute', function(mi)
 	if mi <= 0 then
 		Mute[_source] =  nil
 		TriggerEvent("report:Mutan", _source, nil)
-		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE identifier = @identifier', {
+		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE ID = @identifier', {
 			['@mut']        = 0,
-			['@identifier'] = xPlayer.identifier
+			['@identifier'] = xPlayer.getID()
 		})
 	else
 		Mute[_source] = mi
 		TriggerEvent("report:Mutan", _source, mi)
-		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE identifier = @identifier', {
+		MySQL.Async.execute('UPDATE users SET mute = @mut WHERE ID = @identifier', {
 			['@mut']        = mi,
-			['@identifier'] = xPlayer.identifier
+			['@identifier'] = xPlayer.getID()
 		})
 	end
 end)

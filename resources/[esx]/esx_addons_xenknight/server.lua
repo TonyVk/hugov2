@@ -149,8 +149,8 @@ AddEventHandler('esx:playerLoaded', function(source)
 
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  MySQL.Async.fetchScalar('SELECT phone_number FROM users WHERE identifier = @identifier',{
-    ['@identifier'] = xPlayer.identifier
+  MySQL.Async.fetchScalar('SELECT phone_number FROM users WHERE ID = @identifier',{
+    ['@identifier'] = xPlayer.getID()
   }, function(result)
 
     local phoneNumber = result
@@ -189,8 +189,8 @@ function getPhoneNumber (source, callback)
   if xPlayer == nil then
     callback(nil)
   end
-  MySQL.Async.fetchScalar('SELECT phone_number FROM users WHERE identifier = @identifier',{
-    ['@identifier'] = xPlayer.identifier
+  MySQL.Async.fetchScalar('SELECT phone_number FROM users WHERE ID = @identifier',{
+    ['@identifier'] = xPlayer.getID()
   }, function(result)
     callback(result)
   end)

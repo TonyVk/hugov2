@@ -112,7 +112,7 @@ end
 ESX.RegisterServerCallback('prodajoruzje:DohvatiRPIme', function(source, cb, id)
 	local xPlayer = ESX.GetPlayerFromId(id)
 
-	MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE identifier = @identifier", { ["@identifier"] = xPlayer.identifier }, function(result)
+	MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
 		cb(result[1].firstname.." "..result[1].lastname)
 	end)
 end)
@@ -198,7 +198,7 @@ AddEventHandler('kont:DajItema', function(koord)
 end)
 
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-	MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE identifier = @identifier", { ["@identifier"] = xPlayer.identifier }, function(result)
+	MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
 		MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
 			table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
 			TriggerClientEvent("tagovi:Igraci", -1, Igraci)
@@ -224,7 +224,7 @@ AddEventHandler('onResourceStart', function(resource)
 			local br = 0
 			for i=1, #players, 1 do
 				local xPlayer = ESX.GetPlayerFromId(players[i])
-				MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE identifier = @identifier", { ["@identifier"] = xPlayer.identifier }, function(result)
+				MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
 					MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
 						table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
 						br = br+1
@@ -277,10 +277,10 @@ AddEventHandler('prodajoruzje:Upoznaj', function(id)
 			end
 		end
 		MySQL.Async.fetchAll("insert into prijatelji(VlasnikID, PrijateljID) values(@id1, @id2)", { ["@id1"] = jaPlayer.getID(), ["@id2"] = xPlayer.getID() }, function(result2)
-			MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE identifier = @identifier", { ["@identifier"] = jaPlayer.identifier }, function(result)
+			MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = jaPlayer.getID() }, function(result)
 				MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
 					table.insert(Igraci, {id = jaPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
-					MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE identifier = @identifier", { ["@identifier"] = xPlayer.identifier }, function(result)
+					MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
 						MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
 							table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
 							TriggerClientEvent("tagovi:Igraci", -1, Igraci)

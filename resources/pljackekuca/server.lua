@@ -78,17 +78,17 @@ RegisterNetEvent('pkuca:SpremiVrijeme')
 AddEventHandler('pkuca:SpremiVrijeme', function(minute)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	MySQL.Async.execute('UPDATE users SET kpljacka = @count WHERE identifier = @ident', {
+	MySQL.Async.execute('UPDATE users SET kpljacka = @count WHERE ID = @ident', {
 		['@count'] = tonumber(minute),
-		['@ident'] = xPlayer.identifier
+		['@ident'] = xPlayer.getID()
 	})
 end)
 
 ESX.RegisterServerCallback('pkuca:DohvatiVrijeme', function (source, cb)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	MySQL.Async.fetchScalar('SELECT kpljacka FROM users WHERE identifier = @identifier', {
-		['@identifier'] = xPlayer.identifier
+	MySQL.Async.fetchScalar('SELECT kpljacka FROM users WHERE ID = @identifier', {
+		['@identifier'] = xPlayer.getID()
 	}, function(result)
         cb(result)
     end)

@@ -338,8 +338,8 @@ AddEventHandler('esx_ambulancejob:setDeathStatus', function(isDead)
 		return
 	end
 
-	MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE identifier = @identifier', {
-		['@identifier'] = xPlayer.identifier,
+	MySQL.Sync.execute('UPDATE users SET is_dead = @isDead WHERE ID = @identifier', {
+		['@identifier'] = xPlayer.getID(),
 		['@isDead'] = isDead
 	})
 end)
