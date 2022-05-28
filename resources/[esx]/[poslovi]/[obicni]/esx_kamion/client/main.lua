@@ -72,11 +72,6 @@ function SpawnNpcove()
 		exports.qtarget:RemoveZone('kamion_duznost')
 		DuznostPed = nil
 	end
-	if VoziloPed ~= nil then
-		DeleteEntity(VoziloPed)
-		exports.qtarget:RemoveZone('kamion_vozila')
-		VoziloPed = nil
-	end
 	if ESX.PlayerData.posao.name == Config.Posao then
 		local pedmodel = GetHashKey("s_m_m_trucker_01")
 		LoadModel(pedmodel)
@@ -88,16 +83,6 @@ function SpawnNpcove()
 		FreezeEntityPosition(DuznostPed, true)
 		SetPedCanPlayAmbientAnims(DuznostPed, false)
 		SetPedCanRagdollFromPlayerImpact(DuznostPed, false)
-
-		VoziloPed = CreatePed(0, pedmodel, Config.SpawnVozilaPed.Koord - vector3(0.0, 0.0, 1.0), Config.SpawnVozilaPed.Heading, false, true)
-		SetEntityInvincible(VoziloPed, true)
-		SetBlockingOfNonTemporaryEvents(VoziloPed, true)
-		SetPedDiesWhenInjured(VoziloPed, false)
-		SetPedFleeAttributes(VoziloPed, 2)
-		FreezeEntityPosition(VoziloPed, true)
-		SetPedCanPlayAmbientAnims(VoziloPed, false)
-		SetPedCanRagdollFromPlayerImpact(VoziloPed, false)
-		SetModelAsNoLongerNeeded(pedmodel)
 
 		exports.qtarget:AddEntityZone("kamion", DuznostPed, 
 		{
@@ -120,38 +105,6 @@ function SpawnNpcove()
 				},
 			},
 			distance = 2.5
-		})
-		local brojic = 0
-		for i=1, #Pumpe, 1 do
-			if Pumpe[i] ~= nil then
-				if Pumpe[i].Narudzba == 1 then
-					brojic = brojic+1
-				end
-			end
-		end
-		exports.qtarget:AddEntityZone("kamion2", VoziloPed, 
-		{
-			name="kamion_vozila",
-			debugPoly=false,
-			useZ = true
-		}, {
-			options = {
-				{
-					event = "kamion:Vozilo",
-					icon = "fa fa-car",
-					label = "Dostava kontenjera",
-					broj = 1,
-					canInteract = function(entity) return isInService end
-				},
-				{
-					event = "kamion:Vozilo",
-					icon = "fa fa-user",
-					label = "Dostava goriva ("..brojic.." narudzbi)",
-					broj = 2,
-					canInteract = function(entity) return isInService end
-				},
-			},
-			distance = 2.5,
 		})
 	else
 		local pedmodel = GetHashKey("s_m_m_trucker_01")
@@ -271,6 +224,54 @@ RegisterNetEvent('kamion:UzmiDuznost')
 AddEventHandler('kamion:UzmiDuznost', function()
 	isInService = true
 	setUniform(PlayerPedId())
+	if VoziloPed ~= nil then
+		DeleteEntity(VoziloPed)
+		exports.qtarget:RemoveZone('kamion_vozila')
+		VoziloPed = nil
+	end
+	local pedmodel = GetHashKey("s_m_m_trucker_01")
+	VoziloPed = CreatePed(0, pedmodel, Config.SpawnVozilaPed.Koord - vector3(0.0, 0.0, 1.0), Config.SpawnVozilaPed.Heading, false, true)
+	SetEntityInvincible(VoziloPed, true)
+	SetBlockingOfNonTemporaryEvents(VoziloPed, true)
+	SetPedDiesWhenInjured(VoziloPed, false)
+	SetPedFleeAttributes(VoziloPed, 2)
+	FreezeEntityPosition(VoziloPed, true)
+	SetPedCanPlayAmbientAnims(VoziloPed, false)
+	SetPedCanRagdollFromPlayerImpact(VoziloPed, false)
+	SetModelAsNoLongerNeeded(pedmodel)
+
+	local brojic = 0
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil then
+			if Pumpe[i].Narudzba == 1 then
+				brojic = brojic+1
+			end
+		end
+	end
+	exports.qtarget:AddEntityZone("kamion2", VoziloPed, 
+	{
+		name="kamion_vozila",
+		debugPoly=false,
+		useZ = true
+	}, {
+		options = {
+			{
+				event = "kamion:Vozilo",
+				icon = "fa fa-car",
+				label = "Dostava kontenjera",
+				broj = 1,
+				canInteract = function(entity) return isInService end
+			},
+			{
+				event = "kamion:Vozilo",
+				icon = "fa fa-user",
+				label = "Dostava goriva ("..brojic.." narudzbi)",
+				broj = 2,
+				canInteract = function(entity) return isInService end
+			},
+		},
+		distance = 2.5,
+	})
 end)
 
 RegisterNetEvent('kamion:OstaviDuznost')
@@ -280,6 +281,11 @@ AddEventHandler('kamion:OstaviDuznost', function()
 		TriggerEvent('skinchanger:loadSkin', skin)
 	end)
 	ZavrsiPosao()
+	if VoziloPed ~= nil then
+		DeleteEntity(VoziloPed)
+		exports.qtarget:RemoveZone('kamion_vozila')
+		VoziloPed = nil
+	end
 end)
 
 RegisterNetEvent('kamion:ZaposliSe')
@@ -290,6 +296,7 @@ end)
 RegisterNetEvent('pumpe:SaljiPumpe')
 AddEventHandler('pumpe:SaljiPumpe', function(pumpe) 
 	Pumpe = pumpe
+	TriggerEvent("kamion:UzmiDuznost")
 end)
 
 function setUniform(playerPed)
