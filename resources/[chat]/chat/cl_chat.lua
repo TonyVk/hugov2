@@ -3,6 +3,7 @@ local isRDR = not TerraingridActivate and true or false
 local chatInputActive = false
 local chatInputActivating = false
 local chatLoaded = false
+local kurac = false
 
 RegisterNetEvent('chatMessage')
 RegisterNetEvent('chat:addTemplate')
@@ -243,6 +244,7 @@ if not isRDR then
     end
 
     isFirstHide = false
+    kurac = true
 
     SetResourceKvp('hideState', tostring(chatHideState))
   end, false)
@@ -289,7 +291,7 @@ Citizen.CreateThread(function()
       end
     end
 
-    if chatLoaded then
+    if chatLoaded and (chatInputActive or kurac) then
       local forceHide = IsScreenFadedOut() or IsPauseMenuActive()
       local wasForceHide = false
 
@@ -315,6 +317,7 @@ Citizen.CreateThread(function()
 
         isFirstHide = false
       end
+      kurac = false
     end
   end
 end)

@@ -297,16 +297,16 @@ end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Nemate ovlasti.")
 end, {help = "Promjenite vrijeme", params = {{ name="sati", help="Broj izmedju 0-23"}, { name="minute", help="Broj izmedju 0-59"}}})
 
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-		local newBaseTime = os.time(os.date("!*t"))/2 + 360
-		if freezeTime then
-			timeOffset = timeOffset + baseTime - newBaseTime
-		end
-		baseTime = newBaseTime
-	end
-end)
+-- Citizen.CreateThread(function()
+-- 	while true do
+-- 		Citizen.Wait(0)
+-- 		local newBaseTime = os.time(os.date("!*t"))/2 + 360
+-- 		if freezeTime then
+-- 			timeOffset = timeOffset + baseTime - newBaseTime
+-- 		end
+-- 		baseTime = newBaseTime
+-- 	end
+-- end)
 
 Citizen.CreateThread(function()
 	while true do
