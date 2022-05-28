@@ -12,6 +12,8 @@ local ograda2 = nil
 local ograda3 = nil
 local Broj = 0
 local Cekic = nil
+local DuznostPed = nil
+local VoziloPed = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
