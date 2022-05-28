@@ -63,6 +63,7 @@ local HVozilo					= nil
 local ProdajeHeroin 			= false
 local PovratVozilo 				= false
 local HBlip 					= nil
+local Cpovi 					= {}
 
 --Legala
 local posaov = nil
@@ -121,6 +122,87 @@ Citizen.CreateThread(function()
   Wait(5000)
   ProvjeriPosao()
 end)
+
+function SpawnCpove()
+	if #Cpovi > 0 then
+		for i=1, #Cpovi, 1 do
+		  	if Cpovi[i] ~= nil then
+			  	if Cpovi[i].Spawnan then
+					DeleteCheckpoint(Cpovi[i].ID)
+					Cpovi[i].Spawnan = false
+			  	end
+		  	end
+		end
+	end
+	Cpovi = {}
+	for i=1, #Koord, 1 do
+		if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
+			if Koord[i].Ime == "Oruzarnica" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "Armory", PartNum = i, Station = 1, Koord = vector3(x, y, z), Spawnan = false, r = 50, g = 50, b = 204})
+				end
+			end
+			if Koord[i].Ime == "Lider" and (PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik') then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "BossActions", PartNum = i, Station = 2, Koord = vector3(x, y, z), Spawnan = false, r = 50, g = 50, b = 204})
+				end
+			end
+			if Koord[i].Ime == "SpawnV" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "VehicleSpawner", PartNum = i, Station = 3, Koord = vector3(x, y, z), Spawnan = false, r = 50, g = 50, b = 204})
+				end
+			end
+			if Koord[i].Ime == "DeleteV" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "VehicleDeleter", PartNum = i, Station = 4, Koord = vector3(x, y, z), Spawnan = false, r = 255, g = 0, b = 0})
+				end
+			end
+			if Koord[i].Ime == "DeleteV2" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "VehicleDeleter", PartNum = i, Station = 4, Koord = vector3(x, y, z), Spawnan = false, r = 255, g = 0, b = 0})
+				end
+			end
+			if Koord[i].Ime == "Ulaz" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "UlazUKucu", PartNum = i, Station = 4, Koord = vector3(x, y, z), Spawnan = false, r = 0, g = 128, b = 255})
+				end
+			end
+			if Koord[i].Ime == "Izlaz" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "IzlazIzKuce", PartNum = i, Station = 4, Koord = vector3(x, y, z), Spawnan = false, r = 0, g = 128, b = 255})
+				end
+			end
+			if Koord[i].Ime == "Kokain" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "UlazUKokain", PartNum = i, Station = 4, Koord = vector3(x, y, z), Spawnan = false, r = 0, g = 128, b = 255})
+				end
+			end
+			if Koord[i].Ime == "Heroin" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "UlazUHeroin", PartNum = i, Station = 4, Koord = vector3(x, y, z), Spawnan = false, r = 0, g = 128, b = 255})
+				end
+			end
+			if Koord[i].Ime == "Posao" then
+				local x,y,z = table.unpack(Koord[i].Coord)
+				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+					table.insert(Cpovi, {ID = nil, Tip = "Posao", PartNum = i, Station = 4, Koord = vector3(x, y, z), Spawnan = false, r = 0, g = 128, b = 255})
+				end
+			end
+		end
+	end
+	if PlayerData.job.name == Config.Automafija then
+		table.insert(Cpovi, {ID = nil, Tip = "Impound", PartNum = 1, Station = 1, Koord = Config.Impound, Spawnan = false, r = 50, g = 50, b = 204})
+	end
+end
 
 RegisterNetEvent('esx_property:ProsljediVozilo')
 AddEventHandler('esx_property:ProsljediVozilo', function(voz, bl)
@@ -1204,6 +1286,7 @@ function ProvjeriPosao()
 	if Config.Blipovi == true then
 		SpawnBlipove()
 	end
+	SpawnCpove()
 end
 
 function SpawnBlipove()
@@ -4929,6 +5012,7 @@ RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
 	SpawnBlip()
+	SpawnCpove()
 end)
 
 AddEventHandler('mafije:hasEnteredMarker', function(station, part, partNum)
@@ -6334,19 +6418,51 @@ Citizen.CreateThread(function()
 	while PlayerData.job == nil do
 		Wait(1)
 	end
-	if PlayerData.job.name == Config.Automafija then
-		if #(coords-Config.Impound) < 100.0 then
-			waitara = 0
-			naso = 1
-			DrawMarker(1, Config.Impound, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+	if #Cpovi > 0 then
+		for i=1, #Cpovi, 1 do
+			if Cpovi[i] ~= nil then
+				if #(coords-Cpovi[i].Koord) > 100 then
+					if Cpovi[i].Spawnan then
+						DeleteCheckpoint(Cpovi[i].ID)
+						Cpovi[i].Spawnan = false
+					end
+				else
+					if Cpovi[i].Spawnan == false then
+						local kord = Cpovi[i].Koord
+						local range = 2.0
+						local check = CreateCheckpoint(47, kord.x, kord.y, kord.z, 0, 0, 0, range, Cpovi[i].r, Cpovi[i].g, Cpovi[i].b, 100)
+						SetCheckpointCylinderHeight(check, range, range, range)
+						Cpovi[i].ID = check
+						Cpovi[i].Spawnan = true
+					end
+				end
+			end
 		end
-		if #(coords-Config.Impound) < 1.5 then
-			isInMarker     = true
-			currentStation = 1
-			currentPart    = 'Impound'
-			currentPartNum = 1
+		for i=1, #Cpovi, 1 do
+			if Cpovi[i] ~= nil and Cpovi[i].Spawnan then
+				if #(coords-Cpovi[i].Koord) < 1.5 then
+					isInMarker     = true
+					currentStation = Cpovi[i].Station
+					currentPart    = Cpovi[i].Tip
+					currentPartNum = Cpovi[i].PartNum
+					break
+				end
+			end
 		end
 	end
+	-- if PlayerData.job.name == Config.Automafija then
+	-- 	if #(coords-Config.Impound) < 100.0 then
+	-- 		waitara = 0
+	-- 		naso = 1
+	-- 		DrawMarker(1, Config.Impound, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+	-- 	end
+	-- 	if #(coords-Config.Impound) < 1.5 then
+	-- 		isInMarker     = true
+	-- 		currentStation = 1
+	-- 		currentPart    = 'Impound'
+	-- 		currentPartNum = 1
+	-- 	end
+	-- end
 	if GetDistanceBetweenCoords(coords,  LokCPa,  true) < Config.MarkerSize.x and IstovarioTo == 0 and Vozis == 1 then
 		isInMarker     = true
 		currentStation = k
@@ -6367,170 +6483,170 @@ Citizen.CreateThread(function()
 		currentPart    = 'VratiKamion'
 		currentPartNum = i
 	end
-	for i=1, #Koord, 1 do
-		if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
-			if Koord[i].Ime == "Oruzarnica" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 1
-						currentPart    = 'Armory'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Lider" and (PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik') then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 2
-						currentPart    = 'BossActions'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "SpawnV" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 3
-						currentPart    = 'VehicleSpawner'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "DeleteV" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'VehicleDeleter'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "DeleteV2" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.5, 2.5, 3.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 2.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'VehicleDeleter'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Ulaz" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'UlazUKucu'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Izlaz" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'IzlazIzKuce'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Kokain" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'UlazUKokain'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Heroin" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'UlazUHeroin'
-						currentPartNum = i
-					end
-				end
-			end
-			if Koord[i].Ime == "Posao" then
-				local x,y,z = table.unpack(Koord[i].Coord)
-				if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
-						waitara = 0
-						naso = 1
-						DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
-					end
-					if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
-						isInMarker     = true
-						currentStation = 4
-						currentPart    = 'Posao'
-						currentPartNum = i
-					end
-				end
-			end
-		end
-	end
+	-- for i=1, #Koord, 1 do
+	-- 	if Koord[i] ~= nil and Koord[i].Mafija == PlayerData.job.name then
+	-- 		if Koord[i].Ime == "Oruzarnica" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 1
+	-- 					currentPart    = 'Armory'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "Lider" and (PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik') then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 2
+	-- 					currentPart    = 'BossActions'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "SpawnV" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 3
+	-- 					currentPart    = 'VehicleSpawner'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "DeleteV" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 4
+	-- 					currentPart    = 'VehicleDeleter'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "DeleteV2" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.5, 2.5, 3.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 2.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 4
+	-- 					currentPart    = 'VehicleDeleter'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "Ulaz" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 4
+	-- 					currentPart    = 'UlazUKucu'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "Izlaz" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 4
+	-- 					currentPart    = 'IzlazIzKuce'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "Kokain" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 4
+	-- 					currentPart    = 'UlazUKokain'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "Heroin" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 4
+	-- 					currentPart    = 'UlazUHeroin'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 		if Koord[i].Ime == "Posao" then
+	-- 			local x,y,z = table.unpack(Koord[i].Coord)
+	-- 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 100.0 then
+	-- 					waitara = 0
+	-- 					naso = 1
+	-- 					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 0, 128, 255, 100, false, true, 2, false, false, false, false)
+	-- 				end
+	-- 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 					isInMarker     = true
+	-- 					currentStation = 4
+	-- 					currentPart    = 'Posao'
+	-- 					currentPartNum = i
+	-- 				end
+	-- 			end
+	-- 		end
+	-- 	end
+	-- end
 	
 	if (ProdajeKokain or ProdajeHeroin) and DostavaID ~= 0 then
 		if #(coords-dostave[DostavaID]) < 100 then
