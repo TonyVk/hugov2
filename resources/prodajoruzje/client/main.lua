@@ -156,6 +156,314 @@ AddEventHandler('kontenjer:Pretrazi', function(data)
 	end, koord)
 end)
 
+local kran = nil
+local lTocak1 = nil
+local lTocak2 = nil
+local rTocak1 = nil
+local rTocak2 = nil
+local lift = nil
+local kDizalica = nil
+local kamerica = nil
+local kKont = nil
+
+RegisterCommand("dajrot", function(source, args, raw)
+	local corda = GetEntityCoords(PlayerPedId())
+	local prop = GetClosestObjectOfType(corda, 200.0, GetHashKey("prop_dock_crane_01"), false, false, false)
+	print(prop)
+	if prop ~= 0 then
+		print(GetEntityRotation(prop, 2))
+	end
+end)
+
+RegisterCommand("testkran", function(source, args, raw)
+	local removeprops = {
+		"prop_dock_crane_01",
+		"prop_crane_01_truck1",
+		"prop_crane_01_truck2",
+		"prop_dock_crane_lift"
+	}
+	for i = 1, #removeprops do
+		CreateModelHide(991.01458740234, -2922.1516113281, 5.9021344184875, 300.0, GetHashKey(removeprops[i]), true)
+	end
+	local model = GetHashKey("prop_dock_crane_03")
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+	kran = CreateObjectNoOffset(model, 936.3496, -2919.401, 4.76712, false, false, false)
+	SetModelAsNoLongerNeeded(model)
+	FreezeEntityPosition(kran, true)
+	SetEntityHeading(kran, -90.0)
+	model = GetHashKey("prop_crane_01_truck2")
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+	lTocak1 = CreateObjectNoOffset(model, 929.4009, -2933.829, 7.437534, false, false, false)
+	FreezeEntityPosition(lTocak1, true)
+	SetEntityHeading(lTocak1, -90.0)
+	lTocak2 = CreateObjectNoOffset(model, 929.4009, -2906.186, 7.437534, false, false, false)
+	FreezeEntityPosition(lTocak2, true)
+	SetEntityHeading(lTocak2, -90.0)
+	SetModelAsNoLongerNeeded(model)
+
+	model = GetHashKey("prop_crane_01_truck1")
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+	rTocak1 = CreateObjectNoOffset(model, 943.5405, -2933.829, 7.437534, false, false, false)
+	FreezeEntityPosition(rTocak1, true)
+	SetEntityHeading(rTocak1, -90.0)
+	rTocak2 = CreateObjectNoOffset(model, 943.5405, -2906.186, 7.437534, false, false, false)
+	FreezeEntityPosition(rTocak2, true)
+	SetEntityHeading(rTocak2, -90.0)
+	SetModelAsNoLongerNeeded(model)
+
+	model = GetHashKey("prop_dock_crane_lift")
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+	lift = CreateObjectNoOffset(model, 945.3201, -2934.776, 11.34235, false, false, false)
+	FreezeEntityPosition(lift, true)
+	SetEntityHeading(lift, -90.0)
+	SetModelAsNoLongerNeeded(model)
+
+	model = GetHashKey("p_dock_crane_sld_s")
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+	kDizalica = CreateObjectNoOffset(model, 936.3939, -2914.303, 23.07479, false, false, false)
+	FreezeEntityPosition(kDizalica, true)
+	SetEntityHeading(kDizalica, -90.0)
+	SetModelAsNoLongerNeeded(model)
+
+	model = GetHashKey("port_xr_cont_03")
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+	kKont = CreateObjectNoOffset(model, 948.4851, -2889.608, 20.62049, false, false, false)
+	FreezeEntityPosition(kKont, true)
+	SetEntityHeading(kKont, 0.0)
+	SetModelAsNoLongerNeeded(model)
+
+	local usoULift = false
+	local liftKord = vector3(945.46, -2935.65, 11.19)
+	while not usoULift do
+		DrawMarker(0, 945.46, -2935.65, 11.19, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+		local kord = GetEntityCoords(PlayerPedId())
+		if #(kord-liftKord) <= 1.5 then
+			usoULift = true
+		end
+		Wait(1)
+	end
+	while not SlideObject(
+		lift, 
+		945.3201,
+		-2934.776,
+		47.37572,
+		0.01, 
+		0.01, 
+		0.01, 
+		false
+	) do
+		Wait(1)
+	end
+	kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+	AttachCamToEntity(
+		kamerica, 
+		kDizalica, 
+		15.0, 
+		0.0, 
+		0.0, 
+		true
+	)
+	PointCamAtEntity(kamerica, kDizalica, 0.0, 0.0, 0.0, true)
+	RenderScriptCams(true, false, 0, 1, 0)
+	Citizen.CreateThread(function()
+		while kran ~= nil do
+			if IsControlPressed(0, 172) then --strelica gore
+				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, -0.01, 0.0, 0.0)
+				SetEntityCoords(kDizalica, kord)
+			end
+			if IsControlPressed(0, 173) then --strelica dolje
+				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.01, 0.0, 0.0)
+				SetEntityCoords(kDizalica, kord)
+			end
+			if IsControlPressed(0, 208) then --page up
+				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, 0.0, 0.01)
+				SetEntityCoords(kDizalica, kord)
+			end
+			if IsControlPressed(0, 207) then --page down
+				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, 0.0, -0.01)
+				SetEntityCoords(kDizalica, kord)
+			end
+			if IsControlPressed(0, 174) then --lijevo
+				local kord = GetOffsetFromEntityInWorldCoords(kran, 0.0, -0.01, 0.0)
+				SetEntityCoords(kran, kord)
+
+				local kord = GetOffsetFromEntityInWorldCoords(lTocak1, 0.0, -0.01, 0.0)
+				SetEntityCoords(lTocak1, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(lTocak2, 0.0, -0.01, 0.0)
+				SetEntityCoords(lTocak2, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(rTocak1, 0.0, -0.01, 0.0)
+				SetEntityCoords(rTocak1, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(rTocak2, 0.0, -0.01, 0.0)
+				SetEntityCoords(rTocak2, kord)
+
+				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, -0.01, 0.0)
+				SetEntityCoords(kDizalica, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(lift, 0.0, -0.01, 0.0)
+				SetEntityCoords(lift, kord)
+			end
+			if IsControlPressed(0, 175) then --desno
+				local kord = GetOffsetFromEntityInWorldCoords(kran, 0.0, 0.01, 0.0)
+				SetEntityCoords(kran, kord)
+
+				local kord = GetOffsetFromEntityInWorldCoords(lTocak1, 0.0, 0.01, 0.0)
+				SetEntityCoords(lTocak1, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(lTocak2, 0.0, 0.01, 0.0)
+				SetEntityCoords(lTocak2, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(rTocak1, 0.0, 0.01, 0.0)
+				SetEntityCoords(rTocak1, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(rTocak2, 0.0, 0.01, 0.0)
+				SetEntityCoords(rTocak2, kord)
+
+				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, 0.01, 0.0)
+				SetEntityCoords(kDizalica, kord)
+				local kord = GetOffsetFromEntityInWorldCoords(lift, 0.0, 0.01, 0.0)
+				SetEntityCoords(lift, kord)
+			end
+			Wait(1)
+		end
+	end)
+	local KKord = GetOffsetFromEntityInWorldCoords(kKont, -7.0, 1.1, 3.5)
+	local pokupio = false
+	local prebacioKameru = false
+	while not pokupio do
+		local pKord = GetEntityCoords(kDizalica)
+		DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+		if #(pKord-KKord) <= 10.0 and not prebacioKameru then
+			prebacioKameru = true
+			kamerica2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+			AttachCamToEntity(
+				kamerica2, 
+				kDizalica, 
+				0.0, 
+				0.0, 
+				15.0, 
+				true
+			)
+			PointCamAtEntity(kamerica2, kDizalica, 0.0, 0.0, 0.0, true)
+			SetCamActive(kamerica2, true)
+			DestroyCam(kamerica)
+		end
+		if #(pKord-KKord) <= 1.5 then
+			pokupio = true
+		end
+		Wait(1)
+	end
+	AttachEntityToEntity(kKont, kDizalica, GetPedBoneIndex(PlayerPedId(), 60309), 1.2, 6.0, -3.0, 0.0, 0.0, 90.0, true, true, false, true, 1, true)
+	local ostavio = false
+	KKord = vector3(935.86126708984, -2921.3920898438, 5.902135848999)
+	while not ostavio do
+		local pKord = GetOffsetFromEntityInWorldCoords(kKont, -7.0, 1.1, 3.5)
+		DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+		if #(pKord-KKord) <= 3.0 then
+			ostavio = true
+		end
+		Wait(1)
+	end
+	DetachEntity(kKont, true, true)
+	PlaceObjectOnGroundProperly(kKont)
+	
+	-- kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+	-- AttachCamToEntity(
+	-- 	kamerica, 
+	-- 	kDizalica, 
+	-- 	15.0, 
+	-- 	0.0, 
+	-- 	3.0, 
+	-- 	true
+	-- )
+	-- PointCamAtEntity(kamerica, kDizalica, 0.0, 0.0, 0.0, true)
+	-- SetCamActive(kamerica, true)
+	-- DestroyCam(kamerica2)
+	ESX.ShowNotification("Uspješno istovaren kontenjer!")
+end)
+
+RegisterCommand("testkran2", function(source, args, raw)
+	local removeprops = {
+		"prop_dock_crane_01",
+		"prop_crane_01_truck1",
+		"prop_crane_01_truck2",
+		"prop_dock_crane_lift"
+	}
+	DeleteEntity(kran)
+	kran = nil
+	DeleteEntity(rTocak1)
+	DeleteEntity(rTocak2)
+	DeleteEntity(lTocak1)
+	DeleteEntity(lTocak2)
+	DeleteEntity(lift)
+	DeleteEntity(kDizalica)
+	DeleteEntity(kKont)
+	kKont = nil
+	for i = 1, #removeprops do 
+		-- This will make all hidden entities with the hash "1437508529" within 1.0 gta units visible.
+		RemoveModelHide(991.01458740234, -2922.1516113281, 5.9021344184875, 300.0, GetHashKey(removeprops[i]), false)
+	end
+	RenderScriptCams(false, false, 0, 1, 0) -- Return to gameplay camera
+	DestroyCam(kamerica, false)
+	DestroyCam(kamerica2, false)
+	ESX.ShowNotification("Prikazao")
+end)
+
+RegisterCommand("testattach", function(source, args, raw)
+	model = GetHashKey("port_xr_cont_03")
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+	kKont = CreateObjectNoOffset(model, 948.4851, -2889.608, 20.62049, false, false, false)
+	FreezeEntityPosition(kKont, true)
+	SetEntityHeading(kKont, 0.0)
+	SetModelAsNoLongerNeeded(model)
+	while kKont ~= nil do
+		local KKord = GetOffsetFromEntityInWorldCoords(kKont, -7.0, 1.1, 3.5)
+		DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+		Wait(1)
+	end
+end)
+
+RegisterCommand("testattach2", function(source, args, raw)
+	AttachEntityToEntity(kKont, kDizalica, GetPedBoneIndex(kDizalica, 60309), tonumber(args[1]), tonumber(args[2]), tonumber(args[3]), 0.0, 0.0, 90.0, true, true, false, true, 1, true)
+end)
+
+RegisterCommand("testkameru", function(source, args, raw)
+	kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+	AttachCamToEntity(
+		kamerica, 
+		kDizalica, 
+		0.0, 
+		0.0, 
+		15.0, 
+		true
+	)
+	PointCamAtEntity(kamerica, kDizalica, 0.0, 0.0, 0.0, true)
+	RenderScriptCams(true, false, 0, 1, 0)
+end)
+
 RegisterCommand("testkurac", function(source, args, raw)
 	DoScreenFadeIn(100)
 	ESX.ShowPBar(args[1], tonumber(args[2]), function()

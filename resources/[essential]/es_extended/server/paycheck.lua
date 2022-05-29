@@ -152,9 +152,9 @@ ESX.StartPayCheck = function()
 							if exper >= level*4 then
 								exper = 0
 								level = level+1
-								TriggerClientEvent('esx:showNotification', xPlayer.source, "LEVEL UP! Prešli ste na level "..level)
+								--TriggerClientEvent('esx:showNotification', xPlayer.source, "LEVEL UP! Prešli ste na level "..level)
 							else
-								TriggerClientEvent('esx:showNotification', xPlayer.source, "Fali vam još "..((level*4)-exper).." sati do levela "..(level+1))
+								--TriggerClientEvent('esx:showNotification', xPlayer.source, "Fali vam još "..((level*4)-exper).." sati do levela "..(level+1))
 							end
 							
 							if kredit > 0 then
