@@ -43,6 +43,8 @@ local UVozilu 			  = false
 local Sjedalo 			  = nil
 local Vozilo = nil
 
+local dan, mjesec, god, sat, min = nil
+
 ESX                             = nil
 
 Citizen.CreateThread(function()
