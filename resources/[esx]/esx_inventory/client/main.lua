@@ -880,12 +880,19 @@ RegisterCommand('+prva', function()
         if GetSelectedPedWeapon(PlayerPedId()) == GetHashKey(fastWeapons[1]) then
             SetCurrentPedWeapon(PlayerPedId(), "WEAPON_UNARMED",true)
         else
-local ped = PlayerPedId()
-loadAnimDict( "reaction@intimidation@1h" )
-TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-        SetCurrentPedWeapon(PlayerPedId(), fastWeapons[1],true)
-        Wait(2800)
-        ClearPedTasks(PlayerPedId())
+            local ped = PlayerPedId()
+            loadAnimDict( "reaction@intimidation@1h" )
+            TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+            Citizen.CreateThread(function()
+                while IsEntityPlayingAnim(ped, "reaction@intimidation@1h", "intro", 3) do
+                    Citizen.Wait(0)
+                    DisableControlAction(0, 25, true)
+                    DisablePlayerFiring(PlayerId(), true)
+                end
+            end)
+            SetCurrentPedWeapon(PlayerPedId(), fastWeapons[1],true)
+            Wait(2800)
+            ClearPedTasks(PlayerPedId())
         end
     end
 end, false)
@@ -900,15 +907,22 @@ RegisterCommand('+druga', function()
         if GetSelectedPedWeapon(PlayerPedId()) == GetHashKey(fastWeapons[2]) then
             SetCurrentPedWeapon(PlayerPedId(), "WEAPON_UNARMED",true)
         else
-    local ped = PlayerPedId()
-    loadAnimDict( "reaction@intimidation@1h" )
-    TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+            local ped = PlayerPedId()
+            loadAnimDict( "reaction@intimidation@1h" )
+            TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+            Citizen.CreateThread(function()
+                while IsEntityPlayingAnim(ped, "reaction@intimidation@1h", "intro", 3) do
+                    Citizen.Wait(0)
+                    DisableControlAction(0, 25, true)
+                    DisablePlayerFiring(PlayerId(), true)
+                end
+            end)
             SetCurrentPedWeapon(PlayerPedId(), fastWeapons[2],true)
             Wait(2800)
             ClearPedTasks(PlayerPedId())
-            end
         end
-    end, false)
+    end
+end, false)
 
 RegisterKeyMapping('+treca', 'Treca', 'keyboard', '3')
 
@@ -920,12 +934,19 @@ RegisterCommand('+treca', function()
         if GetSelectedPedWeapon(PlayerPedId()) == GetHashKey(fastWeapons[3]) then
             SetCurrentPedWeapon(PlayerPedId(), "WEAPON_UNARMED",true)
         else
-local ped = PlayerPedId()
-loadAnimDict( "reaction@intimidation@1h" )
-TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-        SetCurrentPedWeapon(PlayerPedId(), fastWeapons[3],true)
+            local ped = PlayerPedId()
+            loadAnimDict( "reaction@intimidation@1h" )
+            TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+            Citizen.CreateThread(function()
+                while IsEntityPlayingAnim(ped, "reaction@intimidation@1h", "intro", 3) do
+                    Citizen.Wait(0)
+                    DisableControlAction(0, 25, true)
+                    DisablePlayerFiring(PlayerId(), true)
+                end
+            end)
+            SetCurrentPedWeapon(PlayerPedId(), fastWeapons[3],true)
             Wait(2800)
-        ClearPedTasks(PlayerPedId())
+            ClearPedTasks(PlayerPedId())
         end
     end
 end, false)
@@ -941,12 +962,19 @@ RegisterCommand('+cetvrta', function()
         if GetSelectedPedWeapon(PlayerPedId()) == GetHashKey(fastWeapons[4]) then
             SetCurrentPedWeapon(PlayerPedId(), "WEAPON_UNARMED",true)
         else
-local ped = PlayerPedId()
-loadAnimDict( "reaction@intimidation@1h" )
-TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-        SetCurrentPedWeapon(PlayerPedId(), fastWeapons[4],true)
+            local ped = PlayerPedId()
+            loadAnimDict( "reaction@intimidation@1h" )
+            TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+            Citizen.CreateThread(function()
+                while IsEntityPlayingAnim(ped, "reaction@intimidation@1h", "intro", 3) do
+                    Citizen.Wait(0)
+                    DisableControlAction(0, 25, true)
+                    DisablePlayerFiring(PlayerId(), true)
+                end
+            end)
+            SetCurrentPedWeapon(PlayerPedId(), fastWeapons[4],true)
             Wait(2800)
-        ClearPedTasks(PlayerPedId())
+            ClearPedTasks(PlayerPedId())
         end
     end
 end, false)
@@ -961,12 +989,19 @@ RegisterCommand('+peta', function()
         if GetSelectedPedWeapon(PlayerPedId()) == GetHashKey(fastWeapons[5]) then
             SetCurrentPedWeapon(PlayerPedId(), "WEAPON_UNARMED",true)
         else
-local ped = PlayerPedId()
-loadAnimDict( "reaction@intimidation@1h" )
-TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-    SetCurrentPedWeapon(PlayerPedId(), fastWeapons[5],true)
-    Wait(2800)
-    ClearPedTasks(PlayerPedId())
+            local ped = PlayerPedId()
+            loadAnimDict( "reaction@intimidation@1h" )
+            TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+            Citizen.CreateThread(function()
+                while IsEntityPlayingAnim(ped, "reaction@intimidation@1h", "intro", 3) do
+                    Citizen.Wait(0)
+                    DisableControlAction(0, 25, true)
+                    DisablePlayerFiring(PlayerId(), true)
+                end
+            end)
+            SetCurrentPedWeapon(PlayerPedId(), fastWeapons[5],true)
+            Wait(2800)
+            ClearPedTasks(PlayerPedId())
         end
     end
 end, false)

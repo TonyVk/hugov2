@@ -55,7 +55,7 @@ function UcitajPumpe()
 			if result[i].vlasnik == nil then
 				table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = nil, Sef = result[i].sef, VlasnikIme = "Nema", Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet})
 			else
-				GetRPName(result[i].vlasnik, function(Firstname, Lastname)
+				GetRPName(tonumber(result[i].vlasnik), function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname
 					table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = tonumber(result[i].vlasnik), Sef = result[i].sef, VlasnikIme = im, Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet})
 				end)
@@ -71,9 +71,12 @@ end)
 
 function GetRPName(ident, data)
 	local Identifier = ident
-
 	MySQL.Async.fetchAll("SELECT firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = Identifier }, function(result)
-		data(result[1].firstname, result[1].lastname)
+		if result ~= nil and #result > 0 then
+			data(result[1].firstname, result[1].lastname)
+		else
+			data("Nema", "Vlasnika")
+		end
 	end)
 end
 

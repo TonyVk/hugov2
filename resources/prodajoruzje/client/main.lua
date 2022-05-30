@@ -912,6 +912,39 @@ Citizen.CreateThread(function()
     end
 end)
 
+Citizen.CreateThread(function()
+	local waitara = 500
+	local id = PlayerId()
+	local prikazo = false
+    while true do
+		if IsPlayerFreeAiming(id) then
+			waitara = 1
+			HideHudComponentThisFrame(1)  -- Wanted Stars
+			HideHudComponentThisFrame(2)
+			HideHudComponentThisFrame(3)  -- Cash
+			HideHudComponentThisFrame(4)  -- MP Cash
+			HideHudComponentThisFrame(6)  -- Vehicle Name
+			HideHudComponentThisFrame(7)  -- Area Name
+			HideHudComponentThisFrame(8)  -- Vehicle Class
+			HideHudComponentThisFrame(9)  -- Street Name
+			HideHudComponentThisFrame(13) -- Cash Change
+			HideHudComponentThisFrame(17) -- Save Game
+			HideHudComponentThisFrame(20) -- Weapon State
+			if not prikazo then
+				prikazo = true
+				DisplayHud(true)
+			end
+		else
+			waitara = 500
+			if prikazo then
+				prikazo = false
+				DisplayHud(false)
+			end
+		end
+		Citizen.Wait(waitara)
+    end
+end)
+
 -- OBJ : draw text in 3d
 -- PARAMETERS :
 --      - coords : world coordinates to where you want to draw the text
