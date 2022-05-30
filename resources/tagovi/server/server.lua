@@ -44,7 +44,7 @@ AddEventHandler('tagovi:staffTag', function(br)
             if duznost[i] ~= nil and duznost[i].src == src then
                 local dif = os.difftime(os.time(), duznost[i].dat)
                 local hr, min, sec = secondsToClock(dif)
-                TriggerClientEvent('prodajoruzje:AdminChat', -1, "^1[ADMIN]", " ^7Admin "..GetPlayerName(src).." je bio na duznosti "..hr.." sati, "..min.." minuta i "..sec.." sekundi!")
+                TriggerEvent("DiscordBot:Aduty", "Admin "..GetPlayerName(src).." je bio na duznosti "..hr.." h, "..min.." min i "..sec.." sec!")
                 table.remove(duznost, i)
                 break
             end
@@ -75,13 +75,11 @@ AddEventHandler('playerDropped', function (reason)
         if duznost[i] ~= nil and duznost[i].src == source then
             local dif = os.difftime(os.time(), duznost[i].dat)
             local hr, min, sec = secondsToClock(dif)
-            print("Admin "..GetPlayerName(source).." je bio na duznosti "..hr.." sati, "..min.." minuta i "..sec.." sekundi!")
-            TriggerClientEvent('prodajoruzje:AdminChat', -1, "^1[ADMIN]", " ^7Admin "..GetPlayerName(source).." je bio na duznosti "..hr.." sati, "..min.." minuta i "..sec.." sekundi!")
+            TriggerEvent("DiscordBot:Aduty", "Admin "..GetPlayerName(src).." je bio na duznosti "..hr.." h, "..min.." min i "..sec.." sec!")
             table.remove(duznost, i)
             break
         end
     end
-    print("Player" .. GetPlayerName(source) .. "removed from staff table (Reason: " .. reason .. ")")
     removebyKey(staffTable, source)
 end)
 
