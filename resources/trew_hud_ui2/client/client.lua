@@ -1090,6 +1090,8 @@ function Status()
 				glad = glad-1
 			else
 				if not IsEntityDead(ped) then
+					SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+					SetPlayerHealthRechargeLimit(PlayerId(), 0)
 					SetEntityHealth(ped, GetEntityHealth(ped)-5)
 					ESX.ShowNotification("Umirete zbog toga sto ste gladni!")
 				end
@@ -1101,6 +1103,8 @@ function Status()
 				zedj = zedj-1
 			else
 				if not IsEntityDead(ped) then
+					SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+					SetPlayerHealthRechargeLimit(PlayerId(), 0)
 					SetEntityHealth(ped, GetEntityHealth(ped)-5)
 					ESX.ShowNotification("Umirete zbog toga sto ste zedni!")
 				end

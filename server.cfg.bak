@@ -64,6 +64,8 @@ set temp_convar "hey world!"
 set onesync_forceMigration true
 set onesync_workaround763185 true
 
+set mysql_ui true
+
 # Uncomment this line if you do not want your server to be listed in the server browser.
 # Do not edit it if you *do* want your server listed.
 # sv_master1 ""
@@ -80,7 +82,7 @@ add_principal identifier.steam:1100001049beec1 group.admin
 sv_endpointprivacy true
 
 start async
-start mysql-async
+start oxmysql
 
 start essentialmode
 #start esplugin_mysql
@@ -88,6 +90,7 @@ start es_extended
 start cron
 start esx_addoninventory
 start esx_addonaccount
+start esx_datastore
 
 start screenshot-basic
 
@@ -103,6 +106,7 @@ start esx_mafije
 start mobitel
 start PolyZone
 start qtarget
+start otok
 
 start meta_libs
 
@@ -125,16 +129,18 @@ start esx_taxijob
 #start esx_reporter
 start esx_jb_weashops
 start esx_deliveryjob
+start esx_jail
 
 #Mape
 start taxi
+start ikea
 
 # Add any new content addons here
 
 start esx_firme
 start t-loadingscreen
 start esx_scoreboard
-start es_admin2
+start admin_menu
 start fivem-ipl
 #start Peds
 #start esx-qalle-jail
@@ -144,7 +150,7 @@ start esx_kljucanjevrata
 start chat-theme-civlifechat
 start esx_rpchat
 #start esx_vehiclelock
-#start esx-carRental
+start esx_rent
 #start esx_spectate
 start es_wsync
 #start esx_advanced_holdup
@@ -156,20 +162,23 @@ start connectqueue
 start trew_hud_ui2
 start HousingShells
 start loaf_housing2
+start esx_droge
+start oglasi
 
 # developement/ remove later
 #start showcoords
+start coordsaver
 # developement/ remove later
 
 # Streamable resources
 start pljackekuca
 #start skriptice
 start esx_biznisi
-start progressBars
 #start autobomba
 
 #Poslovi
 start esx_kosac
+start esx_farmer
 
 ##
 start mumble-voip
