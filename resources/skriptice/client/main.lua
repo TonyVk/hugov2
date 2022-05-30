@@ -115,7 +115,7 @@ local volume = GetProfileSetting(306) / 100
 local previousVolume = volume
 local ZadnjiPritisak = 0
 local Upozorio = false
-
+local open = false
 
 Citizen.CreateThread(function()
     while ESX == nil do
@@ -155,6 +155,91 @@ Citizen.CreateThread(function()
         --It updates every one minute just in case.
 		Citizen.Wait(300000)
 	end
+end)
+
+-- Open ID card
+RegisterNetEvent('jsfour-idcard:open')
+AddEventHandler('jsfour-idcard:open', function( data, type )
+	open = true
+	local MugShot = exports["MugShotBase64"]:GetMugShotBase64(PlayerPedId(), false)
+	SendNUIMessage({
+		action = "open",
+		array  = data,
+		slika = MugShot,
+		type   = type
+	})
+	Citizen.CreateThread(function()
+		local otvorioGa = false
+		while not otvorioGa do
+			Citizen.Wait(0)
+			if open then
+				if IsControlJustReleased(0, 322) or IsControlJustReleased(0, 177) then
+					SendNUIMessage({
+						action = "close"
+					})
+					open = false
+					otvorioGa = true
+				end
+			else
+				SendNUIMessage({
+					action = "close"
+				})
+				open = false
+				otvorioGa = true
+			end
+		end
+	end)
+end)
+
+-- ### A menu (THIS IS AN EXAMPLE)
+function openMenu()
+	ESX.UI.Menu.Open(
+	  'default', GetCurrentResourceName(), 'id_card_menu',
+	  {
+		  title    = 'ID menu',
+		  elements = {
+			  {label = 'Provjerite svoju osobnu', value = 'checkID'},
+			  {label = 'Pokazite svoju osobnu', value = 'showID'},
+			  {label = 'Provjerite svoju vozacku dozvolu', value = 'checkDriver'},
+			  {label = 'Pokazite svoju vozacku dozvolu', value = 'showDriver'},
+			  {label = 'Provjerite svoju dozvolu za oruzje', value = 'checkFirearms'},
+			  {label = 'Pokazite svoju dozvolu za oruzje', value = 'showFirearms'},
+		  }
+	  },
+	  function(data, menu)
+		  local val = data.current.value
+		  
+		  if val == 'checkID' then
+			  TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()))
+		  elseif val == 'checkDriver' then
+			  TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'driver')
+		  elseif val == 'checkFirearms' then
+			  TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'weapon')
+		  else
+			  local player, distance = ESX.Game.GetClosestPlayer()
+			  
+			  if distance ~= -1 and distance <= 3.0 then
+				  if val == 'showID' then
+				  	TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player))
+				  elseif val == 'showDriver' then
+			  		TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player), 'driver')
+				  elseif val == 'showFirearms' then
+			  		TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player), 'weapon')
+				  end
+			  else
+				ESX.ShowNotification('Nema igraca u blizini')
+			  end
+		  end
+	  end,
+	  function(data, menu)
+		  menu.close()
+	  end
+  	)
+end
+
+RegisterKeyMapping('dozvole', 'dozvole', 'keyboard', 'f5')
+RegisterCommand('dozvole', function()
+	openMenu()
 end)
 
 RegisterCommand("uzmitaoca",function()

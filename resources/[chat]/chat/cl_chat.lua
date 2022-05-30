@@ -3,7 +3,6 @@ local isRDR = not TerraingridActivate and true or false
 local chatInputActive = false
 local chatInputActivating = false
 local chatLoaded = false
-local kurac = false
 
 RegisterNetEvent('chatMessage')
 RegisterNetEvent('chat:addTemplate')
@@ -244,23 +243,10 @@ if not isRDR then
     end
 
     isFirstHide = false
-    kurac = true
 
     SetResourceKvp('hideState', tostring(chatHideState))
   end, false)
 end
-
-RegisterCommand('chat', function()
-  if not chatInputActive then
-    chatInputActive = true
-    chatInputActivating = true
-
-    SendNUIMessage({
-      type = 'ON_OPEN'
-    })
-  end
-end, false)
-RegisterKeyMapping('chat', 'Otvori chat', 'keyboard', 't')
 
 Citizen.CreateThread(function()
   SetTextChatEnabled(false)
@@ -272,16 +258,16 @@ Citizen.CreateThread(function()
   while true do
     Wait(0)
 
-    -- if not chatInputActive then
-    --   if IsControlPressed(0, isRDR and `INPUT_MP_TEXT_CHAT_ALL` or 245) --[[ INPUT_MP_TEXT_CHAT_ALL ]] then
-    --     chatInputActive = true
-    --     chatInputActivating = true
+    if not chatInputActive then
+      if IsControlPressed(0, isRDR and `INPUT_MP_TEXT_CHAT_ALL` or 245) --[[ INPUT_MP_TEXT_CHAT_ALL ]] then
+        chatInputActive = true
+        chatInputActivating = true
 
-    --     SendNUIMessage({
-    --       type = 'ON_OPEN'
-    --     })
-    --   end
-    -- end
+        SendNUIMessage({
+          type = 'ON_OPEN'
+        })
+      end
+    end
 
     if chatInputActivating then
       if not IsControlPressed(0, isRDR and `INPUT_MP_TEXT_CHAT_ALL` or 245) then
@@ -291,7 +277,7 @@ Citizen.CreateThread(function()
       end
     end
 
-    if chatLoaded and (chatInputActive or kurac) then
+    if chatLoaded then
       local forceHide = IsScreenFadedOut() or IsPauseMenuActive()
       local wasForceHide = false
 
@@ -317,7 +303,6 @@ Citizen.CreateThread(function()
 
         isFirstHide = false
       end
-      kurac = false
     end
   end
 end)

@@ -56,6 +56,46 @@ AddEventHandler('cmg3_animations:stop', function(targetSrc)
 	TriggerClientEvent('cmg3_animations:cl_stop', targetSrc)
 end)
 
+RegisterServerEvent('jsfour-idcard:open')
+AddEventHandler('jsfour-idcard:open', function(ID, targetID, type)
+	local xPlayer = ESX.GetPlayerFromId(ID)
+	local _source 	 = ESX.GetPlayerFromId(targetID).source
+	local show       = false
+
+	MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE ID = @identifier', {['@identifier'] = xPlayer.getID()},
+	function (user)
+		if (user[1] ~= nil) then
+			MySQL.Async.fetchAll('SELECT type FROM user_licenses WHERE owner = @identifier', {['@identifier'] = xPlayer.getID()},
+			function (licenses)
+				if type ~= nil then
+					for i=1, #licenses, 1 do
+						if type == 'driver' then
+							if licenses[i].type == 'drive' or licenses[i].type == 'drive_bike' or licenses[i].type == 'drive_truck' then
+								show = true
+							end
+						elseif type =='weapon' then
+							if licenses[i].type == 'weapon' then
+								show = true
+							end
+						end
+					end
+				else
+					show = true
+				end
+
+				if show then
+					local array = {
+						user = user,
+						licenses = licenses
+					}
+					TriggerClientEvent('jsfour-idcard:open', _source, array, type)
+				else
+					TriggerClientEvent('esx:showNotification', _source, "Nemate tu dozvolu..")
+				end
+			end)
+		end
+	end)
+end)
 
 -- --------------------------------------------
 -- Commands
