@@ -282,7 +282,7 @@ end)
 RegisterNetEvent('zemljista:PostaviUlaz')
 AddEventHandler('zemljista:PostaviUlaz', function(ime, coord)
 	local src = source
-	MySQL.Async.insert('insert into kuce(prop, door, price, prodaja) values(@pr, @dr, @pri, @prod)', {
+	MySQL.Async.insert('insert into kuce(prop, door, price, prodaja, rentanje, rentCijena) values(@pr, @dr, @pri, @prod, 0, 20)', {
 		['@pr'] = "nice",
 		['@dr'] = json.encode(coord),
 		['@pri'] = 1,

@@ -43,7 +43,7 @@ end)
 
 RegisterNetEvent('loaf_housing:DodajKucu')
 AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, src)
-	table.insert(Config.Houses, {['ID'] = id, ['prop'] = prop, ['door'] = door, ['price'] = price, ['prodaja'] = prod, ['vlasnik'] = nil})
+	table.insert(Config.Houses, {['ID'] = id, ['prop'] = prop, ['door'] = door, ['price'] = price, ['prodaja'] = prod, ['vlasnik'] = nil, rentanje = 0, rentCijena = 20})
 	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	
     local xPlayer = ESX.GetPlayerFromId(src)
@@ -127,7 +127,7 @@ AddEventHandler('kuce:NovaKuca', function(prop, door, price)
 		['@pri'] = price,
 		['@prod'] = 0
 	}, function(insertid)
-		table.insert(Config.Houses, {['ID'] = insertid, ['prop'] = prop, ['door'] = door, ['price'] = price, ['prodaja'] = 0, ['vlasnik'] = nil})
+		table.insert(Config.Houses, {['ID'] = insertid, ['prop'] = prop, ['door'] = door, ['price'] = price, ['prodaja'] = 0, ['vlasnik'] = nil, rentanje = 0, rentCijena = 20})
 	    TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
         xPlayer.showNotification("Uspjesno dodana kuca!")
 	end)
