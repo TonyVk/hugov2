@@ -258,31 +258,31 @@ RegisterCommand("testkran", function(source, args, raw)
 
 	local usoULift = false
 	local liftKord = vector3(945.46, -2935.65, 11.19)
-	while not usoULift do
-		DrawMarker(0, 945.46, -2935.65, 11.19, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
-		local kord = GetEntityCoords(PlayerPedId())
-		if #(kord-liftKord) <= 1.5 then
-			usoULift = true
-		end
-		Wait(1)
-	end
-	while not SlideObject(
-		lift, 
-		945.3201,
-		-2934.776,
-		47.37572,
-		0.01, 
-		0.01, 
-		0.01, 
-		false
-	) do
-		Wait(1)
-	end
+	-- while not usoULift do
+	-- 	DrawMarker(0, 945.46, -2935.65, 11.19, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+	-- 	local kord = GetEntityCoords(PlayerPedId())
+	-- 	if #(kord-liftKord) <= 1.5 then
+	-- 		usoULift = true
+	-- 	end
+	-- 	Wait(1)
+	-- end
+	-- while not SlideObject(
+	-- 	lift, 
+	-- 	945.3201,
+	-- 	-2934.776,
+	-- 	47.37572,
+	-- 	0.01, 
+	-- 	0.01, 
+	-- 	0.01, 
+	-- 	false
+	-- ) do
+	-- 	Wait(1)
+	-- end
 	kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
 	AttachCamToEntity(
 		kamerica, 
 		kDizalica, 
-		15.0, 
+		10.0, 
 		0.0, 
 		0.0, 
 		true
@@ -293,55 +293,111 @@ RegisterCommand("testkran", function(source, args, raw)
 		while kran ~= nil do
 			if IsControlPressed(0, 172) then --strelica gore
 				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, -0.01, 0.0, 0.0)
-				SetEntityCoords(kDizalica, kord)
+				--SetEntityCoords(kDizalica, kord)
+				if kord.y <= -2867.357 then
+					ActivatePhysics(kDizalica)
+					SlideObject(
+						kDizalica, 
+						kord.x, 
+						kord.y, 
+						kord.z, 
+						0.01, 
+						0.01, 
+						0.01, 
+						true
+					)
+				end
 			end
 			if IsControlPressed(0, 173) then --strelica dolje
 				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.01, 0.0, 0.0)
-				SetEntityCoords(kDizalica, kord)
+				--SetEntityCoords(kDizalica, kord)
+				if kord.y >= -2926.825 then
+					ActivatePhysics(kDizalica)
+					SlideObject(
+						kDizalica, 
+						kord.x, 
+						kord.y, 
+						kord.z, 
+						0.01, 
+						0.01, 
+						0.01, 
+						true
+					)
+				end
 			end
 			if IsControlPressed(0, 208) then --page up
 				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, 0.0, 0.01)
-				SetEntityCoords(kDizalica, kord)
+				--SetEntityCoords(kDizalica, kord)
+				if kord.z <= 30.42496 then
+					ActivatePhysics(kDizalica)
+					SlideObject(
+						kDizalica, 
+						kord.x, 
+						kord.y, 
+						kord.z, 
+						0.01, 
+						0.01, 
+						0.01, 
+						true
+					)
+				end
 			end
 			if IsControlPressed(0, 207) then --page down
 				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, 0.0, -0.01)
-				SetEntityCoords(kDizalica, kord)
+				--SetEntityCoords(kDizalica, kord)
+				if kord.z >= 7.864441 then
+					ActivatePhysics(kDizalica)
+					SlideObject(
+						kDizalica, 
+						kord.x, 
+						kord.y, 
+						kord.z, 
+						0.01, 
+						0.01, 
+						0.01, 
+						true
+					)
+				end
 			end
 			if IsControlPressed(0, 174) then --lijevo
-				local kord = GetOffsetFromEntityInWorldCoords(kran, 0.0, -0.01, 0.0)
-				SetEntityCoords(kran, kord)
-
-				local kord = GetOffsetFromEntityInWorldCoords(lTocak1, 0.0, -0.01, 0.0)
-				SetEntityCoords(lTocak1, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(lTocak2, 0.0, -0.01, 0.0)
-				SetEntityCoords(lTocak2, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(rTocak1, 0.0, -0.01, 0.0)
-				SetEntityCoords(rTocak1, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(rTocak2, 0.0, -0.01, 0.0)
-				SetEntityCoords(rTocak2, kord)
-
 				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, -0.01, 0.0)
-				SetEntityCoords(kDizalica, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(lift, 0.0, -0.01, 0.0)
-				SetEntityCoords(lift, kord)
+				if kord.x >= 843.3131 then
+					SetEntityCoords(kDizalica, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(kran, 0.0, -0.01, 0.0)
+					SetEntityCoords(kran, kord)
+
+					local kord = GetOffsetFromEntityInWorldCoords(lTocak1, 0.0, -0.01, 0.0)
+					SetEntityCoords(lTocak1, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(lTocak2, 0.0, -0.01, 0.0)
+					SetEntityCoords(lTocak2, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(rTocak1, 0.0, -0.01, 0.0)
+					SetEntityCoords(rTocak1, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(rTocak2, 0.0, -0.01, 0.0)
+					SetEntityCoords(rTocak2, kord)
+
+					local kord = GetOffsetFromEntityInWorldCoords(lift, 0.0, -0.01, 0.0)
+					SetEntityCoords(lift, kord)
+				end
 			end
 			if IsControlPressed(0, 175) then --desno
-				local kord = GetOffsetFromEntityInWorldCoords(kran, 0.0, 0.01, 0.0)
-				SetEntityCoords(kran, kord)
-
-				local kord = GetOffsetFromEntityInWorldCoords(lTocak1, 0.0, 0.01, 0.0)
-				SetEntityCoords(lTocak1, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(lTocak2, 0.0, 0.01, 0.0)
-				SetEntityCoords(lTocak2, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(rTocak1, 0.0, 0.01, 0.0)
-				SetEntityCoords(rTocak1, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(rTocak2, 0.0, 0.01, 0.0)
-				SetEntityCoords(rTocak2, kord)
-
 				local kord = GetOffsetFromEntityInWorldCoords(kDizalica, 0.0, 0.01, 0.0)
-				SetEntityCoords(kDizalica, kord)
-				local kord = GetOffsetFromEntityInWorldCoords(lift, 0.0, 0.01, 0.0)
-				SetEntityCoords(lift, kord)
+				if kord.x <= 998.7247 then
+					SetEntityCoords(kDizalica, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(kran, 0.0, 0.01, 0.0)
+					SetEntityCoords(kran, kord)
+
+					local kord = GetOffsetFromEntityInWorldCoords(lTocak1, 0.0, 0.01, 0.0)
+					SetEntityCoords(lTocak1, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(lTocak2, 0.0, 0.01, 0.0)
+					SetEntityCoords(lTocak2, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(rTocak1, 0.0, 0.01, 0.0)
+					SetEntityCoords(rTocak1, kord)
+					local kord = GetOffsetFromEntityInWorldCoords(rTocak2, 0.0, 0.01, 0.0)
+					SetEntityCoords(rTocak2, kord)
+
+					local kord = GetOffsetFromEntityInWorldCoords(lift, 0.0, 0.01, 0.0)
+					SetEntityCoords(lift, kord)
+				end
 			end
 			Wait(1)
 		end
@@ -360,7 +416,7 @@ RegisterCommand("testkran", function(source, args, raw)
 				kDizalica, 
 				0.0, 
 				0.0, 
-				15.0, 
+				10.0, 
 				true
 			)
 			PointCamAtEntity(kamerica2, kDizalica, 0.0, 0.0, 0.0, true)
@@ -386,18 +442,18 @@ RegisterCommand("testkran", function(source, args, raw)
 	DetachEntity(kKont, true, true)
 	PlaceObjectOnGroundProperly(kKont)
 	
-	-- kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
-	-- AttachCamToEntity(
-	-- 	kamerica, 
-	-- 	kDizalica, 
-	-- 	15.0, 
-	-- 	0.0, 
-	-- 	3.0, 
-	-- 	true
-	-- )
-	-- PointCamAtEntity(kamerica, kDizalica, 0.0, 0.0, 0.0, true)
-	-- SetCamActive(kamerica, true)
-	-- DestroyCam(kamerica2)
+	kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+	AttachCamToEntity(
+		kamerica, 
+		kDizalica, 
+		10.0, 
+		0.0, 
+		0.0, 
+		true
+	)
+	PointCamAtEntity(kamerica, kDizalica, 0.0, 0.0, 0.0, true)
+	SetCamActive(kamerica, true)
+	DestroyCam(kamerica2)
 	ESX.ShowNotification("Uspješno istovaren kontenjer!")
 end)
 
@@ -428,22 +484,9 @@ RegisterCommand("testkran2", function(source, args, raw)
 	ESX.ShowNotification("Prikazao")
 end)
 
-RegisterCommand("testattach", function(source, args, raw)
-	model = GetHashKey("port_xr_cont_03")
-	RequestModel(model)
-
-	while not HasModelLoaded(model) do
-		Citizen.Wait(1)
-	end
-	kKont = CreateObjectNoOffset(model, 948.4851, -2889.608, 20.62049, false, false, false)
-	FreezeEntityPosition(kKont, true)
-	SetEntityHeading(kKont, 0.0)
-	SetModelAsNoLongerNeeded(model)
-	while kKont ~= nil do
-		local KKord = GetOffsetFromEntityInWorldCoords(kKont, -7.0, 1.1, 3.5)
-		DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
-		Wait(1)
-	end
+RegisterCommand("testpoz", function(source, args, raw)
+	local coords = GetEntityCoords(kDizalica)
+	print(coords)
 end)
 
 RegisterCommand("testattach2", function(source, args, raw)
