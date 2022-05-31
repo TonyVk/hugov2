@@ -153,6 +153,19 @@ AddEventHandler('popo:zapljeni9', function(target, itemType, itemName, amount)
     end
 end)
 
+RegisterNetEvent('policija:IzdajDozvolu')
+AddEventHandler('policija:IzdajDozvolu', function(target)
+	local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+	local yPlayer = ESX.GetPlayerFromId(target)
+	if xPlayer.job.name == "police" then
+		TriggerEvent('esx_license:addLicense', target, 'weapon', function ()
+			xPlayer.showNotification("Izdali ste dozvolu za oruzje igracu "..yPlayer.name)
+			yPlayer.showNotification("Dobili ste dozvolu za oruzje od policajca "..xPlayer.name)
+		end)
+	end
+end)
+
 RegisterServerEvent('heli:spotlight')
 AddEventHandler('heli:spotlight', function(state, nid)
 	TriggerClientEvent('heli:spotlight', -1, nid, state)

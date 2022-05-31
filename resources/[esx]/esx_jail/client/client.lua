@@ -27,8 +27,6 @@ Citizen.CreateThread(function()
 	end
 
 	PlayerData = ESX.GetPlayerData()
-
-	LoadTeleporters()
 end)
 
 RegisterNetEvent("esx:playerLoaded")
@@ -189,39 +187,6 @@ function InJail()
 
 	--Prison Work--
 
-end
-
-function LoadTeleporters()
-	Citizen.CreateThread(function()
-		while true do
-			
-			local sleepThread = 500
-
-			local Ped = PlayerPedId()
-			local PedCoords = GetEntityCoords(Ped)
-
-			for p, v in pairs(Config.Teleports) do
-
-				local DistanceCheck = #(PedCoords-v["Pos"])
-
-				if DistanceCheck <= 7.5 then
-
-					sleepThread = 5
-
-					ESX.Game.Utils.DrawText3D(v, "[E] Otvori vrata", 0.4)
-
-					if DistanceCheck <= 1.0 then
-						if IsControlJustPressed(0, 38) then
-							TeleportPlayer(v)
-						end
-					end
-				end
-			end
-
-			Citizen.Wait(sleepThread)
-
-		end
-	end)
 end
 
 function PackPackage(packageId)

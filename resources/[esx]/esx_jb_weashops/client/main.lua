@@ -505,7 +505,9 @@ Citizen.CreateThread(function()
 							if Licenses['weapon'] ~= nil or Config.Zones[CurrentActionData.zone].legal == 1 then
 								OpenShopMenu(CurrentActionData.zone)
 							else
-								OpenBuyLicenseMenu(CurrentActionData.zone)
+								--OpenBuyLicenseMenu(CurrentActionData.zone)
+								ESX.ShowNotification("Nemate dozvolu za oruzje, pa vam mogu ponuditi samo ovo.")
+								OpenShop2Menu(CurrentActionData.zone)
 							end
 						else
 							OpenShopMenu(CurrentActionData.zone)

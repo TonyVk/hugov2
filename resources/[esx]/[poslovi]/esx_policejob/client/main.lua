@@ -1108,7 +1108,11 @@ RegisterNUICallback(
 		local br = data.br
 		local args = data.args
 		if br == 1 then
-			TriggerServerEvent("policija:Zaposli2", args.posao, args.id)
+			if args.oruzje then
+				TriggerServerEvent("policija:IzdajDozvolu", args.target)
+			else
+				TriggerServerEvent("policija:Zaposli2", args.posao, args.id)
+			end
 		end
     end
 )
@@ -1231,6 +1235,10 @@ function OpenPoliceActionsMenu()
 				table.insert(elements, { label = _U('license_check'), value = 'license' })
 			end
 
+			if PlayerData.job.grade_name == "boss" then
+				table.insert(elements, { label = "Izdaj dozvolu za oruzje", value = 'oruzje' })
+			end
+
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
 				title    = _U('citizen_interaction'),
 				align    = 'top-left',
@@ -1264,6 +1272,8 @@ function OpenPoliceActionsMenu()
 						ShowPlayerLicense(closestPlayer)
 					elseif action == 'unpaid_bills' then
 						OpenUnpaidBillsMenu(closestPlayer)
+					elseif action == 'oruzje' then
+						TriggerEvent("upit:OtvoriPitanje", "esx_policejob", "Izdvanje dozvole za oruzje", "Dali zelite izdati dozvolu igracu "..GetPlayerName(closestPlayer).."?", {oruzje = true, target = GetPlayerServerId(closestPlayer)})
 					end
 				else
 					ESX.ShowNotification(_U('no_players_nearby'))

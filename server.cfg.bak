@@ -130,10 +130,13 @@ start esx_taxijob
 start esx_jb_weashops
 start esx_deliveryjob
 start esx_jail
+start esx_spectate
 
 #Mape
 start taxi
 start ikea
+start PillboxHos
+start PillboxHosDoors
 
 # Add any new content addons here
 
@@ -192,6 +195,7 @@ start vozila
 start manual
 start skriptice
 start MugShotBase64
+start dpemotes
 
 # Server player slot limit (must be between 1 and 32, unless using OneSync)
 sv_maxclients 48
