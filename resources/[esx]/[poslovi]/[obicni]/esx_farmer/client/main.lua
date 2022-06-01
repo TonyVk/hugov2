@@ -177,7 +177,7 @@ RegisterNUICallback(
     function(data, cb)
 		local br = data.br
 		if br == 1 then
-			TriggerServerEvent('esx_joblisting:setJob', 5)
+			TriggerServerEvent('esx_joblisting:setJob', 2)
 			ESX.ShowNotification("Zaposlio si se kao farmer!")
 		end
     end

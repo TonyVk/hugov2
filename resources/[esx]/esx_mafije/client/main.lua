@@ -262,6 +262,7 @@ end)
 
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	print("uso u kamion")
 	if currentSeat == -1 then
 		for i=1, #Kamioni, 1 do
 			if Kamioni[i] ~= nil then
@@ -300,7 +301,7 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 										end
 									end
 								end)
-							elseif Kamioni[i].Vrsta == 2 then
+							elseif Kamioni[i].Vrsta == 2 and HVozilo == nil then
 								if Kamioni[i].Dostava == -1 then
 									if Kamioni[i].Posao == PlayerData.job.name then
 										ProdajeHeroin = true
@@ -400,6 +401,7 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 													DrawMarker(1, korda, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
 												end
 												if #(korda-GetEntityCoords(HVozilo)) <= 4.0 and not cekaj then
+													print("jedan spawn")
 													cekaj = true
 													FreezeEntityPosition(HVozilo, true)
 													TriggerServerEvent("mafije:MakniKamion", VehToNet(HVozilo))
@@ -869,6 +871,7 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 												end
 												if #(korda-GetEntityCoords(HVozilo)) <= 4.0 and not cekaj then
 													cekaj = true
+													print("dva spawn")
 													FreezeEntityPosition(HVozilo, true)
 													TriggerServerEvent("mafije:MakniKamion", VehToNet(HVozilo))
 													ESX.ShowPBar("Istovar heroina", 10000, function()
@@ -1225,6 +1228,7 @@ end
 
 RegisterNetEvent('baseevents:leftVehicle')
 AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	print("Izaso iz kamiona")
 	if currentSeat == -1 then
 		for i=1, #Kamioni, 1 do
 			if Kamioni[i] ~= nil then

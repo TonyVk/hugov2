@@ -396,18 +396,20 @@ end
 
 function GetLicenses(target, cb)
 	local xPlayer  = ESX.GetPlayerFromId(target)
-	MySQL.query('SELECT user_licenses.type, label FROM user_licenses inner join licenses on licenses.type = user_licenses.type WHERE owner = ?', {
-		xPlayer.getID()
-	}, function(result)
-		local licenses = {}
-		for i=1, #result, 1 do
-			table.insert(licenses, {
-				type  = result[i].type,
-				label = result[i].label
-			})
-		end
-		cb(licenses)
-	end)
+	if xPlayer then
+		MySQL.query('SELECT user_licenses.type, label FROM user_licenses inner join licenses on licenses.type = user_licenses.type WHERE owner = ?', {
+			xPlayer.getID()
+		}, function(result)
+			local licenses = {}
+			for i=1, #result, 1 do
+				table.insert(licenses, {
+					type  = result[i].type,
+					label = result[i].label
+				})
+			end
+			cb(licenses)
+		end)
+	end
 end
 
 function CheckLicense(target, type, cb)

@@ -456,7 +456,7 @@ RegisterNUICallback(
     function(data, cb)
 		local br = data.br
 		if br == 1 then
-			TriggerServerEvent('esx_joblisting:setJob', 9)
+			TriggerServerEvent('esx_joblisting:setJob', 4)
 			ESX.ShowNotification("Zaposlio si se kao kosac!")
 		end
     end
