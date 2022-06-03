@@ -296,7 +296,6 @@ end)
 RegisterNetEvent('pumpe:SaljiPumpe')
 AddEventHandler('pumpe:SaljiPumpe', function(pumpe) 
 	Pumpe = pumpe
-	TriggerEvent("kamion:UzmiDuznost")
 end)
 
 function setUniform(playerPed)

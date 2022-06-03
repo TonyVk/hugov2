@@ -3,12 +3,12 @@ Config              = {}
 Config.DrawDistance = 100.0
 Config.MaxDelivery	= 10
 Config.TruckPrice	= 0
-Config.Locale       = 'en'
+Config.Locale       = 'hr'
 Config.Posao 		= "luka"
 
 Config.Oprema = {
 	Koord = vector3(947.9345703125, -2935.1958007812, 5.901162147522),
-	Heading = 91.30
+	Heading = 180.79
 }
 
 Config.SpawnVozilaPed = {
@@ -23,6 +23,17 @@ Config.ZaposliSe = {
 	Type  = 29,
 	Sprite = 68,
 	BColor = 47
+}
+
+Config.Controls = {
+	["direction"] = {
+	  codes = {175,174,173,172},
+	  text = "Smjer",
+	},
+	["height"] = {
+	  codes = {207,208},
+	  text = "Visina",
+	}
 }
 
 Config.Uniforms = {
@@ -94,3 +105,5 @@ Config.Uniforms = {
 		}
 	}
 }
+
+mLibs = exports["meta_libs"]
