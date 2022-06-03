@@ -110,6 +110,7 @@ AddEventHandler('kuce:RentajKucu', function(id)
                 xPlayer.removeMoney(v['rentCijena'])
                 xPlayer.showNotification("Iznajmili ste kucu za $"..v['rentCijena'])
                 MySQL.Async.execute("UPDATE users SET rentKuca=@rent, rentDatum = NOW() WHERE ID=@id", {['@id'] = xPlayer.getID(), ['@rent'] = id})
+                TriggerClientEvent('loaf_housing:reloadHouses', xPlayer.source)
             else
                 xPlayer.showNotification("Nemate dovoljno novca kod sebe!")
             end
