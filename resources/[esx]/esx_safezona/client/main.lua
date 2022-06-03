@@ -91,6 +91,7 @@ function SpawnZone()
                 })
                 UZoni = false
                 NetworkSetFriendlyFireOption(true)
+                SetCanAttackFriendly(PlayerPedId(), true, true)
             end
         end)
     end
@@ -167,6 +168,7 @@ AddEventHandler('safezona:VratiZonu', function(vr, ime, ko)
             })
             UZoni = false
             NetworkSetFriendlyFireOption(true)
+            SetCanAttackFriendly(PlayerPedId(), true, true)
         end
     end)
 end)
