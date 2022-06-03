@@ -1,5 +1,4 @@
 ESX = nil
-local PosaoPed = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -13,18 +12,23 @@ Citizen.CreateThread(function()
 end)
 
 local isInService = false
-local hasAlreadyEnteredMarker = false
-local lastZone                = nil
 local DuznostPed              = nil
 local VoziloPed 			  = nil
 local Radis					  = false
 local ScaleForm 			  = nil
 Scaleforms    = mLibs:Scaleforms()
 
-local tablicaVozila = ""
-local CurrentAction           = nil
-local CurrentActionMsg        = ''
-local CurrentActionData       = {}
+local kran = nil
+local lTocak1 = nil
+local lTocak2 = nil
+local rTocak1 = nil
+local rTocak2 = nil
+local lift = nil
+local kDizalica = nil
+local kamerica = nil
+local kKont = nil
+local kKont2 = nil
+local kKont3 = nil
 --------------------------------------------------------------------------------
 function ProvjeriPosao()
 	ESX.PlayerData = ESX.GetPlayerData()
@@ -42,7 +46,7 @@ function DodajBlip()
 	SetBlipAsShortRange(blip, true)
 
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString("Kosac")
+	AddTextComponentString("Lucki radnik")
 	EndTextCommandSetBlipName(blip)
 end
 
@@ -267,9 +271,18 @@ function ZapocniPosao()
 	kKont = CreateObjectNoOffset(model, 948.4851, -2889.608, 20.62049, false, false, false)
 	FreezeEntityPosition(kKont, true)
 	SetEntityHeading(kKont, 0.0)
+
+	kKont2 = CreateObjectNoOffset(model, 990.5237, -2884.733, 20.62195, false, false, false)
+	FreezeEntityPosition(kKont2, true)
+	SetEntityHeading(kKont2, 0.0)
+
+	kKont3 = CreateObjectNoOffset(model, 892.4869, -2887.194, 20.62195, false, false, false)
+	FreezeEntityPosition(kKont3, true)
+	SetEntityHeading(kKont3, 0.0)
 	SetModelAsNoLongerNeeded(model)
 
-	ESX.ShowNotification("Udjite u lift kako bih ste se popeli do kontrola krana!")
+	ESX.ShowNotification("Udjite u lift kako bih ste se popeli do kontrola krana!", 5000)
+	ESX.ShowNotification("Upisite /zavrsiistovar ako zelite prekinuti posao", 5000)
 
 	local usoULift = false
 	local liftKord = vector3(945.46, -2935.65, 11.19)
@@ -425,7 +438,7 @@ function ZapocniPosao()
 					Wait(1)
 				end
 			end)
-			local KKord = GetOffsetFromEntityInWorldCoords(kKont, -7.0, 1.1, 3.5)
+			local KKord = GetOffsetFromEntityInWorldCoords(kKont, -6.0, 1.1, 3.5)
 			local pokupio = false
 			local prebacioKameru = false
 			while not pokupio and Radis do
@@ -481,7 +494,130 @@ function ZapocniPosao()
 					SetCamActive(kamerica, true)
 					DestroyCam(kamerica2)
 					ESX.ShowNotification("Uspješno istovaren kontenjer!")
-					ZavrsiPosao()
+					TriggerServerEvent("luka:EoPlace")
+					--Kont 2
+					ESX.ShowNotification("Zakacite kontenjer s desne strane broda!", 5000)
+					local KKord = GetOffsetFromEntityInWorldCoords(kKont2, -6.0, 1.1, 3.5)
+					local pokupio = false
+					local prebacioKameru = false
+					while not pokupio and Radis do
+						local pKord = GetEntityCoords(kDizalica)
+						DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+						if #(pKord-KKord) <= 10.0 and not prebacioKameru then
+							prebacioKameru = true
+							kamerica2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+							AttachCamToEntity(
+								kamerica2, 
+								kDizalica, 
+								0.0, 
+								0.0, 
+								10.0, 
+								true
+							)
+							PointCamAtEntity(kamerica2, kDizalica, 0.0, 0.0, 0.0, true)
+							SetCamActive(kamerica2, true)
+							DestroyCam(kamerica)
+						end
+						if #(pKord-KKord) <= 1.5 then
+							pokupio = true
+						end
+						Wait(1)
+					end
+					if Radis then
+						ESX.ShowNotification("Spustite kontenjer ispod krana na asfalt!")
+						AttachEntityToEntity(kKont2, kDizalica, GetPedBoneIndex(PlayerPedId(), 60309), 1.2, 6.0, -3.0, 0.0, 0.0, 90.0, true, true, false, true, 1, true)
+						local ostavio = false
+						KKord = vector3(986.98809814453, -2921.3125, 5.9021363258362)
+						while not ostavio and Radis do
+							local pKord = GetOffsetFromEntityInWorldCoords(kKont2, -7.0, 1.1, 3.5)
+							DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+							if #(pKord-KKord) <= 3.0 then
+								ostavio = true
+							end
+							Wait(1)
+						end
+						if Radis then
+							DetachEntity(kKont2, true, true)
+							PlaceObjectOnGroundProperly(kKont2)
+							
+							kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+							AttachCamToEntity(
+								kamerica, 
+								kDizalica, 
+								10.0, 
+								0.0, 
+								0.0, 
+								true
+							)
+							PointCamAtEntity(kamerica, kDizalica, 0.0, 0.0, 0.0, true)
+							SetCamActive(kamerica, true)
+							DestroyCam(kamerica2)
+							ESX.ShowNotification("Uspješno istovaren kontenjer!")
+							TriggerServerEvent("luka:EoPlace")
+							--Kont 3
+							ESX.ShowNotification("Zakacite kontenjer s lijeve strane broda!", 5000)
+							local KKord = GetOffsetFromEntityInWorldCoords(kKont3, -6.0, 1.1, 3.5)
+							local pokupio = false
+							local prebacioKameru = false
+							while not pokupio and Radis do
+								local pKord = GetEntityCoords(kDizalica)
+								DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+								if #(pKord-KKord) <= 10.0 and not prebacioKameru then
+									prebacioKameru = true
+									kamerica2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+									AttachCamToEntity(
+										kamerica2, 
+										kDizalica, 
+										0.0, 
+										0.0, 
+										10.0, 
+										true
+									)
+									PointCamAtEntity(kamerica2, kDizalica, 0.0, 0.0, 0.0, true)
+									SetCamActive(kamerica2, true)
+									DestroyCam(kamerica)
+								end
+								if #(pKord-KKord) <= 1.5 then
+									pokupio = true
+								end
+								Wait(1)
+							end
+							if Radis then
+								ESX.ShowNotification("Spustite kontenjer ispod krana na asfalt!")
+								AttachEntityToEntity(kKont3, kDizalica, GetPedBoneIndex(PlayerPedId(), 60309), 1.2, 6.0, -3.0, 0.0, 0.0, 90.0, true, true, false, true, 1, true)
+								local ostavio = false
+								KKord = vector3(886.92803955078, -2921.4636230469, 5.900580406189)
+								while not ostavio and Radis do
+									local pKord = GetOffsetFromEntityInWorldCoords(kKont3, -7.0, 1.1, 3.5)
+									DrawMarker(0, KKord, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+									if #(pKord-KKord) <= 3.0 then
+										ostavio = true
+									end
+									Wait(1)
+								end
+								if Radis then
+									DetachEntity(kKont3, true, true)
+									PlaceObjectOnGroundProperly(kKont3)
+									
+									kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 936.3939, -2914.303, 23.07479, -20.62686, -0, -61.17438, 50.0, true, 2)
+									AttachCamToEntity(
+										kamerica, 
+										kDizalica, 
+										10.0, 
+										0.0, 
+										0.0, 
+										true
+									)
+									PointCamAtEntity(kamerica, kDizalica, 0.0, 0.0, 0.0, true)
+									SetCamActive(kamerica, true)
+									DestroyCam(kamerica2)
+									ESX.ShowNotification("Uspješno istovaren kontenjer!")
+									TriggerServerEvent("luka:EoPlace")
+									ZavrsiPosao()
+								end
+							end
+						end
+					end
 				end
 			end
 		end
@@ -695,7 +831,11 @@ function ZavrsiPosao()
 		DeleteEntity(lift)
 		DeleteEntity(kDizalica)
 		DeleteEntity(kKont)
+		DeleteEntity(kKont2)
+		DeleteEntity(kKont3)
 		kKont = nil
+		kKont2 = nil
+		kKont3 = nil
 		for i = 1, #removeprops do 
 			-- This will make all hidden entities with the hash "1437508529" within 1.0 gta units visible.
 			RemoveModelHide(991.01458740234, -2922.1516113281, 5.9021344184875, 300.0, GetHashKey(removeprops[i]), false)

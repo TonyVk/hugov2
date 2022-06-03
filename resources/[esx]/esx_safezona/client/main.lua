@@ -59,6 +59,7 @@ function SpawnZone()
                         DisableControlAction(0, 45, true)
                         DisableControlAction(0, 140, true)
                         DisableControlAction(0, 263, true)
+                        SetPlayerCanDoDriveBy(PlayerId(), false)
                         if IsDisabledControlJustPressed(2, 37) then --if Tab is pressed, send error message
                             SetCurrentPedWeapon(player,GetHashKey("WEAPON_UNARMED"),true) -- if tab is pressed it will set them to unarmed (this is to cover the vehicle glitch until I sort that all out)
                             TriggerEvent("pNotify:SendNotification",{
@@ -90,6 +91,7 @@ function SpawnZone()
                     queue = "global"
                 })
                 UZoni = false
+                SetPlayerCanDoDriveBy(PlayerId(), true)
                 NetworkSetFriendlyFireOption(true)
                 SetCanAttackFriendly(PlayerPedId(), true, true)
             end
