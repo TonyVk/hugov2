@@ -1639,7 +1639,7 @@ function ShowPlayerLicense(player)
 			TriggerServerEvent('esx_policejob:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
 
 			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.type)
-
+			menu.close()
 			ESX.SetTimeout(300, function()
 				ShowPlayerLicense(player)
 			end)

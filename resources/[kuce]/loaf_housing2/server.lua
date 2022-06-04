@@ -20,7 +20,8 @@ AddEventHandler('loaf_housing:enterHouse', function(id, ka)
                     instances[src] = {['id'] = ka, ['owner'] = src, ['coords'] = v['coords'], ['housespawn'] = k, ['players'] = {}}
                     instances[src]['players'][src] = src
                     houses[ka] = src
-                    v['taken'] = true
+                    SetPlayerRoutingBucket(src, ka)
+                    --v['taken'] = true
                     return
                 end
             end
@@ -371,6 +372,7 @@ AddEventHandler('loaf_housing:leaveHouse', function(house)
             end
         end
         instances[houses[house]]['players'] = newPlayers
+        SetPlayerRoutingBucket(src, 0)
 		MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = 0})
     end
 end)
@@ -389,6 +391,7 @@ AddEventHandler('loaf_housing:deleteInstance', function()
         Config.HouseSpawns[instances[src]['housespawn']]['taken'] = false
         for k, v in pairs(instances[src]['players']) do
             TriggerClientEvent('loaf_housing:leaveHouse', v, instances[src]['id'])
+            SetPlayerRoutingBucket(v, 0)
 			local xPlayer = ESX.GetPlayerFromId(v)
 			MySQL.Async.execute("UPDATE users SET last_house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = 0})
         end
@@ -403,7 +406,7 @@ AddEventHandler('loaf_housing:letIn', function(plr, storage)
     if instances[src] then
         if not instances[src]['players'][plr] then 
             instances[src]['players'][plr] = plr
-
+            SetPlayerRoutingBucket(plr, instances[src]['id'])
             local spawnpos = instances[src]['housecoords']
             local furniture = instances[src]['furniture']
             TriggerClientEvent('loaf_housing:knockAccept', plr, instances[src]['coords'], instances[src]['id'], storage, spawnpos, furniture, src)
@@ -424,7 +427,8 @@ RegisterServerEvent('loaf_housing:knockDoor')
 AddEventHandler('loaf_housing:knockDoor', function(id)
     local src = source
     if instances[houses[id]] then
-        TriggerClientEvent('loaf_housing:knockedDoor', instances[houses[id]]['owner'], src)
+        local ime = GetPlayerName(src)
+        TriggerClientEvent('loaf_housing:knockedDoor', instances[houses[id]]['owner'], src, ime)
     else
         TriggerClientEvent('esx:showNotification', src, Strings['Noone_Home'])
     end
@@ -446,6 +450,7 @@ AddEventHandler('loaf_housing:exitHouse', function(id)
 	local xPlayer = ESX.GetPlayerFromId(src)
     if instances[src] then
         for k, v in pairs(instances['players']) do
+            SetPlayerRoutingBucket(v, 0)
             TriggerClientEvent('loaf_housing:exitHouse', v, id)
             table.remove(instances, src)
             table.remove(houses, id)
@@ -696,6 +701,7 @@ ESX.RegisterServerCallback('loaf_housing:hasGuests2', function(source, cb, kuca)
         local playerlist = GetPlayers()
         for id, src in pairs(playerlist) do
             if v ~= source and v == tonumber(src) then
+                SetPlayerRoutingBucket(v, 0)
                 TriggerClientEvent("loaf_housing:leaveHouse", v, kuca)
             end
         end

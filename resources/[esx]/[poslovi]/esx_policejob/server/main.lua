@@ -159,9 +159,13 @@ AddEventHandler('policija:IzdajDozvolu', function(target)
     local xPlayer = ESX.GetPlayerFromId(_source)
 	local yPlayer = ESX.GetPlayerFromId(target)
 	if xPlayer.job.name == "police" then
-		TriggerEvent('esx_license:addLicense', target, 'weapon', function ()
-			xPlayer.showNotification("Izdali ste dozvolu za oruzje igracu "..yPlayer.name)
-			yPlayer.showNotification("Dobili ste dozvolu za oruzje od policajca "..xPlayer.name)
+		TriggerEvent('esx_license:addLicense', target, 'weapon', function (br)
+			if br then
+				xPlayer.showNotification("Izdali ste dozvolu za oruzje igracu "..yPlayer.name)
+				yPlayer.showNotification("Dobili ste dozvolu za oruzje od policajca "..xPlayer.name)
+			else
+				xPlayer.showNotification("Igrac vec ima dozvolu!")
+			end
 		end)
 	end
 end)
@@ -424,45 +428,43 @@ end)
 ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, cb, target)
 	if Config.EnableESXIdentity then
 		local xPlayer = ESX.GetPlayerFromId(target)
-		local result = MySQL.Sync.fetchAll('SELECT firstname, lastname, money, sex, dateofbirth, height FROM users WHERE ID = @identifier', {
+		MySQL.Async.fetchAll('SELECT firstname, lastname, money, sex, dateofbirth FROM users WHERE ID = @identifier', {
 			['@identifier'] = xPlayer.getID()
-		})
+		}, function(result)
+			local firstname = result[1].firstname
+			local lastname  = result[1].lastname
+			local sex       = result[1].sex
+			local dob       = result[1].dateofbirth
+			local money 	= result[1].money
 
-		local firstname = result[1].firstname
-		local lastname  = result[1].lastname
-		local sex       = result[1].sex
-		local dob       = result[1].dateofbirth
-		local height    = result[1].height
-		local money 	= result[1].money
+			local data = {
+				name      = GetPlayerName(target),
+				job       = xPlayer.job,
+				inventory = xPlayer.inventory,
+				accounts  = xPlayer.accounts,
+				weapons   = xPlayer.loadout,
+				novac 	  = money,
+				firstname = firstname,
+				lastname  = lastname,
+				sex       = sex,
+				dob       = dob
+			}
 
-		local data = {
-			name      = GetPlayerName(target),
-			job       = xPlayer.job,
-			inventory = xPlayer.inventory,
-			accounts  = xPlayer.accounts,
-			weapons   = xPlayer.loadout,
-			novac 	  = money,
-			firstname = firstname,
-			lastname  = lastname,
-			sex       = sex,
-			dob       = dob,
-			height    = height
-		}
+			-- TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
+			-- 	if status ~= nil then
+			-- 		data.drunk = math.floor(status.percent)
+			-- 	end
+			-- end)
 
-		TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
-			if status ~= nil then
-				data.drunk = math.floor(status.percent)
+			if Config.EnableLicenses then
+				TriggerEvent('esx_license:getLicenses', target, function(licenses)
+					data.licenses = licenses
+					cb(data)
+				end)
+			else
+				cb(data)
 			end
 		end)
-
-		if Config.EnableLicenses then
-			TriggerEvent('esx_license:getLicenses', target, function(licenses)
-				data.licenses = licenses
-				cb(data)
-			end)
-		else
-			cb(data)
-		end
 	else
 		local xPlayer = ESX.GetPlayerFromId(target)
 
@@ -474,11 +476,11 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 			weapons    = xPlayer.loadout
 		}
 
-		TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
-			if status then
-				data.drunk = math.floor(status.percent)
-			end
-		end)
+		-- TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
+		-- 	if status then
+		-- 		data.drunk = math.floor(status.percent)
+		-- 	end
+		-- end)
 
 		TriggerEvent('esx_license:getLicenses', target, function(licenses)
 			data.licenses = licenses

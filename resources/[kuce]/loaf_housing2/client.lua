@@ -14,6 +14,7 @@ local prop_ent = nil
 local Broj = 0
 local UKuci = false
 local perm = 0
+local ent = nil
 
 --[[Citizen['CreateThread'](function()
     while true do
@@ -38,6 +39,11 @@ AddEventHandler('esx_property:ProsljediVozilo', function(voz, bl)
 	GarazaV = voz
 	Vblip = bl
 end)
+
+RegisterCommand('dajoff', function()
+    local koord = GetEntityCoords(PlayerPedId())
+    print(GetOffsetFromEntityGivenWorldCoords(ent, koord.x, koord.y, koord.z-1.0))
+end, false)
 
 RegisterCommand('unrentkucu', function()
     if RentHouse.houseId > 0 then
@@ -507,16 +513,16 @@ Citizen.CreateThread(function()
                 local text = 'error'
                 while Vdist2(GetEntityCoords(PlayerPedId()), v['door']) <= 2.5 do
                     if OwnedHouse.houseId == k or RentHouse.houseId == k then
-                        text = (Strings['Press_E']):format(Strings['Manage_House'])
+                        text = "["..k.."] "..(Strings['Press_E']):format(Strings['Manage_House'])
                     else
                         if not AvailableHouses[k] then
                             if OwnedHouse.houseId ~= 0 or RentHouse.houseId ~= 0 then
                                 text = Strings['Must_Sell']
                             else
-                                text = (Strings['Press_E']):format((Strings['Buy_House']):format(k, v['price']))
+                                text = "["..k.."] "..(Strings['Press_E']):format((Strings['Buy_House']):format(k, v['price']))
                             end
                         else
-                            text = (Strings['Press_E']):format(Strings['Knock_House'])
+                            text = "["..k.."] "..(Strings['Press_E']):format(Strings['Knock_House'])
                         end
                     end
                     if not bmenu then
@@ -1101,6 +1107,7 @@ AddEventHandler('loaf_housing:spawnHouse', function(coords, furniture)
     SetEntityHeading(house, 0.0)
     local exit = GetOffsetFromEntityInWorldCoords(house, Config.Offsets[prop]['door'])
     local storage = GetOffsetFromEntityInWorldCoords(house, Config.Offsets[prop]['storage'])
+    ent = house
     TriggerServerEvent('loaf_housing:setInstanceCoords', exit, coords, prop, furn)
     DoScreenFadeOut(750)
     while not IsScreenFadedOut() do Wait(0) end
@@ -1730,10 +1737,10 @@ AddEventHandler('loaf_housing:reloadHouses', function()
 end)
 
 RegisterNetEvent('loaf_housing:knockedDoor')
-AddEventHandler('loaf_housing:knockedDoor', function(src)
+AddEventHandler('loaf_housing:knockedDoor', function(src, ime)
     ESX.ShowNotification(Strings['Someone_Knocked'])
     if not Knockings[src] then
-        Knockings[src] = {label = (Strings['Accept_Player']):format(GetPlayerName(GetPlayerFromServerId(src))), value = src}
+        Knockings[src] = {label = (Strings['Accept_Player']):format(ime), value = src}
     end
 end)
 
@@ -1784,7 +1791,8 @@ AddEventHandler('loaf_housing:setHouse', function(house, purchasedHouses, rent)
 end)
 
 EnterHouse = function(prop, coords)
-    local obj = CreateObject(prop, coords, false)
+    local obj = CreateObject(prop, coords.x, coords.y, coords.z, false, false, false)
+    SetEntityHeading(obj, 0.0)
     FreezeEntityPosition(obj, true)
     return obj
 end

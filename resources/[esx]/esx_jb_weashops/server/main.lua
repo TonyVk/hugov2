@@ -355,14 +355,19 @@ end)
 
 function AddLicense(target, type, cb)
 	local xPlayer  = ESX.GetPlayerFromId(target)
-
-	MySQL.Async.execute('INSERT INTO user_licenses (type, owner) VALUES (@type, @owner)', {
-		['@type']  = type,
-		['@owner'] = xPlayer.getID()
-	}, function(rowsChanged)
-		LoadLicenses(target)
-		if cb ~= nil then
-			cb()
+	CheckLicense(target, type, function(br)
+		if not br then
+			MySQL.Async.execute('INSERT INTO user_licenses (type, owner) VALUES (@type, @owner)', {
+				['@type']  = type,
+				['@owner'] = xPlayer.getID()
+			}, function(rowsChanged)
+				LoadLicenses(target)
+				if cb ~= nil then
+					cb(true)
+				end
+			end)
+		else
+			cb(false)
 		end
 	end)
 end

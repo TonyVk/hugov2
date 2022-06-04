@@ -45,13 +45,13 @@ function SpawnZone()
                     layout = "bottomcenter",
                     queue = "global"
                 })
+                NetworkSetFriendlyFireOption(false)
+                ClearPlayerWantedLevel(PlayerId())
+                SetCurrentPedWeapon(player,GetHashKey("WEAPON_UNARMED"),true)
                 Citizen.CreateThread(function()
                     while UZoni do
                         Citizen.Wait(0)
                         local player = GetPlayerPed(-1)
-                        NetworkSetFriendlyFireOption(false)
-                        ClearPlayerWantedLevel(PlayerId())
-                        SetCurrentPedWeapon(player,GetHashKey("WEAPON_UNARMED"),true)
                         DisableControlAction(2, 37, true) -- disable weapon wheel (Tab)
                         DisablePlayerFiring(player,true) -- Disables firing all together if they somehow bypass inzone Mouse Disable
                         DisableControlAction(0, 106, true) -- Disable in-game mouse controls
@@ -91,6 +91,7 @@ function SpawnZone()
                     queue = "global"
                 })
                 UZoni = false
+                DisablePlayerFiring(PlayerPedId(),false)
                 SetPlayerCanDoDriveBy(PlayerId(), true)
                 NetworkSetFriendlyFireOption(true)
                 SetCanAttackFriendly(PlayerPedId(), true, true)

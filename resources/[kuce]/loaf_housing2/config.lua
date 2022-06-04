@@ -18,11 +18,11 @@ Config = {
     
     Props = { -- don't mess around with this if you don't know to 110% what you're doing
         ['trevor'] = `shell_trevor`,
-        ['nice'] = `shell_v16mid`,
+        ['nice'] = `shell_highendv2`,
         ['lester'] = `shell_lester`,
-        ['mansion'] = `shell_ranch`,
+        ['mansion'] = `shell_highend`,
         ['trailer'] = `shell_trailer`,
-        ['kinda_nice'] = `shell_v16low`
+        ['kinda_nice'] = `shell_v16mid`
     },
 
     Furniture = { 
@@ -6848,14 +6848,37 @@ Config = {
 		},
 	},
 
-    Offsets = { -- don't mess around with this if you don't know to 110% what you're doing. Seriously! You will screw something up if you change something here
-        ['trevor'] = {['door'] = vector3(0.17, -3.51, -1.39), ['storage'] = vector3(0.7475586, 1.476196, -1.398027), ['spawn_furniture'] = vector3(1.046143, 0.06665039, -1.398043)},
-        ['lester'] = {['door'] = vector3(-1.58, -5.84, -1.36), ['storage'] = vector3(-0.19, 2.23, -1.36), ['spawn_furniture'] = vector3(3.002892, 0.9969482, -1.359673)},
-        ['mansion'] = {['door'] = vector3(-0.6, -5.39, -2.41), ['storage'] = vector3(1.17, 17.20, -2.41), ['spawn_furniture'] = vector3(7.177441, 0.05088806, -2.416786)},
-        ['trailer'] = {['door'] = vector3(-1.35, -1.80, -1.47), ['storage'] = vector3(-5.04, -1.28, -1.469), ['spawn_furniture'] = vector3(1.285862, 0.1700745, -1.462135)},
-        ['kinda_nice'] = {['door'] = vector3(4.645, -6.389, -2.64418), ['storage'] = vector3(-2.944827, 0.5492249, -0.6442719), ['spawn_furniture'] = vector3(-0.4546165, 2.853912, -0.6442719)},
-        ['nice'] = {['door'] = vector3(1.287569, -13.87549, -1.482468), ['storage'] = vector3(-4.280577, -4.621674, -1.476418), ['spawn_furniture'] = vector3(-3.95883, 1.823792, -1.475471)}
-    },
+    -- Offsets = { -- don't mess around with this if you don't know to 110% what you're doing. Seriously! You will screw something up if you change something here
+    --     ['trevor'] = {['door'] = vector3(0.17, -3.51, -1.39), ['storage'] = vector3(0.7475586, 1.476196, -1.398027), ['spawn_furniture'] = vector3(1.046143, 0.06665039, -1.398043)},
+    --     ['lester'] = {['door'] = vector3(-1.58, -5.84, -1.36), ['storage'] = vector3(-0.19, 2.23, -1.36), ['spawn_furniture'] = vector3(3.002892, 0.9969482, -1.359673)},
+    --     ['mansion'] = {['door'] = vector3(-0.6, -5.39, -2.41), ['storage'] = vector3(1.17, 17.20, -2.41), ['spawn_furniture'] = vector3(7.177441, 0.05088806, -2.416786)},
+    --     ['trailer'] = {['door'] = vector3(-1.35, -1.80, -1.47), ['storage'] = vector3(-5.04, -1.28, -1.469), ['spawn_furniture'] = vector3(1.285862, 0.1700745, -1.462135)},
+    --     ['kinda_nice'] = {['door'] = vector3(4.645, -6.389, -2.64418), ['storage'] = vector3(-2.944827, 0.5492249, -0.6442719), ['spawn_furniture'] = vector3(-0.4546165, 2.853912, -0.6442719)},
+    --     ['nice'] = {['door'] = vector3(1.287569, -13.87549, -1.482468), ['storage'] = vector3(-4.280577, -4.621674, -1.476418), ['spawn_furniture'] = vector3(-3.95883, 1.823792, -1.475471)}
+    -- },
+
+	Offsets = {
+		["shell_apartment2"] = {['door'] = vector3(-2.2558898925781, 8.9857788085938, 2.2122497558594)},
+		["shell_apartment1"] = {['door'] = vector3(-2.2137756347656, 8.95556640625, 2.2123107910156)},
+		["nice"] = {['door'] = vector3(-10.472412109375, 0.82540893554688, 0.9453125), ['storage'] = vector3(4.810059, -11.36597, 0.335045), ['spawn_furniture'] = vector3(-8.519226, -6.418945, 0.934937)},
+		["mansion"] = {['door'] = vector3(-22.357116699219, -0.3636474609375, 6.2174072265625)},
+		["shell_apartment3"] = {['door'] = vector3(11.430450439453, 4.4891662597656, 1.01904296875)},
+		["shell_michael"] = {['door'] = vector3(-9.3757629394531, 5.6485290527344, -5.05322265625)},
+		["shell_medium2"] = {['door'] = vector3(6.0094604492188, 0.28695678710938, -1.6507873535156)},
+		["shell_v16low"] = {['door'] = vector3(4.635009765625, -6.5882263183594, -2.6448974609375)},
+		["trevor"] = {['door'] = vector3(0.18386840820313, -3.8077392578125, -1.3983764648438)},
+		["kinda_nice"] = {['door'] = vector3(1.3710327148438, -14.351745605469, -1.4822082519531)},
+		["lester"] = {['door'] = vector3(-1.6512145996094, -6.0126342773438, -1.35986328125)},
+		["shell_frankaunt"] = {['door'] = vector3(-0.33334350585938, -5.9446105957031, -1.5599365234375)},
+		["shell_medium3"] = {['door'] = vector3(-2.5239868164063, 7.7714233398438, 0.19931030273438)},
+		["trailer"] = {['door'] = vector3(-1.3285827636719, -2.0115661621094, -1.4691772460938)},
+		["shell_westons"] = {['door'] = vector3(4.3998336791992, 10.373115539551, 0.35943603515625)},
+		["shell_banham"] = {['door'] = vector3(-3.3586883544922, -1.5261611938477, 0.24725341796875)},
+		["shell_westons2"] = {['door'] = vector3(-1.8435668945313, 10.505462646484, 0.3590087890625)},
+		["playerhouse_hotel"] = {['door'] = vector3(-0.88674545288086, -3.5486145019531, 0.010009765625)},
+		["playerhouse_tier1"] = {['door'] = vector3(3.6389088630676, -15.743461608887, -0.185791015625)},
+		["playerhouse_tier3"] = {['door'] = vector3(-18.440452575684, -1.98046875, 6.217041015625)}
+	},
     Houses = { -- ALWAYS add a new house at the bottom of this list. Adding it at the top will just ruin the housing system! If you don't know what you're doing, DON'T DO ANYTHING!
         
     },

@@ -133,6 +133,7 @@ AddEventHandler('luka:UzmiDuznost', function()
 			VoziloPed = nil
 		end
 		local pedmodel = GetHashKey("s_m_y_dockwork_01")
+		LoadModel(pedmodel)
 		VoziloPed = CreatePed(0, pedmodel, Config.SpawnVozilaPed.Koord - vector3(0.0, 0.0, 1.0), Config.SpawnVozilaPed.Heading, false, true)
 		SetEntityInvincible(VoziloPed, true)
 		SetBlockingOfNonTemporaryEvents(VoziloPed, true)
