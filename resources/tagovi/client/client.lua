@@ -65,6 +65,10 @@ AddEventHandler('tagovi:Igraci', function(igr)
 end)
 
 function ManageHeadLabels()
+	local staff = false
+	if has_value(staffTable,GetPlayerServerId(PlayerId())) then 
+		staff = true
+	end
 	for i = 0, 255 do
 		if NetworkIsPlayerActive(i) and #Igraci > 0 then
 			local iPed = GetPlayerPed(i)
@@ -101,6 +105,9 @@ function ManageHeadLabels()
 												end
 											end
 										end
+									end
+									if staff then
+										ime = GetPlayerName(i)
 									end
 									headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "Admin", false )
 									if has_value(staffTable,GetPlayerServerId(i)) then 
