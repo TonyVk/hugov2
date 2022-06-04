@@ -93,6 +93,7 @@ start esx_addonaccount
 start esx_datastore
 
 start screenshot-basic
+start stream
 
 start skinchanger
 start esx_skin
@@ -128,7 +129,6 @@ start esx_mechanicjob
 start esx_taxijob
 #start esx_reporter
 start esx_jb_weashops
-start esx_deliveryjob
 start esx_jail
 start esx_spectate
 
@@ -137,6 +137,8 @@ start taxi
 start ikea
 start PillboxHos
 start PillboxHosDoors
+start policija
+start prison-map
 
 # Add any new content addons here
 
@@ -150,11 +152,9 @@ start fivem-ipl
 #start esx_carwash
 start esx_kljucanjevrata
 #start esx_dmvschool
-start chat-theme-civlifechat
 start esx_rpchat
 #start esx_vehiclelock
 start esx_rent
-#start esx_spectate
 start es_wsync
 #start esx_advanced_holdup
 start esx_safezona
@@ -182,6 +182,8 @@ start esx_biznisi
 #Poslovi
 start esx_kosac
 start esx_farmer
+start esx_kamion
+start esx_luka
 
 ##
 start mumble-voip

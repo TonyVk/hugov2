@@ -486,9 +486,51 @@ RegisterCommand("testkran2", function(source, args, raw)
 	ESX.ShowNotification("Prikazao")
 end)
 
-RegisterCommand("testpoz", function(source, args, raw)
-	local coords = GetEntityCoords(kDizalica)
-	print(coords)
+RegisterCommand("auredi", function(source, args, raw)
+	local elements = {}
+    table.insert(elements, {label = 'Uredi kuce', value = "kuce"})
+	table.insert(elements, {label = 'Uredi firme', value = "firme"})
+	table.insert(elements, {label = 'Uredi droge', value = "droge"})
+	table.insert(elements, {label = 'Uredi safe zone', value = "szone"})
+	table.insert(elements, {label = 'Uredi mafija zone', value = "mzone"})
+	table.insert(elements, {label = 'Uredi kljucanje vrata', value = "kvrata"})
+	table.insert(elements, {label = 'Uredi rent', value = "urent"})
+	table.insert(elements, {label = 'Uredi pumpe', value = "pumpe"})
+	table.insert(elements, {label = 'Uredi mafije', value = "mafije"})
+
+    ESX.UI.Menu.Open(
+      'default', GetCurrentResourceName(), 'auredi',
+      {
+        title    = "Izaberite uredjivanje",
+        align    = 'top-left',
+        elements = elements,
+      },
+      function(data, menu)
+		menu.close()
+		if data.current.value == "kuce" then
+			ExecuteCommand("uredikuce")
+		elseif data.current.value == "firme" then
+			ExecuteCommand("uredifirmu")
+		elseif data.current.value == "droge" then
+			ExecuteCommand("uredidroge")
+		elseif data.current.value == "szone" then
+			ExecuteCommand("uredisafezonu")
+		elseif data.current.value == "mzone" then
+			ExecuteCommand("uredizone")
+		elseif data.current.value == "kvrata" then
+			ExecuteCommand("uredivrata")
+		elseif data.current.value == "urent" then
+			ExecuteCommand("uredirent")
+		elseif data.current.value == "pumpe" then
+			ExecuteCommand("uredipumpe")
+		elseif data.current.value == "mafije" then
+			ExecuteCommand("uredimafiju")
+		end
+      end,
+      function(data, menu)
+        menu.close()
+      end
+    )
 end)
 
 RegisterCommand("testattach2", function(source, args, raw)

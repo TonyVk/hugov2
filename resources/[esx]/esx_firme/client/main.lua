@@ -1772,7 +1772,7 @@ Citizen.CreateThread(function()
 						Tip = Cpovi[i].Tip
 						cpid = Cpovi[i].Svijet
 						TrgID = Cpovi[i].fID
-						TriggerEvent("dpc:EquipLast")
+						--TriggerEvent("dpc:EquipLast")
 						break
 					elseif Cpovi[i].Ime == "odjeca_menu" then
 						isInMarker  = true
@@ -1782,7 +1782,7 @@ Citizen.CreateThread(function()
 						Tip = Cpovi[i].Tip
 						cpid = Cpovi[i].Svijet
 						TrgID = Cpovi[i].fID
-						TriggerEvent("dpc:EquipLast")
+						--TriggerEvent("dpc:EquipLast")
 						break
 					elseif Cpovi[i].Ime == "tuning_menu" then
 						isInMarker  = true

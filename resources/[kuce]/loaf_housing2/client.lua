@@ -64,6 +64,7 @@ RegisterCommand("uredikuce", function(source, args, raw)
         local elements = {}
 
         table.insert(elements, {label = "Kreiraj kucu", value = "nova"})
+        table.insert(elements, {label = "Upisite ID kuce", value = "idkuce"})
         
         for i=1, #Config.Houses, 1 do
             if Config.Houses[i] ~= nil then
@@ -93,6 +94,7 @@ RegisterCommand("uredikuce", function(source, args, raw)
                             for k, nes in pairs(Config.Props) do
                                 table.insert(elements2, {label = k, value = k})
                             end
+                            table.sort(elements2, function(a, b) return a.label:upper() < b.label:upper() end)
                             ESX.UI.Menu.Open(
                                 'default', GetCurrentResourceName(), 'ukucuint',
                                 {
@@ -112,6 +114,131 @@ RegisterCommand("uredikuce", function(source, args, raw)
                                     menu2.close()
                                 end
                             )
+                        end
+                    end, function (datari, menuri)
+                        menuri.close()
+                    end)
+                elseif data.current.value == "idkuce" then
+                    ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'idkuce', {
+                        title = "Upisite ID kuce",
+                    }, function (datari, menuri)
+                        local id = tonumber(datari.value)
+                                                    
+                        if id == nil or id < 0 then
+                            ESX.ShowNotification('Greska.')
+                        else
+                            menuri.close()
+                            menu.close()
+                            local naso = false
+                            for k, v in pairs(Config.Houses) do
+                                if v['ID'] == id then
+                                    naso = true
+                                    break
+                                end
+                            end
+                            if naso then
+                                elements = {}
+                                table.insert(elements, {label = "Premjesti kucu", value = "premjesti"})
+                                table.insert(elements, {label = "Promijeni cijenu", value = "cijena"})
+                                table.insert(elements, {label = "Promijeni interijer", value = "int"})
+                                table.insert(elements, {label = "Port do vrata", value = "port"})
+                                table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
+                                table.insert(elements, {label = "Obrisi kucu", value = "obrisi"})
+                                ESX.UI.Menu.Open(
+                                    'default', GetCurrentResourceName(), 'uzemlj2',
+                                    {
+                                        title    = "Izaberite opciju",
+                                        align    = 'top-left',
+                                        elements = elements,
+                                    },
+                                    function(data2, menu2)
+                                        if data2.current.value == "premjesti" then
+                                            local koord = GetEntityCoords(PlayerPedId())
+                                            TriggerServerEvent("kuce:PremjestiMarker", id, koord)
+                                        elseif data2.current.value == "cijena" then
+                                            ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijena', {
+                                                title = "Upisite cijenu kuce",
+                                            }, function (datari, menuri)
+                                                local mCijena = datari.value
+                                                                            
+                                                if mCijena == nil or tonumber(mCijena) < 0 then
+                                                    ESX.ShowNotification('Greska.')
+                                                else
+                                                    menuri.close()
+                                                    TriggerServerEvent("kuce:PromijeniCijenu", id, mCijena)
+                                                end
+                                            end, function (datari, menuri)
+                                                menuri.close()
+                                            end)
+                                        elseif data2.current.value == "int" then
+                                            local elements2 = {}
+                                            for k, nes in pairs(Config.Props) do
+                                                table.insert(elements2, {label = k, value = k})
+                                            end
+                                            table.sort(elements2, function(a, b) return a.label:upper() < b.label:upper() end)
+                                            ESX.UI.Menu.Open(
+                                                'default', GetCurrentResourceName(), 'ukucuint',
+                                                {
+                                                    title    = "Izaberite interijer",
+                                                    align    = 'top-left',
+                                                    elements = elements2,
+                                                },
+                                                function(data3, menu3)
+                                                    TriggerServerEvent("kuce:PromijeniInt", id, data3.current.value)
+                                                    menu3.close()
+                                                end,
+                                                function(data3, menu3)
+                                                    menu3.close()
+                                                end
+                                            )
+                                        elseif data2.current.value == "port" then
+                                            for k, v in pairs(Config.Houses) do
+                                                if v['ID'] == id then
+                                                    SetEntityCoords(PlayerPedId(), v["door"])
+                                                    break
+                                                end
+                                            end
+                                        elseif data2.current.value == "vlasnik" then
+                                            TriggerServerEvent("kuce:MakniVlasnika", id)
+                                        elseif data2.current.value == "obrisi" then
+                                            elements = {}
+                                            
+                                            table.insert(elements, {label = "Da", value = "da"})
+                                            table.insert(elements, {label = "Ne", value = "ne"})
+
+                                            ESX.UI.Menu.Open(
+                                            'default', GetCurrentResourceName(), 'zelisli',
+                                            {
+                                                title    = "Zelite li obrisati kucu?",
+                                                align    = 'top-left',
+                                                elements = elements,
+                                            },
+                                            function(datalr, menulr)
+                                                if datalr.current.value == "da" then
+                                                    menulr.close()
+                                                    menu2.close()
+                                                    menu.close()
+                                                    TriggerServerEvent("kuce:ObrisiKucu", id)
+                                                    Wait(200)
+                                                    ExecuteCommand("uredikuce")
+                                                else
+                                                    menulr.close()
+                                                end
+                                            end,
+                                            function(datalr, menulr)
+                                                menulr.close()
+                                            end
+                                            )
+                                        end
+                                    end,
+                                    function(data2, menu2)
+                                        
+                                        menu2.close()
+                                    end
+                                )
+                            else
+                                ESX.ShowNotification("Kuca s tim ID-om ne postoji!")
+                            end
                         end
                     end, function (datari, menuri)
                         menuri.close()
@@ -156,6 +283,7 @@ RegisterCommand("uredikuce", function(source, args, raw)
                                 for k, nes in pairs(Config.Props) do
                                     table.insert(elements2, {label = k, value = k})
                                 end
+                                table.sort(elements2, function(a, b) return a.label:upper() < b.label:upper() end)
                                 ESX.UI.Menu.Open(
                                     'default', GetCurrentResourceName(), 'ukucuint',
                                     {
@@ -330,6 +458,7 @@ end
 RegisterNetEvent('loaf_housing:SaljiKucice')
 AddEventHandler('loaf_housing:SaljiKucice', function(kuce)
 	Config.Houses = kuce
+    TriggerEvent("loaf_housing:reloadHouses")
 end)
 
 RegisterNetEvent('kuce:VratiVozilo')
@@ -933,12 +1062,9 @@ Citizen.CreateThread(function()
                                 SetCamCoord(cam, currentCoord)
                             end
                         elseif IsDisabledControlPressed(0, 97) then
-                            print('hej')
                             local currentCoord = GetCamCoord(cam)
-                            print(currentCoord)
                             if currentCoord.z - 0.1 >= GetOffsetFromEntityInWorldCoords(furniture, 0.0, -5.0, 0.1).z then
                                 currentCoord = vector3(currentCoord.x, currentCoord.y, currentCoord.z - 0.1)
-                                print(currentCoord)
                                 SetCamCoord(cam, currentCoord)
                             end
                         elseif IsControlPressed(0, 33) then
@@ -1763,7 +1889,8 @@ AddEventHandler('loaf_housing:setHouse', function(house, purchasedHouses, rent)
     for k, v in pairs(blips) do
         RemoveBlip(v)
     end
-
+    blips = {}
+    AvailableHouses = {}
     for k, v in pairs(purchasedHouses) do
         if v.houseid ~= OwnedHouse.houseId then
             AvailableHouses[v.houseid] = v.houseid

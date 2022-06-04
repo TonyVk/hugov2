@@ -262,7 +262,6 @@ end)
 
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
-	print("uso u kamion")
 	if currentSeat == -1 then
 		for i=1, #Kamioni, 1 do
 			if Kamioni[i] ~= nil then
@@ -4444,12 +4443,20 @@ function OpenBodySearchMenu(player)
 			if itemType == "item_weapon" then
 				imalga = HasPedGotWeapon(PlayerPedId() , itemName, false)
 			end
-			if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
-				TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, true, imalga)
+			local kord1 = GetEntityCoords(PlayerPedId())
+			local kord2 = GetEntityCoords(player)
+			if #(kord1-kord2) <= 3.0 then
+				if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+					TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, true, imalga)
+				else
+					TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, false, imalga)
+				end
+				menu.close()
+				OpenBodySearchMenu(player)
 			else
-				TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, false, imalga)
+				menu.close()
+				ESX.ShowNotification("Igrac je predaleko!")
 			end
-			OpenBodySearchMenu(player)
 		end
 
       end,

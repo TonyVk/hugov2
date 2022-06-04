@@ -1524,10 +1524,17 @@ function OpenBodySearchMenu(player)
 			elements = elements
 		}, function(data, menu)
 			if data.current.value then
-				TriggerServerEvent('popo:zapljeni9', GetPlayerServerId(player), data.current.itemType, data.current.value, data.current.amount)
-				menu.close()
-				Wait(500)
-				OpenBodySearchMenu(player)
+				local kord1 = GetEntityCoords(PlayerPedId())
+				local kord2 = GetEntityCoords(player)
+				if #(kord1-kord2) <= 3.0 then
+					TriggerServerEvent('popo:zapljeni9', GetPlayerServerId(player), data.current.itemType, data.current.value, data.current.amount)
+					menu.close()
+					Wait(500)
+					OpenBodySearchMenu(player)
+				else
+					menu.close()
+					ESX.ShowNotification("Igrac je predaleko!")
+				end
 			end
 		end, function(data, menu)
 			menu.close()

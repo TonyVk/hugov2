@@ -213,156 +213,156 @@ function getVehicleLabelFromModel(model)
 	return
 end
 
-RegisterCommand("uredisalone", function(source, args, raw)
-	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
-		if perm == 69 then
-			local elements = {}
+-- RegisterCommand("uredisalone", function(source, args, raw)
+-- 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
+-- 		if perm == 69 then
+-- 			local elements = {}
 			
-			for i=1, #Saloni, 1 do
-				if Saloni[i] ~= nil then
-					table.insert(elements, {label = Saloni[i].Ime, value = Saloni[i].ID})
-				end
-			end
+-- 			for i=1, #Saloni, 1 do
+-- 				if Saloni[i] ~= nil then
+-- 					table.insert(elements, {label = Saloni[i].Ime, value = Saloni[i].ID})
+-- 				end
+-- 			end
 			
-			table.insert(elements, {label = "Kreiraj salon", value = "novisalon"})
+-- 			table.insert(elements, {label = "Kreiraj salon", value = "novisalon"})
 
-			ESX.UI.Menu.Open(
-				'default', GetCurrentResourceName(), 'umafiju',
-				{
-					title    = "Izaberite salon",
-					align    = 'top-left',
-					elements = elements,
-				},
-				function(data, menu)
-					if data.current.value == "novisalon" then
-						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime2', {
-							title = "Upisite cijenu salona",
-						}, function (datari2, menuri2)
-							local mCijena = datari2.value						
-							if mCijena == nil then
-								ESX.ShowNotification('Greska.')
-							else
-								menuri2.close()
-								menu.close()
-								TriggerServerEvent("saloni:NapraviSalon", mCijena)
-								ExecuteCommand("uredisalone")
-							end
-						end, function (datari2, menuri2)
-							menuri2.close()
-						end)
-					else
-						local IDSalona = data.current.value
-						elements = {}
-						table.insert(elements, {label = "Koordinate", value = "koord"})
-						table.insert(elements, {label = "Promjeni ime", value = "ime"})
-						table.insert(elements, {label = "Promjeni cijenu", value = "cijena"})
-						table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
-						table.insert(elements, {label = "Obrisi salon", value = "obrisi"})
-						ESX.UI.Menu.Open(
-							'default', GetCurrentResourceName(), 'umafiju2',
-							{
-								title    = "Izaberite opciju",
-								align    = 'top-left',
-								elements = elements,
-							},
-							function(data2, menu2)
-								if data2.current.value == "koord" then
-									elements = {}
+-- 			ESX.UI.Menu.Open(
+-- 				'default', GetCurrentResourceName(), 'umafiju',
+-- 				{
+-- 					title    = "Izaberite salon",
+-- 					align    = 'top-left',
+-- 					elements = elements,
+-- 				},
+-- 				function(data, menu)
+-- 					if data.current.value == "novisalon" then
+-- 						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime2', {
+-- 							title = "Upisite cijenu salona",
+-- 						}, function (datari2, menuri2)
+-- 							local mCijena = datari2.value						
+-- 							if mCijena == nil then
+-- 								ESX.ShowNotification('Greska.')
+-- 							else
+-- 								menuri2.close()
+-- 								menu.close()
+-- 								TriggerServerEvent("saloni:NapraviSalon", mCijena)
+-- 								ExecuteCommand("uredisalone")
+-- 							end
+-- 						end, function (datari2, menuri2)
+-- 							menuri2.close()
+-- 						end)
+-- 					else
+-- 						local IDSalona = data.current.value
+-- 						elements = {}
+-- 						table.insert(elements, {label = "Koordinate", value = "koord"})
+-- 						table.insert(elements, {label = "Promjeni ime", value = "ime"})
+-- 						table.insert(elements, {label = "Promjeni cijenu", value = "cijena"})
+-- 						table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
+-- 						table.insert(elements, {label = "Obrisi salon", value = "obrisi"})
+-- 						ESX.UI.Menu.Open(
+-- 							'default', GetCurrentResourceName(), 'umafiju2',
+-- 							{
+-- 								title    = "Izaberite opciju",
+-- 								align    = 'top-left',
+-- 								elements = elements,
+-- 							},
+-- 							function(data2, menu2)
+-- 								if data2.current.value == "koord" then
+-- 									elements = {}
 									
-									table.insert(elements, {label = "Postavi koordinate kupovine firme", value = "1"})
+-- 									table.insert(elements, {label = "Postavi koordinate kupovine firme", value = "1"})
 
-									ESX.UI.Menu.Open(
-									  'default', GetCurrentResourceName(), 'listarankova',
-									  {
-										title    = "Izaberite opciju",
-										align    = 'top-left',
-										elements = elements,
-									  },
-									  function(datalr, menulr)
-										local mid = datalr.current.value
-										local coord = GetEntityCoords(PlayerPedId())
-										TriggerServerEvent("saloni:SpremiCoord", IDSalona, coord, tonumber(mid))
-									  end,
-									  function(datalr, menulr)
-										menulr.close()
-									  end
-									)
-								elseif data2.current.value == "ime" then
-									local mafIme
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'mafime', {
-										title = "Upisite novo ime salona",
-									}, function (datar, menur)
-										mafIme = datar.value
-										if mafIme == nil then
-											ESX.ShowNotification('Greska.')
-										else
-											menur.close()
-											TriggerServerEvent("saloni:PromjeniIme", IDSalona, mafIme)
-										end
-									end, function (datar, menur)
-										menur.close()
-									end)
-								elseif data2.current.value == "vlasnik" then
-									TriggerServerEvent("saloni:MakniVlasnika", IDSalona)
-								elseif data2.current.value == "cijena" then
-									local mafIme
-									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'mafime', {
-										title = "Upisite novu cijenu salona",
-									}, function (datar, menur)
-										mafIme = datar.value
-										if mafIme == nil then
-											ESX.ShowNotification('Greska.')
-										else
-											menur.close()
-											TriggerServerEvent("saloni:PromjeniCijenu", IDSalona, mafIme)
-										end
-									end, function (datar, menur)
-										menur.close()
-									end)
-								elseif data2.current.value == "obrisi" then
-									elements = {}
+-- 									ESX.UI.Menu.Open(
+-- 									  'default', GetCurrentResourceName(), 'listarankova',
+-- 									  {
+-- 										title    = "Izaberite opciju",
+-- 										align    = 'top-left',
+-- 										elements = elements,
+-- 									  },
+-- 									  function(datalr, menulr)
+-- 										local mid = datalr.current.value
+-- 										local coord = GetEntityCoords(PlayerPedId())
+-- 										TriggerServerEvent("saloni:SpremiCoord", IDSalona, coord, tonumber(mid))
+-- 									  end,
+-- 									  function(datalr, menulr)
+-- 										menulr.close()
+-- 									  end
+-- 									)
+-- 								elseif data2.current.value == "ime" then
+-- 									local mafIme
+-- 									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'mafime', {
+-- 										title = "Upisite novo ime salona",
+-- 									}, function (datar, menur)
+-- 										mafIme = datar.value
+-- 										if mafIme == nil then
+-- 											ESX.ShowNotification('Greska.')
+-- 										else
+-- 											menur.close()
+-- 											TriggerServerEvent("saloni:PromjeniIme", IDSalona, mafIme)
+-- 										end
+-- 									end, function (datar, menur)
+-- 										menur.close()
+-- 									end)
+-- 								elseif data2.current.value == "vlasnik" then
+-- 									TriggerServerEvent("saloni:MakniVlasnika", IDSalona)
+-- 								elseif data2.current.value == "cijena" then
+-- 									local mafIme
+-- 									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'mafime', {
+-- 										title = "Upisite novu cijenu salona",
+-- 									}, function (datar, menur)
+-- 										mafIme = datar.value
+-- 										if mafIme == nil then
+-- 											ESX.ShowNotification('Greska.')
+-- 										else
+-- 											menur.close()
+-- 											TriggerServerEvent("saloni:PromjeniCijenu", IDSalona, mafIme)
+-- 										end
+-- 									end, function (datar, menur)
+-- 										menur.close()
+-- 									end)
+-- 								elseif data2.current.value == "obrisi" then
+-- 									elements = {}
 									
-									table.insert(elements, {label = "Da", value = "da"})
-									table.insert(elements, {label = "Ne", value = "ne"})
+-- 									table.insert(elements, {label = "Da", value = "da"})
+-- 									table.insert(elements, {label = "Ne", value = "ne"})
 
-									ESX.UI.Menu.Open(
-									  'default', GetCurrentResourceName(), 'listarankova',
-									  {
-										title    = "Zelite li obrisati salon?",
-										align    = 'top-left',
-										elements = elements,
-									  },
-									  function(datalr, menulr)
-										if datalr.current.value == "da" then
-											menulr.close()
-											menu2.close()
-											menu.close()
-											TriggerServerEvent("saloni:ObrisiSalon", IDSalona)
-										else
-											menulr.close()
-										end
-									  end,
-									  function(datalr, menulr)
-										menulr.close()
-									  end
-									)
-								end
-							end,
-							function(data2, menu2)
+-- 									ESX.UI.Menu.Open(
+-- 									  'default', GetCurrentResourceName(), 'listarankova',
+-- 									  {
+-- 										title    = "Zelite li obrisati salon?",
+-- 										align    = 'top-left',
+-- 										elements = elements,
+-- 									  },
+-- 									  function(datalr, menulr)
+-- 										if datalr.current.value == "da" then
+-- 											menulr.close()
+-- 											menu2.close()
+-- 											menu.close()
+-- 											TriggerServerEvent("saloni:ObrisiSalon", IDSalona)
+-- 										else
+-- 											menulr.close()
+-- 										end
+-- 									  end,
+-- 									  function(datalr, menulr)
+-- 										menulr.close()
+-- 									  end
+-- 									)
+-- 								end
+-- 							end,
+-- 							function(data2, menu2)
 								
-								menu2.close()
-							end
-						)
-					end
-				end,
-				function(data, menu)
+-- 								menu2.close()
+-- 							end
+-- 						)
+-- 					end
+-- 				end,
+-- 				function(data, menu)
 
-					menu.close()
-				end
-			)
-		end
-	end)
-end, false)
+-- 					menu.close()
+-- 				end
+-- 			)
+-- 		end
+-- 	end)
+-- end, false)
 
 RegisterNetEvent('saloni:PosaljiSalone')
 AddEventHandler('saloni:PosaljiSalone', function(sal)

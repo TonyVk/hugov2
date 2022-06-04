@@ -45,7 +45,6 @@ end)
 RegisterNetEvent('loaf_housing:DodajKucu')
 AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, src)
 	table.insert(Config.Houses, {['ID'] = id, ['prop'] = prop, ['door'] = door, ['price'] = price, ['prodaja'] = prod, ['vlasnik'] = nil, rentanje = 0, rentCijena = 20})
-	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	
     local xPlayer = ESX.GetPlayerFromId(src)
     MySQL.Async.fetchScalar("SELECT house FROM users WHERE ID = @id", {['@id'] = xPlayer.getID()}, function(result)
@@ -59,6 +58,7 @@ AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, 
                     for k, v in pairs(Config.Houses) do
                         if v['ID'] == id then
                             v['vlasnik'] = xPlayer.getID()
+                            TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
                             break
                         end
                     end
@@ -66,8 +66,6 @@ AddEventHandler('loaf_housing:DodajKucu', function(id, prop, door, price, prod, 
             end)
         end
     end)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('kuce:OdobriRent')
@@ -133,8 +131,6 @@ AddEventHandler('kuce:NovaKuca', function(prop, door, price)
 	    TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
         xPlayer.showNotification("Uspjesno dodana kuca!")
 	end)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('kuce:PremjestiMarker')
@@ -153,8 +149,6 @@ AddEventHandler('kuce:PremjestiMarker', function(id, door)
 	}, function(insertid)
 		TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	end)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('kuce:PromijeniCijenu')
@@ -173,8 +167,6 @@ AddEventHandler('kuce:PromijeniCijenu', function(id, cijena)
 	}, function(insertid)
 		TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	end)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('kuce:PromijeniInt')
@@ -193,8 +185,6 @@ AddEventHandler('kuce:PromijeniInt', function(id, int)
 	}, function(insertid)
 		TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
 	end)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('kuce:MakniVlasnika')
@@ -204,14 +194,14 @@ AddEventHandler('kuce:MakniVlasnika', function(id)
 		local k = v['ID']
 		if k == id then
             MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = v['vlasnik'], ['@house'] = '{"owns":false,"furniture":[],"houseId":0}'}) 
-            MySQL.Async.execute("DELETE FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = id})
-			v['vlasnik'] = nil
+            MySQL.Async.execute("DELETE FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = id}, function(rez)
+                xPlayer.showNotification("Maknuli ste vlasnika na kuci #"..id)
+                v['vlasnik'] = nil
+                TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
+            end)
 			break
 		end
 	end
-	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('kuce:ObrisiKucu')
@@ -228,8 +218,6 @@ AddEventHandler('kuce:ObrisiKucu', function(id)
 		end
 	end
 	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('loaf_housing:UrediKucu')
@@ -241,8 +229,6 @@ AddEventHandler('loaf_housing:UrediKucu', function(id, door, src)
 		end
 	end
 	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('loaf_housing:ObrisiKucu')
@@ -255,8 +241,6 @@ AddEventHandler('loaf_housing:ObrisiKucu', function(id)
 		end
 	end
 	TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 ESX.RegisterServerCallback('loaf_housing:DohvatiZadnjuKucu', function(source, cb)
@@ -506,8 +490,6 @@ AddEventHandler('loaf_housing:buyHouse', function(id, ka)
             end)
         end
     end)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 ESX.RegisterServerCallback('loaf_housing:ImalKucu', function(source, cb)
@@ -546,8 +528,6 @@ AddEventHandler('loaf_housing:sellHouse', function()
         end
         TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
     end)
-    Wait(1500)
-    TriggerClientEvent('loaf_housing:reloadHouses', -1)
 end)
 
 RegisterNetEvent('kuce:PonudiIgracu')
@@ -587,8 +567,6 @@ AddEventHandler('kuce:PrihvatiPonudu', function(orgIgr, id, cij)
                     TriggerClientEvent("loaf_housing:SaljiKucice", -1, Config.Houses)
                     xPlayer.showNotification("Kupili ste kucu #"..id.." za $"..cij)
                     vlPlayer.showNotification("Prodali ste kucu #"..id.." za $"..cij)
-                    Wait(1500)
-                    TriggerClientEvent('loaf_housing:reloadHouses', -1)
                 else
                     xPlayer.showNotification("Igrac nije vlasnik kuce!")
                     vlPlayer.showNotification("Niste vlasnik kuce!")

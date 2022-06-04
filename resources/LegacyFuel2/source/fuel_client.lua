@@ -1137,8 +1137,9 @@ if Config.ShowNearestGasStationOnly then
 			if DoesBlipExist(currentGasBlip) then
 				RemoveBlip(currentGasBlip)
 			end
-
-			currentGasBlip = CreateBlip(closestCoords)
+			if closestCoords ~= nil then
+				currentGasBlip = CreateBlip(closestCoords)
+			end
 		end
 	end)
 elseif Config.ShowAllGasStations then

@@ -296,7 +296,7 @@ function OpenMechanicActionsMenu()
 		{label = _U('civ_wear'),       value = 'cloakroom2'},
 		{label = _U('deposit_stock'),  value = 'put_stock'},
 		{label = "Pregled narudzbi",   value = 'pregled_nar'},
-		{label = "Uzmi sarafciger ($500)",    value = 'saraf'}
+		--{label = "Uzmi sarafciger ($500)",    value = 'saraf'}
 	}
 
 	if ESX.PlayerData.job.grade > 0 then

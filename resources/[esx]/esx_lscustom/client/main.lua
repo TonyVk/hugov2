@@ -390,7 +390,7 @@ function OpenLSMenu2(elems, menuName, menuTitle, parent)
 					elements = elems
 				}, function(data, menu)
 					if data.current.modType == "zavrsi" then
-						if not IsVehicleSeatFree(vehicle, -1) then
+						--if not IsVehicleSeatFree(vehicle, -1) then
 							local pedara = GetPedInVehicleSeat(vehicle, -1)
 							local plID = DajPlayerId(pedara)
 							local srwID = GetPlayerServerId(plID)
@@ -401,9 +401,9 @@ function OpenLSMenu2(elems, menuName, menuTitle, parent)
 							TriggerServerEvent('esx_billing:posaljiTuljana', srwID, 'society_mechanic', "Mehanicar | Dijelovi", cijena)
 							TriggerServerEvent("meh:NaruciDijelove", Narudzba, srwID)
 							ESX.ShowNotification("Narucili ste dijelove")
-						else
-							ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
-						end
+						--else
+							--ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
+						--end
 						Narudzba = {}
 						lsMenuIsShowed = false
 						menu.close()
@@ -712,12 +712,13 @@ function UpdateMods2(nar, data)
 				local ped = PlayerPedId()
 				TaskLeaveVehicle(ped, vehicle, 16)
 				Wait(1000)
+				makeEntityFaceEntity(ped, vehicle)
 				local coords = GetEntityCoords(ped)
 				local dict
 				local model = 'prop_carjack'
 				local offset = GetOffsetFromEntityInWorldCoords(ped, 0.0, -2.0, 0.0)
 				local headin = GetEntityHeading(ped)
-				makeEntityFaceEntity(ped, vehicle)
+				--makeEntityFaceEntity(ped, vehicle)
 				Wait(1000)
 				local veh = vehicle
 				FreezeEntityPosition(veh, true)
@@ -874,6 +875,9 @@ function UpdateMods2(nar, data)
 				else
 					brVrata = 4
 				end
+				if engcoord.x == 0 and engcoord.y == 0 then
+					brVrata = 4
+				end
 				SetVehicleDoorOpen(vehicle, brVrata, false, false)
 				ESX.Streaming.RequestAnimDict("anim@heists@box_carry@", function()
 					TaskPlayAnim(PlayerPedId(),"anim@heists@box_carry@", "idle", 8.0, 8.0, -1, 50)
@@ -885,8 +889,13 @@ function UpdateMods2(nar, data)
 				AttachEntityToEntity(prop_ent, PlayerPedId(), GetEntityBoneIndexByName(PlayerPedId(), "SKEL_Pelvis"), -0.1, 1.3, -1.0, 0.0, -0.95, 178.8, 10000.0, false, false, false, 0, true)
 				--SetModelAsNoLongerNeeded(modele)
 				local veh = vehicle
+				local dist = 2.0
 				local coords = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, "engine"))
-				while #(coords-GetEntityCoords(PlayerPedId())) > 2.0 do
+				if engcoord.x == 0 and engcoord.y == 0 then
+					coords = haubacoord
+					dist = 3.0
+				end
+				while #(coords-GetEntityCoords(PlayerPedId())) > dist do
 					DrawMarker(23, coords.x, coords.y, coords.z, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 238, 227, 79, 200, 0, 0, 0, 0)
 					Wait(1)
 				end
@@ -947,7 +956,7 @@ function UpdateMods2(nar, data)
 				AttachEntityToEntity(prop_ent3, prop_ent, 0, -0.1, -1.1, 1.2, 0.0, -0.95, 0.0, 10000.0, false, false, false, 0, true)
 				--SetModelAsNoLongerNeeded(modele)
 				--Ugradi drugi
-				while #(coords-GetEntityCoords(PlayerPedId())) > 2.0 do
+				while #(coords-GetEntityCoords(PlayerPedId())) > dist do
 					DrawMarker(23, coords.x, coords.y, coords.z, 0, 0, 0, 0, 0, 0, 1.501, 1.5001, 0.5001, 238, 227, 79, 200, 0, 0, 0, 0)
 					Wait(1)
 				end
@@ -963,6 +972,9 @@ function UpdateMods2(nar, data)
 				SetEntityNoCollisionEntity(prop_ent3, veh, false)
 				SetModelAsNoLongerNeeded(modele)
 				local novecoord = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, "engine"))
+				if novecoord.x == 0 and novecoord.y == 0 then
+					novecoord = haubacoord
+				end
 				Wait(3000)
 				while not SlideObject(
 					prop_ent3, 
@@ -1214,7 +1226,7 @@ function GetAction(data)
 				elements = elems
 			}, function(data, menu)
 				if data.current.modType == "zavrsi" then
-					if not IsVehicleSeatFree(vehicle, -1) then
+					--if not IsVehicleSeatFree(vehicle, -1) then
 						local pedara = GetPedInVehicleSeat(vehicle, -1)
 						local plID = DajPlayerId(pedara)
 						local srwID = GetPlayerServerId(plID)
@@ -1225,9 +1237,9 @@ function GetAction(data)
 						TriggerServerEvent('esx_billing:posaljiTuljana', srwID, 'society_mechanic', "Mehanicar | Dijelovi", cijena)
 						TriggerServerEvent("meh:NaruciDijelove", Narudzba, srwID)
 						ESX.ShowNotification("Narucili ste dijelove")
-					else
-						ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
-					end
+					--else
+						--ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
+					--end
 					lsMenuIsShowed = false
 					Narudzba = {}
 					menu.close()
@@ -1663,11 +1675,11 @@ function GetAction(data)
 		end)
 		if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
 			if GetPedInVehicleSeat(vehicle, 0) == playerPed then
-				if not IsVehicleSeatFree(vehicle, -1) then
+				--if not IsVehicleSeatFree(vehicle, -1) then
 					OpenLSMenu2(elements, menuName, menuTitle, parent)
-				else
-					ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
-				end
+				--else
+					--ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
+				--end
 			elseif GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				OpenLSMenu(elements, menuName, menuTitle, parent)
 			end
@@ -1747,7 +1759,7 @@ Citizen.CreateThread(function()
 				if isInLSMarker then
 					if GetPedInVehicleSeat(vehicle, 0) == playerPed then
 						if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
-							if not IsVehicleSeatFree(vehicle, -1) then
+							--if not IsVehicleSeatFree(vehicle, -1) then
 								lsMenuIsShowed = true
 
 								FreezeEntityPosition(vehicle, true)
@@ -1756,9 +1768,9 @@ Citizen.CreateThread(function()
 								Narudzba = {}
 								ESX.UI.Menu.CloseAll()
 								GetAction({value = 'main'})
-							else
-								ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
-							end
+							--else
+								--ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
+							--end
 						end
 					elseif GetPedInVehicleSeat(vehicle, -1) == playerPed then
 						lsMenuIsShowed = true
