@@ -22,6 +22,28 @@ local Vozila = {}
 local LokalnaVozila = {}
 local OtvorenHTML = false
 
+--Contract
+local Ima = 0
+local vlasnik
+local cijena = 0
+local tablica
+local Vozilo = nil
+
+local brVozilo = nil
+local Blip = nil
+local Spawnovi = {
+	{x = -999.11291503906, y = -1400.1403808594, z = 0.29306834936142, h = 20.268524169922}, --spawnvozila
+	{x = -990.41900634766, y = -1397.63671875, z = 0.32235115766525, h = 21.303436279297}, --spawn2
+	{x = -981.62341308594, y = -1394.7960205078, z = 0.26907229423523, h = 19.966035842896}, --spawn3
+	{x = -973.55328369141, y = -1391.3395996094, z = 0.30388006567955, h = 20.50302696228}, --spawn4
+	{x = -964.90197753906, y = -1388.7297363281, z = 0.30299228429794, h = 19.273345947266}, --spawn5
+	{x = -954.75231933594, y = -1385.0946044922, z = 0.27771404385567, h = 19.083749771118}, --spawn6
+	{x = -946.68768310547, y = -1381.6982421875, z = 0.32856410741806, h = 19.446186065674}, --spawn7
+	{x = -937.97387695313, y = -1378.8669433594, z = 0.31743547320366, h = 20.496671676636}, --spawn7
+	{x = -929.65881347656, y = -1375.3037109375, z = 0.30395010113716, h = 21.080327987671}, --spawn9
+	{x = -921.25415039063, y = -1372.5773925781, z = 0.292709171772, h = 19.627565383911}
+}
+
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -56,6 +78,17 @@ Citizen.CreateThread(function()
 	ReloadBlip()
 	SpawnNpcove()
 	SpawnCpove()
+
+	Blip = AddBlipForCoord(Config.Zones.Rent.Pos)
+	SetBlipSprite (Blip, 427)
+	SetBlipDisplay(Blip, 2)
+	SetBlipScale  (Blip, 1.2)
+	SetBlipColour (Blip, 57)
+	SetBlipAsShortRange(Blip, true)
+
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString("Rent glisera")
+	EndTextCommandSetBlipName(Blip)
 	--[[ESX.TriggerServerCallback('saloni:DohvatiSalone', function(sal, voz)
 		Saloni = sal
 		Vozila = voz
@@ -67,6 +100,133 @@ Citizen.CreateThread(function()
 		ImamSalon = imal
 	end)]]
 end)
+
+RegisterNetEvent('esx_contract:PoslaoMu')
+AddEventHandler('esx_contract:PoslaoMu', function(br, tabl, cij, igr, veh)
+	Ima = br
+	tablica = tabl
+	cijena = cij
+	vlasnik = igr
+	Vozilo = veh
+end)
+
+RegisterNetEvent('contract:ZamjenaVozila')
+AddEventHandler('contract:ZamjenaVozila', function(plate)
+	if GarazaV ~= nil then
+		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
+		GarazaV = nil
+		if Vblip ~= nil then
+			RemoveBlip(Vblip)
+			Vblip = nil
+		end
+	end
+	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+end)
+
+RegisterCommand("prihvativozilo", function(source, args, rawCommandString)
+	if Ima == 1 then
+		Ima = 0
+		TriggerServerEvent('ugovor:prodajtuljanu', vlasnik, tablica, cijena)
+		TriggerEvent("garaza:ObrisiProslo")
+		TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
+		local vehicle = ESX.Game.GetClosestVehicle(coords)
+		local vehiclecoords = GetEntityCoords(vehicle)
+		local vehDistance = GetDistanceBetweenCoords(coords, vehiclecoords, true)
+		if DoesEntityExist(vehicle) and (vehDistance <= 3) then
+			Vblip = AddBlipForEntity(vehicle)
+			SetBlipSprite (Vblip, 225)
+			SetBlipDisplay(Vblip, 4)
+			SetBlipScale  (Vblip, 1.0)
+			SetBlipColour (Vblip, 30)
+			SetBlipAsShortRange(Vblip, true)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString("Vase vozilo")
+			EndTextCommandSetBlipName(Vblip)
+			local props = ESX.Game.GetVehicleProperties(vehicle)
+			local pla = props.plate:gsub("^%s*(.-)%s*$", "%1")
+			TriggerServerEvent("garaza:SpremiModel", pla, props.model)
+			local nid = NetworkGetNetworkIdFromEntity(vehicle)
+			TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
+		end
+	else
+		ESX.ShowNotification("Nemate ponudu za vozilo!")
+	end
+end, false)
+
+RegisterNetEvent('esx_contract:getVehicle')
+AddEventHandler('esx_contract:getVehicle', function()
+	local playerPed = PlayerPedId()
+	local coords = GetEntityCoords(playerPed)
+	local closestPlayer, playerDistance = ESX.Game.GetClosestPlayer()
+
+	if closestPlayer ~= -1 and playerDistance <= 3.0 then
+		local vehicle = ESX.Game.GetClosestVehicle(coords)
+		local vehiclecoords = GetEntityCoords(vehicle)
+		local vehDistance = GetDistanceBetweenCoords(coords, vehiclecoords, true)
+		if DoesEntityExist(vehicle) and (vehDistance <= 3) then
+			local JelDonatorski = false
+			for i=1, #Vehicles, 1 do
+				if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
+					if Vehicles[i].category == "donatorski" or Vehicles[i].category == "razz" then
+						JelDonatorski = true
+						if Vehicles[i].category == "razz" and ESX.PlayerData.job.name == 'mechanic' and ESX.PlayerData.job.grade == 5 then
+							JelDonatorski = false
+						end
+						break
+					end
+				end
+			end
+			if not JelDonatorski then
+				TriggerEvent("esx_invh:closeinv")
+				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijenica_vozila', {
+					title = "Upisite cijenu vozila"
+				}, function(data, menu)
+
+					local amount = tonumber(data.value)
+
+					if amount == nil then
+						ESX.ShowNotification("Niste unjeli cijenu")
+					else
+						menu.close()
+						local vehProps = ESX.Game.GetVehicleProperties(vehicle)
+						ESX.TriggerServerCallback('garaza:JelIstiModel', function(dane)
+							if (dane) then
+								ESX.ShowNotification(_U('writingcontract', vehProps.plate))
+								TriggerServerEvent('ugovor:prodajtuljanu2', GetPlayerServerId(closestPlayer), vehProps.plate, amount, GarazaV)
+							end
+						end, vehProps.plate, vehProps.model)
+					end
+				end, function(data, menu)
+					menu.close()
+				end)
+			else
+				ESX.ShowNotification("Ne smijete prodavati donatorsko vozilo!")
+			end
+		else
+			ESX.ShowNotification(_U('nonearby'))
+		end
+	else
+		ESX.ShowNotification(_U('nonearbybuyer'))
+	end
+	
+end)
+
+RegisterNetEvent('esx_contract:showAnim')
+AddEventHandler('esx_contract:showAnim', function(player)
+	loadAnimDict('anim@amb@nightclub@peds@')
+	TaskStartScenarioInPlace(PlayerPedId(), 'WORLD_HUMAN_CLIPBOARD', 0, false)
+	Citizen.Wait(20000)
+	ClearPedTasks(PlayerPedId())
+end)
+
+function loadAnimDict(dict)
+	while (not HasAnimDictLoaded(dict)) do
+		RequestAnimDict(dict)
+		Citizen.Wait(0)
+	end
+end
 
 function SpawnCpove()
 	if #Cpovi > 0 then
@@ -88,6 +248,7 @@ function SpawnCpove()
 	table.insert(Cpovi, {Tip = "ResellVehicle", ID = check, Koord = Config.Zones.ResellVehicle.Pos, Spawnan = false, r = Config.MarkerColor.r, g = Config.MarkerColor.g, b = Config.MarkerColor.b})
 	table.insert(Cpovi, {Tip = "ShopEntering2", ID = check, Koord = Config.Zones.ShopEntering2.Pos, Spawnan = false, r = Config.MarkerColor.r, g = Config.MarkerColor.g, b = Config.MarkerColor.b})
 	table.insert(Cpovi, {Tip = "ResellVehicle2", ID = check, Koord = Config.Zones.ResellVehicle2.Pos, Spawnan = false, r = Config.MarkerColor.r, g = Config.MarkerColor.g, b = Config.MarkerColor.b})
+	table.insert(Cpovi, {Tip = "bRent", ID = check, Koord = Config.Zones.Rent.Pos, Spawnan = false, r = Config.MarkerColor.r, g = Config.MarkerColor.g, b = Config.MarkerColor.b})
 end
 
 function SpawnNpcove()
@@ -2030,6 +2191,10 @@ AddEventHandler('esx_vehicleshop:hasEnteredMarker', function(zone, id)
 		CurrentActionMsg  = _U('shop_menu')
 		CurrentActionData = {}
 		Brod = true
+	elseif zone == 'bRent' then
+		CurrentAction     = 'bRent'
+		CurrentActionMsg  = "Pritisnite E da otvorite rent menu"
+		CurrentActionData = {}
 	end
 end)
 
@@ -2711,6 +2876,58 @@ Citizen.CreateThread(function()
 					OpenUpitProdajeMenu(CurrentActionData)
 				elseif CurrentAction == 'boss_actions_menu' then
 					OpenBossActionsMenu()
+				elseif CurrentAction == 'bRent' then
+					local elements = {}
+					table.insert(elements, {label = "Dinghy(700$)", value = 'dinghy'})
+					table.insert(elements, {label = 'Jetmax(700$)',  value = 'jetmax'})
+					table.insert(elements, {label = 'Speeder(700$)',  value = 'speeder'})
+					table.insert(elements, {label = 'Tropic(700$)',  value = 'tropic'})
+
+					ESX.UI.Menu.Open(
+					  'default', GetCurrentResourceName(), 'rentb',
+					  {
+						title    = "Izaberite brod",
+						align    = 'top-left',
+						elements = elements,
+					  },
+					  function(data, menu)
+						ESX.TriggerServerCallback('rentbroda:ImalPara', function(platio)
+							if platio then
+								if brVozilo ~= nil then
+									ESX.Game.DeleteVehicle(brVozilo)
+									brVozilo = nil
+								end
+								local Mjesto = false
+								for i=1, #Spawnovi, 1 do
+									if ESX.Game.IsSpawnPointClear({
+										x = Spawnovi[i].x,
+										y = Spawnovi[i].y,
+										z = Spawnovi[i].z
+									}, 5.0) then
+										Mjesto = true
+										local korde = vector3(Spawnovi[i].x, Spawnovi[i].y, Spawnovi[i].z)
+										ESX.Game.SpawnVehicle(data.current.value, korde, Spawnovi[i].h, function(callback_vehicle)
+											brVozilo = callback_vehicle
+											TaskWarpPedIntoVehicle(PlayerPedId(), callback_vehicle, -1)
+										end)
+										TriggerServerEvent("rentbroda:SviSuTuljani")
+										ESX.ShowNotification("Unrentati mozete sa /bunrent")
+										break
+									end
+								end
+								if Mjesto == false then
+									ESX.ShowNotification("Trenutno nema slobodnog mjesta za gliser!")
+								end
+							else
+								ESX.ShowNotification("Nemate dovoljno novca!")
+							end
+						end)
+						menu.close()
+					  end,
+					  function(data, menu)
+						menu.close()
+					  end
+					)
 				end
 				if CurrentAction ~= "shop_pregled" then
 					CurrentAction = nil
@@ -2721,6 +2938,16 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
+RegisterCommand("bunrent", function(source, args, rawCommandString)
+	if brVozilo ~= nil then
+		ESX.Game.DeleteVehicle(brVozilo)
+		brVozilo = nil
+		ESX.ShowNotification("Unrentali ste brod!")
+	else
+		ESX.ShowNotification("Nemate rentan brod!")
+	end
+end, false)
 
 Citizen.CreateThread(function()
 	RequestIpl('shr_int') -- Load walls and floor

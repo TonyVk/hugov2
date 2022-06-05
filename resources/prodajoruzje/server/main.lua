@@ -50,13 +50,6 @@ ESX.RegisterUsableItem('autobomba', function(source)
     end
 end)
 
-RegisterCommand('testbombu', function(source, args)
-	local xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer.getInventoryItem('autobomba').count > 0 then
-        TriggerClientEvent('RNG_CarBomb:CheckIfRequirementsAreMet', source)
-    end
-end)
-
 RegisterServerEvent('RNG_CarBomb:RemoveBombFromInv')
 AddEventHandler('RNG_CarBomb:RemoveBombFromInv', function()
     local xPlayer = ESX.GetPlayerFromId(source)
