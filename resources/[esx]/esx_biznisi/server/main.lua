@@ -233,7 +233,7 @@ AddEventHandler('biznis:DodajTuru', function(posao)
 	local _source = source
 	local ime = GetPlayerName(_source)
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	if xPlayer.getJob().name == posao then
+	if xPlayer.posao.name == posao then
 		local naso = false
 		for i=1, #Sati, 1 do
 			if Sati[i] ~= nil and Sati[i].Identifier == xPlayer.identifier and Sati[i].Posao == posao then
@@ -318,10 +318,8 @@ end)
 
 RegisterNetEvent('biznis:StaviUSef')
 AddEventHandler('biznis:StaviUSef', function(posao, cifra)
-	local src = source
-	local xPlayer = ESX.GetPlayerFromId(src)
 	for i=1, #Biznisi, 1 do
-		if Biznisi[i] ~= nil and Biznisi[i].Posao == posao and Biznisi[i].Posao == xPlayer.getJob().name then
+		if Biznisi[i] ~= nil and Biznisi[i].Posao == posao then
 			Biznisi[i].Sef = Biznisi[i].Sef+cifra
 			Biznisi[i].Tjedan = Biznisi[i].Tjedan+cifra
 			break

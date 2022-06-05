@@ -497,6 +497,7 @@ RegisterCommand("auredi", function(source, args, raw)
 	table.insert(elements, {label = 'Uredi rent', value = "urent"})
 	table.insert(elements, {label = 'Uredi pumpe', value = "pumpe"})
 	table.insert(elements, {label = 'Uredi mafije', value = "mafije"})
+	table.insert(elements, {label = 'Uredi biznise', value = "biznisi"})
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'auredi',
@@ -525,6 +526,8 @@ RegisterCommand("auredi", function(source, args, raw)
 			ExecuteCommand("uredipumpe")
 		elseif data.current.value == "mafije" then
 			ExecuteCommand("uredimafiju")
+		elseif data.current.value == "biznisi" then
+			ExecuteCommand("uredibiznise")
 		end
       end,
       function(data, menu)
