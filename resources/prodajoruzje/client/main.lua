@@ -43,6 +43,19 @@ local UVozilu 			  = false
 local Sjedalo 			  = nil
 local Vozilo = nil
 
+Config = {}
+
+-- 0 (Explode After Countdown) | 1 (Explode once the veh reaches a set speed) | 2 (Remote Detonate on Key Press) | 3 (Detonate after veh is entered and timer ends) |
+-- 4 (Detonate Immediately After the vehicle is entered)
+Config.DetonationType = 4
+Config.ProgressBarType = 1 -- 0 (Disable) | 1 (ProgressBars) | 2 (MythicProgressBars)
+Config.UsingMythicNotifications = false -- false (Default ESX Notifications) | true (Mythic Notifications Enabled)
+Config.TimeTakenToArm = 15 -- in seconds 
+Config.TimeUntilDetonation = 10 -- in seconds
+Config.TriggerKey = 47 -- If using type 2
+Config.maxSpeed = 50 -- if using type 1
+Config.Speed = 'KPH' -- if using type 2
+
 local dan, mjesec, god, sat, min = nil
 
 ESX                             = nil
@@ -92,6 +105,15 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 	UVozilu = true
 	Sjedalo = currentSeat
 	Vozilo = currentVehicle
+	ESX.TriggerServerCallback('bomba:ProvjeriVozilo', function(ima)
+		if ima then
+			while not IsVehicleEngineStarting(currentVehicle) do
+				Wait(100)
+			end
+			DetonateVehicle(currentVehicle)
+			TriggerServerEvent("bomba:MakniVozilo", GetVehicleNumberPlateText(currentVehicle))
+		end
+	end, GetVehicleNumberPlateText(currentVehicle))
 	if Sjedalo == 0 then
 		Citizen.CreateThread(function ()
 			while UVozilu do
@@ -124,6 +146,51 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
 	Sjedalo = nil
 	Vozilo = nil
 end)
+
+function RunTimer(veh)
+    timer = Config.TimeUntilDetonation
+    while timer > 0 do
+        timer = timer - 1
+        Citizen.Wait(1000)
+        if timer == 0 then
+            DetonateVehicle(veh)
+        end
+    end
+end
+
+function DetonateVehicle(veh)
+    if DoesEntityExist(veh) then
+		NetworkExplodeVehicle(veh, true, false, false)
+    end
+end
+
+function ShowNotification( text )
+    SetNotificationTextEntry( "STRING" )
+    AddTextComponentString( text )
+    DrawNotification( false, false )
+end
+
+function FastMythticProg(message, time)
+    exports['mythic_progbar']:Progress({
+		name = "tint",
+		duration = time,
+		label = message,
+		useWhileDead = false,
+		canCancel = false,
+		controlDisables = {
+			disableMovement = true,
+			disableCarMovement = true,
+			disableMouse = false,
+			disableCombat = true,
+		},
+	}, function(cancelled)
+        if not cancelled then
+            
+		else
+			Citizen.Wait(1000)
+		end
+	end)
+end
 
 exports.qtarget:AddTargetModel({-206690185, 1511880420, 682791951}, {
 	options = {
@@ -1515,9 +1582,7 @@ AddEventHandler('prodajoruzje:petarde', function()
 			DeleteEntity(prop)
 end)
 
-local skupljanje = vector3(59.282123565674, -774.98114013672, 17.823108673096)
-local cprerada = vector3(2433.5622558594, 4968.9677734375, 42.347618103027)
-local cijev = vector3(94.248916625977, 3755.9348144531, 40.77135848999)
+local bomba = vector3(-484.06744384766, 198.82972717286, 83.157684326172)
 
 Citizen.CreateThread(function()
 	local waitara = 500
@@ -1539,71 +1604,41 @@ Citizen.CreateThread(function()
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
 			if IsControlPressed(0, Keys['E']) and (GetGameTimer() - GUI.Time) > 150 then
-				if CurrentAction == 'menu_prerada' then
-					OpenPreradaMenu()
-				elseif CurrentAction == 'menu_skupljanje' then
-					TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_WELDING", 0, true)
-                    local vrime = GetGameTimer()
-					while GetGameTimer()-vrime < 15000 do
-						Wait(1)
-						DisableAllControlActions()
+				if CurrentAction == 'bomba' then
+					local coords = GetEntityCoords(PlayerPedId())
+					if(GetDistanceBetweenCoords(coords, -484.06744384766, 198.82972717286, 83.157684326172, true) < 2) then
+						local torba = 0
+						TriggerEvent('skinchanger:getSkin', function(skin)
+							torba = skin['bags_1']
+						end)
+						if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+							TriggerServerEvent('bomba:KupiBombu', true)
+						else
+							TriggerServerEvent('bomba:KupiBombu', false)
+						end
+					else
+						TriggerEvent('prodajoruzje:hasExitedMarker', lastStation, lastPart, lastPartNum)
 					end
-					ClearPedTasksImmediately(playerPed)
-					local kordic = GetEntityCoords(playerPed)
-					if not IsEntityDead(playerPed) and #(kordic-skupljanje) <= 5.0 then
-						TriggerServerEvent("kraft:SkupiGa")
-						ESX.ShowNotification("Dobili ste 1x zeljeza!")
-						currentStation = 1
-						currentPart    = 'Skupljanje'
-						currentPartNum = 1
-					end
-					isInMarker = false
-					HasAlreadyEnteredMarker = false
-				elseif CurrentAction == 'menu_cijev' then
-					OpenCijevMenu()
 				end
 				GUI.Time = GetGameTimer()
 				CurrentAction = nil
 			end
 		end
 		local coords    = GetEntityCoords(playerPed)
-		
-		if #(coords-cprerada) < 100.0 then
+
+		if #(coords-bomba) < 100.0 then
 			waitara = 0
 			naso = 1
-			DrawMarker(0, cprerada, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
-		end
-		if #(coords-cprerada) < 2.5 then
-			isInMarker     = true
-			currentStation = 1
-			currentPart    = 'Prerada'
-			currentPartNum = 1
-		end
-		
-		if #(coords-skupljanje) < 100.0 then
-			waitara = 0
-			naso = 1
-			DrawMarker(0, skupljanje, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
-		end
-		if #(coords-skupljanje) < 2.5 then
-			isInMarker     = true
-			currentStation = 1
-			currentPart    = 'Skupljanje'
-			currentPartNum = 1
-		end
-		
-		if #(coords-cijev) < 100.0 then
-			waitara = 0
-			naso = 1
-			DrawMarker(0, cijev, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
-		end
-		if #(coords-cijev) < 1.5 then
-			isInMarker     = true
-			currentStation = 1
-			currentPart    = 'Cijev'
-			currentPartNum = 1
+			DrawMarker(0, bomba, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 2.0, 1.0, 0, 0, 0, 100, false, true, 2, false, false, false, false)
 		end
 
+		if #(coords-bomba) < 2 then
+			isInMarker  = true
+			currentStation = 1
+			currentPart = "bomba"
+			currentPartNum = 1
+		end
+		
 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then
 			waitara = 0
 			naso = 1
@@ -1638,17 +1673,9 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler('prodajoruzje:hasEnteredMarker', function(station, part, partNum)
-	if part == 'Prerada' then
-		CurrentAction     = 'menu_prerada'
-		CurrentActionMsg  = "Pritisnite E da otvorite menu prerade!"
-		CurrentActionData = {}
-	elseif part == 'Skupljanje' then
-		CurrentAction     = 'menu_skupljanje'
-		CurrentActionMsg  = "Pritisnite E da pocnete skupljati zeljezo!"
-		CurrentActionData = {}
-	elseif part == 'Cijev' then
-		CurrentAction     = 'menu_cijev'
-		CurrentActionMsg  = "Pritisnite E da otvorite menu!"
+	if part == 'bomba' then
+		CurrentAction     = "bomba"
+		CurrentActionMsg  = "Pritisnite E da kupite auto bombu za $200000"
 		CurrentActionData = {}
 	end
 end)
@@ -1656,6 +1683,82 @@ end)
 AddEventHandler('prodajoruzje:hasExitedMarker', function(station, part, partNum)
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
+end)
+
+RegisterNetEvent('RNG_CarBomb:CheckIfRequirementsAreMet')
+AddEventHandler('RNG_CarBomb:CheckIfRequirementsAreMet', function()
+    local ped = GetPlayerPed(-1)
+    local coords = GetEntityCoords(ped)
+    local veh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.000, 0, 70)
+    local vCoords = GetEntityCoords(veh)
+    local dist = GetDistanceBetweenCoords(coords.x, coords.y, coords.z, vCoords.x, vCoords.y, vCoords.z, false)
+    local animDict = "anim@amb@business@weed@weed_inspecting_lo_med_hi@"
+    local anim = "weed_spraybottle_crouch_base_inspector"
+
+    if not IsPedInAnyVehicle(ped, false) then
+        if veh and (dist < 3.0) then
+            loadAnimDict(animDict)
+            Citizen.Wait(1000)
+            TaskPlayAnim(ped, animDict, anim, 3.0, 1.0, -1, 0, 1, 0, 0, 0)
+			FreezeEntityPosition(ped, true)
+            if Config.ProgressBarType == 0 then
+                --return
+            elseif Config.ProgressBarType == 1 then
+				ESX.ShowPBar('Postavljanje bombe', Config.TimeTakenToArm * 1000)
+            elseif Config.ProgressBarType == 2 then
+                FastMythticProg('Postavljanje bombe', Config.TimeTakenToArm * 1000)
+            end
+            Citizen.Wait(Config.TimeTakenToArm * 1000)
+            ClearPedTasksImmediately(ped)
+			FreezeEntityPosition(ped, false)
+			TriggerServerEvent('RNG_CarBomb:RemoveBombFromInv')
+			TriggerServerEvent("bomba:SpremiVozilo", GetVehicleNumberPlateText(veh))
+            if Config.DetonationType == 0 then
+                if Config.UsingMythicNotifications then
+                    TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = 'The device will explode in '..Config.TimeUntilDetonation..' seconds', length = 5500})
+                else
+					ESX.ShowNotification('The device will explode in '..Config.TimeUntilDetonation..' seconds')
+                end
+                RunTimer(veh)
+            elseif Config.DetonationType == 1 then
+                if Config.UsingMythicNotifications then
+                    TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = 'The device will explode at the speed of '..Config.maxSpeed..' '..Config.Speed, length = 5500})
+                else
+					ESX.ShowNotification('The device will explode at the speed of '..Config.maxSpeed..' '..Config.Speed)
+                end
+            elseif Config.DetonationType == 2 then
+                if Config.UsingMythicNotifications then
+                    TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = 'Detonate the device by pressing G', length = 5500})
+                else
+					ESX.ShowNotification('Detonate the device by pressing G')
+                end
+            elseif Config.DetonationType == 3 then
+                if Config.UsingMythicNotifications then
+                    TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = 'The device will detonate '..Config.TimeUntilDetonation..' seconds after someone enters the vehicle', length = 5500})
+                else
+					ESX.ShowNotification('The device will detonate '..Config.TimeUntilDetonation..' seconds after someone enters the vehicle')
+                end 
+            elseif Config.DetonationType == 4 then
+                if Config.UsingMythicNotifications then
+                    TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = 'Bomba ce eksplodirati cim vozac upali motor vozila', length = 5500})
+                else
+					ESX.ShowNotification('Bomba ce eksplodirati cim vozac upali motor vozila')
+                end 
+            end 
+        else
+            if Config.UsingMythicNotifications then
+                TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = 'Nema vozila u blizini', length = 5500})
+            else
+				ESX.ShowNotification('Nema vozila u blizini')  
+            end 
+        end 
+    else
+        if Config.UsingMythicNotifications then
+            TriggerEvent('mythic_notify:client:SendAlert', { type = 'error', text = 'Ne mozete to uraditi kada ste u vozilu!', length = 5500})
+        else
+			ESX.ShowNotification('Ne mozete to uraditi kada ste u vozilu!')  
+        end 
+    end
 end)
 
 function OpenPreradaMenu()
