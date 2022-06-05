@@ -7,5 +7,6 @@ AddEventHandler('luka:EoPlace', function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.posao.name == Config.Posao then
 		xPlayer.addMoney(350)
+		TriggerEvent("biznis:StaviUSef", Config.Posao, math.ceil(350*0.30))
     end
 end)

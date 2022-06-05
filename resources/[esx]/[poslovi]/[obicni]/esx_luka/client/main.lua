@@ -496,6 +496,7 @@ function ZapocniPosao()
 					DestroyCam(kamerica2)
 					ESX.ShowNotification("Uspješno istovaren kontenjer!")
 					TriggerServerEvent("luka:EoPlace")
+					TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 					--Kont 2
 					ESX.ShowNotification("Zakacite kontenjer s desne strane broda!", 5000)
 					local KKord = GetOffsetFromEntityInWorldCoords(kKont2, -6.0, 1.1, 3.5)
@@ -555,6 +556,7 @@ function ZapocniPosao()
 							DestroyCam(kamerica2)
 							ESX.ShowNotification("Uspješno istovaren kontenjer!")
 							TriggerServerEvent("luka:EoPlace")
+							TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 							--Kont 3
 							ESX.ShowNotification("Zakacite kontenjer s lijeve strane broda!", 5000)
 							local KKord = GetOffsetFromEntityInWorldCoords(kKont3, -6.0, 1.1, 3.5)
@@ -614,6 +616,7 @@ function ZapocniPosao()
 									DestroyCam(kamerica2)
 									ESX.ShowNotification("Uspješno istovaren kontenjer!")
 									TriggerServerEvent("luka:EoPlace")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 									ZavrsiPosao()
 								end
 							end

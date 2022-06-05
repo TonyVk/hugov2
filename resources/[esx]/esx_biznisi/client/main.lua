@@ -48,6 +48,174 @@ AddEventHandler('es_admin:setPerm', function()
 	end)
 end)
 
+RegisterCommand("uredibiznise", function(source, args, raw)
+    ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
+		if perm == 69 then
+			print("koji kurac se desava")
+			local elements = {}
+
+			table.insert(elements, {label = "Novi biznis", value = "novi"})
+			
+			for i=1, #Biznisi, 1 do
+				if Biznisi[i] ~= nil then
+					table.insert(elements, {label = Biznisi[i].Label, value = Biznisi[i].ID})
+				end
+			end
+
+			ESX.UI.Menu.Open(
+				'default', GetCurrentResourceName(), 'ubiz',
+				{
+					title    = "Izaberite biznis",
+					align    = 'top-left',
+					elements = elements,
+				},
+				function(data, menu)
+					if data.current.value == "novi" then
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pimebiz', {
+							title = "Upisite ime biznisa",
+						}, function (datari, menuri)
+							local pIme = datari.value	
+							if pIme == nil then
+								ESX.ShowNotification('Greska.')
+							else
+								local naso = 0
+								for i=1, #Biznisi, 1 do
+									if Biznisi[i] ~= nil and Biznisi[i].Ime == pIme then
+										naso = 1
+										break
+									end
+								end
+								if naso == 0 then
+									menuri.close()
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'plabelbiz', {
+										title = "Upisite label biznisa",
+									}, function (datari2, menuri2)
+										local pLabel = datari2.value
+										if pLabel == nil then
+											ESX.ShowNotification('Greska.')
+										else
+											menuri2.close()
+											menu.close()
+											TriggerServerEvent("biznis:NapraviBiznis", pIme, pLabel)
+											ESX.ShowNotification("Uspjesno napravljen biznis")
+											Wait(100)
+                                			ExecuteCommand("uredibiznise")
+										end
+									end, function (datari2, menuri2)
+										menuri2.close()
+									end)
+								else
+									ESX.ShowNotification("Biznis sa tim imenom vec postoji!")
+								end
+							end
+						end, function (datari, menuri)
+							menuri.close()
+						end)
+					else
+						local bID = data.current.value
+						menu.close()
+						local id
+						for i = 1, #Biznisi do
+							if Biznisi[i].ID == bID then
+								id = i
+								break
+							end
+						end
+						elements = {}
+						table.insert(elements, {label = "Koordinate biznisa", value = "koord"})
+						table.insert(elements, {label = "Port do biznisa", value = "port"})
+						table.insert(elements, {label = "Posao biznisa", value = "posao"})
+						table.insert(elements, {label = "Vlasnik biznisa", value = "vlasnik"})
+						table.insert(elements, {label = "Label biznisa", value = "label"})
+						table.insert(elements, {label = "Obrisi biznis", value = "obrisi"})
+						ESX.UI.Menu.Open(
+							'default', GetCurrentResourceName(), 'ubiz',
+							{
+								title    = "Izaberite opciju",
+								align    = 'top-left',
+								elements = elements,
+							},
+							function(data2, menu2)
+								if data2.current.value == "koord" then
+									local koord = GetEntityCoords(PlayerPedId())
+									TriggerServerEvent("biznis:PostaviKoord", bID, Biznisi[id].Ime, koord)
+								elseif data2.current.value == "port" then
+									local x,y,z = table.unpack(Biznisi[id].Coord)
+									SetEntityCoords(PlayerPedId(), x,y,z)
+								elseif data2.current.value == "posao" then
+									elements = {}
+									ESX.TriggerServerCallback('biznisi:DajPoslove', function(poslovi)
+										elements = poslovi
+										ESX.UI.Menu.Open(
+										'default', GetCurrentResourceName(), 'ubizpos',
+										{
+											title    = "Izaberite posao",
+											align    = 'top-left',
+											elements = elements,
+										},
+										function(data3, menu3)
+											local posao = data3.current.value
+											TriggerServerEvent("biznis:PostaviPosao", bID, posao)
+											ESX.ShowNotification("Uspjesno postavljen posao biznisa na "..data3.current.label)
+											menu3.close()
+										end,
+										function(data3, menu3)
+											menu3.close()
+										end
+									)
+									end)
+								elseif data2.current.value == "vlasnik" then
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pvlbiz', {
+										title = "Upisite ID igraca (0 da maknete vlasnika)",
+									}, function (datari2, menuri2)
+										local igrID = tonumber(datari2.value)
+										if igrID == nil or igrID < 0 then
+											ESX.ShowNotification('Greska.')
+										else
+											TriggerServerEvent("biznis:PostaviVlasnika", bID, Biznisi[id].Ime, igrID)
+											menuri2.close()
+										end
+									end, function (datari2, menuri2)
+										menuri2.close()
+									end)
+								elseif data2.current.value == "label" then
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'urlabelbiz', {
+										title = "Upisite label biznisa",
+									}, function (datari2, menuri2)
+										local pLabel = datari2.value
+										if pLabel == nil then
+											ESX.ShowNotification('Greska.')
+										else
+											menuri2.close()
+											TriggerServerEvent("biznis:PostaviLabel", bID, Biznisi[id].Ime, pLabel)
+											ESX.ShowNotification("Uspjesno postavljen novi label biznisa!")
+										end
+									end, function (datari2, menuri2)
+										menuri2.close()
+									end)
+								elseif data2.current.value == "obrisi" then
+									TriggerServerEvent("biznis:ObrisiBiznis", bID, Biznisi[id].Ime)
+									menu2.close()
+									Wait(100)
+                                	ExecuteCommand("uredibiznise")
+								end
+							end,
+							function(data2, menu2)
+								menu2.close()
+							end
+						)
+					end
+				end,
+				function(data, menu)
+					menu.close()
+				end
+			)
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	end)
+end, false)
+
 RegisterCommand("napravibiznis", function(source, args, rawCommandString)
 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
 		if perm == 69 then
@@ -180,25 +348,25 @@ RegisterCommand("obrisibiznis", function(source, args, rawCommandString)
 end, false)
 
 function Draw3DText(x,y,z,textInput,fontId,scaleX,scaleY)
-         local px,py,pz=table.unpack(GetGameplayCamCoords())
-         local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)    
-         local scale = (1/dist)*20
-         local fov = (1/GetGameplayCamFov())*100
-         local scale = scale*fov   
-         SetTextScale(scaleX*scale, scaleY*scale)
-         SetTextFont(fontId)
-         SetTextProportional(1)
-         SetTextColour(250, 250, 250, 255)		-- You can change the text color here
-         SetTextDropshadow(1, 1, 1, 1, 255)
-         SetTextEdge(2, 0, 0, 0, 150)
-         SetTextDropShadow()
-         SetTextOutline()
-         SetTextEntry("STRING")
-         SetTextCentre(1)
-         AddTextComponentString(textInput)
-         SetDrawOrigin(x,y,z+2, 0)
-         DrawText(0.0, 0.0)
-         ClearDrawOrigin()
+	local px,py,pz=table.unpack(GetGameplayCamCoords())
+	local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)    
+	local scale = (1/dist)*20
+	local fov = (1/GetGameplayCamFov())*100
+	local scale = scale*fov   
+	SetTextScale(scaleX*scale, scaleY*scale)
+	SetTextFont(fontId)
+	SetTextProportional(1)
+	SetTextColour(250, 250, 250, 255)		-- You can change the text color here
+	SetTextDropshadow(1, 1, 1, 1, 255)
+	SetTextEdge(2, 0, 0, 0, 150)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextEntry("STRING")
+	SetTextCentre(1)
+	AddTextComponentString(textInput)
+	SetDrawOrigin(x,y,z+2, 0)
+	DrawText(0.0, 0.0)
+	ClearDrawOrigin()
 end
 
 function SpawnBlipove()
@@ -283,7 +451,7 @@ Citizen.CreateThread(function()
 				end
 				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
 					isInMarker     = true
-					currentStation = Biznisi[i].Ime
+					currentStation = Biznisi[i].ID
 					currentPart    = 'Biznis'
 					currentPartNum = i
 				end
@@ -331,7 +499,7 @@ function OpenBiznisMenu(ime)
   local Kupljen = false
   local Posao = nil
   for i=1, #Biznisi, 1 do
-	if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
+	if Biznisi[i] ~= nil and Biznisi[i].ID == ime then
 		if Biznisi[i].Kupljen == true then
 			Posao = Biznisi[i].Posao
 			Kupljen = true

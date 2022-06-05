@@ -456,6 +456,7 @@ function Ograda(cord, head)
 						SetEntityHeading(obj, hedara)
 					end)
 					TriggerServerEvent("farmer:EoPlace2")
+					TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 					Broj = Broj+1
 					moze = false
 				end
@@ -618,6 +619,7 @@ function SpawnObjekte()
 										RemoveBlip(Objekti[i].blip)
 									end
 									TriggerServerEvent("farmer:EoPlace")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 									table.remove(Objekti, i)
 									if #Objekti == 0 then
 										if DoesBlipExist(Blip) then

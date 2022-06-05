@@ -359,6 +359,7 @@ function SpawnObjekte2()
 								RemoveBlip(Objekti[i].blip)
 							end
 							TriggerServerEvent("kosac:EoPlace2")
+							TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 							table.remove(Objekti, i)
 							if #Objekti == 0 then
 								DeleteObject(Kosilica)
@@ -421,6 +422,7 @@ function SpawnObjekte()
 										RemoveBlip(Objekti[i].blip)
 									end
 									TriggerServerEvent("kosac:EoPlace")
+									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 									table.remove(Objekti, i)
 									if #Objekti == 0 then
 										local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
