@@ -52,6 +52,21 @@ AddEventHandler('tagovi:staffTag', function(br)
     end
 end)
 
+RegisterNetEvent('tagovi:hideTag')
+AddEventHandler('tagovi:hideTag', function(br)
+	local src = source
+    if br then
+        if has_value(staffTable, src) then
+            removebyKey(staffTable, src)
+        end
+    else
+        if not has_value(staffTable, src) then
+            table.insert(staffTable, src)
+        end
+    end
+	TriggerClientEvent("sendStaff", -1, staffTable)
+end)
+
 function has_value (tab, val)
     for i, v in ipairs (tab) do
         if (v == val) then

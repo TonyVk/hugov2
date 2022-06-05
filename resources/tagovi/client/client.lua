@@ -85,27 +85,27 @@ function ManageHeadLabels()
 									SetMpGamerTagAlpha(headDisplayId, 4, 225)							
 									SetMpGamerTagVisibility(headDisplayId, 4, true)
 								else
-									local vlasnikid
-									for a = 1, #Igraci do
-										if Igraci[a] ~= nil then
-											if Igraci[a].id == GetPlayerServerId(PlayerId()) then
-												vlasnikid = Igraci[a].uID
-												break
-											end
-										end
-									end
-									for a = 1, #Igraci do
-										if Igraci[a] ~= nil then
-											if Igraci[a].id == GetPlayerServerId(i) then
-												ime = Igraci[a].name
-												for g = 1, #Igraci[a].prijatelji do
-													if (Igraci[a].prijatelji[g].PrijateljID == vlasnikid and Igraci[a].prijatelji[g].VlasnikID == Igraci[a].uID) or (Igraci[a].prijatelji[g].PrijateljID == Igraci[a].uID and Igraci[a].prijatelji[g].VlasnikID == vlasnikid) then
-														ime = Igraci[a].name2
-													end
-												end
-											end
-										end
-									end
+									-- local vlasnikid
+									-- for a = 1, #Igraci do
+									-- 	if Igraci[a] ~= nil then
+									-- 		if Igraci[a].id == GetPlayerServerId(PlayerId()) then
+									-- 			vlasnikid = Igraci[a].uID
+									-- 			break
+									-- 		end
+									-- 	end
+									-- end
+									-- for a = 1, #Igraci do
+									-- 	if Igraci[a] ~= nil then
+									-- 		if Igraci[a].id == GetPlayerServerId(i) then
+									-- 			ime = Igraci[a].name
+									-- 			for g = 1, #Igraci[a].prijatelji do
+									-- 				if (Igraci[a].prijatelji[g].PrijateljID == vlasnikid and Igraci[a].prijatelji[g].VlasnikID == Igraci[a].uID) or (Igraci[a].prijatelji[g].PrijateljID == Igraci[a].uID and Igraci[a].prijatelji[g].VlasnikID == vlasnikid) then
+									-- 					ime = Igraci[a].name2
+									-- 				end
+									-- 			end
+									-- 		end
+									-- 	end
+									-- end
 									if staff then
 										ime = GetPlayerName(i)
 									end
@@ -115,16 +115,6 @@ function ManageHeadLabels()
 										SetMpGamerTagBigText(headDisplayId, "Admin")
 										SetMpGamerTagVisibility(headDisplayId, 3, true)
 										SetMpGamerTagColour(headDisplayId, 3, 6)
-									else
-										SetMpGamerTagColour(headDisplayId, 0, 0)
-										SetMpGamerTagName(headDisplayId,GetPlayerServerId(i).." | "..ime)
-										SetMpGamerTagBigText(headDisplayId, "")
-										SetMpGamerTagVisibility(headDisplayId, 3, false)
-									end
-									if driverID == GetPlayerServerId(i) then
-
-									else
-
 									end
 									SetMpGamerTagVisibility(headDisplayId, 4, false)
 									SetMpGamerTagVisibility(headDisplayId, 0, true)

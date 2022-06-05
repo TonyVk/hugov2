@@ -1,8 +1,8 @@
 ESX = nil
 local Grebalice = {}
 local COruzje = {}
-local LotoBrojevi = {}
-local Igraci = {}
+--local LotoBrojevi = {}
+--local Igraci = {}
 local Zvukovi = {}
 local Kontenjer = {}
 
@@ -197,103 +197,103 @@ AddEventHandler('kont:DajItema', function(koord)
 	end
 end)
 
-AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
-	MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
-		MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
-			table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
-			TriggerClientEvent("tagovi:Igraci", -1, Igraci)
-		end)
-	end)
-end)
+-- AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
+-- 	MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
+-- 		MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
+-- 			table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
+-- 			TriggerClientEvent("tagovi:Igraci", -1, Igraci)
+-- 		end)
+-- 	end)
+-- end)
 
-AddEventHandler('esx:playerDropped', function(playerId)
-	for i = 1, #Igraci do
-		if Igraci[i] ~= nil then
-			if Igraci[i].id == playerId then
-				table.remove(Igraci, i)
-			end
-		end
-	end
-end)
+-- AddEventHandler('esx:playerDropped', function(playerId)
+-- 	for i = 1, #Igraci do
+-- 		if Igraci[i] ~= nil then
+-- 			if Igraci[i].id == playerId then
+-- 				table.remove(Igraci, i)
+-- 			end
+-- 		end
+-- 	end
+-- end)
 
-AddEventHandler('onResourceStart', function(resource)
-	if resource == GetCurrentResourceName() then
-		Citizen.CreateThread(function()
-			Citizen.Wait(1000)
-			local players = ESX.GetPlayers()
-			local br = 0
-			for i=1, #players, 1 do
-				local xPlayer = ESX.GetPlayerFromId(players[i])
-				MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
-					MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
-						table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
-						br = br+1
-						if br >= #players then
-							TriggerClientEvent("tagovi:Igraci", -1, Igraci)
-						end
-					end)
-				end)
-			end
-		end)
-	end
-end)
+-- AddEventHandler('onResourceStart', function(resource)
+-- 	if resource == GetCurrentResourceName() then
+-- 		Citizen.CreateThread(function()
+-- 			Citizen.Wait(1000)
+-- 			local players = ESX.GetPlayers()
+-- 			local br = 0
+-- 			for i=1, #players, 1 do
+-- 				local xPlayer = ESX.GetPlayerFromId(players[i])
+-- 				MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
+-- 					MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
+-- 						table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
+-- 						br = br+1
+-- 						if br >= #players then
+-- 							TriggerClientEvent("tagovi:Igraci", -1, Igraci)
+-- 						end
+-- 					end)
+-- 				end)
+-- 			end
+-- 		end)
+-- 	end
+-- end)
 
-RegisterNetEvent("prodajoruzje:Upoznaj1")
-AddEventHandler('prodajoruzje:Upoznaj1', function(id)
-	local src = source
-	TriggerClientEvent("upit:OtvoriPitanje", id, "prodajoruzje", "Upoznavanje", "Želite li se upoznati?", src)
-end)
+-- RegisterNetEvent("prodajoruzje:Upoznaj1")
+-- AddEventHandler('prodajoruzje:Upoznaj1', function(id)
+-- 	local src = source
+-- 	TriggerClientEvent("upit:OtvoriPitanje", id, "prodajoruzje", "Upoznavanje", "Želite li se upoznati?", src)
+-- end)
 
-RegisterNetEvent("prodajoruzje:Upoznaj")
-AddEventHandler('prodajoruzje:Upoznaj', function(id)
-	local src = source
-	local jaPlayer = ESX.GetPlayerFromId(src)
-	local xPlayer = ESX.GetPlayerFromId(id)
-	local nemoze = false
-	for a = 1, #Igraci do
-		if Igraci[a] ~= nil then
-			if Igraci[a].id == src or Igraci[a].id == id then
-				for g = 1, #Igraci[a].prijatelji do
-					if (Igraci[a].prijatelji[g].PrijateljID == jaPlayer.getID() and Igraci[a].prijatelji[g].VlasnikID == xPlayer.getID()) or (Igraci[a].prijatelji[g].PrijateljID == xPlayer.getID() and Igraci[a].prijatelji[g].VlasnikID == jaPlayer.getID()) then
-						nemoze = true
-					end
-				end
-			end
-		end
-	end
-	if not nemoze then
-		for i = 1, #Igraci do
-			if Igraci[i] ~= nil then
-				if Igraci[i].id == src then
-					table.remove(Igraci, i)
-				end
-			end
-		end
-		for i = 1, #Igraci do
-			if Igraci[i] ~= nil then
-				if Igraci[i].id == id then
-					table.remove(Igraci, i)
-				end
-			end
-		end
-		MySQL.Async.fetchAll("insert into prijatelji(VlasnikID, PrijateljID) values(@id1, @id2)", { ["@id1"] = jaPlayer.getID(), ["@id2"] = xPlayer.getID() }, function(result2)
-			MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = jaPlayer.getID() }, function(result)
-				MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
-					table.insert(Igraci, {id = jaPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
-					MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
-						MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
-							table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
-							TriggerClientEvent("tagovi:Igraci", -1, Igraci)
-						end)
-					end)
-				end)
-			end)
-		end)
-	else
-		jaPlayer.showNotification("Vec ste se upoznali!")
-		xPlayer.showNotification("Vec ste se upoznali!")
-	end
-end)
+-- RegisterNetEvent("prodajoruzje:Upoznaj")
+-- AddEventHandler('prodajoruzje:Upoznaj', function(id)
+-- 	local src = source
+-- 	local jaPlayer = ESX.GetPlayerFromId(src)
+-- 	local xPlayer = ESX.GetPlayerFromId(id)
+-- 	local nemoze = false
+-- 	for a = 1, #Igraci do
+-- 		if Igraci[a] ~= nil then
+-- 			if Igraci[a].id == src or Igraci[a].id == id then
+-- 				for g = 1, #Igraci[a].prijatelji do
+-- 					if (Igraci[a].prijatelji[g].PrijateljID == jaPlayer.getID() and Igraci[a].prijatelji[g].VlasnikID == xPlayer.getID()) or (Igraci[a].prijatelji[g].PrijateljID == xPlayer.getID() and Igraci[a].prijatelji[g].VlasnikID == jaPlayer.getID()) then
+-- 						nemoze = true
+-- 					end
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- 	if not nemoze then
+-- 		for i = 1, #Igraci do
+-- 			if Igraci[i] ~= nil then
+-- 				if Igraci[i].id == src then
+-- 					table.remove(Igraci, i)
+-- 				end
+-- 			end
+-- 		end
+-- 		for i = 1, #Igraci do
+-- 			if Igraci[i] ~= nil then
+-- 				if Igraci[i].id == id then
+-- 					table.remove(Igraci, i)
+-- 				end
+-- 			end
+-- 		end
+-- 		MySQL.Async.fetchAll("insert into prijatelji(VlasnikID, PrijateljID) values(@id1, @id2)", { ["@id1"] = jaPlayer.getID(), ["@id2"] = xPlayer.getID() }, function(result2)
+-- 			MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = jaPlayer.getID() }, function(result)
+-- 				MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
+-- 					table.insert(Igraci, {id = jaPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
+-- 					MySQL.Async.fetchAll("SELECT ID, firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = xPlayer.getID() }, function(result)
+-- 						MySQL.Async.fetchAll("SELECT VlasnikID, PrijateljID FROM prijatelji WHERE VlasnikID = @identifier or PrijateljID = @identifier", { ["@identifier"] = result[1].ID }, function(result2)
+-- 							table.insert(Igraci, {id = xPlayer.source, uID = result[1].ID, name = "Stranac_"..result[1].ID, name2 = result[1].firstname.." "..result[1].lastname, prijatelji = result2})
+-- 							TriggerClientEvent("tagovi:Igraci", -1, Igraci)
+-- 						end)
+-- 					end)
+-- 				end)
+-- 			end)
+-- 		end)
+-- 	else
+-- 		jaPlayer.showNotification("Vec ste se upoznali!")
+-- 		xPlayer.showNotification("Vec ste se upoznali!")
+-- 	end
+-- end)
 
 RegisterNetEvent("prodajoruzje:DajSkin")
 AddEventHandler('prodajoruzje:DajSkin', function(id)
@@ -1023,57 +1023,57 @@ AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
 	TriggerClientEvent('esx:showNotification', src, "Platili ste porez u iznosu od $"..(kol*1000))
 end)
 
-ESX.RegisterUsableItem("loto", function(source)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	TriggerClientEvent('loto:IzaberiBroj', _source)
-end)
+-- ESX.RegisterUsableItem("loto", function(source)
+-- 	local _source = source
+-- 	local xPlayer = ESX.GetPlayerFromId(_source)
+-- 	TriggerClientEvent('loto:IzaberiBroj', _source)
+-- end)
 
-RegisterNetEvent("loto:UplatiBroj")
-AddEventHandler('loto:UplatiBroj', function(br, cijena)
-	local src = source
-	local xPlayer = ESX.GetPlayerFromId(src)
-	if xPlayer.getMoney() >= tonumber(cijena) then
-		local naso = false
-		for i=1, #LotoBrojevi, 1 do
-			if LotoBrojevi[i].Broj == tonumber(br) or LotoBrojevi[i].Ident == xPlayer.identifier then
-				naso = true
-				break
-			end
-		end
-		if not naso then
-			xPlayer.removeInventoryItem("loto", 1)
-			xPlayer.removeMoney(cijena)
-			ESX.SavePlayer(xPlayer, function()
-			end)
-			TriggerClientEvent('esx:showNotification', src, "Uplatili ste $"..tonumber(cijena).." na loto broj "..tonumber(br).."!")
-			table.insert(LotoBrojevi, {Ident = xPlayer.identifier, Broj = tonumber(br), Cijena = tonumber(cijena)})
-		else
-			TriggerClientEvent('esx:showNotification', src, "Broj je zauzet ili ste vec uplatili listic!")
-		end
-	else
-		TriggerClientEvent('esx:showNotification', src, "Nemate dovoljno novca!")
-	end
-end)
+-- RegisterNetEvent("loto:UplatiBroj")
+-- AddEventHandler('loto:UplatiBroj', function(br, cijena)
+-- 	local src = source
+-- 	local xPlayer = ESX.GetPlayerFromId(src)
+-- 	if xPlayer.getMoney() >= tonumber(cijena) then
+-- 		local naso = false
+-- 		for i=1, #LotoBrojevi, 1 do
+-- 			if LotoBrojevi[i].Broj == tonumber(br) or LotoBrojevi[i].Ident == xPlayer.identifier then
+-- 				naso = true
+-- 				break
+-- 			end
+-- 		end
+-- 		if not naso then
+-- 			xPlayer.removeInventoryItem("loto", 1)
+-- 			xPlayer.removeMoney(cijena)
+-- 			ESX.SavePlayer(xPlayer, function()
+-- 			end)
+-- 			TriggerClientEvent('esx:showNotification', src, "Uplatili ste $"..tonumber(cijena).." na loto broj "..tonumber(br).."!")
+-- 			table.insert(LotoBrojevi, {Ident = xPlayer.identifier, Broj = tonumber(br), Cijena = tonumber(cijena)})
+-- 		else
+-- 			TriggerClientEvent('esx:showNotification', src, "Broj je zauzet ili ste vec uplatili listic!")
+-- 		end
+-- 	else
+-- 		TriggerClientEvent('esx:showNotification', src, "Nemate dovoljno novca!")
+-- 	end
+-- end)
 
-function Loto()
-	TriggerClientEvent('esx:showNotification', -1, "Loto pocinje za 15 minuta, uplatite listice dok mozete!")
-	SetTimeout(900000, function()
-		local br = math.random(1,120)
-		TriggerClientEvent('esx:showNotification', -1, "[Loto] Izvucen je broj "..br.."!")
-		for i=1, #LotoBrojevi, 1 do
-			if LotoBrojevi[i].Broj == br then
-				local xPlayer = ESX.GetPlayerFromIdentifier(LotoBrojevi[i].Ident)
-				if xPlayer ~= nil then
-					xPlayer.addMoney(LotoBrojevi[i].Cijena*3)
-					TriggerClientEvent('esx:showNotification', xPlayer.source, "[Loto] Osvojili ste $"..(LotoBrojevi[i].Cijena*3).."! Cestitke!!")
-				end
-				break
-			end
-		end
-		LotoBrojevi = {}
-		SetTimeout(13500000, Loto)
-	end)
-end
+-- function Loto()
+-- 	TriggerClientEvent('esx:showNotification', -1, "Loto pocinje za 15 minuta, uplatite listice dok mozete!")
+-- 	SetTimeout(900000, function()
+-- 		local br = math.random(1,120)
+-- 		TriggerClientEvent('esx:showNotification', -1, "[Loto] Izvucen je broj "..br.."!")
+-- 		for i=1, #LotoBrojevi, 1 do
+-- 			if LotoBrojevi[i].Broj == br then
+-- 				local xPlayer = ESX.GetPlayerFromIdentifier(LotoBrojevi[i].Ident)
+-- 				if xPlayer ~= nil then
+-- 					xPlayer.addMoney(LotoBrojevi[i].Cijena*3)
+-- 					TriggerClientEvent('esx:showNotification', xPlayer.source, "[Loto] Osvojili ste $"..(LotoBrojevi[i].Cijena*3).."! Cestitke!!")
+-- 				end
+-- 				break
+-- 			end
+-- 		end
+-- 		LotoBrojevi = {}
+-- 		SetTimeout(13500000, Loto)
+-- 	end)
+-- end
 
-SetTimeout(13500000, Loto)
+-- SetTimeout(13500000, Loto)

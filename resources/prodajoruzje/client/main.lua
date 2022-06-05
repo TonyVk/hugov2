@@ -1342,38 +1342,38 @@ Citizen.CreateThread(function()
 	end
 end)
 
-exports.qtarget:Player({
-	options = {
-		{
-			icon = "fa fa-users",
-			label = "Upoznaj",
-			action = function(entity)
-				TriggerServerEvent("prodajoruzje:Upoznaj1", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
-            end
-		}
-	},
-	distance = 2
-})
+-- exports.qtarget:Player({
+-- 	options = {
+-- 		{
+-- 			icon = "fa fa-users",
+-- 			label = "Upoznaj",
+-- 			action = function(entity)
+-- 				TriggerServerEvent("prodajoruzje:Upoznaj1", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
+--             end
+-- 		}
+-- 	},
+-- 	distance = 2
+-- })
 
-RegisterCommand("upoznaj", function(source, args, rawCommandString)
-	local players      = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 3.0)
-	local foundPlayers = false
+-- RegisterCommand("upoznaj", function(source, args, rawCommandString)
+-- 	local players      = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 3.0)
+-- 	local foundPlayers = false
 
-	for i=1, #players, 1 do
-		if players[i] ~= PlayerId() then
-			foundPlayers = true
-		end
-	end
+-- 	for i=1, #players, 1 do
+-- 		if players[i] ~= PlayerId() then
+-- 			foundPlayers = true
+-- 		end
+-- 	end
 
-	if not foundPlayers then
-		ESX.ShowNotification("Nema igraca u blizini!")
-		return
-	end
+-- 	if not foundPlayers then
+-- 		ESX.ShowNotification("Nema igraca u blizini!")
+-- 		return
+-- 	end
 
-	foundPlayers = false
+-- 	foundPlayers = false
 
-	TriggerServerEvent("prodajoruzje:Upoznaj1", GetPlayerServerId(players[1]))
-end, false)
+-- 	TriggerServerEvent("prodajoruzje:Upoznaj1", GetPlayerServerId(players[1]))
+-- end, false)
 
 RegisterNetEvent('ronjenje:PocniRonit')
 AddEventHandler('ronjenje:PocniRonit', function()
@@ -1805,15 +1805,15 @@ RegisterNUICallback(
     end
 )
 
-RegisterNUICallback(
-    "zatvoriupit",
-    function(data, cb)
-		local br = data.br
-		if br == 1 then
-			TriggerServerEvent("prodajoruzje:Upoznaj", data.args)
-		end
-    end
-)
+-- RegisterNUICallback(
+--     "zatvoriupit",
+--     function(data, cb)
+-- 		local br = data.br
+-- 		if br == 1 then
+-- 			TriggerServerEvent("prodajoruzje:Upoznaj", data.args)
+-- 		end
+--     end
+-- )
 
 RegisterCommand("testpitanje2", function(source, args, rawCommandString)
 	TriggerEvent("upit:OtvoriPitanje", "prodajoruzje", "Upit za posao", "Dali se zelite zaposliti kao vozac kamiona?")

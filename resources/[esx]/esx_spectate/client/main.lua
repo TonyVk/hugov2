@@ -40,7 +40,7 @@ function spectate(target)
 			else
 				resetNormalCamera()
 			end
-
+			TriggerEvent("tagovi:hideTag", true)
 			local playerPed = GetPlayerPed(-1)
 
 			SetEntityCollision(playerPed, false, false)
@@ -76,6 +76,7 @@ end
 
 function resetNormalCamera()
 	InSpectatorMode = false
+	TriggerEvent("tagovi:hideTag", false)
 	local targetPlayerId = GetPlayerFromServerId(TargetSpectate)
 	local ped = GetPlayerPed(targetPlayerId)
 	NetworkSetInSpectatorMode(false, ped)
