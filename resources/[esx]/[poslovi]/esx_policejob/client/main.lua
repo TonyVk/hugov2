@@ -540,6 +540,7 @@ function OpenCloakroomMenu()
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
 				PostavioEUP = false
+				playerInService = false
 			end
 
 			if Config.MaxInService ~= -1 then
@@ -626,6 +627,8 @@ function OpenCloakroomMenu()
 			data.current.value == 'bullet_wear' or
 			data.current.value == 'gilet_wear'
 		then
+			playerInService = true
+			ESX.ShowNotification(_U('service_in'))
 			setUniform(data.current.value, PlayerPedId())
 		end
 
@@ -2070,7 +2073,6 @@ end)
 
 -- don't show dispatches if the player isn't in service
 AddEventHandler('esx_phone:cancelMessage', function(dispatchNumber)
-	print(dispatchNumber)
 	if PlayerData.job and PlayerData.job.name == 'police' and PlayerData.job.name == dispatchNumber then
 		-- if esx_service is enabled
 		if Config.MaxInService ~= -1 and not playerInService then
@@ -2714,9 +2716,7 @@ end)
 
 RegisterCommand('+akcijepd', function()
     if PlayerData.job and PlayerData.job.name == 'police' and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
-		if Config.MaxInService == -1 then
-			OpenPoliceActionsMenu()
-		elseif playerInService then
+		if playerInService then
 			OpenPoliceActionsMenu()
 		else
 			ESX.ShowNotification(_U('service_not'))
@@ -2771,25 +2771,19 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'menu_cloakroom' then
 					OpenCloakroomMenu()
 				elseif CurrentAction == 'menu_armory' then
-					if Config.MaxInService == -1 then
-						OpenArmoryMenu(CurrentActionData.station)
-					elseif playerInService then
+					if playerInService then
 						OpenArmoryMenu(CurrentActionData.station)
 					else
 						ESX.ShowNotification(_U('service_not'))
 					end
 				elseif CurrentAction == 'menu_vehicle_spawner' then
-					if Config.MaxInService == -1 then
-						OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-					elseif playerInService then
+					if playerInService then
 						OpenVehicleSpawnerMenu('car', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
 					else
 						ESX.ShowNotification(_U('service_not'))
 					end
 				elseif CurrentAction == 'Helicopters' then
-					if Config.MaxInService == -1 then
-						OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
-					elseif playerInService then
+					if playerInService then
 						OpenVehicleSpawnerMenu('helicopter', CurrentActionData.station, CurrentActionData.part, CurrentActionData.partNum)
 					else
 						ESX.ShowNotification(_U('service_not'))
