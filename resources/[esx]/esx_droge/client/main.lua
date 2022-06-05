@@ -123,6 +123,13 @@ RegisterCommand("uredidroge", function(source, args, raw)
 	end)
 end, false)
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 -- Useitem thread
 RegisterNetEvent('esx_koristiHeroin:useItem')
 AddEventHandler('esx_koristiHeroin:useItem', function(itemName)

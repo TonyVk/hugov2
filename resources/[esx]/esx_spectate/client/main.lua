@@ -253,6 +253,13 @@ end
 	end
 end)]]
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 RegisterCommand("spec", function(source, args, rawCommandString)
 	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if perm == 1 then

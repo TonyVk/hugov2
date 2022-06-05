@@ -1820,6 +1820,13 @@ Citizen.CreateThread(function()
 	end
 end)
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 --esx_marker
 RegisterCommand("tpm", function(source)
     TeleportToWaypoint()

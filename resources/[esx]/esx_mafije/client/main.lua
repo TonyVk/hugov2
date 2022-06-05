@@ -1715,6 +1715,13 @@ AddEventHandler('esx_mafije:PosaljiMafia', function(odg, ime, posao)
 	end
 end)
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 RegisterCommand("uredimafiju", function(source, args, raw)
 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
 		if perm == 69 then

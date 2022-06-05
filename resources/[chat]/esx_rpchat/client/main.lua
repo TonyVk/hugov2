@@ -21,6 +21,13 @@ AddEventHandler("playerSpawned", function()
 	TriggerServerEvent("rpchat:PogleMute")
 end)
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 RegisterNetEvent('BrojiMute')
 AddEventHandler('BrojiMute', function(mi)
 	Minute = mi

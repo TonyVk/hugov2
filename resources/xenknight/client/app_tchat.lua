@@ -21,6 +21,13 @@ AddEventHandler("playerSpawned", function()
 	end
 end)
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 function hasPhone (cb)
 	if (ESX == nil) then return cb(false) end
 	ESX.TriggerServerCallback('xenknight:getItemAmount', function(imal)

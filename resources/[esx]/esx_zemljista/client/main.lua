@@ -919,6 +919,13 @@ RegisterCommand("uredizemljiste", function(source, args, raw)
     )
 end, false)
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 RegisterCommand("napravizemljiste", function(source, args, raw)
 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
 		if perm == 69 then

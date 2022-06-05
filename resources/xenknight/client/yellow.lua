@@ -23,6 +23,13 @@ AddEventHandler("xenknight:yellow_getPagess", function(pagess)
 	SendNUIMessage({event = 'yellow_pagess', pagess = pagess})
 end)
 
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 local prvispawn = false
 AddEventHandler("playerSpawned", function()
 	if not prvispawn then
