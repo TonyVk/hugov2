@@ -34,40 +34,30 @@ end
 
 function spectate(target)
 	ESX.TriggerServerCallback('esx_spectate:getPlayerData', function(player, kord, ped, id)
-		if not InSpectatorMode then
-			LastPosition = GetEntityCoords(GetPlayerPed(-1))
-		else
-			resetNormalCamera()
-		end
-
-		local playerPed = GetPlayerPed(-1)
-
-		SetEntityCollision(playerPed, false, false)
-		SetEntityVisible(playerPed, false)
-		local xa, ya, za = table.unpack(kord)
-		SetEntityCoords(playerPed, xa, ya, za - 5)
-		SetPedMaxTimeUnderwater(playerPed, 2000.00)
-		local komando = "/spec "..target
-		TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
-
-		PlayerData = player
-		if ShowInfos then
-			SendNUIMessage({
-				type = 'infos',
-				data = PlayerData
-			})	
-		end
-
-		--Citizen.CreateThread(function()
-			--[[while not DoesCamExist(cam) do
-			--if not DoesCamExist(cam) then
-				Wait(0)
-				cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
+		if player ~= false then
+			if not InSpectatorMode then
+				LastPosition = GetEntityCoords(GetPlayerPed(-1))
+			else
+				resetNormalCamera()
 			end
 
-			SetCamCoord(cam,  xa, ya, za)
-			SetCamActive(cam, true)
-			RenderScriptCams(true, false, 0, true, true)]]
+			local playerPed = GetPlayerPed(-1)
+
+			SetEntityCollision(playerPed, false, false)
+			SetEntityVisible(playerPed, false)
+			local xa, ya, za = table.unpack(kord)
+			SetEntityCoords(playerPed, xa, ya, za - 5)
+			SetPedMaxTimeUnderwater(playerPed, 2000.00)
+			local komando = "/spec "..target
+			TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
+
+			PlayerData = player
+			if ShowInfos then
+				SendNUIMessage({
+					type = 'infos',
+					data = PlayerData
+				})	
+			end
 			local pedara = GetPlayerPed(GetPlayerFromServerId(id))
 			while pedara == PlayerPedId() do
 				Wait(100)
@@ -78,9 +68,10 @@ function spectate(target)
 
 			TargetSpectate  = target
 			InSpectatorMode = true
-		--end)
+		else
+			ESX.ShowNotification("Igrac nije online!")
+		end
 	end, target)
-
 end
 
 function resetNormalCamera()
@@ -261,6 +252,20 @@ end
 		end
 	end
 end)]]
+
+RegisterCommand("spec", function(source, args, rawCommandString)
+	--ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		if perm == 1 then
+			if args[1] then
+				spectate(tonumber(args[1]))
+			else
+				TriggerEvent('chat:addMessage', { args = { '^1SYSTEM ', " /spec [ID igraca]" } })
+			end
+		else
+			ESX.ShowNotification("Nemate pristup ovoj komandi!")
+		end
+	--end)
+end, false)
 
 RegisterCommand('+spectate', function()
     ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
