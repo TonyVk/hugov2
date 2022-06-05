@@ -1,5 +1,6 @@
 ESX                             = nil
 local Vrata                     = {}
+local spawno                    = false
 local perm 						= 0
 
 Citizen.CreateThread(function()
@@ -235,6 +236,22 @@ AddEventHandler('esx:setJob', function(job)
     ESX.PlayerData.job = job
 end)
 
+RegisterNetEvent("Otkljucaj")
+AddEventHandler("Otkljucaj", function()
+    local koord = GetEntityCoords(PlayerPedId())
+    for i = 1, #Vrata do
+        if #(koord-Vrata[i].koord) <= Vrata[i].dist then
+            if IsDoorRegisteredWithSystem(Vrata[i].ime) then
+                local state = DoorSystemGetDoorState(Vrata[i].ime)
+                if state == 4 then
+                    TriggerServerEvent("vrata:PromjeniLock", Vrata[i].ime, 0)
+                    lock = 1
+                end
+            end
+        end
+    end
+end)
+
 RegisterNetEvent('vrata:VratiLock')
 AddEventHandler('vrata:VratiLock', function(ime, lock)
     for i = 1, #Vrata do
@@ -252,6 +269,8 @@ AddEventHandler("playerSpawned", function()
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		perm = br
 	end)
+    Wait(1500)
+    spawno = true
 end)
 
 RegisterNetEvent('es_admin:setPerm')
@@ -289,31 +308,33 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-        local koord = GetEntityCoords(PlayerPedId())
-        for i = 1, #Vrata do
-            if #(koord-Vrata[i].koord) <= 50 then
-                if Vrata[i].objekt == nil then
-                    Vrata[i].objekt = GetClosestObjectOfType(Vrata[i].koord.x, Vrata[i].koord.y, Vrata[i].koord.z, 3.0, Vrata[i].model, false, false, false)
-                    if Vrata[i].objekt then
-                        if not IsDoorRegisteredWithSystem(Vrata[i].ime) then
-                            AddDoorToSystem(Vrata[i].ime, GetEntityModel(Vrata[i].objekt), Vrata[i].koord.x, Vrata[i].koord.y, Vrata[i].koord.z,
-                                false,
-                                true, -- Force closed when locked?
-                                true
-                            )
-                            local zastita = 0
-                            while not DoorSystemGetIsPhysicsLoaded(Vrata[i].ime) and zastita < 50 do
-                                zastita = zastita+1
-                                Wait(10)
+        if spawno then
+            local koord = GetEntityCoords(PlayerPedId())
+            for i = 1, #Vrata do
+                if #(koord-Vrata[i].koord) <= 50 then
+                    if Vrata[i].objekt == nil then
+                        Vrata[i].objekt = GetClosestObjectOfType(Vrata[i].koord.x, Vrata[i].koord.y, Vrata[i].koord.z, 3.0, Vrata[i].model, false, false, false)
+                        if Vrata[i].objekt then
+                            if not IsDoorRegisteredWithSystem(Vrata[i].ime) then
+                                AddDoorToSystem(Vrata[i].ime, GetEntityModel(Vrata[i].objekt), Vrata[i].koord.x, Vrata[i].koord.y, Vrata[i].koord.z,
+                                    false,
+                                    true, -- Force closed when locked?
+                                    true
+                                )
+                                local zastita = 0
+                                while not DoorSystemGetIsPhysicsLoaded(Vrata[i].ime) and zastita < 50 do
+                                    zastita = zastita+1
+                                    Wait(10)
+                                end
+                                DoorSystemSetDoorState(Vrata[i].ime, Vrata[i].lock, true, true)
                             end
-                            DoorSystemSetDoorState(Vrata[i].ime, Vrata[i].lock, true, true)
                         end
                     end
-                end
-            else
-                if Vrata[i].objekt ~= nil then
-                    RemoveDoorFromSystem(Vrata[i].ime)
-                    Vrata[i].objekt = nil
+                else
+                    if Vrata[i].objekt ~= nil then
+                        RemoveDoorFromSystem(Vrata[i].ime)
+                        Vrata[i].objekt = nil
+                    end
                 end
             end
         end

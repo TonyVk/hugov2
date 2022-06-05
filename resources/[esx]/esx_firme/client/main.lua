@@ -71,7 +71,7 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 			
 			for i=1, #Firme, 1 do
 				if Firme[i] ~= nil then
-					table.insert(elements, {label = Firme[i].Label, value = Firme[i].Ime})
+					table.insert(elements, {label = "Firma "..Firme[i].TrgID, value = Firme[i].Ime})
 				end
 			end
 			
