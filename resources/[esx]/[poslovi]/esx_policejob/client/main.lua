@@ -541,6 +541,8 @@ function OpenCloakroomMenu()
 				end)
 				PostavioEUP = false
 				playerInService = false
+				ESX.ShowNotification(_U('service_out'))
+				RemoveAllPedWeapons(PlayerId(), false)
 			end
 
 			if Config.MaxInService ~= -1 then
