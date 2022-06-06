@@ -37,7 +37,6 @@ end)
 
 RegisterNetEvent('safezona:DodajZonu')
 AddEventHandler('safezona:DodajZonu', function(ime, coord)
-    print("picko")
     MySQL.Async.insert('INSERT INTO safezone (ime, koord) VALUES (@ime, @ko)',{
 		['@ime'] = ime,
 		['@ko'] = json.encode(coord)
