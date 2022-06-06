@@ -257,7 +257,7 @@ end)
 RegisterNetEvent("Zakljucaj")
 AddEventHandler("Zakljucaj", function()
     for i = 1, #Vrata do
-        if Vrata[i].banka then
+        if Vrata[i].banka == 1 then
             if IsDoorRegisteredWithSystem(Vrata[i].ime) then
                 TriggerServerEvent("vrata:PromjeniLock", Vrata[i].ime, 4)
             end
