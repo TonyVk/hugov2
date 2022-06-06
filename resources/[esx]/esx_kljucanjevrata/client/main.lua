@@ -58,7 +58,7 @@ RegisterCommand("uredivrata", function(source, args, raw)
         end
 
         ESX.UI.Menu.Open(
-            'default', GetCurrentResourceName(), 'uimanj',
+            'default', GetCurrentResourceName(), 'uvrat',
             {
                 title    = "Izaberite vrata",
                 align    = 'top-left',
@@ -77,6 +77,7 @@ RegisterCommand("uredivrata", function(source, args, raw)
                 table.insert(elements, {label = "Promjeni posao", value = "posao"})
                 table.insert(elements, {label = "Portaj se", value = "port"})
                 table.insert(elements, {label = "Promjeni distancu", value = "dist"})
+                table.insert(elements, {label = "Vrata banke (da/ne)", value = "banka"})
                 table.insert(elements, {label = "Obrisi vrata", value = "obrisi"})
                 ESX.UI.Menu.Open(
                     'default', GetCurrentResourceName(), 'uvrata',
@@ -121,6 +122,8 @@ RegisterCommand("uredivrata", function(source, args, raw)
                             end)
                         elseif data2.current.value == "obrisi" then
                             TriggerServerEvent("vrata:ObrisiVrata", ime)
+                        elseif data2.current.value == "banka" then
+                            TriggerServerEvent("vrata:VrataBanke", ime)
                         end
                     end,
                     function(data2, menu2)
@@ -245,8 +248,18 @@ AddEventHandler("Otkljucaj", function()
                 local state = DoorSystemGetDoorState(Vrata[i].ime)
                 if state == 4 then
                     TriggerServerEvent("vrata:PromjeniLock", Vrata[i].ime, 0)
-                    lock = 1
                 end
+            end
+        end
+    end
+end)
+
+RegisterNetEvent("Zakljucaj")
+AddEventHandler("Zakljucaj", function()
+    for i = 1, #Vrata do
+        if Vrata[i].banka then
+            if IsDoorRegisteredWithSystem(Vrata[i].ime) then
+                TriggerServerEvent("vrata:PromjeniLock", Vrata[i].ime, 4)
             end
         end
     end
