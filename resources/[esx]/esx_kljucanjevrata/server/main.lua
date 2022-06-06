@@ -10,7 +10,7 @@ end)
 function UcitajVrata()
 	Vrata = {}
 	MySQL.Async.fetchAll(
-      'SELECT * FROM vrata',
+      'SELECT * FROM vrata order by ID',
       {},
       function(result)
         for i=1, #result, 1 do
@@ -72,7 +72,11 @@ AddEventHandler('vrata:VrataBanke', function(ime)
         local bank
         for i=1, #Vrata, 1 do
             if Vrata[i].ime == ime then
-                Vrata[i].banka = not Vrata[i].banka
+                if Vrata[i].banka == 0 then
+                    Vrata[i].banka = 1
+                else
+                    Vrata[i].banka = 0
+                end
                 bank = Vrata[i].banka
                 break
             end
@@ -81,6 +85,11 @@ AddEventHandler('vrata:VrataBanke', function(ime)
             ['@ba'] = bank,
             ['@ime'] = ime
         })
+        if bank == 0 then
+            xPlayer.showNotification("Postavili ste da vrata nisu od banke")
+        else
+            xPlayer.showNotification("Postavili ste da su vrata od banke")
+        end
         TriggerClientEvent("vrata:VratiVrata", -1, Vrata)
     end
 end)
