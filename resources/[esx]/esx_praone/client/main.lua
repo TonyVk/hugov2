@@ -69,7 +69,7 @@ function SpawnBlipove()
 	for i=1, #Praone, 1 do
 		if Praone[i] ~= nil then
 			if Praone[i].pranje then
-				ESX.TriggerServerCallback('praone:JesilVlasnik', function(br)
+				ESX.TriggerServerCallback('praone:JesilVlasnik', function(br, kuplj)
 					if br then
 						local blip = AddBlipForCoord(Praone[i].pranje)
 						SetBlipSprite(blip, 100)
@@ -376,7 +376,7 @@ RegisterNUICallback(
 )
 
 function OtvoriVlasnik(pid)
-	ESX.TriggerServerCallback('praone:JesilVlasnik', function(br)
+	ESX.TriggerServerCallback('praone:JesilVlasnik', function(br, kuplj)
 		if br then
 			local id
 			for i = 1, #Praone do
@@ -463,9 +463,13 @@ function OtvoriVlasnik(pid)
 				end
 			) 
 		else
-			ESX.TriggerServerCallback('praone:DajProdajnu', function(cij)
-				TriggerEvent("upit:OtvoriPitanje", GetCurrentResourceName(), "Praona", "Zelite li kupiti praonicu auta za $"..cij.."?", {kupi = true, id = pid})
-			end, pid)
+			if not kuplj then
+				ESX.TriggerServerCallback('praone:DajProdajnu', function(cij)
+					TriggerEvent("upit:OtvoriPitanje", GetCurrentResourceName(), "Praona", "Zelite li kupiti praonicu auta za $"..cij.."?", {kupi = true, id = pid})
+				end, pid)
+			else
+				ESX.ShowNotification("Praona je vec kupljena!")
+			end
 		end
 	end, pid)
 end

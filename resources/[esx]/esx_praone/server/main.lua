@@ -150,7 +150,7 @@ AddEventHandler('praone:PonudiIgracu', function(id, cij, prIgr)
             if Praone[i].ID == id then
                 if Praone[i].vlasnik == xPlayer.getID() then
                     xPlayer.showNotification("Poslali ste ponudu igracu.")
-                    TriggerClientEvent("upit:OtvoriPitanje", prIgr, "esx_carwash", "Kupovina praone", "Zelite li kupiti praonu #"..Rent[i].ID.." za $"..cij.." ?", {cijena = cij, id = id, orgIgr = src})
+                    TriggerClientEvent("upit:OtvoriPitanje", prIgr, "esx_praone", "Kupovina praone", "Zelite li kupiti praonu #"..Praone[i].ID.." za $"..cij.." ?", {cijena = cij, id = id, orgIgr = src})
                 end
                 break
             end
@@ -176,8 +176,8 @@ AddEventHandler('praone:PrihvatiPonudu', function(orgIgr, id, cij)
                         })
                         Praone[i].vlasnik = xPlayer.getID()
 						TriggerClientEvent("praone:VratiPraone", -1, Praone)
-                        xPlayer.showNotification("Kupili ste praonu #"..Rent[i].ID.." za $"..cij)
-                        vlPlayer.showNotification("Prodali ste praonu #"..Rent[i].ID.." za $"..cij)
+                        xPlayer.showNotification("Kupili ste praonu #"..Praone[i].ID.." za $"..cij)
+                        vlPlayer.showNotification("Prodali ste praonu #"..Praone[i].ID.." za $"..cij)
                     else
                         xPlayer.showNotification("Igrac nije vlasnik praone!")
                         vlPlayer.showNotification("Niste vlasnik praone!")
@@ -297,13 +297,19 @@ end)
 ESX.RegisterServerCallback('praone:JesilVlasnik', function(source, cb, id)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local naso = false
+    local kupljeno = false
 	for i=1, #Praone, 1 do
-		if Praone[i].ID == id and Praone[i].vlasnik == xPlayer.getID() then
-			naso = true
+		if Praone[i].ID == id then
+            if Praone[i].vlasnik == xPlayer.getID() then
+			    naso = true
+            end
+            if Praone[i].vlasnik ~= nil then
+                kupljeno = true
+            end
 			break
 		end
 	end
-	cb(naso)
+	cb(naso, kupljeno)
 end)
 
 ESX.RegisterServerCallback('praone:DajCijenu', function(source, cb, id)
