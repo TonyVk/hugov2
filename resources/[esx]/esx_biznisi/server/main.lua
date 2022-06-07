@@ -330,10 +330,10 @@ end)
 function SpremiPare()
 	for i=1, #Biznisi, 1 do
 		if Biznisi[i] ~= nil then
-			MySQL.Async.execute('UPDATE biznisi SET Sef = @se, Tjedan = @tj WHERE Posao = @im', {
+			MySQL.Async.execute('UPDATE biznisi SET Sef = @se, Tjedan = @tj WHERE ID = @id', {
 				['@se'] = Biznisi[i].Sef,
 				['@tj'] = Biznisi[i].Tjedan,
-				['@im'] = Biznisi[i].Posao
+				['@id'] = Biznisi[i].ID
 			})
 		end
 		Wait(100)
