@@ -122,6 +122,7 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 						table.insert(elements, {label = "Promjeni ime", value = "ime"})
 						table.insert(elements, {label = "Promjeni cijenu", value = "cijena"})
 						table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
+						table.insert(elements, {label = "Port do firme", value = "port"})
 						table.insert(elements, {label = "Zakljucaj/otkljucaj tip firme", value = "kljucaj"})
 						table.insert(elements, {label = "Obrisi firmu", value = "obrisi"})
 						ESX.UI.Menu.Open(
@@ -195,6 +196,16 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 									end, function (datar, menur)
 										menur.close()
 									end)
+								elseif data2.current.value == "port" then
+									for i=1, #Firme, 1 do
+										if Firme[i] ~= nil and Firme[i].Ime == ImeFirme then
+											if Firme[i].Kupovina then
+												SetEntityCoords(PlayerPedId(), Firme[i].Kupovina)
+											end
+											break
+										end
+									end
+									menu2.close()
 								elseif data2.current.value == "vlasnik" then
 									TriggerServerEvent("firme:MakniVlasnika", ImeFirme)
 								elseif data2.current.value == "kljucaj" then
