@@ -607,6 +607,8 @@ function OpenShopMenu3()
 		'shoes_2',
 		'chain_1',
 		'chain_2',
+		'bproof_1',
+		'bproof_2',
 		'helmet_1',
 		'helmet_2',
 		'bags_1',
