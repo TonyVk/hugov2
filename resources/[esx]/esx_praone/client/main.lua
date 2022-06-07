@@ -26,13 +26,17 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+	while ESX.GetPlayerData().job == nil do
+        Citizen.Wait(100)
+    end
+	Wait(500)
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		perm = br
 	end)
     ESX.TriggerServerCallback('praone:DohvatiPraone', function(vr)
 		Praone = vr
-		--SpawnCpove()
-		--SpawnBlipove()
+		SpawnCpove()
+		SpawnBlipove()
 	end)
 end)
 
@@ -63,14 +67,29 @@ function SpawnBlipove()
 		RemoveBlip(Blipovi[i].blip)
 	end
 	for i=1, #Praone, 1 do
-		if Praone[i].pranje then
-			local blip = AddBlipForCoord(Praone[i].pranje)
-			SetBlipSprite(blip, 100)
-			SetBlipAsShortRange(blip, true)
-			BeginTextCommandSetBlipName('STRING')
-			AddTextComponentString(_U('blip_carwash'))
-			EndTextCommandSetBlipName(blip)
-			table.insert(Blipovi, {ID = Praone[i].ID, blip = blip})
+		if Praone[i] ~= nil then
+			if Praone[i].pranje then
+				ESX.TriggerServerCallback('praone:JesilVlasnik', function(br)
+					if br then
+						local blip = AddBlipForCoord(Praone[i].pranje)
+						SetBlipSprite(blip, 100)
+						SetBlipColour(blip, 3)
+						SetBlipAsShortRange(blip, true)
+						BeginTextCommandSetBlipName('STRING')
+						AddTextComponentString('Vasa praonica auta')
+						EndTextCommandSetBlipName(blip)
+						table.insert(Blipovi, {ID = Praone[i].ID, blip = blip})
+					else
+						local blip = AddBlipForCoord(Praone[i].pranje)
+						SetBlipSprite(blip, 100)
+						SetBlipAsShortRange(blip, true)
+						BeginTextCommandSetBlipName('STRING')
+						AddTextComponentString(_U('blip_carwash'))
+						EndTextCommandSetBlipName(blip)
+						table.insert(Blipovi, {ID = Praone[i].ID, blip = blip})
+					end
+				end, Praone[i].ID)
+			end
 		end
 	end
 end
@@ -135,7 +154,8 @@ RegisterCommand("uredipraone", function(source, args, raw)
 					table.insert(elements, {label = "Postavi koordinate vlasnik menua", value = "vlmenu"})
 					table.insert(elements, {label = "Portaj se", value = "port"})
 					table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
-					table.insert(elements, {label = "Promjeni cijenu", value = "cijena"})
+					table.insert(elements, {label = "Promjeni cijenu pranja", value = "cijena"})
+					table.insert(elements, {label = "Promjeni cijenu firme", value = "kcijena"})
 					table.insert(elements, {label = "Obrisi praonu", value = "obrisi"})
 					ESX.UI.Menu.Open(
 						'default', GetCurrentResourceName(), 'upraonu',
@@ -178,6 +198,20 @@ RegisterCommand("uredipraone", function(source, args, raw)
 								menu2.close()
 								Wait(500)
 								ExecuteCommand("uredipraone")
+							elseif data2.current.value == "kcijena" then
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pcij2', {
+										title = "Upisite novu cijenu praone",
+									}, function (datari, menuri)
+										local pCijena = tonumber(datari.value)				
+										if pCijena == nil or pCijena <= 0 then
+											ESX.ShowNotification('Greska.')
+										else
+											menuri.close()
+											TriggerServerEvent("praone:UrediCijenuPraone", pID, pCijena)
+										end
+									end, function (datari, menuri)
+										menuri.close()
+									end)
 							elseif data2.current.value == "vlmenu" then
 								local kord = GetEntityCoords(PlayerPedId())
 								kord = kord-vector3(0.0, 0.0, 1.0)
@@ -306,7 +340,7 @@ end)
 
 function OtvoriPranje(id)
 	ESX.TriggerServerCallback('praone:DajCijenu', function(cijena)
-		TriggerEvent("upit:OtvoriPitanje", "esx_carwash", "Pranje auta", "Zelite li oprati auto za $"..cijena.."?", {id = id})
+		TriggerEvent("upit:OtvoriPitanje", GetCurrentResourceName(), "Pranje auta", "Zelite li oprati auto za $"..cijena.."?", {id = id})
 	end, id)
 end
 
@@ -318,18 +352,19 @@ RegisterNUICallback(
 		if br == 1 then
 			if args.kupi then
 				TriggerServerEvent("praone:KupiPraonu", args.id)
+				HasAlreadyEnteredMarker = false
 			else
 				if args.cijena then
 					TriggerServerEvent("praone:PrihvatiPonudu", args.orgIgr, args.id, args.cijena)
 				else
-					--if CanWashVehicle() then
+					if CanWashVehicle() then
 						local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 						if GetVehicleDirtLevel(vehicle) > 2 then
 							WashVehicle(args.id)
 						else
 							ESX.ShowNotification(_U('wash_failed_clean'))
 						end
-					--end
+					end
 				end
 			end
 		else
@@ -345,7 +380,7 @@ function OtvoriVlasnik(pid)
 		if br then
 			local id
 			for i = 1, #Praone do
-				if Praone[i].ID == rid then
+				if Praone[i].ID == pid then
 					id = i
 					break
 				end
@@ -429,8 +464,8 @@ function OtvoriVlasnik(pid)
 			) 
 		else
 			ESX.TriggerServerCallback('praone:DajProdajnu', function(cij)
-				TriggerEvent("upit:OtvoriPitanje", "esx_carwash", "Praona", "Zelite li kupiti praonicu auta za $"..cij.."?", {kupi = true, id = pid})
-			end)
+				TriggerEvent("upit:OtvoriPitanje", GetCurrentResourceName(), "Praona", "Zelite li kupiti praonicu auta za $"..cij.."?", {kupi = true, id = pid})
+			end, pid)
 		end
 	end, pid)
 end
@@ -470,7 +505,7 @@ function WashVehicle(id)
 			while dirtLevel > 0 do
 				dirtLevel = dirtLevel - 0.5
 				SetVehicleDirtLevel(vehicle, dirtLevel)
-				Citizen.Wait(5000)
+				Citizen.Wait(2000)
 			end
 			SetVehicleDirtLevel(vehicle, 0)
 			WashDecalsFromVehicle(vehicle, 1.0)

@@ -104,6 +104,7 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 										menuri2.close()
 										menu.close()
 										TriggerServerEvent("firme:NapraviFirmu", mIme, mCijena)
+										Wait(500)
 										ExecuteCommand("uredifirmu")
 									end
 								end, function (datari2, menuri2)

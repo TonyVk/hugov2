@@ -69,12 +69,30 @@ AddEventHandler('praone:UrediCijenu', function(id, cijena)
     end
 end)
 
+RegisterNetEvent('praone:UrediCijenuPraone')
+AddEventHandler('praone:UrediCijenuPraone', function(id, cijena)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.getPerm() >= 1 then
+        for i=1, #Praone, 1 do
+            if Praone[i].ID == id then
+                Praone[i].kcijena = cijena
+                break
+            end
+        end
+        MySQL.Async.execute('UPDATE praone SET `kcijena` = @ci WHERE ID = @id',{
+            ['@ci'] = cijena,
+            ['@id'] = id
+        })
+        TriggerClientEvent("praone:VratiPraone", -1, Praone)
+    end
+end)
+
 RegisterNetEvent('praone:StanjeSefa')
 AddEventHandler('praone:StanjeSefa', function(id)
     local xPlayer = ESX.GetPlayerFromId(source)
 	for i=1, #Praone, 1 do
 		if Praone[i].ID == id then
-			xPlayer.showNotification("U sefu se nalazi $"..Praone[i].sef)
+			xPlayer.showNotification("U sefu se nalazi $"..ESX.Math.GroupDigits(Praone[i].sef))
 			break
 		end
 	end
@@ -239,6 +257,7 @@ end)
 
 RegisterNetEvent('praone:KupiPraonu')
 AddEventHandler('praone:KupiPraonu', function(id)
+    print(id)
     local xPlayer = ESX.GetPlayerFromId(source)
 	for i=1, #Praone, 1 do
 		if Praone[i].ID == id then
@@ -280,7 +299,6 @@ ESX.RegisterServerCallback('praone:JesilVlasnik', function(source, cb, id)
 	local naso = false
 	for i=1, #Praone, 1 do
 		if Praone[i].ID == id and Praone[i].vlasnik == xPlayer.getID() then
-			cb(true)
 			naso = true
 			break
 		end
@@ -299,7 +317,6 @@ ESX.RegisterServerCallback('praone:DajCijenu', function(source, cb, id)
 end)
 
 ESX.RegisterServerCallback('praone:DajProdajnu', function(source, cb, id)
-	local xPlayer = ESX.GetPlayerFromId(source)
 	for i=1, #Praone, 1 do
 		if Praone[i].ID == id then
 			cb(Praone[i].kcijena)
@@ -317,17 +334,13 @@ ESX.RegisterServerCallback('praone:OperiMe', function(source, cb, id)
 			break
 		end
 	end
-	if Config.EnablePrice then
-		if xPlayer.getMoney() >= cijena then
-			xPlayer.removeMoney(cijena)
-			DodajLovu(id, cijena)
-			cb(true, cijena)
-		else
-			cb(false, cijena)
-		end
-	else
-		cb(true, 50)
-	end
+    if xPlayer.getMoney() >= cijena then
+        xPlayer.removeMoney(cijena)
+        DodajLovu(id, cijena)
+        cb(true, cijena)
+    else
+        cb(false, cijena)
+    end
 end)
 
 function DodajLovu(id, br)

@@ -9,8 +9,6 @@ version '1.0.0'
 server_scripts {
 	'@es_extended/locale.lua',
 	'@oxmysql/lib/MySQL.lua',
-	'locales/en.lua',
-	'locales/sv.lua',
 	'locales/hr.lua',
 	'config.lua',
 	'server/main.lua'
@@ -18,8 +16,6 @@ server_scripts {
 
 client_scripts {
 	'@es_extended/locale.lua',
-	'locales/en.lua',
-	'locales/sv.lua',
 	'locales/hr.lua',
 	'config.lua',
 	'client/main.lua'
