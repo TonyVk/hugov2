@@ -3,6 +3,7 @@ local isRDR = not TerraingridActivate and true or false
 local chatInputActive = false
 local chatInputActivating = false
 local chatLoaded = false
+local otvorenF10 = false
 
 RegisterNetEvent('chatMessage')
 RegisterNetEvent('chat:addTemplate')
@@ -33,6 +34,11 @@ AddEventHandler('chatMessage', function(author, color, text)
       args = args
     }
   })
+end)
+
+RegisterNetEvent('hud:SaljiF10')
+AddEventHandler('hud:SaljiF10', function(br)
+  OtvorenF10 = br
 end)
 
 AddEventHandler('__cfx_internal:serverPrint', function(msg)
@@ -278,7 +284,7 @@ Citizen.CreateThread(function()
     end
 
     if chatLoaded then
-      local forceHide = IsScreenFadedOut() or IsPauseMenuActive()
+      local forceHide = IsScreenFadedOut() or IsPauseMenuActive() or OtvorenF10
       local wasForceHide = false
 
       if chatHideState ~= CHAT_HIDE_STATES.ALWAYS_HIDE then

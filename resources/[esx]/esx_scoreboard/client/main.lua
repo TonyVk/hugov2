@@ -12,6 +12,7 @@ local Keys = {
 
 local idVisable = true
 local Policija = 0
+local Otvoren = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -171,6 +172,7 @@ Citizen.CreateThread(function()
 			SendNUIMessage({
 				action  = 'close'
 			})
+			TriggerEvent("hud:SaljiF10", false)
 		elseif not IsPauseMenuActive() and IsPaused then
 			IsPaused = false
 		end
@@ -178,9 +180,11 @@ Citizen.CreateThread(function()
 end)
 
 function ToggleScoreBoard()
+	Otvoren = not Otvoren
 	SendNUIMessage({
 		action = 'toggle'
 	})
+	TriggerEvent("hud:SaljiF10", Otvoren)
 end
 
 Citizen.CreateThread(function()
