@@ -63,4 +63,7 @@ Locales['fr'] = {
   ['customer_plate']          = 'tablice autaa',
   ['customer_soldby']         = 'prodavac',
   ['customer_date']           = 'datum',
+  ['message_title']           = 'Kljucanje vozila',
+  ['message_locked']          = ' Zakljucano',
+  ['message_unlocked']        = ' Otkljucano',
 }

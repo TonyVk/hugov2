@@ -77,6 +77,17 @@ MySQL.ready(function()
 	end)
 end)
 
+ESX.RegisterServerCallback('esx_vehiclelock:requestPlayerCars', function(source, cb, plate)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	MySQL.Async.fetchAll('SELECT 1 FROM owned_vehicles WHERE owner = @owner AND plate = @plate', {
+		['@owner'] = xPlayer.getID(),
+		['@plate'] = plate
+	}, function(result)
+		cb(result[1] ~= nil)
+	end)
+end)
+
 RegisterServerEvent('ugovor:prodajtuljanu2')
 AddEventHandler('ugovor:prodajtuljanu2', function(target, plate, price, veh)
 	local _target = target
@@ -1009,12 +1020,12 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 			print(('[esx_vehicleshop] [^3WARNING^7] %s attempted to sell an unknown vehicle!'):format(xPlayer.identifier))
 			cb(false)
 		else
-			MySQL.Async.fetchScalar('SELECT base_price FROM rented_vehicles WHERE plate = @plate', {
-				['@plate'] = plate
-			}, function(result)
-				if result then -- is it a rented vehicle?
-					cb(false) -- it is, don't let the player sell it since he doesn't own it
-				else
+			-- MySQL.Async.fetchScalar('SELECT base_price FROM rented_vehicles WHERE plate = @plate', {
+			-- 	['@plate'] = plate
+			-- }, function(result)
+			-- 	if result then -- is it a rented vehicle?
+			-- 		cb(false) -- it is, don't let the player sell it since he doesn't own it
+			-- 	else
 					MySQL.Async.fetchScalar('SELECT vehicle FROM owned_vehicles WHERE owner = @owner AND @plate = plate', {
 						['@owner'] = xPlayer.getID(),
 						['@plate'] = plate
@@ -1038,8 +1049,8 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function(source, cb,
 							end
 						end
 					end)
-				end
-			end)
+			-- 	end
+			-- end)
 		end
 	--end
 end)

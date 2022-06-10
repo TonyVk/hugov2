@@ -71,5 +71,9 @@ Locales['hr'] = {
   ['boughtvehicle'] = 'Kupili ste vozilo sa tablicama ~g~%s~s~',
   ['notyourcar'] = 'Ovo nije vase vozilo',
   ['nonearby'] = 'Nema vozila u blizini',
-  ['nonearbybuyer'] = 'Nema kupca u blizini'
+  ['nonearbybuyer'] = 'Nema kupca u blizini',
+
+  ['message_title']           = '^3Kljucanje vozila',
+  ['message_locked']          = ' Zakljucano',
+  ['message_unlocked']        = ' Otkljucano'
 }

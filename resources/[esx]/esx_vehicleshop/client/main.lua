@@ -101,6 +101,89 @@ Citizen.CreateThread(function()
 	end)]]
 end)
 
+function ToggleVehicleLock()
+	local playerPed = PlayerPedId()
+	local coords = GetEntityCoords(playerPed)
+	local vehicle
+
+	if IsPedInAnyVehicle(playerPed, false) then
+		vehicle = GetVehiclePedIsIn(playerPed, false)
+	else
+		vehicle = GetClosestVehicle(coords, 8.0, 0, 70)
+	end
+
+	if not DoesEntityExist(vehicle) then
+		return
+	end
+	local dict = "anim@mp_player_intmenu@key_fob@"
+	RequestAnimDict(dict)
+	while not HasAnimDictLoaded(dict) do
+		Citizen.Wait(0)
+	end
+	ESX.TriggerServerCallback('esx_vehiclelock:requestPlayerCars', function(isOwnedVehicle)
+
+		if isOwnedVehicle then
+			--local lockStatus = GetVehicleDoorLockStatus(vehicle)
+			local lockStatus = GetVehicleDoorsLockedForPlayer(vehicle)
+			if lockStatus == false then -- unlocked
+				SetVehicleDoorsLockedForAllPlayers(vehicle, true)
+				PlayVehicleDoorCloseSound(vehicle, 1)
+				local prop
+				if not IsPedInAnyVehicle(PlayerPedId(), true) then
+					local playerPed = PlayerPedId()
+					local x,y,z = table.unpack(GetEntityCoords(playerPed))
+					prop = CreateObject(GetHashKey("lr_prop_carkey_fob"), x, y, z+2, true, true, true)
+					local boneIndex = GetPedBoneIndex(playerPed, 57005)
+					AttachEntityToEntity(prop, playerPed, boneIndex, 0.12, 0.038, 0.001, 10.0, 175.0, 90.0, true, true, false, true, 1, true)
+					TaskPlayAnim(PlayerPedId(), dict, "fob_click_fp", 8.0, 8.0, -1, 48, 1, false, false, false)
+				end
+				SetVehicleLights(vehicle, 2)
+				Citizen.Wait(150)
+				SetVehicleLights(vehicle, 0)
+				Citizen.Wait(150)
+				SetVehicleLights(vehicle, 2)
+				Citizen.Wait(150)
+				SetVehicleLights(vehicle, 0)
+				if not IsPedInAnyVehicle(PlayerPedId(), true) then
+					Citizen.Wait(600)
+					DeleteObject(prop)
+				end
+				TriggerEvent('chat:addMessage', { args = { _U('message_title'), _U('message_locked') } })
+			else-- locked
+				SetVehicleDoorsLockedForAllPlayers(vehicle, false)
+				PlayVehicleDoorOpenSound(vehicle, 0)
+				local prop
+				if not IsPedInAnyVehicle(PlayerPedId(), true) then
+					local playerPed = PlayerPedId()
+					local x,y,z = table.unpack(GetEntityCoords(playerPed))
+					prop = CreateObject(GetHashKey("lr_prop_carkey_fob"), x, y, z+2, true, true, true)
+					local boneIndex = GetPedBoneIndex(playerPed, 57005)
+					AttachEntityToEntity(prop, playerPed, boneIndex, 0.12, 0.038, 0.001, 10.0, 175.0, 90.0, true, true, false, true, 1, true)
+					TaskPlayAnim(PlayerPedId(), dict, "fob_click_fp", 8.0, 8.0, -1, 48, 1, false, false, false)
+				end
+				SetVehicleLights(vehicle, 2)
+				Citizen.Wait(150)
+				SetVehicleLights(vehicle, 0)
+				Citizen.Wait(150)
+				SetVehicleLights(vehicle, 2)
+				Citizen.Wait(150)
+				SetVehicleLights(vehicle, 0)
+				if not IsPedInAnyVehicle(PlayerPedId(), true) then
+					Citizen.Wait(600)
+					DeleteObject(prop)
+				end
+				TriggerEvent('chat:addMessage', { args = { _U('message_title'), _U('message_unlocked') } })
+			end
+		end
+
+	end, ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)))
+end
+
+RegisterCommand("lvozila", function(source,args,rawCommand)
+    ToggleVehicleLock()
+end, false)
+RegisterKeyMapping('lvozila', 'Lock vozila', 'keyboard', 'U')
+
 RegisterNetEvent('esx_contract:PoslaoMu')
 AddEventHandler('esx_contract:PoslaoMu', function(br, tabl, cij, igr, veh)
 	Ima = br
