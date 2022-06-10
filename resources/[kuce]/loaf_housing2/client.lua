@@ -444,15 +444,14 @@ function OpenGarageMenu(co,he)
 end
 
 function SpawnVehicle(vehicle, co, he)
-	if GarazaV ~= nil then
-		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-		GarazaV = nil
-		if Vblip ~= nil then
-			RemoveBlip(Vblip)
-			Vblip = nil
-		end
-	end
-	TriggerServerEvent("kuce:SpawnVozilo", vehicle, co, he)
+	TriggerServerEvent("garaza:ObrisiVozilo")
+    ESX.Game.SpawnVehicle(vehicle.model, co, he, function (vehicle2)
+		TaskWarpPedIntoVehicle(PlayerPedId(), vehicle2, -1)
+		ESX.Game.SetVehicleProperties(vehicle2, vehicle)
+		local nid = VehToNet(vehicle2)
+		TriggerServerEvent("garaza:SpremiVozilo", nid)
+	end)
+	--TriggerServerEvent("kuce:SpawnVozilo", vehicle, co, he)
 end
 
 RegisterNetEvent('loaf_housing:SaljiKucice')

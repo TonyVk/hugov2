@@ -112,14 +112,7 @@ end)
 
 RegisterNetEvent('contract:ZamjenaVozila')
 AddEventHandler('contract:ZamjenaVozila', function(plate)
-	if GarazaV ~= nil then
-		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-		GarazaV = nil
-		if Vblip ~= nil then
-			RemoveBlip(Vblip)
-			Vblip = nil
-		end
-	end
+	TriggerServerEvent("garaza:ObrisiVozilo")
 	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
 end)
 
@@ -920,13 +913,15 @@ RegisterNUICallback(
 										FreezeEntityPosition(playerPed, false)
 										SetEntityVisible(playerPed, true)
 										SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
-
+										TriggerServerEvent("garaza:ObrisiVozilo")
 										ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
 											TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
 											local vehicleProps = prope
 											vehicleProps.plate = newPlate
 											ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 											SetVehicleNumberPlateText(vehicle, newPlate)
+											local nid = VehToNet(vehicle)
+											TriggerServerEvent("garaza:SpremiVozilo", nid)
 										end)
 									else
 										ESX.ShowNotification(_U('not_enough_money'))
@@ -964,12 +959,15 @@ RegisterNUICallback(
 										FreezeEntityPosition(playerPed, false)
 										SetEntityVisible(playerPed, true)
 										SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
+										TriggerServerEvent("garaza:ObrisiVozilo")
 										ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
 											TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
 											local vehicleProps = prope
 											vehicleProps.plate = generatedPlate
 											ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 											SetVehicleNumberPlateText(vehicle, generatedPlate)
+											local nid = VehToNet(vehicle)
+											TriggerServerEvent("garaza:SpremiVozilo", nid)
 										end)
 									else
 										ESX.ShowNotification(_U('not_enough_money'))
@@ -1024,16 +1022,17 @@ RegisterNUICallback(
 											
 									DeleteDisplayVehicleInsideShop()
 											
-									if GarazaV ~= nil then
-										TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-										GarazaV = nil
-										if Vblip ~= nil then
-											RemoveBlip(Vblip)
-											Vblip = nil
-										end
-									end
-									
-									TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, generatedPlate, 3)
+									TriggerServerEvent("garaza:ObrisiVozilo")
+									ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, function (vehicle)
+										TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+										local vehicleProps = propi
+										vehicleProps.plate = generatedPlate
+										ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+										SetVehicleNumberPlateText(vehicle, generatedPlate)
+										local nid = VehToNet(vehicle)
+										TriggerServerEvent("garaza:SpremiVozilo", nid)
+									end)
+									--TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, generatedPlate, 3)
 								else
 									ESX.ShowNotification(_U('not_enough_money'))
 								end
@@ -2386,14 +2385,7 @@ RegisterNUICallback(
 		local br = data.br
 		local arg = data.args
 		if br == 1 then
-			if GarazaV ~= nil then
-				TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-				GarazaV = nil
-				if Vblip ~= nil then
-					RemoveBlip(Vblip)
-					Vblip = nil
-				end
-			end
+			TriggerServerEvent("garaza:ObrisiVozilo")
 			local generatedPlate = GeneratePlate()
 			local veh = GetVehiclePedIsIn(PlayerPedId())
 			local corda = GetEntityCoords(veh)
@@ -2556,26 +2548,26 @@ function OpenUpitProdajeMenu(cardata)
 					if cardata.kategorija ~= "donatorski" and cardata.kategorija ~= "razz" then
 						ESX.TriggerServerCallback('esx_vehicleshop:resellVehicle', function(vehicleSold)
 							if vehicleSold then
-								if GarazaV ~= nil then
-									TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-									GarazaV = nil
-									if Vblip ~= nil then
-										RemoveBlip(Vblip)
-										Vblip = nil
-									end
-								else
-									local veh = GetVehiclePedIsIn(PlayerPedId())
-									local prop = ESX.Game.GetVehicleProperties(veh)
-									local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
-									ESX.Game.DeleteVehicle(veh)
-									TriggerServerEvent("garaza:SpremiModel", pla, nil)
-									GarazaV = nil
-									TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
-									if Vblip ~= nil then
-										RemoveBlip(Vblip)
-										Vblip = nil
-									end
-								end
+								--if GarazaV ~= nil then
+									TriggerServerEvent("garaza:ObrisiVozilo")
+								-- 	GarazaV = nil
+								-- 	if Vblip ~= nil then
+								-- 		RemoveBlip(Vblip)
+								-- 		Vblip = nil
+								-- 	end
+								-- else
+								-- 	local veh = GetVehiclePedIsIn(PlayerPedId())
+								-- 	local prop = ESX.Game.GetVehicleProperties(veh)
+								-- 	local pla = prop.plate:gsub("^%s*(.-)%s*$", "%1")
+								-- 	ESX.Game.DeleteVehicle(veh)
+								-- 	TriggerServerEvent("garaza:SpremiModel", pla, nil)
+								-- 	GarazaV = nil
+								-- 	TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+								-- 	if Vblip ~= nil then
+								-- 		RemoveBlip(Vblip)
+								-- 		Vblip = nil
+								-- 	end
+								-- end
 								ESX.ShowNotification(_U('vehicle_sold_for', cardata.label, ESX.Math.GroupDigits(cardata.price)))
 							else
 								ESX.ShowNotification(_U('not_yours'))

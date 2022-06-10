@@ -346,14 +346,7 @@ end
 
 RegisterNetEvent('garaza:ObrisiProslo')
 AddEventHandler('garaza:ObrisiProslo', function()
-	if GarazaV ~= nil and DoesEntityExist(GarazaV) then
-		TriggerServerEvent("garaza:ObrisiVozilo", GarazaV)
-		GarazaV = nil
-		if Vblip ~= nil then
-			RemoveBlip(Vblip)
-			Vblip = nil
-		end
-	end
+	TriggerServerEvent("garaza:ObrisiVozilo")
 end)
 
 RegisterNetEvent('eden_garage:vrativozilo')
@@ -363,6 +356,7 @@ end)
 
 
 function ranger(vehicle,vehicleProps)
+	TriggerServerEvent("garaza:ObrisiVozilo")
 	ObrisiVozilo(vehicle)
 
 	TriggerServerEvent('eden_garage:modifystate', vehicleProps, 1)
@@ -467,6 +461,8 @@ function SpawnVehicle(vehicle)
 		ESX.Game.SetVehicleProperties(vehicle2, vehicle)
 		local plate = GetVehicleNumberPlateText(vehicle2)
 		local pla = vehicle.plate:gsub("^%s*(.-)%s*$", "%1")
+		local nid = VehToNet(vehicle2)
+		TriggerServerEvent("garaza:SpremiVozilo", nid)
 		TriggerServerEvent("garaza:SpremiModel", pla, vehicle.model)
 		TriggerServerEvent("ls:mainCheck", plate, vehicle2, true)
 		TriggerServerEvent('eden_garage:modifystate', vehicle, 0)

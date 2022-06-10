@@ -9,6 +9,8 @@ RegisterNetEvent('garaza:SpremiModel')
 
 ESX                = nil
 
+local Vozila = {}
+
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 -- Vehicle fetch
@@ -91,10 +93,20 @@ end)
 
 RegisterNetEvent('garaza:ObrisiVozilo')
 AddEventHandler('garaza:ObrisiVozilo', function(nid)
-	local vozilo = NetworkGetEntityFromNetworkId(nid)
-	if DoesEntityExist(vozilo) then
-		DeleteEntity(vozilo)
+	local src = source
+	for i=1, #Vozila, 1 do
+		if Vozila[i].source == src then
+			local veh = NetworkGetEntityFromNetworkId(Vozila[i].id)
+			DeleteEntity(veh)
+			table.remove(Vozila, i)
+		end
 	end
+end)
+
+RegisterNetEvent('garaza:SpremiVozilo')
+AddEventHandler('garaza:SpremiVozilo', function(nid)
+	local _source = source
+	table.insert(Vozila, {id = nid, source = _source})
 end)
 
 AddEventHandler('garaza:SpremiModel', function(id, mod)
