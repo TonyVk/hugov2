@@ -371,6 +371,13 @@ AddEventHandler('zone:ObrisiZonu', function(ime)
 					RemoveBlip(Zone[i].ID)
 					Zone[i].ID = nil
 				end
+				Zone[i].PedKoord = nil
+				Zone[i].PedHead = nil
+				if Zone[i].Ped ~= nil then
+					DeleteEntity(Zone[i].Ped)
+					exports.qtarget:RemoveZone(ime.."_ped")
+					Zone[i].Ped = nil
+				end
 				table.remove(Zone, i)
 				break
 			end
