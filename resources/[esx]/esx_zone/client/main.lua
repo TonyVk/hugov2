@@ -72,12 +72,14 @@ function SpawnNpcove()
 					{
 						event = "zone:ProdajListove",
 						icon = "far fa-comment",
-						label = "Prodaj listove kokaina"
+						label = "Prodaj listove kokaina ($"..Config.CijenaLista..")",
+						idzona = i
 					},
 					{
 						event = "zone:ProdajGljive",
 						icon = "far fa-comment",
-						label = "Prodaj gljive"
+						label = "Prodaj gljive ($"..Config.CijenaGljive..")",
+						idzona = i
 					}
 				},
 				distance = 2.5
@@ -88,25 +90,33 @@ function SpawnNpcove()
 end
 
 RegisterNetEvent("zone:ProdajListove")
-AddEventHandler('zone:ProdajListove', function()
-	ESX.TriggerServerCallback('zone:ProdajListove', function(br, kol, cij)
-		if br then
-			ESX.ShowNotification("Prodali ste "..kol.." listova kokaina za $"..cij)
-		else
-			ESX.ShowNotification("Nemate listova kokaina za prodati!")
-		end
-	end)
+AddEventHandler('zone:ProdajListove', function(data)
+	if Zone[data.idzona].Vlasnik ~= nil then
+		ESX.TriggerServerCallback('zone:ProdajListove', function(br, kol, cij)
+			if br then
+				ESX.ShowNotification("Prodali ste "..kol.." listova kokaina za $"..cij)
+			else
+				ESX.ShowNotification("Nemate listova kokaina za prodati!")
+			end
+		end, Zone[data.idzona].Vlasnik)
+	else
+		ESX.ShowNotification("Trenutno nam ne treba listova!")
+	end
 end)
 
 RegisterNetEvent("zone:ProdajGljive")
-AddEventHandler('zone:ProdajGljive', function()
-	ESX.TriggerServerCallback('zone:ProdajGljive', function(br, kol, cij)
-		if br then
-			ESX.ShowNotification("Prodali ste "..kol.." gljiva za $"..cij)
-		else
-			ESX.ShowNotification("Nemate gljiva za prodati!")
-		end
-	end)
+AddEventHandler('zone:ProdajGljive', function(data)
+	if Zone[data.idzona].Vlasnik ~= nil then
+		ESX.TriggerServerCallback('zone:ProdajGljive', function(br, kol, cij)
+			if br then
+				ESX.ShowNotification("Prodali ste "..kol.." gljiva za $"..cij)
+			else
+				ESX.ShowNotification("Nemate gljiva za prodati!")
+			end
+		end, Zone[data.idzona].Vlasnik)
+	else
+		ESX.ShowNotification("Trenutno nam ne treba gljiva!")
+	end
 end)
 
 if Config.DinamicneMafije then
@@ -261,12 +271,14 @@ AddEventHandler('zone:DodajPeda', function(ime, koord, head)
 							{
 								event = "zone:ProdajListove",
 								icon = "far fa-comment",
-								label = "Prodaj listove kokaina"
+								label = "Prodaj listove kokaina ($"..Config.CijenaLista..")",
+								idzona = i
 							},
 							{
 								event = "zone:ProdajGljive",
 								icon = "far fa-comment",
-								label = "Prodaj gljive"
+								label = "Prodaj gljive ($"..Config.CijenaGljive..")",
+								idzona = i
 							}
 						},
 						distance = 2.5

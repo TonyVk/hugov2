@@ -213,7 +213,7 @@ AddEventHandler('zone:UpdateBoju', function(ime, boja, maf, label)
 			break
 		end
 	end
-	TriggerClientEvent("zone:UpdateBoju", -1, ime, boja, maf, label)
+	TriggerClientEvent("zone:UpdateBoju", -1, ime, boja, maf, label, id)
 	MySQL.Async.execute('UPDATE zone SET boja = @boja, vlasnik = @maf, label = @lab WHERE ime = @ime',{
 		['@ime'] = ime,
 		['@boja'] = boja,
@@ -361,27 +361,47 @@ ESX.RegisterServerCallback('zone:DohvatiZone', function(source, cb)
 	cb(vracaj)
 end)
 
-ESX.RegisterServerCallback('zone:ProdajListove', function(source, cb)
+ESX.RegisterServerCallback('zone:ProdajListove', function(source, cb, maf)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xItem = xPlayer.getInventoryItem("coke")
 	if xItem.count > 0 then
-		local cij = xItem.count*15
-		xPlayer.removeInventoryItem("coke", xItem.count)
-		xPlayer.addMoney(cij)
-		cb(true, xItem.count, cij)
+		local cij = xItem.count*Config.CijenaLista
+		local society = "society_"..maf
+		TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
+			if account.money >= cij then
+				account.removeMoney(cij)
+				account.save()
+				xPlayer.removeInventoryItem("coke", xItem.count)
+				xPlayer.addMoney(cij)
+				TriggerEvent("mafije:OstaviListove2", xItem.count, maf)
+				cb(true, xItem.count, cij)
+			else
+				xPlayer.showNotification("Trenutno nemamo dovoljno novca za tvoju kolicinu!")
+			end
+		end)
 	else
 		cb(false, nil, nil)
 	end
 end)
 
-ESX.RegisterServerCallback('zone:ProdajGljive', function(source, cb)
+ESX.RegisterServerCallback('zone:ProdajGljive', function(source, cb, maf)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xItem = xPlayer.getInventoryItem("gljive")
 	if xItem.count > 0 then
-		local cij = xItem.count*16
-		xPlayer.removeInventoryItem("gljive", xItem.count)
-		xPlayer.addMoney(cij)
-		cb(true, xItem.count, cij)
+		local cij = xItem.count*Config.CijenaGljive
+		local society = "society_"..maf
+		TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
+			if account.money >= cij then
+				account.removeMoney(cij)
+				account.save()
+				xPlayer.removeInventoryItem("gljive", xItem.count)
+				xPlayer.addMoney(cij)
+				TriggerEvent("mafije:OstaviGljive2", xItem.count, maf)
+				cb(true, xItem.count, cij)
+			else
+				xPlayer.showNotification("Trenutno nemamo dovoljno novca za tvoju kolicinu!")
+			end
+		end)
 	else
 		cb(false, nil, nil)
 	end
