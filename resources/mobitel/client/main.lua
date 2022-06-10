@@ -301,20 +301,26 @@ AddEventHandler('mobitel:PosaljiPoruku', function(br)
 end)
 
 RegisterCommand('+mobitel', function()
-  if IsControlEnabled(0, 288) then
-    Otvoren = not Otvoren;
-    ESX.TriggerServerCallback('mobitel:DohvatiBroj', function(broj)
-      SendNUIMessage({
-        mobitel = true,
-        br = Otvoren,
-        broj = broj
-      })
-    end)
-    if Otvoren then
-      SetNuiFocus(true, true)
+  ESX.TriggerServerCallback('mobitel:ImalMobitel', function(br)
+    if br then
+      if IsControlEnabled(0, 288) then
+        Otvoren = not Otvoren;
+        ESX.TriggerServerCallback('mobitel:DohvatiBroj', function(broj)
+          SendNUIMessage({
+            mobitel = true,
+            br = Otvoren,
+            broj = broj
+          })
+        end)
+        if Otvoren then
+          SetNuiFocus(true, true)
+        else
+          SetNuiFocus(false)
+        end
+      end
     else
-      SetNuiFocus(false)
+      ESX.ShowNotification("Nemate mobitel.")
     end
-  end
+  end)
 end, false)
 RegisterKeyMapping('+mobitel', 'Koristi mobitel', 'keyboard', 'f1')

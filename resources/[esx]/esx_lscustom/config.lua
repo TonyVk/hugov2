@@ -78,7 +78,8 @@ Config.Motori = {
 	{naziv = "ta011mit4g63", label = "Lancer"},
 	{naziv = "subaruej20", label = "Impreza"},
 	{naziv = "ta023l539", label = "v12"},
-	{naziv = "ta032s63b44", label = "BMW v8"}
+	{naziv = "ta032s63b44", label = "BMW v8"},
+	{naziv = "ta019b58", label = "Supra GR"}
 }
 
 Config.Colors = {

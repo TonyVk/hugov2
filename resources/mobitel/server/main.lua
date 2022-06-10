@@ -43,6 +43,17 @@ ESX.RegisterServerCallback('mobitel:DohvatiKontakte', function(source, cb)
     end)
 end)
 
+ESX.RegisterServerCallback('mobitel:ImalMobitel', function(source, cb)
+  local _source = source
+  local xPlayer = ESX.GetPlayerFromId(_source)
+  local xItem = xPlayer.getInventoryItem("mobitel")
+  if xItem.count > 0 then
+    cb(true)
+  else
+    cb(false)
+  end
+end)
+
 ESX.RegisterServerCallback('mobitel:DohvatiHitne', function(source, cb)
   local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
