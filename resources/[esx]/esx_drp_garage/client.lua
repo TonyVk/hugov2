@@ -456,6 +456,7 @@ end
 
 --Function for spawning vehicle
 function SpawnVehicle(vehicle)
+	TriggerServerEvent("garaza:ObrisiVozilo")
 	ESX.Game.SpawnVehicle(vehicle.model, this_Garage.SpawnPoint.Pos, this_Garage.SpawnPoint.Heading, function (vehicle2)
 		TaskWarpPedIntoVehicle(PlayerPedId(), vehicle2, -1)
 		ESX.Game.SetVehicleProperties(vehicle2, vehicle)

@@ -55,7 +55,7 @@ Bones['seat_dside_f'] = {
 	options = {
 		{
 			icon = "fas fa-door-open",
-			label = "Toggle front Door",
+			label = "Otvori prednja vrata",
 			canInteract = function(entity)
 				return GetEntityBoneIndexByName(entity, 'door_dside_f') ~= -1
 			end,
@@ -71,7 +71,7 @@ Bones['seat_pside_f'] = {
 	options = {
 		{
 			icon = "fas fa-door-open",
-			label = "Toggle front Door",
+			label = "Otvori prednja vrata",
 			canInteract = function(entity)
 				return GetEntityBoneIndexByName(entity, 'door_pside_f') ~= -1
 			end,
@@ -87,7 +87,7 @@ Bones['seat_dside_r'] = {
 	options = {
 		{
 			icon = "fas fa-door-open",
-			label = "Toggle rear Door",
+			label = "Otvori straznja vrata",
 			canInteract = function(entity)
 				return GetEntityBoneIndexByName(entity, 'door_dside_r') ~= -1
 			end,
@@ -103,7 +103,7 @@ Bones['seat_pside_r'] = {
 	options = {
 		{
 			icon = "fas fa-door-open",
-			label = "Toggle rear Door",
+			label = "Otvori straznja vrata",
 			canInteract = function(entity)
 				return GetEntityBoneIndexByName(entity, 'door_pside_r') ~= -1
 			end,
@@ -119,7 +119,7 @@ Bones['bonnet'] = {
 	options = {
 		{
 			icon = "fa-duotone fa-engine",
-			label = "Toggle Hood",
+			label = "Otvori haubu",
 			action = function(entity)
 				ToggleDoor(entity, 4)
 			end
