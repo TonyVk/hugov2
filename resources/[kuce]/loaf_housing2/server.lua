@@ -743,6 +743,7 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner,
 							else
 								xPlayer.showNotification("Uzeli ste "..amount.."x "..xItem.label)
 								xPlayer.addInventoryItem(iime, amount)
+                                TriggerEvent("DiscordBot:SefKuce", "Igrac "..GetPlayerName(src).." je uzeo "..amount.."x"..xItem.label.." iz sefa kuce!")
                                 if tonumber(result[1].kolicina)-amount == 0 then
                                     MySQL.Async.execute("DELETE FROM kuce_stvari WHERE ID=@id", {['@id'] = item})
                                 else
@@ -755,6 +756,7 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner,
 							else
 								xPlayer.showNotification("Uzeli ste "..amount.."x "..xItem.label)
 								xPlayer.addInventoryItem(iime, amount)
+                                TriggerEvent("DiscordBot:SefKuce", "Igrac "..GetPlayerName(src).." je uzeo "..amount.."x"..xItem.label.." iz sefa kuce!")
                                 if tonumber(result[1].kolicina)-amount == 0 then
                                     MySQL.Async.execute("DELETE FROM kuce_stvari WHERE ID=@id", {['@id'] = item})
                                 else
@@ -781,6 +783,7 @@ AddEventHandler('loaf_housing:withdrawItem', function(type, item, amount, owner,
                         if #result > 0 then
                             MySQL.Async.execute("DELETE FROM kuce_oruzja WHERE ID=@id", {['@id'] = item})
                             xPlayer.addWeapon(iime, amount)
+                            TriggerEvent("DiscordBot:SefKuce", "Igrac "..GetPlayerName(src).." je uzeo "..iime.." sa "..amount.." metaka iz sefa kuce!")
                         else
                             TriggerClientEvent('esx:showNotification', src, "Tog oruzja nema u sefu kuce!")
                         end
@@ -817,6 +820,7 @@ AddEventHandler('loaf_housing:storeItem', function(type, item, amount, kuca)
                         end
                     end)
                     xPlayer.removeInventoryItem(item, amount)
+                    TriggerEvent("DiscordBot:SefKuce", "Igrac "..GetPlayerName(src).." je ostavio "..amount.."x"..xItem.label.." u sef kuce!")
                     xPlayer.showNotification("Uspjesno ste spremili stvar.")
                 else
                     TriggerClientEvent('esx:showNotification', src, Strings['Not_Enough'])
@@ -840,6 +844,7 @@ AddEventHandler('loaf_housing:storeItem', function(type, item, amount, kuca)
                         ['@ku'] = kuca
                     })
                     xPlayer.removeWeapon(item)
+                    TriggerEvent("DiscordBot:SefKuce", "Igrac "..GetPlayerName(src).." je ostavio "..item.." sa "..amount.." metaka u sef kuce!")
                 else
                     TriggerClientEvent('esx:showNotification', src, Strings['No_Weapon'])
                 end

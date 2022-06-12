@@ -45,7 +45,7 @@ end
 if DiscordWebhookMeh == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Mehanicar" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookMeh, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Mehanicar" webhook non-existing!\n\n')
 		end
@@ -55,7 +55,7 @@ end
 if DiscordWebhookVozila == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Vozila" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookVozila, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Vozila" webhook non-existing!\n\n')
 		end
@@ -65,7 +65,7 @@ end
 if DiscordWebhookProdaja == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Prodaja" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookProdaja, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Prodaja" webhook non-existing!\n\n')
 		end
@@ -75,9 +75,19 @@ end
 if DiscordWebhookDuty == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Aduty" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookDuty, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Aduty" webhook non-existing!\n\n')
+		end
+	end)
+end
+
+if DiscordWebhookSefKuce == 'WEBHOOK_LINK_HERE' then
+	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "SefKuce" webhook\n\n')
+else
+	PerformHttpRequest(DiscordWebhookSefKuce, function(Error, Content, Head)
+		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
+			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "SefKuce" webhook non-existing!\n\n')
 		end
 	end)
 end
@@ -85,7 +95,7 @@ end
 if DiscordWebhookInventory == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Inventory" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookInventory, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Inventory" webhook non-existing!\n\n')
 		end
@@ -95,7 +105,7 @@ end
 if DiscordWebhookAnticheat == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Anticheat" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookAnticheat, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Anticheat" webhook non-existing!\n\n')
 		end
@@ -105,7 +115,7 @@ end
 if DiscordWebhookMarkeri == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Markeri" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookMarkeri, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Markeri" webhook non-existing!\n\n')
 		end
@@ -115,7 +125,7 @@ end
 if DiscordWebhookGepek == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Gepek" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookGepek, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Gepek" webhook non-existing!\n\n')
 		end
@@ -125,7 +135,7 @@ end
 if DiscordWebhookOduzimanje == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Oduzimanje" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookOduzimanje, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Oduzimanje" webhook non-existing!\n\n')
 		end
@@ -135,7 +145,7 @@ end
 if DiscordWebhookZetoni == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Zetoni" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookZetoni, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Zetoni" webhook non-existing!\n\n')
 		end
@@ -145,7 +155,7 @@ end
 if DiscordWebhookGranica == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Granica" webhook\n\n')
 else
-	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
+	PerformHttpRequest(DiscordWebhookGranica, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
 			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Granica" webhook non-existing!\n\n')
 		end
@@ -285,6 +295,19 @@ AddEventHandler('DiscordBot:Aduty', function(Message)
 	if date.min < 10 then date.min = '0' .. tostring(date.min) end
 	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
 	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookDuty, SystemName, Message .. ' `' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`', SystemAvatar, false)
+end)
+
+-- Sef kuce Log
+RegisterNetEvent('DiscordBot:SefKuce')
+AddEventHandler('DiscordBot:SefKuce', function(Message)
+	local date = os.date('*t')
+	
+	if date.day < 10 then date.day = '0' .. tostring(date.day) end
+	if date.month < 10 then date.month = '0' .. tostring(date.month) end
+	if date.hour < 10 then date.hour = '0' .. tostring(date.hour) end
+	if date.min < 10 then date.min = '0' .. tostring(date.min) end
+	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
+	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookSefKuce, SystemName, Message .. ' `' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`', SystemAvatar, false)
 end)
 
 -- Vozila Log
