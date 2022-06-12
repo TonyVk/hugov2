@@ -185,47 +185,42 @@ end, false)
 RegisterKeyMapping('lvozila', 'Lock vozila', 'keyboard', 'U')
 
 RegisterNetEvent('esx_contract:PoslaoMu')
-AddEventHandler('esx_contract:PoslaoMu', function(br, tabl, cij, igr, veh)
+AddEventHandler('esx_contract:PoslaoMu', function(br, tabl, cij, igr, nid)
+	ESX.ShowNotification("Zelite li kupiti vozilo s tablicom "..tabl.." za $"..cij, 5000)
+	ESX.ShowNotification("Upisite /prihvativozilo da kupite vozilo!", 5000)
 	Ima = br
 	tablica = tabl
 	cijena = cij
 	vlasnik = igr
-	Vozilo = veh
+	Vozilo = nid
 end)
 
 RegisterNetEvent('contract:ZamjenaVozila')
-AddEventHandler('contract:ZamjenaVozila', function(plate)
-	TriggerServerEvent("garaza:ObrisiVozilo")
-	TriggerEvent("esx_property:ProsljediVozilo", GarazaV, Vblip)
+AddEventHandler('contract:ZamjenaVozila', function()
+	TriggerServerEvent("garaza:MakniVozilo")
 end)
 
 RegisterCommand("prihvativozilo", function(source, args, rawCommandString)
 	if Ima == 1 then
 		Ima = 0
-		TriggerServerEvent('ugovor:prodajtuljanu', vlasnik, tablica, cijena)
-		TriggerEvent("garaza:ObrisiProslo")
-		TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
-		local playerPed = PlayerPedId()
-		local coords = GetEntityCoords(playerPed)
-		local vehicle = ESX.Game.GetClosestVehicle(coords)
-		local vehiclecoords = GetEntityCoords(vehicle)
-		local vehDistance = GetDistanceBetweenCoords(coords, vehiclecoords, true)
-		if DoesEntityExist(vehicle) and (vehDistance <= 3) then
-			Vblip = AddBlipForEntity(vehicle)
-			SetBlipSprite (Vblip, 225)
-			SetBlipDisplay(Vblip, 4)
-			SetBlipScale  (Vblip, 1.0)
-			SetBlipColour (Vblip, 30)
-			SetBlipAsShortRange(Vblip, true)
-			BeginTextCommandSetBlipName("STRING")
-			AddTextComponentString("Vase vozilo")
-			EndTextCommandSetBlipName(Vblip)
-			local props = ESX.Game.GetVehicleProperties(vehicle)
-			local pla = props.plate:gsub("^%s*(.-)%s*$", "%1")
-			TriggerServerEvent("garaza:SpremiModel", pla, props.model)
-			local nid = NetworkGetNetworkIdFromEntity(vehicle)
-			TriggerEvent("esx_property:ProsljediVozilo", nid, Vblip)
-		end
+		ESX.TriggerServerCallback('ugovor:prodajtuljanu3', function(dane)
+			if dane then
+				TriggerEvent("garaza:ObrisiProslo")
+				TriggerEvent("esx_property:ProsljediVozilo", nil, nil)
+				local playerPed = PlayerPedId()
+				local vehicle = NetToVeh(Vozilo)
+				if DoesEntityExist(vehicle) then
+					local props = ESX.Game.GetVehicleProperties(vehicle)
+					local pla = props.plate:gsub("^%s*(.-)%s*$", "%1")
+					local nid = VehToNet(vehicle)
+					TriggerServerEvent("garaza:SpremiVozilo", nid)
+					TriggerServerEvent("garaza:SpremiModel", pla, props.model)
+				end
+				TriggerEvent('esx_contract:showAnim')
+				Wait(5000)
+				TriggerServerEvent('esx_contract:showAnim', vlasnik, tablica)
+			end
+		end, vlasnik, tablica, cijena)
 	else
 		ESX.ShowNotification("Nemate ponudu za vozilo!")
 	end
@@ -247,9 +242,6 @@ AddEventHandler('esx_contract:getVehicle', function()
 				if GetHashKey(Vehicles[i].model) == GetEntityModel(vehicle) then
 					if Vehicles[i].category == "donatorski" or Vehicles[i].category == "razz" then
 						JelDonatorski = true
-						if Vehicles[i].category == "razz" and ESX.PlayerData.job.name == 'mechanic' and ESX.PlayerData.job.grade == 5 then
-							JelDonatorski = false
-						end
 						break
 					end
 				end
@@ -270,7 +262,8 @@ AddEventHandler('esx_contract:getVehicle', function()
 						ESX.TriggerServerCallback('garaza:JelIstiModel', function(dane)
 							if (dane) then
 								ESX.ShowNotification(_U('writingcontract', vehProps.plate))
-								TriggerServerEvent('ugovor:prodajtuljanu2', GetPlayerServerId(closestPlayer), vehProps.plate, amount, GarazaV)
+								local net = VehToNet(vehicle)
+								TriggerServerEvent('ugovor:prodajtuljanu2', GetPlayerServerId(closestPlayer), vehProps.plate, amount, net)
 							end
 						end, vehProps.plate, vehProps.model)
 					end
@@ -290,11 +283,22 @@ AddEventHandler('esx_contract:getVehicle', function()
 end)
 
 RegisterNetEvent('esx_contract:showAnim')
-AddEventHandler('esx_contract:showAnim', function(player)
+AddEventHandler('esx_contract:showAnim', function()
 	loadAnimDict('anim@amb@nightclub@peds@')
 	TaskStartScenarioInPlace(PlayerPedId(), 'WORLD_HUMAN_CLIPBOARD', 0, false)
-	Citizen.Wait(20000)
+	Citizen.Wait(5000)
+	RemoveAnimDict('anim@amb@nightclub@peds@')
 	ClearPedTasks(PlayerPedId())
+end)
+
+RegisterNetEvent('esx_contract:showAnim2')
+AddEventHandler('esx_contract:showAnim2', function(vl, pl)
+	loadAnimDict('anim@amb@nightclub@peds@')
+	TaskStartScenarioInPlace(PlayerPedId(), 'WORLD_HUMAN_CLIPBOARD', 0, false)
+	Citizen.Wait(5000)
+	RemoveAnimDict('anim@amb@nightclub@peds@')
+	ClearPedTasks(PlayerPedId())
+	TriggerServerEvent("esx_contract:PosaljiPoruke", vl, pl)
 end)
 
 function loadAnimDict(dict)

@@ -103,6 +103,16 @@ AddEventHandler('garaza:ObrisiVozilo', function(nid)
 	end
 end)
 
+RegisterNetEvent('garaza:MakniVozilo')
+AddEventHandler('garaza:MakniVozilo', function()
+	local src = source
+	for i=1, #Vozila, 1 do
+		if Vozila[i].source == src then
+			table.remove(Vozila, i)
+		end
+	end
+end)
+
 RegisterNetEvent('garaza:SpremiVozilo')
 AddEventHandler('garaza:SpremiVozilo', function(nid)
 	local _source = source
