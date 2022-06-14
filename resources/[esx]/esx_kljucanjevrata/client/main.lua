@@ -243,7 +243,7 @@ RegisterNetEvent("Otkljucaj")
 AddEventHandler("Otkljucaj", function()
     local koord = GetEntityCoords(PlayerPedId())
     for i = 1, #Vrata do
-        if #(koord-Vrata[i].koord) <= 7.0 then
+        if #(koord-Vrata[i].koord) <= 5.0 then
             if IsDoorRegisteredWithSystem(Vrata[i].ime) then
                 local state = DoorSystemGetDoorState(Vrata[i].ime)
                 if state == 4 then
