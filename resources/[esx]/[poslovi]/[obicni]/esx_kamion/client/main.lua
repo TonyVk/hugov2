@@ -791,14 +791,16 @@ function StartajPosao(br)
 			else
 				ESX.Game.DeleteVehicle(Vozilo)
 				Vozilo = nil
-				Blipara = AddBlipForCoord(-500.92709350586, -2842.4367675781, 6.0003814697266)
+				local LokBroj = math.random(1, #Config.Dostave)
+				Lokacija = Config.Dostave[LokBroj]
+				Blipara = AddBlipForCoord(Lokacija)
 				SetBlipSprite (Blipara, 68)
 				SetBlipDisplay(Blipara, 8)
 				SetBlipColour (Blipara, 47)
 				SetBlipScale  (Blipara, 1.4)
 				SetBlipRoute(Blipara, true)
 				ESX.ShowNotification("Odvezite kontenjer na oznacenu lokaciju!")
-				Lokacija = vector3(-500.92709350586, -2842.4367675781, 5.0003814697266)
+				--Lokacija = vector3(-500.92709350586, -2842.4367675781, 5.0003814697266)
 			end
 		end)
 	end

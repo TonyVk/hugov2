@@ -6,5 +6,6 @@ cache/*
 *.ytd
 *.webm
 *.log
+*.ydd
 resources/vozila/*
 resources/t-loadingscreen/loading.mp4
