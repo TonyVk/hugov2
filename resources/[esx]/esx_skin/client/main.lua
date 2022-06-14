@@ -414,6 +414,7 @@ function PokreniIntro(izb)
 			slika = MugShot
 		})
 		SetNuiFocus(true, true)
+		ESX.ShowNotification("Uhapseni ste, upisite svoje ime, prezime i datum rođenja!")
 	else
 		DoScreenFadeOut(1000)
 		while not IsScreenFadedOut() do
@@ -462,6 +463,7 @@ function PokreniIntro(izb)
 			Wait(1000)
 			SetVehicleDoorsLocked(voza, 2)
 			SetFollowPedCamViewMode(1)
+			ESX.ShowNotification("Upisite vase ime, prezime i datum rođenja!")
 			local MugShot = exports["MugShotBase64"]:GetMugShotBase64(PlayerPedId(), false)
 			SendNUIMessage({
 				prikaziintro = true,
