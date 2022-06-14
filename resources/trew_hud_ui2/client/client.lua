@@ -1322,6 +1322,7 @@ end)
 
 RegisterNetEvent('kvar:PopraviKvar')
 AddEventHandler('kvar:PopraviKvar', function(tabl)
+	TriggerEvent("iens:Dozvoljeno", true)
 	TriggerServerEvent("kvar:PopraviKvar", tabl, math.random(Kvar, Kvar+25000))
 end)
 
@@ -1418,8 +1419,9 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 								end
 							end)
 						elseif VrstaKvara == 2 then
+							TriggerEvent("iens:Dozvoljeno", false)
 							Citizen.CreateThread(function()
-								while UVozilu do
+								while UVozilu and VrstaKvara == 2 do
 									--vehica = GetVehiclePedIsIn(PlayerPedId())
 									SetDisableVehicleEngineFires(vehica, true)
 									SetVehicleEngineHealth(vehica, 301)
@@ -1429,7 +1431,7 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 						elseif VrstaKvara == 3 then
 							local waitara = 5000
 							Citizen.CreateThread(function()
-								while UVozilu do
+								while UVozilu and VrstaKvara == 3 do
 									--vehica = GetVehiclePedIsIn(PlayerPedId())
 									SetVehicleEngineOn(vehica, false, true, false)
 									waitara = math.random(1000, 25000)
@@ -1438,7 +1440,7 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 							end)
 						elseif VrstaKvara == 4 then
 							Citizen.CreateThread(function()
-								while UVozilu do
+								while UVozilu and VrstaKvara == 4 do
 									--vehica = GetVehiclePedIsIn(PlayerPedId())
 									SetVehicleEngineOn(vehica, false, true, true)
 									if IsVehicleEngineStarting(vehica) then
@@ -1652,6 +1654,7 @@ end)
 RegisterNetEvent('baseevents:leftVehicle')
 AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, modelName, netId)
 	SapucoKvar = false
+	TriggerEvent("iens:Dozvoljeno", true)
 	ESX.TriggerServerCallback('ovjes:DajStari', function(roty, susp)
 		if roty == nil then
 			local globalplate = GetVehicleNumberPlateText(currentVehicle)

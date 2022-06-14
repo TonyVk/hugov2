@@ -37,13 +37,13 @@ server_scripts {
   '@es_extended/locale.lua',
   '@oxmysql/lib/MySQL.lua',
   'locales/hr.lua',
-  'server/main.lua',
-  'config.lua'
+  'config.lua',
+  'server/main.lua'
 }
 
 client_scripts {
   '@es_extended/locale.lua',
   'locales/hr.lua',
-  'client/main.lua',
-  'config.lua'
+  'config.lua',
+  'client/main.lua'
 }
