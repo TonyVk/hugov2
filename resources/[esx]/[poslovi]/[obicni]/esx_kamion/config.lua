@@ -49,7 +49,7 @@ Config.ZaposliSe = {
 }
 
 Config.Uniforms = {
-	EUP = false,
+	EUP = true,
 	uniforma = { 
 		male = {
 			['tshirt_1'] = 59,  ['tshirt_2'] = 0,

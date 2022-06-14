@@ -11,8 +11,8 @@ local SpawnMarker = false
 local Ulica = false
 local Blipic = nil
 local ObjBr = 1
-local Cpovi = {}
 local PosaoPed = nil
+local VoziloPed = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -39,7 +39,6 @@ local Blipara				  = {}
 function ProvjeriPosao()
 	ESX.PlayerData = ESX.GetPlayerData()
 	DodajBlip()
-	SpawnCpove()
 	SpawnNpcove()
 end
 function DodajBlip()
@@ -55,29 +54,7 @@ function DodajBlip()
 	AddTextComponentString("Kosac")
 	EndTextCommandSetBlipName(blip)
 end
-function SpawnCpove()
-	if #Cpovi > 0 then
-		for i=1, #Cpovi, 1 do
-		  	if Cpovi[i] ~= nil then
-			  	if Cpovi[i].Spawnan then
-					DeleteCheckpoint(Cpovi[i].ID)
-					Cpovi[i].Spawnan = false
-			  	end
-		  	end
-		end
-	end
-	Cpovi = {}
-	--[[for k,v in pairs(Config.Zones) do
-		if v.Type ~= -1 then
-			table.insert(Cpovi, {ID = check, Tip = 2, Koord = v.Pos, Spawnan = false, r = v.Color.r, g = v.Color.g, b = v.Color.b})
-		end
-	end]]
-	if JesiKosac() then
-		for k,v in pairs(Config.Cloakroom) do
-			table.insert(Cpovi, {ID = check, Tip = 1, Koord = v.Pos, Spawnan = false, r = v.Color.r, g = v.Color.g, b = v.Color.b})
-		end
-	end
-end
+
 function SpawnNpcove()
 	if PosaoPed ~= nil then
 		DeleteEntity(PosaoPed)
@@ -113,12 +90,153 @@ function SpawnNpcove()
 			distance = 2.5
 		})
 		SetModelAsNoLongerNeeded(pedmodel)
+	else
+		local pedmodel = GetHashKey("s_m_m_gardener_01")
+		LoadModel(pedmodel)
+		PosaoPed = CreatePed(0, pedmodel, Config.ZaposliSe.Pos - vector3(0.0, 0.0, 1.0), Config.ZaposliSe.Heading, false, true)
+		SetEntityInvincible(PosaoPed, true)
+		SetBlockingOfNonTemporaryEvents(PosaoPed, true)
+		SetPedDiesWhenInjured(PosaoPed, false)
+		SetPedFleeAttributes(PosaoPed, 2)
+		FreezeEntityPosition(PosaoPed, true)
+		SetPedCanPlayAmbientAnims(PosaoPed, false)
+		SetPedCanRagdollFromPlayerImpact(PosaoPed, false)
+
+		exports.qtarget:AddEntityZone("kosac", PosaoPed, 
+		{
+			name="kosac_posao",
+			debugPoly=false,
+			useZ = true
+		}, {
+			options = {
+				{
+					event = "kosac:UzmiDuznost",
+					icon = "far fa-comment",
+					label = _U('job_wear'),
+					posao = Config.Posao
+				},
+				{
+					event = "kosac:OstaviDuznost",
+					icon = "fas fa-sign-out-alt",
+					label = _U('citizen_wear'),
+					posao = Config.Posao
+				},
+			},
+			distance = 2.5
+		})
+		SetModelAsNoLongerNeeded(pedmodel)
 	end
 end
+
+RegisterNetEvent('kosac:UzmiDuznost')
+AddEventHandler('kosac:UzmiDuznost', function()
+	if not isInService then
+		isInService = true
+		setUniform(PlayerPedId())
+		if VoziloPed ~= nil then
+			DeleteEntity(VoziloPed)
+			exports.qtarget:RemoveZone('kosac_vozila')
+			VoziloPed = nil
+		end
+		local pedmodel = GetHashKey("s_m_m_gardener_01")
+		VoziloPed = CreatePed(0, pedmodel, Config.Zones.VehicleSpawner.Pos, Config.Zones.VehicleSpawner.Heading, false, true)
+		SetEntityInvincible(VoziloPed, true)
+		SetBlockingOfNonTemporaryEvents(VoziloPed, true)
+		SetPedDiesWhenInjured(VoziloPed, false)
+		SetPedFleeAttributes(VoziloPed, 2)
+		FreezeEntityPosition(VoziloPed, true)
+		SetPedCanPlayAmbientAnims(VoziloPed, false)
+		SetPedCanRagdollFromPlayerImpact(VoziloPed, false)
+		SetModelAsNoLongerNeeded(pedmodel)
+	
+		exports.qtarget:AddEntityZone("kosac2", VoziloPed, 
+		{
+			name="kosac_vozila",
+			debugPoly=false,
+			useZ = true
+		}, {
+			options = {
+				{
+					event = "kosac:Vozilo",
+					icon = "fa fa-car",
+					label = "Mower",
+					broj = 1,
+					canInteract = function(entity) return isInService end
+				},
+				{
+					event = "kosac:Vozilo",
+					icon = "fa fa-user",
+					label = "Obicna kosilica",
+					broj = 2,
+					canInteract = function(entity) return isInService end
+				},
+			},
+			distance = 2.5,
+		})
+	end
+end)
+
+RegisterNetEvent('kosac:Vozilo')
+AddEventHandler('kosac:Vozilo', function(data)
+	if data.broj == 1 then
+		if Vozilo ~= nil then
+			ESX.Game.DeleteVehicle(Vozilo)
+			Vozilo = nil
+		end
+		ESX.Streaming.RequestModel("mower")
+		Vozilo = CreateVehicle("mower", Config.Zones.VehicleSpawnPoint.Pos.x, Config.Zones.VehicleSpawnPoint.Pos.y, Config.Zones.VehicleSpawnPoint.Pos.z, 315.28479003906, true, false)
+		platenum = math.random(10000, 99999)
+		SetModelAsNoLongerNeeded("mower")
+		SetVehicleNumberPlateText(Vozilo, "WAL"..platenum)             
+		tablicaVozila = "WAL"..platenum			
+		TaskWarpPedIntoVehicle(GetPlayerPed(-1), Vozilo, -1)
+		Radis = true
+		TriggerEvent("dpemotes:Radim", true)
+		SpawnObjekte()
+	elseif data.broj == 2 then
+		SetPlayerInvincible(PlayerId(), true)
+		ESX.ShowNotification("Ukoliko zelite zavrsiti posao upisite /zavrsikosenje")
+		SetEntityCoords(PlayerPedId(), -1348.0754394531, 128.62022399902, 55.238655090332, false, false, false, true)
+		SetEntityHeading(PlayerPedId(), 220.04908752441)
+		if Kosilica ~= nil then
+			DeleteObject(Kosilica)
+		end
+		ESX.Streaming.RequestAnimDict("anim@heists@box_carry@", function()
+			TaskPlayAnim(PlayerPedId(),"anim@heists@box_carry@", "idle", 8.0, 8.0, -1, 50)
+		end)
+		local modele = "prop_lawnmower_01"
+		ESX.Streaming.RequestModel(modele)
+		Kosilica = CreateObject(GetHashKey(modele), GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, -5.0), true, false, false)
+		AttachEntityToEntityPhysically(Kosilica, PlayerPedId(), 0, GetEntityBoneIndexByName(PlayerPedId(), "SKEL_Pelvis"), 0.175, 0.90, -0.86, -0.075, 0.90, -0.86, 0.0, 0.5, 181.0, 10000.0, true, true, true, false, 2)
+		SetModelAsNoLongerNeeded(modele)
+		TriggerEvent("dpemotes:Radim", true)
+		Radis = true
+		SpawnObjekte2()
+	end
+end)
+
+RegisterNetEvent('kosac:OstaviDuznost')
+AddEventHandler('kosac:OstaviDuznost', function()
+	if isInService then
+		isInService = false
+		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+			TriggerEvent('skinchanger:loadSkin', skin)
+		end)
+		TriggerEvent("dpemotes:Radim", false)
+		if VoziloPed ~= nil then
+			DeleteEntity(VoziloPed)
+			exports.qtarget:RemoveZone('kosac_vozila')
+			VoziloPed = nil
+		end
+	end
+end)
+
 RegisterNetEvent('kosac:ZaposliSe')
 AddEventHandler('kosac:ZaposliSe', function()
 	TriggerEvent("upit:OtvoriPitanje", "esx_kosac", "Upit za posao", "Dali se zelite zaposliti kao kosac?")
 end)
+
+
 LoadModel = function(model)
 	RequestModel(model)
 
@@ -143,15 +261,6 @@ function MenuCloakRoom()
 			if data.current.value == 'citizen_wear' then
 				if isInService then
 					isInService = false
-					for i=1, #Cpovi, 1 do
-						if Cpovi[i] ~= nil and Cpovi[i].Tip == 2 then
-							if Cpovi[i].Spawnan then
-								DeleteCheckpoint(Cpovi[i].ID)
-								Cpovi[i].Spawnan = false
-								table.remove(Cpovi, i)
-							end
-						end
-					end
 					ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 						TriggerEvent('skinchanger:loadSkin', skin)
 					end)
@@ -160,11 +269,6 @@ function MenuCloakRoom()
 			end
 			if data.current.value == 'job_wear' then
 				if not isInService then
-					for k,v in pairs(Config.Zones) do
-						if v.Type ~= -1 then
-							table.insert(Cpovi, {ID = check, Tip = 2, Koord = v.Pos, Spawnan = false, r = v.Color.r, g = v.Color.g, b = v.Color.b})
-						end
-					end
 					isInService = true
 					setUniform(PlayerPedId())
 				end
@@ -534,94 +638,6 @@ function round(num, numDecimalPlaces)
     return math.floor(num * mult + 0.5) / mult
 end
 
--- DISPLAY MISSION MARKERS AND MARKERS
-Citizen.CreateThread(function()
-	local waitara = 1000
-	while true do
-		Citizen.Wait(waitara)
-		local naso = 0
-		local isInMarker  = false
-		local currentZone = nil
-		if JesiKosac() then
-			local coords      = GetEntityCoords(GetPlayerPed(-1))
-
-			if #Cpovi > 0 then
-				for i=1, #Cpovi, 1 do
-					if Cpovi[i] ~= nil then
-						if #(coords-Cpovi[i].Koord) > 100 then
-							if Cpovi[i].Spawnan then
-								DeleteCheckpoint(Cpovi[i].ID)
-								Cpovi[i].Spawnan = false
-							end
-						else
-							if Cpovi[i].Spawnan == false then
-								local kord = Cpovi[i].Koord
-								local range = 2.0
-								local check = CreateCheckpoint(47, kord.x, kord.y, kord.z, 0, 0, 0, range, Cpovi[i].r, Cpovi[i].g, Cpovi[i].b, 100)
-								SetCheckpointCylinderHeight(check, range, range, range)
-								Cpovi[i].ID = check
-								Cpovi[i].Spawnan = true
-							end
-						end
-					end
-				end
-				for i=1, #Cpovi, 1 do
-					if Cpovi[i] ~= nil and Cpovi[i].Spawnan then
-						if #(coords-Cpovi[i].Koord) < 1.5 then
-							if Cpovi[i].Tip == 1 then
-								isInMarker  = true
-								currentZone = "CloakRoom"
-								break
-							elseif Cpovi[i].Tip == 2 then
-								isInMarker  = true
-								currentZone = "VehicleSpawner"
-								break
-							end
-						end
-					end
-				end
-			end
-			
-			if isInMarker and not hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = true
-				lastZone                = currentZone
-				TriggerEvent('esx_kosac:hasEnteredMarker', currentZone)
-			end
-
-			if not isInMarker and hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = false
-				TriggerEvent('esx_kosac:hasExitedMarker', lastZone)
-			end
-		else
-			--[[local coords = GetEntityCoords(GetPlayerPed(-1))
-			if(Config.ZaposliSe.Type ~= -1 and #(coords-Config.ZaposliSe.Pos) < Config.DrawDistance) then
-				waitara = 0
-				naso = 1
-				DrawMarker(Config.ZaposliSe.Type, Config.ZaposliSe.Pos, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZaposliSe.Size.x, Config.ZaposliSe.Size.y, Config.ZaposliSe.Size.z, Config.ZaposliSe.Color.r, Config.ZaposliSe.Color.g, Config.ZaposliSe.Color.b, 100, false, true, 2, false, false, false, false)
-			end
-			if #(coords-Config.ZaposliSe.Pos) < Config.ZaposliSe.Size.x then
-				waitara = 0
-				naso = 1
-				isInMarker  = true
-				currentZone = "posao"
-			end
-			if isInMarker and not hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = true
-				lastZone                = currentZone
-				TriggerEvent('esx_kosac:hasEnteredMarker', currentZone)
-			end
-
-			if not isInMarker and hasAlreadyEnteredMarker then
-				hasAlreadyEnteredMarker = false
-				TriggerEvent('esx_kosac:hasExitedMarker', lastZone)
-			end]]
-		end
-		if naso == 0 then
-			waitara = 1000
-		end
-	end
-end)
-
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
   ESX.PlayerData = xPlayer
@@ -630,7 +646,6 @@ end)
 RegisterNetEvent('esx:setPosao')
 AddEventHandler('esx:setPosao', function(job)
 	ESX.PlayerData.posao = job
-	SpawnCpove()
 	SpawnNpcove()
 	ZavrsiPosao()
 end)

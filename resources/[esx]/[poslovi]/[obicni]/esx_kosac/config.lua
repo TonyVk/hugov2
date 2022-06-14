@@ -31,6 +31,7 @@ Config.ZaposliSe = {
 Config.Zones = {
 	VehicleSpawner = {
 		Pos   = vector3(-1352.2934570312, 124.50176239014, 55.238651275634),
+		Heading = 4.99,
 		Size  = {x = 3.0, y = 3.0, z = 1.0},
 		Color = {r = 204, g = 204, b = 0},
 		Type  = 1
@@ -44,7 +45,7 @@ Config.Zones = {
 }
 
 Config.Uniforms = {
-	EUP = false,
+	EUP = true,
 	uniforma = { 
 		male = {
 			['tshirt_1'] = 59,  ['tshirt_2'] = 0,
