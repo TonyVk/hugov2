@@ -2677,16 +2677,16 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if #(coords-pozicija) < Config.DrawDistance then
-				naso = 1
-				waitara = 0
-				DrawMarker(22, pozicija, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
-				letSleep = false
-			end
+			-- if #(coords-pozicija) < Config.DrawDistance then
+			-- 	naso = 1
+			-- 	waitara = 0
+			-- 	DrawMarker(22, pozicija, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+			-- 	letSleep = false
+			-- end
 
-			if #(coords-pozicija) < Config.MarkerSize.x then
-				isInMarker, currentStation, currentPart, currentPartNum = true, "Znj", 'Centrala', 1
-			end
+			-- if #(coords-pozicija) < Config.MarkerSize.x then
+			-- 	isInMarker, currentStation, currentPart, currentPartNum = true, "Znj", 'Centrala', 1
+			-- end
 
 			if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
 				if

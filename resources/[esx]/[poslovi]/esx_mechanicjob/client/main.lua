@@ -351,7 +351,7 @@ function OpenMechanicActionsMenu()
 				local elements = {
 					{label = _U('flat_bed'),  value = 'flatbed'},
 					{label = _U('tow_truck'), value = 'towtruck2'},
-					{label = "Nissan Titan", value = 'nissantitan17'}
+					--{label = "Nissan Titan", value = 'nissantitan17'}
 				}
 
 				if Config.EnablePlayerManagement and ESX.PlayerData.job and (ESX.PlayerData.job.grade_name == 'boss' or ESX.PlayerData.job.grade_name == 'chief' or ESX.PlayerData.job.grade_name == 'vlasnik' or ESX.PlayerData.job.grade_name == 'experimente') then
@@ -957,6 +957,7 @@ function OpenGetStocksMenu()
 				local count = tonumber(data2.value)
 
 				if count == nil then
+					print("ovaj?")
 					ESX.ShowNotification(_U('invalid_quantity'))
 				else
 					menu2.close()

@@ -303,9 +303,12 @@ end)
 
 RegisterServerEvent('esx_mechanicjob:getStockItem')
 AddEventHandler('esx_mechanicjob:getStockItem', function(itemName, count)
+	print(itemName)
+	print(count)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local job = xPlayer.getJob()
 	if job.name == "mechanic" then
+		print(job.id)
 		TriggerEvent('esx_addoninventory:getSharedInventory', job.id, function(inventory)
 			local item = inventory.getItem(itemName)
 			local sourceItem = xPlayer.getInventoryItem(itemName)
@@ -315,6 +318,7 @@ AddEventHandler('esx_mechanicjob:getStockItem', function(itemName, count)
 
 				-- can the player carry the said amount of x item?
 				if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
+					print("nemeres?")
 					TriggerClientEvent('esx:showNotification', xPlayer.source, _U('player_cannot_hold'))
 				else
 					inventory.removeItem(itemName, count)
@@ -322,6 +326,7 @@ AddEventHandler('esx_mechanicjob:getStockItem', function(itemName, count)
 					TriggerClientEvent('esx:showNotification', xPlayer.source, _U('have_withdrawn', count, item.label))
 				end
 			else
+				print("eo greske")
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_quantity'))
 			end
 		end)

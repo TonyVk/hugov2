@@ -59,6 +59,11 @@ Citizen.CreateThread(function()
 
 	RegisterNUICallback('menu_prazan', function(data, cb)
 		ESX.ShowNotification("Menu je prazan!")
+		local menu = ESX.UI.Menu.GetOpened(MenuType, data._namespace, data._name)
+		
+		if menu.cancel ~= nil then
+			menu.cancel(data, menu)
+		end
 		cb('OK')
 	end)
 
@@ -176,51 +181,84 @@ Citizen.CreateThread(function()
 	end, false)
 	RegisterKeyMapping('+menuback', 'Menu back', 'keyboard', 'BACK')
 
+	local DrzimUp = false
 	RegisterCommand('+menutop', function()
-		if (GetGameTimer() - GUI.Time) > 200 then
-			SendNUIMessage({
-				action  = 'controlPressed',
-				control = 'TOP'
-			})
+		DrzimUp = true
+		while DrzimUp do
+			if (GetGameTimer() - GUI.Time) > 200 then
+				SendNUIMessage({
+					action  = 'controlPressed',
+					control = 'TOP'
+				})
 
-			GUI.Time = GetGameTimer()
+				GUI.Time = GetGameTimer()
+			end
+			Wait(1)
 		end
+	end, false)
+	RegisterCommand('-menutop', function()
+		DrzimUp = false
 	end, false)
 	RegisterKeyMapping('+menutop', 'Menu top', 'keyboard', 'UP')
 
+	local DrzimDown = false
 	RegisterCommand('+menudown', function()
-		if (GetGameTimer() - GUI.Time) > 200 then
-			SendNUIMessage({
-				action  = 'controlPressed',
-				control = 'DOWN'
-			})
+		DrzimDown = true
+		while DrzimDown do
+			if (GetGameTimer() - GUI.Time) > 200 then
+				SendNUIMessage({
+					action  = 'controlPressed',
+					control = 'DOWN'
+				})
 
-			GUI.Time = GetGameTimer()
+				GUI.Time = GetGameTimer()
+			end
+			Wait(1)
 		end
+	end, false)
+
+	RegisterCommand('-menudown', function()
+		DrzimDown = false
 	end, false)
 	RegisterKeyMapping('+menudown', 'Menu down', 'keyboard', 'DOWN')
 
+	local DrzimLeft = false
 	RegisterCommand('+menuleft', function()
-		if (GetGameTimer() - GUI.Time) > 150 then
-			SendNUIMessage({
-				action  = 'controlPressed',
-				control = 'LEFT'
-			})
+		DrzimLeft = true
+		while DrzimLeft do
+			if (GetGameTimer() - GUI.Time) > 150 then
+				SendNUIMessage({
+					action  = 'controlPressed',
+					control = 'LEFT'
+				})
 
-			GUI.Time = GetGameTimer()
+				GUI.Time = GetGameTimer()
+			end
+			Wait(1)
 		end
+	end, false)
+	RegisterCommand('-menuleft', function()
+		DrzimLeft = false
 	end, false)
 	RegisterKeyMapping('+menuleft', 'Menu left', 'keyboard', 'LEFT')
 
+	local DrzimRight = false
 	RegisterCommand('+menuright', function()
-		if (GetGameTimer() - GUI.Time) > 150 then
-			SendNUIMessage({
-				action  = 'controlPressed',
-				control = 'RIGHT'
-			})
+		DrzimRight = true
+		while DrzimRight do
+			if (GetGameTimer() - GUI.Time) > 150 then
+				SendNUIMessage({
+					action  = 'controlPressed',
+					control = 'RIGHT'
+				})
 
-			GUI.Time = GetGameTimer()
+				GUI.Time = GetGameTimer()
+			end
+			Wait(1)
 		end
+	end, false)
+	RegisterCommand('-menuright', function()
+		DrzimRight = false
 	end, false)
 	RegisterKeyMapping('+menuright', 'Menu right', 'keyboard', 'RIGHT')
 end)

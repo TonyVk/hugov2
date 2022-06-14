@@ -33,18 +33,16 @@ Config.PoliceStations = {
 		},
 
 		Cloakrooms = {
-			vector3(452.6, -992.8, 30.6),
-			vector3(1662.814, -25.306, 172.551)
+			vector3(452.6, -992.8, 30.6)
 		},
 
 		Armories = {
-			vector3(451.7, -980.1, 30.6),
-			vector3(1663.998, -49.942, 168.552)
+			vector3(451.7, -980.1, 30.6)
 		},
 
 		Vehicles = {
 			{
-				Spawner = vector3(454.6, -1017.4, 28.4), vector3(1670.185, -59.915, 173.533),
+				Spawner = vector3(454.6, -1017.4, 28.4),
 				InsideShop = vector3(228.5, -993.5, -99.5),
 				SpawnPoints = {
 					{ coords = vector3(438.4, -1018.3, 27.7), heading = 90.0, radius = 6.0 },
@@ -53,7 +51,6 @@ Config.PoliceStations = {
 					{ coords = vector3(450.9, -1016.5, 28.1), heading = 90.0, radius = 6.0 },
 				}
 			},
-
 			{
 				Spawner = vector3(473.3, -1018.8, 28.0),
 				InsideShop = vector3(228.5, -993.5, -99.0),
@@ -315,7 +312,7 @@ Config.AuthorizedHelicopters = {
 
 Config.Uniforms = {
 	recruit_wear = {  -- Pocetnici
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 59,  ['tshirt_2'] = 1,
 			['torso_1'] = 55,   ['torso_2'] = 0,
@@ -384,7 +381,7 @@ Config.Uniforms = {
 		}
 	},
 	officer_wear = {  -- Saobracajci
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 58,  ['tshirt_2'] = 0,
 			['torso_1'] = 55,   ['torso_2'] = 0,
@@ -453,7 +450,7 @@ Config.Uniforms = {
 		}
 	},
 	sergeant_wear = {  -- Od policajca do visi narednik
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 122,  ['tshirt_2'] = 0,
 			['torso_1'] = 55,   ['torso_2'] = 0,
@@ -522,7 +519,7 @@ Config.Uniforms = {
 		}
 	},
 	intendent_wear = {  -- i opet je paksu
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 122,  ['tshirt_2'] = 0,
 			['torso_1'] = 55,   ['torso_2'] = 0,
@@ -593,7 +590,7 @@ Config.Uniforms = {
 		}
 	},
 	lieutenant_wear = { -- hehe, mali easter egg
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 130,  ['tshirt_2'] = 0,
 			['torso_1'] = 139,   ['torso_2'] = 3,
@@ -664,7 +661,7 @@ Config.Uniforms = {
 		}
 	},
 	interventna_wear = {
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 15,  ['tshirt_2'] = 0,
 			['torso_1'] = 49,   ['torso_2'] = 2,
@@ -735,7 +732,7 @@ Config.Uniforms = {
 		}
 	},
 	granicna_wear = {
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 42,  ['tshirt_2'] = 0,
 			['torso_1'] = 98,   ['torso_2'] = 0,
@@ -806,7 +803,7 @@ Config.Uniforms = {
 		}
 	},
 	chef_wear = {
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 130,  ['tshirt_2'] = 0,
 			['torso_1'] = 221,   ['torso_2'] = 6,
@@ -877,7 +874,7 @@ Config.Uniforms = {
 		}
 	},
 	boss_wear = { -- ISMIR
-		EUP = false,
+		EUP = true,
 		male = {
 			['tshirt_1'] = 21,  ['tshirt_2'] = 4,
 			['torso_1'] = 142,   ['torso_2'] = 0,

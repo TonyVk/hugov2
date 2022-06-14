@@ -22,7 +22,12 @@
 
 	ESX_MENU.open = function(namespace, name, data) {
 		if(data.elements.length == 0){
-			$.post('http://' + ESX_MENU.ResourceName + '/menu_prazan');
+			//$.post('http://' + ESX_MENU.ResourceName + '/menu_prazan');
+			ESX_MENU.close(namespace, name);
+			$.post('http://' + ESX_MENU.ResourceName + '/menu_prazan', JSON.stringify({
+				_namespace: namespace,
+				_name     : name
+			}));
 			return 1;
 		}
 
