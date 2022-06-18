@@ -993,22 +993,6 @@ ESX.RegisterServerCallback('minute:DohvatiSate', function(source, cb)
 	end)
 end)
 
-ESX.RegisterServerCallback("esx_marker:fetchUserRank", function(source, cb)
-    local player = ESX.GetPlayerFromId(source)
-
-    if player ~= nil then
-        local playerGroup = player.getGroup()
-
-        if playerGroup ~= nil then 
-            cb(playerGroup)
-        else
-            cb("user")
-        end
-    else
-        cb("user")
-    end
-end)
-
 function getIdentity(source)
 	local identifier = GetPlayerIdentifiers(source)[1]
 	local result = MySQL.Sync.fetchAll("SELECT * FROM users WHERE identifier = @identifier", {['@identifier'] = identifier})

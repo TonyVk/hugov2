@@ -231,6 +231,48 @@ RegisterCommand('giveaccountmoney', function(source, args, rawCommand)
 	end
 end, false)
 
+--esx_marker
+RegisterCommand("tpm", function(source)
+	if duznost then
+		TeleportToWaypoint()
+		TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), "/tpm")
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end)
+--esx_marker
+TeleportToWaypoint = function()
+    ESX.TriggerServerCallback("esx_marker:fetchUserRank", function(playerRank)
+        if playerRank == "admin" or playerRank == "superadmin" or playerRank == "mod" then
+            local WaypointHandle = GetFirstBlipInfoId(8)
+
+            if DoesBlipExist(WaypointHandle) then
+                local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
+
+                for height = 1, 1000 do
+                    SetPedCoordsKeepVehicle(PlayerPedId(), waypointCoords["x"], waypointCoords["y"], height + 0.0)
+
+                    local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], height + 0.0)
+
+                    if foundGround then
+                        SetPedCoordsKeepVehicle(PlayerPedId(), waypointCoords["x"], waypointCoords["y"], height + 0.0)
+
+                        break
+                    end
+
+                    Citizen.Wait(5)
+                end
+
+                ESX.ShowNotification("Teleportiran.")
+            else
+                ESX.ShowNotification("Stavite vas marker prvo.")
+            end
+        else
+            ESX.ShowNotification("Nemate ovlasti za ovu komandu.")
+        end
+    end)
+end	
+
 RegisterCommand('+adminmenu2', function()
     ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then

@@ -1,5 +1,3 @@
-local PermLvl = 0
-
 TriggerEvent('es:addGroupCommand', 'tp', 'admin', function(source, args, user)
 	local x = tonumber(args[1])
 	local y = tonumber(args[2])
@@ -122,11 +120,6 @@ TriggerEvent('es:addGroupCommand', 'spawnobject', 'admin', function(source, args
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Nemate pristup komandi' } })
 end, {help = _U('spawn_object'), params = {{name = "name"}}})
-
-RegisterNetEvent('VratiPermLevel')
-AddEventHandler('VratiPermLevel', function(perm)
-	PermLvl = perm
-end)
 
 RegisterNetEvent('amenu:SetMoney')
 AddEventHandler('amenu:SetMoney', function(igr, typ, br)
