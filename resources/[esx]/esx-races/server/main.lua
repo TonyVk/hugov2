@@ -43,20 +43,6 @@ ESX.RegisterServerCallback('DajMiPermLevelCall', function(source, cb)
     end)
 end)
 
-RegisterNetEvent("DajMiPermLevel")
-AddEventHandler('DajMiPermLevel', function(id)
-	if id == 0 then
-		TriggerEvent('VratiPermLevel', 69)
-	else
-		local xPlayer = ESX.GetPlayerFromId(id)
-		MySQL.Async.fetchScalar('SELECT permission_level FROM users WHERE ID = @id', {
-			['@id'] = xPlayer.getID()
-		}, function(result)
-			TriggerEvent('VratiPermLevel', result)
-		end)
-	end
-end)
-
 RegisterNetEvent("utrke:BucketajGa")
 AddEventHandler('utrke:BucketajGa', function(br)
 	local src = source
@@ -65,16 +51,6 @@ AddEventHandler('utrke:BucketajGa', function(br)
 	else
 		SetPlayerRoutingBucket(src, 0)
 	end
-end)
-
-RegisterNetEvent("DajMiPermLevel2")
-AddEventHandler('DajMiPermLevel2', function(id)
-	local xPlayer = ESX.GetPlayerFromId(id)
-	MySQL.Async.fetchScalar('SELECT permission_level FROM users WHERE ID = @id', {
-		['@id'] = xPlayer.getID()
-	}, function(result)
-		TriggerEvent('VratiPermLevel2', result)
-	end)
 end)
 
 ESX.RegisterServerCallback('esx-races:DohvatiPermisiju', function(source, cb)

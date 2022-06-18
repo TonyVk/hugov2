@@ -128,73 +128,61 @@ AddEventHandler('VratiPermLevel', function(perm)
 	PermLvl = perm
 end)
 
-TriggerEvent('es:addGroupCommand', 'setmoney', 'admin', function(source, args, user)
-	local _source = source
-	TriggerEvent("DajMiPermLevel", _source)
-	Wait(600)
-	if PermLvl == 69 then
-		local target = tonumber(args[1])
-		local money_type = args[2]
-		local money_amount = tonumber(args[3])
+RegisterNetEvent('amenu:SetMoney')
+AddEventHandler('amenu:SetMoney', function(igr, typ, br)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() >= 69 then
+		local target = igr
+		local money_type = typ
+		local money_amount = br
 		
-		local xPlayer = ESX.GetPlayerFromId(target)
+		local yPlayer = ESX.GetPlayerFromId(target)
 
-		if target and money_type and money_amount and xPlayer ~= nil then
+		if target and money_type and money_amount and yPlayer ~= nil then
 			if money_type == 'cash' then
-				xPlayer.setMoney(money_amount)
+				yPlayer.setMoney(money_amount)
 			elseif money_type == 'bank' then
-				xPlayer.setAccountMoney('bank', money_amount)
+				yPlayer.setAccountMoney('bank', money_amount)
 			elseif money_type == 'black' then
-				xPlayer.setAccountMoney('black_money', money_amount)
+				yPlayer.setAccountMoney('black_money', money_amount)
 			else
-				TriggerClientEvent('chatMessage', _source, "SYSTEM", {255, 0, 0}, "^2" .. money_type .. " ^0 nije vazeci tip novca!")
+				TriggerClientEvent('chatMessage', src, "SYSTEM", {255, 0, 0}, "^2" .. money_type .. " ^0 nije vazeci tip novca!")
 				return
 			end
 		else
-			TriggerClientEvent('chatMessage', _source, "SYSTEM", {255, 0, 0}, "Krivi argumenti.")
+			TriggerClientEvent('chatMessage', src, "SYSTEM", {255, 0, 0}, "Krivi argumenti.")
 			return
 		end
 		
-		print('es_extended: ' .. GetPlayerName(source) .. ' just set $' .. money_amount .. ' (' .. money_type .. ') to ' .. xPlayer.name)
+		print('es_extended: ' .. GetPlayerName(source) .. ' just set $' .. money_amount .. ' (' .. money_type .. ') to ' .. yPlayer.name)
 		
-		if xPlayer.source ~= _source then
-			TriggerClientEvent('esx:showNotification', xPlayer.source, _U('money_set', money_amount, money_type))
+		if yPlayer.source ~= src then
+			TriggerClientEvent('esx:showNotification', yPlayer.source, _U('money_set', money_amount, money_type))
 		end
-	else
-		TriggerClientEvent('chat:addMessage', _source, {
-			args = {"^1SYSTEM", "Vlasnik potreban za ovo!"}
-		})
 	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Nemate pristup komandi' } })
-end, {help = _U('setmoney'), params = {{name = "id", help = _U('id_param')}, {name = "money type", help = _U('money_type')}, {name = "amount", help = _U('money_amount')}}})
+end)
 
-TriggerEvent('es:addGroupCommand', 'giveaccountmoney', 'admin', function(source, args, user)
-	local _source = source
-	TriggerEvent("DajMiPermLevel", _source)
-	Wait(600)
-	if PermLvl == 69 then
-		local xPlayer = ESX.GetPlayerFromId(args[1])
-		local account = args[2]
-		local amount  = tonumber(args[3])
+RegisterNetEvent('amenu:AccountMoney')
+AddEventHandler('amenu:AccountMoney', function(igr, acc, br)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() >= 69 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		local account = acc
+		local amount  = br
 
 		if amount ~= nil then
-			if xPlayer.getAccount(account) ~= nil then
-				xPlayer.addAccountMoney(account, amount)
+			if yPlayer.getAccount(account) ~= nil then
+				yPlayer.addAccountMoney(account, amount)
 			else
-				TriggerClientEvent('esx:showNotification', _source, _U('invalid_account'))
+				TriggerClientEvent('esx:showNotification', src, _U('invalid_account'))
 			end
 		else
-			TriggerClientEvent('esx:showNotification', _source, _U('amount_invalid'))
+			TriggerClientEvent('esx:showNotification', src, _U('amount_invalid'))
 		end
-	else
-		TriggerClientEvent('chat:addMessage', _source, {
-			args = {"^1SYSTEM", "Vlasnik potreban za ovo!"}
-		})
 	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Nemate pristup komandi' } })
-end, {help = _U('giveaccountmoney'), params = {{name = "id", help = _U('id_param')}, {name = "account", help = _U('account')}, {name = "amount", help = _U('money_amount')}}})
+end)
 
 TriggerEvent('es:addGroupCommand', 'giveitem', 'admin', function(source, args, user)
 	local _source = source

@@ -2,7 +2,6 @@ TriggerEvent("es:addGroup", "mod", "user", function(group) end)
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-local PermLvl = 0
 local Mutan = {}
 -- Modify if you want, btw the _admin_ needs to be able to target the group and it will work
 local groupsRequired = {
@@ -136,9 +135,8 @@ end)
 RegisterServerEvent('es_admin:all')
 AddEventHandler('es_admin:all', function(type)
 	local Source = source
-	TriggerEvent("DajMiPermLevel", Source)
-	Wait(600)
-	if PermLvl == 69 then
+	local xPlayer = ESX.GetPlayerFromId(Source)
+	if xPlayer.getPerm() >= 69 then
 		TriggerEvent('es:getPlayerFromId', source, function(user)
 			TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
 				if available or user.getGroup() == "superadmin" then
@@ -213,111 +211,298 @@ AddEventHandler('es:playerLoaded', function(Source, user)
 	TriggerClientEvent('es_admin:setGroup', Source, user.getGroup())
 end)
 
-RegisterNetEvent('VratiPermLevel')
-AddEventHandler('VratiPermLevel', function(perm)
-	PermLvl = perm
+RegisterNetEvent('amenu:Kick')
+AddEventHandler('amenu:Kick', function(igr, reas)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() > 0 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			DropPlayer(igr, reas)
+			TriggerClientEvent('chat:addMessage', src, {
+				args = {"^1SYSTEM", "Izbacili ste igraca ^2" .. GetPlayerName(igr) .. "^0 sa servera (^2" .. reas .. "^0)"}
+			})
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:Announce')
+AddEventHandler('amenu:Announce', function(args)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() > 0 then
+		TriggerClientEvent('chat:addMessage', -1, {
+			template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 0, 0, 0.6); border-radius: 3px;"><i class="fas fa-bullhorn"></i> {0}:<br> {1}</div>',
+			args = {"OBAVIJEST", table.concat(args, " ")}
+		})
+	end
+end)
+
+local frozen = {}
+RegisterNetEvent('amenu:Freeze')
+AddEventHandler('amenu:Freeze', function(player)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() > 0 then
+		local yPlayer = ESX.GetPlayerFromId(player)
+		if yPlayer then
+			if(frozen[player])then
+				frozen[player] = false
+			else
+				frozen[player] = true
+			end
+
+			TriggerClientEvent('es_admin:freezePlayer', player, frozen[player])
+
+			local state = "odmrznut"
+			if(frozen[player])then
+				state = "zamrznut"
+			end
+
+			TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Vi ste " .. state .. " od admina ^2" .. GetPlayerName(source)} })
+			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je " .. state} })
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:Bring')
+AddEventHandler('amenu:Bring', function(igr)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() > 0 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			local kord = GetEntityCoords(GetPlayerPed(src))
+			TriggerClientEvent('es_admin:teleportUser', igr, kord.x, kord.y, kord.z)
+
+			TriggerClientEvent('chat:addMessage', igr, { args = {"^1SYSTEM", "Portani ste do admina ^2" .. GetPlayerName(src)} })
+			TriggerClientEvent('chat:addMessage', src, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(igr) .. "^0 je portan do vas"} })
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:Slap')
+AddEventHandler('amenu:Slap', function(igr)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() > 0 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			TriggerClientEvent('es_admin:slap', igr)
+			TriggerClientEvent('chat:addMessage', igr, { args = {"^1SYSTEM", "Slapani ste od ^2" .. GetPlayerName(src)} })
+			TriggerClientEvent('chat:addMessage', src, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(igr) .. "^0 je slapan"} })
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:Goto')
+AddEventHandler('amenu:Goto', function(igr)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() > 0 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			local kord = GetEntityCoords(GetPlayerPed(igr))
+			TriggerClientEvent('es_admin:teleportUser', src, kord.x, kord.y, kord.z)
+			--TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Do vas se portao admin ^2" .. GetPlayerName(source)} })
+			TriggerClientEvent('chat:addMessage', src, { args = {"^1SYSTEM", "Portani ste do igraca ^2" .. GetPlayerName(igr) .. ""} })
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:Slay')
+AddEventHandler('amenu:Slay', function(igr)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() > 0 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			TriggerClientEvent('es_admin:kill', igr)
+			TriggerClientEvent('chat:addMessage', igr, { args = {"^1SYSTEM", "Ubijeni ste od ^2" .. GetPlayerName(src)} })
+			TriggerClientEvent('chat:addMessage', src, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(igr) .. "^0 je ubijen."} })
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:Crash')
+AddEventHandler('amenu:Crash', function(igr)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() >= 69 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			TriggerClientEvent('es_admin:crash', igr)
+			TriggerClientEvent('chat:addMessage', src, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(igr) .. "^0 je crashan."} })
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:SetAdmin')
+AddEventHandler('amenu:SetAdmin', function(igr, lvl)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() >= 69 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			TriggerEvent("es:setPlayerData", igr, "permission_level", lvl, function(response, success)
+				RconPrint(response)
+	
+				TriggerClientEvent('es:setPlayerDecorator', igr, 'rank', lvl, true)
+				TriggerClientEvent('chat:addMessage', igr, {
+					args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(igr) .. "^0 je postavljen na ^2 " .. lvl}
+				})
+				yPlayer.showNotification("Postavljen vam je admin level "..lvl.."!")
+			end)
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
+end)
+
+RegisterNetEvent('amenu:SetGroup')
+AddEventHandler('amenu:SetGroup', function(igr, gr)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if xPlayer.getPerm() >= 69 then
+		local yPlayer = ESX.GetPlayerFromId(igr)
+		if yPlayer then
+			TriggerEvent("es:getAllGroups", function(groups)
+				if(groups[gr])then
+					TriggerEvent("es:getPlayerFromId", igr, function(user)
+						ExecuteCommand('remove_principal identifier.' .. user.getIdentifier() .. " group." .. user.getGroup())
+
+						TriggerEvent("es:setPlayerData", igr, "group", gr, function(response, success)
+							TriggerClientEvent('es:setPlayerDecorator', igr, 'group', gr, true)
+							TriggerClientEvent('chat:addMessage', src, {
+								args = {"^1KONZOLA", "Grupa igracu ^2^*" .. GetPlayerName(igr) .. "^r^0 je postavljena na ^2^*" .. gr}
+							})
+
+							ExecuteCommand('add_principal identifier.' .. user.getIdentifier() .. " group." .. user.getGroup())
+						end)
+					end)
+				else
+					RconPrint("Ova grupa ne postoji.\n")
+				end
+			end)
+		else
+			xPlayer.showNotification("Igrac nije online!")
+		end
+	end
 end)
 
 RegisterServerEvent('es_admin:set')
 AddEventHandler('es_admin:set', function(t, USER, GROUP)
 	local Source = source
-	TriggerEvent("DajMiPermLevel", Source)
-	Wait(600)
-	if PermLvl == 69 then
-	TriggerEvent('es:getPlayerFromId', Source, function(user)
-		TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
-			if available then
-			if t == "group" then
-				if(GetPlayerName(USER) == nil)then
-					TriggerClientEvent('chat:addMessage', source, {
-						args = {"^1SYSTEM", "Igrac nije pronadjen"}
-					})
-				else
-					TriggerEvent("es:getAllGroups", function(groups)
-						if(groups[GROUP])then
-							TriggerEvent("es:setPlayerData", USER, "group", GROUP, function(response, success)
-								TriggerClientEvent('es_admin:setGroup', USER, GROUP)
-								TriggerClientEvent('chat:addMessage', USER, {
-									args = {"^1KONZOLA", "Grupa igracu ^2^*" .. GetPlayerName(tonumber(USER)) .. "^r^0 je postavljena na ^2^*" .. GROUP}
-								})
-							end)
-						else
-							TriggerClientEvent('chat:addMessage', Source, {
-								args = {"^1SYSTEM", "Grupa nije pronadjena"}
-							})
-						end
-					end)
-				end
-			elseif t == "level" then
-				if(GetPlayerName(USER) == nil)then
-					TriggerClientEvent('chat:addMessage', Source, {
-						args = {"^1SYSTEM", "Igrac nije pronadjen"}
-					})
-				else
-					GROUP = tonumber(GROUP)
-					if(GROUP ~= nil and GROUP > -1)then
-						TriggerEvent("es:setPlayerData", USER, "permission_level", GROUP, function(response, success)
-							if(true)then
-								TriggerClientEvent('chat:addMessage', USER, {
-									args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavljen na ^2 " .. tostring(GROUP)}
+	local xPlayer = ESX.GetPlayerFromId(Source)
+	if xPlayer.getPerm() >= 69 then
+		TriggerEvent('es:getPlayerFromId', Source, function(user)
+			TriggerEvent('es:canGroupTarget', user.getGroup(), "admin", function(available)
+				if available then
+				if t == "group" then
+					if(GetPlayerName(USER) == nil)then
+						TriggerClientEvent('chat:addMessage', source, {
+							args = {"^1SYSTEM", "Igrac nije pronadjen"}
+						})
+					else
+						TriggerEvent("es:getAllGroups", function(groups)
+							if(groups[GROUP])then
+								TriggerEvent("es:setPlayerData", USER, "group", GROUP, function(response, success)
+									TriggerClientEvent('es_admin:setGroup', USER, GROUP)
+									TriggerClientEvent('chat:addMessage', USER, {
+										args = {"^1KONZOLA", "Grupa igracu ^2^*" .. GetPlayerName(tonumber(USER)) .. "^r^0 je postavljena na ^2^*" .. GROUP}
+									})
+								end)
+							else
+								TriggerClientEvent('chat:addMessage', Source, {
+									args = {"^1SYSTEM", "Grupa nije pronadjena"}
 								})
 							end
 						end)
-						
-						TriggerClientEvent('es_admin:setPerm', USER)
+					end
+				elseif t == "level" then
+					if(GetPlayerName(USER) == nil)then
+						TriggerClientEvent('chat:addMessage', Source, {
+							args = {"^1SYSTEM", "Igrac nije pronadjen"}
+						})
+					else
+						GROUP = tonumber(GROUP)
+						if(GROUP ~= nil and GROUP > -1)then
+							TriggerEvent("es:setPlayerData", USER, "permission_level", GROUP, function(response, success)
+								if(true)then
+									TriggerClientEvent('chat:addMessage', USER, {
+										args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavljen na ^2 " .. tostring(GROUP)}
+									})
+								end
+							end)
+							
+							TriggerClientEvent('es_admin:setPerm', USER)
 
+							TriggerClientEvent('chat:addMessage', Source, {
+								args = {"^1SYSTEM", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavljen na ^2 " .. tostring(GROUP)}
+							})
+						else
+							TriggerClientEvent('chat:addMessage', Source, {
+								args = {"^1SYSTEM", "Krivi broj!"}
+							})
+						end
+					end
+				elseif t == "money" then
+					if(GetPlayerName(USER) == nil)then
 						TriggerClientEvent('chat:addMessage', Source, {
-							args = {"^1SYSTEM", "Level permisije igracu ^2" .. GetPlayerName(tonumber(USER)) .. "^0 je postavljen na ^2 " .. tostring(GROUP)}
+							args = {"^1SYSTEM", "Igrac nije pronadjen"}
 						})
 					else
+						GROUP = tonumber(GROUP)
+						if(GROUP ~= nil and GROUP > -1)then
+							TriggerEvent('es:getPlayerFromId', USER, function(target)
+								target.setMoney(GROUP)
+							end)
+						else
+							TriggerClientEvent('chat:addMessage', Source, {
+								args = {"^1SYSTEM", "Krivi broj!"}
+							})
+						end
+					end
+				elseif t == "bank" then
+					if(GetPlayerName(USER) == nil)then
 						TriggerClientEvent('chat:addMessage', Source, {
-							args = {"^1SYSTEM", "Krivi broj!"}
+							args = {"^1SYSTEM", "Igrac nije pronadjen"}
 						})
+					else
+						GROUP = tonumber(GROUP)
+						if(GROUP ~= nil and GROUP > -1)then
+							TriggerEvent('es:getPlayerFromId', USER, function(target)
+								target.setBankBalance(GROUP)
+								TriggerEvent("bank:balance", USER)
+							end)
+						else
+							TriggerClientEvent('chat:addMessage', Source, {
+								args = {"^1SYSTEM", "Krivi broj!"}
+							})
+						end
 					end
 				end
-			elseif t == "money" then
-				if(GetPlayerName(USER) == nil)then
-					TriggerClientEvent('chat:addMessage', Source, {
-						args = {"^1SYSTEM", "Igrac nije pronadjen"}
-					})
 				else
-					GROUP = tonumber(GROUP)
-					if(GROUP ~= nil and GROUP > -1)then
-						TriggerEvent('es:getPlayerFromId', USER, function(target)
-							target.setMoney(GROUP)
-						end)
-					else
-						TriggerClientEvent('chat:addMessage', Source, {
-							args = {"^1SYSTEM", "Krivi broj!"}
-						})
-					end
-				end
-			elseif t == "bank" then
-				if(GetPlayerName(USER) == nil)then
 					TriggerClientEvent('chat:addMessage', Source, {
-						args = {"^1SYSTEM", "Igrac nije pronadjen"}
+						args = {"^1SYSTEM", "Superadmin potreban za ovo!"}
 					})
-				else
-					GROUP = tonumber(GROUP)
-					if(GROUP ~= nil and GROUP > -1)then
-						TriggerEvent('es:getPlayerFromId', USER, function(target)
-							target.setBankBalance(GROUP)
-							TriggerEvent("bank:balance", USER)
-						end)
-					else
-						TriggerClientEvent('chat:addMessage', Source, {
-							args = {"^1SYSTEM", "Krivi broj!"}
-						})
-					end
 				end
-			end
-			else
-				TriggerClientEvent('chat:addMessage', Source, {
-					args = {"^1SYSTEM", "Superadmin potreban za ovo!"}
-				})
-			end
+			end)
 		end)
-	end)
 	else
 		TriggerClientEvent('chat:addMessage', Source, {
 			args = {"^1SYSTEM", "Vlasnik potreban za ovo!"}
@@ -325,118 +510,51 @@ AddEventHandler('es_admin:set', function(t, USER, GROUP)
 	end
 end)
 
-RegisterCommand('setadmin', function(source, args, raw)
-	local player = tonumber(args[1])
-	local level = tonumber(args[2])
-	if args[1] then
-		if (player and GetPlayerName(player)) then
-			if level then
-				local Source = source
-				TriggerEvent("DajMiPermLevel", Source)
-				Wait(100)
-				if PermLvl == 69 then
-					TriggerEvent("es:setPlayerData", tonumber(args[1]), "permission_level", tonumber(args[2]), function(response, success)
-						RconPrint(response)
-			
-						TriggerClientEvent('es:setPlayerDecorator', tonumber(args[1]), 'rank', tonumber(args[2]), true)
-						TriggerClientEvent('chat:addMessage', -1, {
-							args = {"^1KONZOLA", "Level permisije igracu ^2" .. GetPlayerName(tonumber(args[1])) .. "^0 je postavljen na ^2 " .. args[2]}
-						})
-					end)
-				end
-			else
-				RconPrint("Krivi broj!\n")
-			end
-		else
-			RconPrint("Igrac nije u igri\n")
-		end
-	else
-		RconPrint("Koristi: setadmin [user-id] [permission-level]\n")
-	end
-end, true)
+-- RegisterCommand('giverole', function(source, args, raw)
+-- 	local player = tonumber(args[1])
+-- 	local role = table.concat(args, " ", 2)
+-- 	if args[1] then
+-- 		if (player and GetPlayerName(player)) then
+-- 			if args[2] then
+-- 				TriggerEvent("es:getPlayerFromId", player, function(user)
+-- 					user.giveRole(role)
+-- 					TriggerClientEvent('chat:addMessage', user.get('source'), {
+-- 						args = {"^1SYSTEM", "Dobili ste ulogu: ^2" .. role}
+-- 					})
+-- 				end)
+-- 			else
+-- 				RconPrint("Koristi: giverole [user-id] [uloga]\n")
+-- 			end
+-- 		else
+-- 			RconPrint("Igrac nije u igri\n")
+-- 		end
+-- 	else
+-- 		RconPrint("Koristi: giverole [user-id] [uloga]\n")
+-- 	end
+-- end, true)
 
-RegisterCommand('setgroup', function(source, args, raw)
-	local player = tonumber(args[1])
-	local group = args[2]
-	if args[1] then
-		if (player and GetPlayerName(player)) then
-			TriggerEvent("es:getAllGroups", function(groups)
-
-				if(groups[args[2]])then
-					local Source = source
-					TriggerEvent("DajMiPermLevel", Source)
-					Wait(100)
-					if PermLvl == 69 then
-						TriggerEvent("es:getPlayerFromId", player, function(user)
-							ExecuteCommand('remove_principal identifier.' .. user.getIdentifier() .. " group." .. user.getGroup())
-
-							TriggerEvent("es:setPlayerData", player, "group", args[2], function(response, success)
-								TriggerClientEvent('es:setPlayerDecorator', player, 'group', tonumber(group), true)
-								TriggerClientEvent('chat:addMessage', -1, {
-									args = {"^1KONZOLA", "Grupa igracu ^2^*" .. GetPlayerName(player) .. "^r^0 je postavljena na ^2^*" .. group}
-								})
-
-								ExecuteCommand('add_principal identifier.' .. user.getIdentifier() .. " group." .. user.getGroup())
-							end)
-						end)
-					end
-				else
-					RconPrint("Ova grupa ne postoji.\n")
-				end
-			end)
-		else
-			RconPrint("Igrac nije u igri\n")
-		end
-	else
-		RconPrint("Koristi: setgroup [user-id] [group]\n")
-	end
-end, true)
-
-RegisterCommand('giverole', function(source, args, raw)
-	local player = tonumber(args[1])
-	local role = table.concat(args, " ", 2)
-	if args[1] then
-		if (player and GetPlayerName(player)) then
-			if args[2] then
-				TriggerEvent("es:getPlayerFromId", player, function(user)
-					user.giveRole(role)
-					TriggerClientEvent('chat:addMessage', user.get('source'), {
-						args = {"^1SYSTEM", "Dobili ste ulogu: ^2" .. role}
-					})
-				end)
-			else
-				RconPrint("Koristi: giverole [user-id] [uloga]\n")
-			end
-		else
-			RconPrint("Igrac nije u igri\n")
-		end
-	else
-		RconPrint("Koristi: giverole [user-id] [uloga]\n")
-	end
-end, true)
-
-RegisterCommand('removerole', function(source, args, raw)
-	local player = tonumber(args[1])
-	local role = table.concat(args, " ", 2)
-	if args[1] then
-		if (player and GetPlayerName(player)) then
-			if args[2] then
-				TriggerEvent("es:getPlayerFromId", tonumber(args[1]), function(user)
-					user.removeRole(role)
-					TriggerClientEvent('chat:addMessage', user.get('source'), {
-						args = {"^1SYSTEM", "Obrisani ste iz uloge: ^2" .. role}
-					})
-				end)
-			else
-				RconPrint("Koristi: removerole [user-id] [uloga]\n")
-			end
-		else
-			RconPrint("Igrac nije u igri\n")
-		end
-	else
-		RconPrint("Koristi: removerole [user-id] [uloga]\n")
-	end
-end, true)
+-- RegisterCommand('removerole', function(source, args, raw)
+-- 	local player = tonumber(args[1])
+-- 	local role = table.concat(args, " ", 2)
+-- 	if args[1] then
+-- 		if (player and GetPlayerName(player)) then
+-- 			if args[2] then
+-- 				TriggerEvent("es:getPlayerFromId", tonumber(args[1]), function(user)
+-- 					user.removeRole(role)
+-- 					TriggerClientEvent('chat:addMessage', user.get('source'), {
+-- 						args = {"^1SYSTEM", "Obrisani ste iz uloge: ^2" .. role}
+-- 					})
+-- 				end)
+-- 			else
+-- 				RconPrint("Koristi: removerole [user-id] [uloga]\n")
+-- 			end
+-- 		else
+-- 			RconPrint("Igrac nije u igri\n")
+-- 		end
+-- 	else
+-- 		RconPrint("Koristi: removerole [user-id] [uloga]\n")
+-- 	end
+-- end, true)
 
 -- Default commands
 TriggerEvent('es:addCommand', 'admin', function(source, args, user)
@@ -501,214 +619,6 @@ TriggerEvent('es:addGroupCommand', 'clean', "admin", function(source, args, user
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
 end, {help = "Ciscenje vozila"})
-
--- Kicking
-TriggerEvent('es:addGroupCommand', 'kick', "mod", function(source, args, user)
-	if args[1] then
-		if(tonumber(args[1]) and GetPlayerName(tonumber(args[1])))then
-			local player = tonumber(args[1])
-
-			-- User permission check
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-
-				local reason = args
-				table.remove(reason, 1)
-				if(#reason == 0)then
-					reason = "Kickan: Izbaceni ste sa servera"
-				else
-					reason = "Kickan: " .. table.concat(reason, " ")
-				end
-
-				TriggerClientEvent('chat:addMessage', -1, {
-					args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je izbacen sa servera(^2" .. reason .. "^0)"}
-				})
-				DropPlayer(player, reason)
-			end)
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-		end
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Kickanje igraca sa razlogom ili bez navedenog razloga", params = {{name = "userid", help = "ID igraca"}, {name = "reason", help = "Razlog zasto ste kickali igraca"}}})
-
--- Announcing
-TriggerEvent('es:addGroupCommand', 'announce', "admin", function(source, args, user)
-	if args[1] ~= nil then
-	TriggerClientEvent('chat:addMessage', -1, {
-        template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 0, 0, 0.6); border-radius: 3px;"><i class="fas fa-bullhorn"></i> {0}:<br> {1}</div>',
-        args = {"OBAVIJEST", table.concat(args, " ")}
-    })
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", " /announce [Poruka]"} })
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Objavite nesta cijelome serveru", params = {{name = "announcement", help = "Poruka koju ocete objaviti"}}})
-
--- Freezing
-local frozen = {}
-TriggerEvent('es:addGroupCommand', 'freeze', "mod", function(source, args, user)
-	if args[1] then
-		if(tonumber(args[1]) and GetPlayerName(tonumber(args[1])))then
-			local player = tonumber(args[1])
-
-			-- User permission check
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-
-				if(frozen[player])then
-					frozen[player] = false
-				else
-					frozen[player] = true
-				end
-
-				TriggerClientEvent('es_admin:freezePlayer', player, frozen[player])
-
-				local state = "odmrznut"
-				if(frozen[player])then
-					state = "zamrznut"
-				end
-
-				TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Vi ste " .. state .. " od admina ^2" .. GetPlayerName(source)} })
-				TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je " .. state} })
-			end)
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-		end
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Zamrzni ili odmrzni igraca", params = {{name = "userid", help = "ID igraca"}}})
-
--- Bring
-TriggerEvent('es:addGroupCommand', 'bring', "mod", function(source, args, user)
-	if args[1] then
-		if(tonumber(args[1]) and GetPlayerName(tonumber(args[1])))then
-			local player = tonumber(args[1])
-
-			-- User permission check
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-				local kord = GetEntityCoords(GetPlayerPed(source))
-				TriggerClientEvent('es_admin:teleportUser', target.get('source'), kord.x, kord.y, kord.z)
-
-				TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Portani ste do admina ^2" .. GetPlayerName(source)} })
-				TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je portan do vas"} })
-			end)
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-		end
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Port igraca do vas", params = {{name = "userid", help = "ID igraca"}}})
-
--- Slap
-TriggerEvent('es:addGroupCommand', 'slap', "admin", function(source, args, user)
-	if args[1] then
-		if(tonumber(args[1]) and GetPlayerName(tonumber(args[1])))then
-			local player = tonumber(args[1])
-
-			-- User permission check
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-
-				TriggerClientEvent('es_admin:slap', player)
-
-				TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Slapani ste od ^2" .. GetPlayerName(source)} })
-				TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je slapan"} })
-			end)
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-		end
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Slap igraca", params = {{name = "userid", help = "ID igraca"}}})
-
--- Goto
-TriggerEvent('es:addGroupCommand', 'goto', "mod", function(source, args, user)
-	if args[1] then
-		if(tonumber(args[1]) and GetPlayerName(tonumber(args[1])))then
-			local player = tonumber(args[1])
-
-			-- User permission check
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-				if(target)then
-					local kord = GetEntityCoords(GetPlayerPed(tonumber(args[1])))
-					TriggerClientEvent('es_admin:teleportUser', source, kord.x, kord.y, kord.z)
-
-					TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Do vas se portao admin ^2" .. GetPlayerName(source)} })
-					TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Portani ste do igraca ^2" .. GetPlayerName(player) .. ""} })
-				end
-			end)
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-		end
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Port do igraca", params = {{name = "userid", help = "ID igraca"}}})
-
--- Slay a player
-TriggerEvent('es:addGroupCommand', 'slay', "admin", function(source, args, user)
-	if args[1] then
-		if(tonumber(args[1]) and GetPlayerName(tonumber(args[1])))then
-			local player = tonumber(args[1])
-
-			-- User permission check
-			TriggerEvent("es:getPlayerFromId", player, function(target)
-
-				TriggerClientEvent('es_admin:kill', player)
-
-				TriggerClientEvent('chat:addMessage', player, { args = {"^1SYSTEM", "Ubijeni ste od ^2" .. GetPlayerName(source)} })
-				TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je ubijen."} })
-			end)
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-		end
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Ubijte igraca", params = {{name = "userid", help = "ID igraca"}}})
-
--- Crashing
-TriggerEvent('es:addGroupCommand', 'crash', "superadmin", function(source, args, user)
-	if args[1] then
-		if(tonumber(args[1]) and GetPlayerName(tonumber(args[1])))then
-			local Source = source
-			TriggerEvent("DajMiPermLevel", Source)
-			Wait(100)
-			if PermLvl == 69 then
-				local player = tonumber(args[1])
-
-				-- User permission check
-				TriggerEvent("es:getPlayerFromId", player, function(target)
-
-					TriggerClientEvent('es_admin:crash', player)
-
-					TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Igrac ^2" .. GetPlayerName(player) .. "^0 je crashan."} })
-				end)
-			end
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-		end
-	else
-		TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Krivi ID igraca"}})
-	end
-end, function(source, args, user)
-	TriggerClientEvent('chat:addMessage', source, { args = {"^1SYSTEM", "Nemate ovlasti!"} })
-end, {help = "Crash igraca, nemam pojma cemu to jos postoji", params = {{name = "userid", help = "ID igraca"}}})
 
 function stringsplit(inputstr, sep)
 	if sep == nil then

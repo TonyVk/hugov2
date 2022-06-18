@@ -6,6 +6,7 @@ local noclipEntity = nil
 local noclipSpeed = 2.0
 local noclip = false
 local nevidljivost = false
+local duznost = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -30,6 +31,206 @@ end)
 -- 	end
 -- end)
 
+RegisterCommand('kick', function(source, args, rawCommand)
+    if duznost then
+		if args[1] then
+			if tonumber(args[1]) then
+				local player = tonumber(args[1])
+				local reason = args
+				table.remove(reason, 1)
+				if(#reason == 0)then
+					reason = "Kickan: Izbaceni ste sa servera"
+				else
+					reason = "Kickan: " .. table.concat(reason, " ")
+				end
+				TriggerServerEvent("amenu:Kick", player, reason)
+			else
+				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+			end
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('announce', function(source, args, rawCommand)
+    if duznost then
+		if args[1] ~= nil then
+			TriggerServerEvent("amenu:Announce", args)
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", " /announce [Poruka]"} })
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('freeze', function(source, args, rawCommand)
+    if duznost then
+		if args[1] then
+			if tonumber(args[1]) then
+				local player = tonumber(args[1])
+				TriggerServerEvent("amenu:Freeze", player)
+			else
+				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+			end
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('bring', function(source, args, rawCommand)
+    if duznost then
+		if args[1] then
+			if tonumber(args[1]) then
+				local player = tonumber(args[1])
+				TriggerServerEvent("amenu:Bring", player)
+			else
+				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+			end
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('slap', function(source, args, rawCommand)
+    if duznost then
+		if args[1] then
+			if tonumber(args[1]) then
+				local player = tonumber(args[1])
+				TriggerServerEvent("amenu:Slap", player)
+			else
+				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+			end
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('goto', function(source, args, rawCommand)
+    if duznost then
+		if args[1] then
+			if tonumber(args[1]) then
+				local player = tonumber(args[1])
+				TriggerServerEvent("amenu:Goto", player)
+			else
+				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+			end
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('slay', function(source, args, rawCommand)
+    if duznost then
+		if args[1] then
+			if tonumber(args[1]) then
+				local player = tonumber(args[1])
+				TriggerServerEvent("amenu:Slay", player)
+			else
+				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+			end
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('crash', function(source, args, rawCommand)
+    if duznost then
+		if args[1] then
+			if tonumber(args[1]) then
+				local player = tonumber(args[1])
+				TriggerServerEvent("amenu:Crash", player)
+			else
+				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+			end
+		else
+			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('setadmin', function(source, args, rawCommand)
+    if duznost then
+		local player = tonumber(args[1])
+		local level = tonumber(args[2])
+		if args[1] then
+			if player then
+				if level then
+					TriggerServerEvent("amenu:SetAdmin", player, level)
+				else
+					ESX.ShowNotification("Krivi broj!")
+				end
+			else
+				ESX.ShowNotification("Igrac nije u igri!")
+			end
+		else
+			ESX.ShowNotification("Koristi: setadmin [user-id] [permission-level]")
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('setgroup', function(source, args, rawCommand)
+    if duznost then
+		local player = tonumber(args[1])
+		local group = args[2]
+		if args[1] then
+			if player then
+				TriggerServerEvent("amenu:SetGroup", player, group)
+			else
+				ESX.ShowNotification("Igrac nije u igri")
+			end
+		else
+			ESX.ShowNotification("Koristi: setgroup [user-id] [group]")
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('setmoney', function(source, args, rawCommand)
+    if duznost then
+		local target = tonumber(args[1])
+		local money_type = args[2]
+		local money_amount = tonumber(args[3])
+		TriggerServerEvent("amenu:SetMoney", target, money_type, money_amount)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
+RegisterCommand('giveaccountmoney', function(source, args, rawCommand)
+    if duznost then
+		local player = tonumber(args[1])
+		local account = args[2]
+		local amount  = tonumber(args[3])
+		TriggerServerEvent("amenu:AccountMoney", player, account, amount)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
+
 RegisterCommand('+adminmenu2', function()
     ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
@@ -43,8 +244,12 @@ RegisterKeyMapping('+adminmenu2', 'Otvori quick admin menu', 'keyboard', 'F2')
 RegisterCommand('+adminmenu', function()
     ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
 		if br == 1 then
-			SetNuiFocus(true, true)
-			getPlayers(true)
+			if duznost then
+				SetNuiFocus(true, true)
+				getPlayers(true)
+			else
+				ESX.ShowNotification("Niste na admin duznosti!")
+			end
 		end
 	end)
 end, false)
@@ -53,6 +258,11 @@ RegisterKeyMapping('+adminmenu', 'Otvori admin menu', 'keyboard', 'HOME')
 RegisterNetEvent('es_admin:setGroup')
 AddEventHandler('es_admin:setGroup', function(g)
 	group = g
+end)
+
+RegisterNetEvent('duznost:Saljem')
+AddEventHandler('duznost:Saljem', function(br)
+	duznost = br
 end)
 
 RegisterNUICallback('close', function(data, cb)
@@ -70,110 +280,142 @@ RegisterNUICallback('ADuznost', function(data, cb)
 end)
 
 RegisterNUICallback('Nevidljiv', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			if nevidljivost == false then
-				SetEntityVisible(PlayerPedId(), false)
-				ESX.ShowNotification("Nevidjlivost je uključena!")
-				nevidljivost = true
-			  else
-				SetEntityVisible(PlayerPedId(), true)
-				ESX.ShowNotification("Nevidjlivost je isključena!")
-				nevidljivost = false
-			  end
-		end
-	end)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				if nevidljivost == false then
+					SetEntityVisible(PlayerPedId(), false)
+					ESX.ShowNotification("Nevidjlivost je uključena!")
+					nevidljivost = true
+				else
+					SetEntityVisible(PlayerPedId(), true)
+					ESX.ShowNotification("Nevidjlivost je isključena!")
+					nevidljivost = false
+				end
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('Vozilo', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			local koord = GetEntityCoords(PlayerPedId())
-			local head = GetEntityHeading(PlayerPedId())
-			ESX.Game.SpawnVehicle("sultanrs", koord, head, function(vehicle)
-				TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-			end)
-		end
-	end)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				local koord = GetEntityCoords(PlayerPedId())
+				local head = GetEntityHeading(PlayerPedId())
+				ESX.Game.SpawnVehicle("sultanrs", koord, head, function(vehicle)
+					TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+				end)
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('Marker', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			ExecuteCommand("tpm")
-		end
-	end)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				ExecuteCommand("tpm")
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('Heal', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			ExecuteCommand("heal")
-		end
-	end)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				ExecuteCommand("heal")
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('ObrisiVozilo', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			ExecuteCommand("dv")
-		end
-	end)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				ExecuteCommand("dv")
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('PopraviVozilo', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			ExecuteCommand("fix")
-		end
-	end)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				ExecuteCommand("fix")
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('Ubij', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			SetEntityHealth(PlayerPedId(), 0)
-		end
-	end)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				SetEntityHealth(PlayerPedId(), 0)
+			end
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('NoClip', function(data, cb)
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'closeQuick'})
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			noclipSpeed = data.speed
-			local msg = "upaljen"
-			if(noclip == false)then
-				noclip_pos = GetEntityCoords(PlayerPedId(), false)
+	if duznost then
+		SetNuiFocus(false)
+		SendNUIMessage({type = 'closeQuick'})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			if br == 1 then
+				noclipSpeed = data.speed
+				local msg = "upaljen"
+				if(noclip == false)then
+					noclip_pos = GetEntityCoords(PlayerPedId(), false)
+				end
+
+				noclip = not noclip
+
+				if(not noclip)then
+					msg = "ugasen"
+					SetEntityCollision(noclipEntity, true, true)
+					FreezeEntityPosition(PlayerPedId(-1), false)
+					SetEntityInvincible(PlayerPedId(-1), false)
+				end
+
+				TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Noclip je ^2^*" .. msg)
 			end
-
-			noclip = not noclip
-
-			if(not noclip)then
-				msg = "ugasen"
-				SetEntityCollision(noclipEntity, true, true)
-				FreezeEntityPosition(PlayerPedId(-1), false)
-				SetEntityInvincible(PlayerPedId(-1), false)
-			end
-
-			TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Noclip je ^2^*" .. msg)
-		end
-	end)
+		end)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)
 
 RegisterNUICallback('noclipBrzina', function(data, cb)
@@ -195,34 +437,35 @@ end)
 --test
 RegisterNetEvent('es_admin:viewname')
 AddEventHandler('es_admin:viewname', function(t)
-	local xPlayers = ESX.Game.GetPlayers()
-	for id=1, 255, 1 do
-            if  NetworkIsPlayerActive( id ) and GetPlayerPed( id ) ~= GetPlayerPed( -1 ) then
+	if duznost then
+		local xPlayers = ESX.Game.GetPlayers()
+		for id=1, 255, 1 do
+			if  NetworkIsPlayerActive( id ) and GetPlayerPed( id ) ~= GetPlayerPed( -1 ) then
+				ped = GetPlayerPed( id )
+				blip = GetBlipFromEntity( ped )
+					ida = GetPlayerServerId(id)
 
-                ped = GetPlayerPed( id )
-                blip = GetBlipFromEntity( ped )
-	        ida = GetPlayerServerId(id)
+				-- HEAD DISPLAY STUFF --
 
-                -- HEAD DISPLAY STUFF --
+				-- Create head display (this is safe to be spammed)
+				local testic = GetPlayerName(id).." ("..ida..")"
+				headId = Citizen.InvokeNative( 0xBFEFE3321A3F5015, ped, testic, false, false, "", false )
 
-                -- Create head display (this is safe to be spammed)
-		local testic = GetPlayerName(id).." ("..ida..")"
-                headId = Citizen.InvokeNative( 0xBFEFE3321A3F5015, ped, testic, false, false, "", false )
+				-- Speaking display
+				if NetworkIsPlayerTalking( id ) then
 
-                -- Speaking display
-                if NetworkIsPlayerTalking( id ) then
+					Citizen.InvokeNative( 0x63BB75ABEDC1F6A0, headId, 9, true ) -- Add speaking sprite
 
-                    Citizen.InvokeNative( 0x63BB75ABEDC1F6A0, headId, 9, true ) -- Add speaking sprite
+				else
 
-                else
+					Citizen.InvokeNative( 0x63BB75ABEDC1F6A0, headId, 9, false ) -- Remove speaking sprite
 
-                    Citizen.InvokeNative( 0x63BB75ABEDC1F6A0, headId, 9, false ) -- Remove speaking sprite
-
-                end
-
-            end
-
-        end
+				end
+			end
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
 end)--test
 
 RegisterNetEvent('es_admin:quick')
@@ -419,28 +662,36 @@ end)
 
 RegisterNetEvent('es_admin:fix')
 AddEventHandler('es_admin:fix', function()
-	local playerPed = GetPlayerPed(-1)
-	if IsPedInAnyVehicle(playerPed, false) then
-		local vehicle = GetVehiclePedIsIn(playerPed, false)
-		SetVehicleEngineHealth(vehicle, 1000)
-		SetVehicleEngineOn( vehicle, true, true )
-		TriggerEvent("iens:repair")
-		SetVehicleFixed(vehicle)
-		TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Tvoje vozilo je popravljeno!")
+	if duznost then
+		local playerPed = GetPlayerPed(-1)
+		if IsPedInAnyVehicle(playerPed, false) then
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
+			SetVehicleEngineHealth(vehicle, 1000)
+			SetVehicleEngineOn( vehicle, true, true )
+			TriggerEvent("iens:repair")
+			SetVehicleFixed(vehicle)
+			TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Tvoje vozilo je popravljeno!")
+		else
+			TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Niste u vozilu!")
+		end
 	else
-		TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Niste u vozilu!")
+		ESX.ShowNotification("Niste na admin duznosti!")
 	end
 end)
 
 RegisterNetEvent('es_admin:clean')
 AddEventHandler('es_admin:clean', function()
-	local playerPed = GetPlayerPed(-1)
-	if IsPedInAnyVehicle(playerPed, false) then
-		local vehicle = GetVehiclePedIsIn(playerPed, false)
-		SetVehicleDirtLevel(vehicle, 0)
-		TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Vase vozilo je ocisceno!")
+	if duznost then
+		local playerPed = GetPlayerPed(-1)
+		if IsPedInAnyVehicle(playerPed, false) then
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
+			SetVehicleDirtLevel(vehicle, 0)
+			TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Vase vozilo je ocisceno!")
+		else
+			TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Niste u vozilu!")
+		end
 	else
-		TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Niste u vozilu!")
+		ESX.ShowNotification("Niste na admin duznosti!")
 	end
 end)
 
@@ -469,21 +720,25 @@ end)
 
 RegisterNetEvent("es_admin:noclip")
 AddEventHandler("es_admin:noclip", function(t)
-	local msg = "upaljen"
-	if(noclip == false)then
-		noclip_pos = GetEntityCoords(PlayerPedId(), false)
+	if duznost then
+		local msg = "upaljen"
+		if(noclip == false)then
+			noclip_pos = GetEntityCoords(PlayerPedId(), false)
+		end
+
+		noclip = not noclip
+
+		if(not noclip)then
+			msg = "ugasen"
+			SetEntityCollision(noclipEntity, true, true)
+			FreezeEntityPosition(PlayerPedId(-1), false)
+			SetEntityInvincible(PlayerPedId(-1), false)
+		end
+
+		TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Noclip je ^2^*" .. msg)
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
 	end
-
-	noclip = not noclip
-
-	if(not noclip)then
-		msg = "ugasen"
-		SetEntityCollision(noclipEntity, true, true)
-		FreezeEntityPosition(PlayerPedId(-1), false)
-        SetEntityInvincible(PlayerPedId(-1), false)
-	end
-
-	TriggerEvent("chatMessage", "SYSTEM", {255, 0, 0}, "Noclip je ^2^*" .. msg)
 end)
 
 function getPlayers(br)

@@ -2605,6 +2605,7 @@ RegisterCommand("aduty", function(source, args, rawCommandString)
 				aduty = false
 				ESX.ShowNotification("Otisli ste s admin duznosti!")
 			end
+			TriggerEvent("duznost:Saljem", aduty)
 			TriggerServerEvent("tagovi:staffTag", aduty)
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
