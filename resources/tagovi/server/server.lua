@@ -90,7 +90,7 @@ AddEventHandler('playerDropped', function (reason)
         if duznost[i] ~= nil and duznost[i].src == source then
             local dif = os.difftime(os.time(), duznost[i].dat)
             local hr, min, sec = secondsToClock(dif)
-            TriggerEvent("DiscordBot:Aduty", "Admin "..GetPlayerName(src).." je bio na duznosti "..hr.." h, "..min.." min i "..sec.." sec!")
+            TriggerEvent("DiscordBot:Aduty", "Admin "..GetPlayerName(source).." je bio na duznosti "..hr.." h, "..min.." min i "..sec.." sec!")
             table.remove(duznost, i)
             break
         end

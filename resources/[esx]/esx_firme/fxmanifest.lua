@@ -26,7 +26,7 @@ ui_page "html/index.html"
 files {
   "html/index.html",
   -- ICONS
-  "html/items/*.png",
+  "html/items/*.png"
 }
 
 
