@@ -26,6 +26,7 @@ ESX.StartPayCheck = function()
 													TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function (account)
 														if account.money >= salary then -- does the society money to pay its employees?
 															xPlayer.addAccountMoney('bank', salary)
+															TriggerEvent("banka:Povijest", xPlayer.source, tonumber(salary), "Plaća za prošli mjesec")
 															account.removeMoney(salary)
 															account.save()
 															TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
@@ -35,11 +36,13 @@ ESX.StartPayCheck = function()
 													end)
 												else -- not a society
 													xPlayer.addAccountMoney('bank', salary)
+													TriggerEvent("banka:Povijest", xPlayer.source, tonumber(salary), "Plaća za prošli mjesec")
 													TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
 												end
 											end)
 										else -- generic job
 											xPlayer.addAccountMoney('bank', salary)
+											TriggerEvent("banka:Povijest", xPlayer.source, tonumber(salary), "Plaća za prošli mjesec")
 											TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
 										end
 										--[[MySQL.Async.fetchAll('SELECT * FROM billing WHERE identifier = @identifier', {
@@ -160,6 +163,7 @@ ESX.StartPayCheck = function()
 							if kredit > 0 then
 								if kredit > rata then
 									xPlayer.removeAccountMoney('bank', rata)
+									TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(rata)), "Plaćanje rate kredita")
 									kredit = kredit-rata
 									MySQL.Async.execute("UPDATE users SET kredit=@kr WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@kr'] = kredit})
 									local tekste = "Platili ste ratu kredita od $"..rata.."! Za vratit vam je ostalo jos $"..kredit.."."
@@ -169,6 +173,7 @@ ESX.StartPayCheck = function()
 									'CHAR_BANK_MAZE', 9)
 								else
 									xPlayer.removeAccountMoney('bank', kredit)
+									TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(kredit)), "Plaćanje zadnje rate kredita")
 									kredit = 0
 									MySQL.Async.execute("UPDATE users SET kredit=0, rata=0 WHERE ID=@identifier", {['@identifier'] = xPlayer.getID()})
 									TriggerClientEvent('esx:showNotification', xPlayer.source, "[Banka] Otplatili ste kredit!")

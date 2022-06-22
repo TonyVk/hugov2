@@ -132,6 +132,7 @@ if Config.EarlyRespawnFine then
 
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('respawn_bleedout_fine_msg', ESX.Math.GroupDigits(fineAmount)))
 		xPlayer.removeAccountMoney('bank', fineAmount)
+		TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(fineAmount)), "Plaćanje liječenja")
 	end)
 end
 

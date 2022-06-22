@@ -258,6 +258,7 @@ ESX.RegisterServerCallback('loaf_housing:DohvatiZadnjuKucu', function(source, cb
                             xPlayer.showNotification("Platili ste rent kuce $"..v['rentCijena'])
                             xPlayer.showNotification("Da prestanete rentati kucu upisite /unrentkucu")
                             xPlayer.removeBank(v['rentCijena'])
+                            TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(v['rentCijena'])), "Plaćanje renta kuće")
                             MySQL.Async.execute("UPDATE users SET rentDatum=NOW() WHERE ID=@id", {['@id'] = xPlayer.getID()})
                         else
                             xPlayer.showNotification("Niste imali novca na banci pa ste izbaceni iz kuce.")
@@ -316,6 +317,7 @@ AddEventHandler('loaf_housing:buy_furniture', function(category, id)
     if Config.Furniture[Config.Furniture['Categories'][category][1]][id] then
         if xPlayer.getAccount('bank').money >= Config.Furniture[Config.Furniture['Categories'][category][1]][id][3] then
             xPlayer.removeAccountMoney('bank', Config.Furniture[Config.Furniture['Categories'][category][1]][id][3])
+            TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(Config.Furniture[Config.Furniture['Categories'][category][1]][id][3])), "Plaćanje namještaja za kuću")
             hadMoney = true
         else
             if xPlayer.getMoney() >= Config.Furniture[Config.Furniture['Categories'][category][1]][id][3] then
@@ -461,6 +463,7 @@ AddEventHandler('loaf_housing:buyHouse', function(id, ka)
                 if not result then
                     if xPlayer.getAccount('bank').money >= Config.Houses[ka]['price'] then
                         xPlayer.removeAccountMoney('bank', Config.Houses[ka]['price'])
+                        TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(Config.Houses[ka]['price'])), "Kupovina kuće")
                         MySQL.Async.execute("UPDATE users SET house=@house WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@house'] = newHouse}) 
                         MySQL.Sync.execute("INSERT INTO bought_houses (houseid, vlasnik) VALUES (@houseid, @vlasnik)", {['houseid'] = id, ['vlasnik'] = xPlayer.getID()})
                         for i=1, #Config.Houses, 1 do
