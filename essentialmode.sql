@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 22/05/2022 15:25:26
+ Date: 22/06/2022 17:23:30
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,7 @@ CREATE TABLE `addon_account`  (
 -- ----------------------------
 INSERT INTO `addon_account` VALUES ('society_mechanic', 'Mehanicar', 1);
 INSERT INTO `addon_account` VALUES ('society_testonja', 'Testonja', 1);
+INSERT INTO `addon_account` VALUES ('society_testara', 'Testara', 1);
 
 -- ----------------------------
 -- Table structure for addon_account_data
@@ -46,13 +47,14 @@ CREATE TABLE `addon_account_data`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `index_addon_account_data_account_name_owner`(`account_name`, `owner`) USING BTREE,
   INDEX `index_addon_account_data_account_name`(`account_name`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of addon_account_data
 -- ----------------------------
-INSERT INTO `addon_account_data` VALUES (1, 'society_mechanic', 109208, NULL);
-INSERT INTO `addon_account_data` VALUES (7, 'society_testonja', 5820000, NULL);
+INSERT INTO `addon_account_data` VALUES (1, 'society_mechanic', 111708, NULL);
+INSERT INTO `addon_account_data` VALUES (7, 'society_testonja', 7410000, NULL);
+INSERT INTO `addon_account_data` VALUES (8, 'society_testara', 0, NULL);
 
 -- ----------------------------
 -- Table structure for addon_inventory
@@ -72,6 +74,7 @@ INSERT INTO `addon_inventory` VALUES (3, 'Mehanicar', 1);
 INSERT INTO `addon_inventory` VALUES (43, 'Testonja', 1);
 INSERT INTO `addon_inventory` VALUES (44, 'Testara', 1);
 INSERT INTO `addon_inventory` VALUES (45, 'Testonja', 1);
+INSERT INTO `addon_inventory` VALUES (46, 'Testara', 1);
 
 -- ----------------------------
 -- Table structure for addon_inventory_items
@@ -87,13 +90,13 @@ CREATE TABLE `addon_inventory_items`  (
   INDEX `index_addon_inventory_items_inventory_name_name`(`inventory_name`, `name`) USING BTREE,
   INDEX `index_addon_inventory_items_inventory_name_name_owner`(`inventory_name`, `name`, `owner`) USING BTREE,
   INDEX `index_addon_inventory_inventory_name`(`inventory_name`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 47 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of addon_inventory_items
 -- ----------------------------
-INSERT INTO `addon_inventory_items` VALUES (9, 3, 'turbo', 1, NULL);
-INSERT INTO `addon_inventory_items` VALUES (8, 3, 'filter', 1, NULL);
+INSERT INTO `addon_inventory_items` VALUES (45, 3, 'filter', 1, NULL);
+INSERT INTO `addon_inventory_items` VALUES (46, 3, 'turbo', 1, NULL);
 INSERT INTO `addon_inventory_items` VALUES (33, 44, 'bread', 5, NULL);
 
 -- ----------------------------
@@ -114,7 +117,7 @@ CREATE TABLE `baninfo`  (
 -- ----------------------------
 -- Records of baninfo
 -- ----------------------------
-INSERT INTO `baninfo` VALUES ('steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'no info', 'no info', 'discord:319628026251837442', 'ip:192.168.1.11', 'Sikora');
+INSERT INTO `baninfo` VALUES ('steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:192.168.1.7', 'Sikora');
 INSERT INTO `baninfo` VALUES ('steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 'live:1688852646456500', 'xbl:2533274866168124', 'discord:275436547317301248', 'ip:91.49.45.110', 'Ficho');
 INSERT INTO `baninfo` VALUES ('steam:11000010a1d1042', 'license:c7a857dcd5b4160c69d1671f02e52332bd339733', 'live:1829578983319685', 'xbl:2535460133546917', 'discord:293992988936241153', 'ip:109.237.34.43', 'chame');
 INSERT INTO `baninfo` VALUES ('steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 'live:1829582274463247', 'xbl:2535463957312212', 'no info', 'ip:92.195.157.176', 'MaZz');
@@ -124,6 +127,23 @@ INSERT INTO `baninfo` VALUES ('steam:110000115e9ac6b', 'no info', 'no info', 'no
 INSERT INTO `baninfo` VALUES ('steam:11000011aee96e0', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:192.168.1.14', 'hashtag.sikora');
 INSERT INTO `baninfo` VALUES ('steam:1100001453fc4a4', 'license:28b3a93ce930a76bb21c53788d5a938c86ed7160', 'live:914798680250289', 'xbl:2535464137820964', 'discord:853641506148319302', 'ip:86.31.105.27', '~r~Owner | ~w~Fuezify');
 INSERT INTO `baninfo` VALUES ('steam:11000014694839f', 'license:90b661c3b1f4c5647edd360963abfb730037ed79', 'no info', 'no info', 'no info', 'ip:185.193.240.203', 'zarezarkovski csgocases.com');
+
+-- ----------------------------
+-- Table structure for banka_transakcije
+-- ----------------------------
+DROP TABLE IF EXISTS `banka_transakcije`;
+CREATE TABLE `banka_transakcije`  (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Vlasnik` int NULL DEFAULT NULL,
+  `Tekst` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `Iznos` int NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `vlasnik`(`Vlasnik`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of banka_transakcije
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for banlist
@@ -206,13 +226,15 @@ CREATE TABLE `billing`  (
   `label` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `amount` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of billing
 -- ----------------------------
 INSERT INTO `billing` VALUES (6, 10011, 10000, 'society', 'society_mechanic', 'Mehanicar | Dijelovi', 3600);
 INSERT INTO `billing` VALUES (7, 10011, 10000, 'society', 'society_mechanic', 'Mehanicar | Dijelovi', 7200);
+INSERT INTO `billing` VALUES (10, 10010, 10000, 'society', 'society_mechanic', 'Mehanicar | Dijelovi', 7230);
+INSERT INTO `billing` VALUES (11, 10010, 10000, 'player', 'steam:11000010441bee9', 'Bolnicar', 2000);
 
 -- ----------------------------
 -- Table structure for biznisi
@@ -229,20 +251,15 @@ CREATE TABLE `biznisi`  (
   `Sati` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Tjedan` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of biznisi
 -- ----------------------------
-INSERT INTO `biznisi` VALUES (4, 'drvosjeca', 'Drvosjeca', '[1189.6624755859376,-1278.3201904296876,34.89719009399414]', 3300, NULL, 'drvosjeca', '{}', 0);
-INSERT INTO `biznisi` VALUES (3, 'kosac', 'Kosac trave', '[-1366.4168701171876,56.53075408935547,53.09845733642578]', 711, NULL, 'kosac', '{}', 0);
-INSERT INTO `biznisi` VALUES (5, 'farmer', 'Farmer', '[2415.745849609375,4993.283203125,45.2213249206543]', 917, NULL, 'farmer', '{}', 0);
-INSERT INTO `biznisi` VALUES (6, 'kamion', 'Kamiondzija', '[1183.4019775390626,-3303.89501953125,5.9168572425842289]', 21210, NULL, 'kamion', '{}', 0);
-INSERT INTO `biznisi` VALUES (7, 'elektricar', 'Elektricar', '[679.0198364257813,73.37919616699219,82.1897964477539]', 8970, NULL, 'elektricar', '{}', 0);
-INSERT INTO `biznisi` VALUES (8, 'dostavljac', 'Dostavljac', '[812.78662109375,-911.2910766601563,24.41560173034668]', 1935, NULL, 'deliverer', '[{\"Posao\":\"deliverer\",\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\",\"Ture\":1}]', 129);
-INSERT INTO `biznisi` VALUES (9, 'vodoinstalater', 'Vodoinstalater', '[990.3715209960938,-1853.208984375,30.039819717407228]', 510, NULL, 'vodoinstalater', '{}', 0);
-INSERT INTO `biznisi` VALUES (10, 'vatrogasac', 'Vatrogasci', '[210.68028259277345,-1656.9088134765626,28.80321502685547]', 66, NULL, 'vatrogasac', '{}', 0);
-INSERT INTO `biznisi` VALUES (11, 'garbage', 'Smetlari', '[-355.04974365234377,-1513.8880615234376,26.71724510192871]', 134, NULL, 'garbage', '{}', 0);
+INSERT INTO `biznisi` VALUES (1, 'kosac', 'Kosac trave', '[-1366.4168701171876,56.53075408935547,53.09845733642578]', 727, NULL, 'kosac', '[{\"Ime\":\"Sikora\",\"Posao\":\"kosac\",\"Identifier\":\"steam:11000010441bee9\",\"Ture\":4}]', 16);
+INSERT INTO `biznisi` VALUES (2, 'farmer', 'Farmer', '[2415.745849609375,4993.283203125,45.2213249206543]', 917, NULL, 'farmer', '{}', 0);
+INSERT INTO `biznisi` VALUES (3, 'kamion', 'Kamiondzija', '[1183.4019775390626,-3303.89501953125,5.9168572425842289]', 23280, NULL, 'kamion', '[{\"Ture\":5,\"Ime\":\"Sikora\",\"Identifier\":\"steam:11000010441bee9\",\"Posao\":\"kamion\"}]', 2070);
+INSERT INTO `biznisi` VALUES (4, 'luka', 'Lucki radnik', '[926.2833862304688,-2935.85009765625,4.90115547180175]', 210, 10000, 'luka', '[{\"Posao\":\"luka\",\"Ture\":1,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\"}]', 210);
 
 -- ----------------------------
 -- Table structure for bought_houses
@@ -257,14 +274,14 @@ CREATE TABLE `bought_houses`  (
 -- ----------------------------
 -- Records of bought_houses
 -- ----------------------------
-INSERT INTO `bought_houses` VALUES (23, 10000);
+INSERT INTO `bought_houses` VALUES (29, 10000);
 
 -- ----------------------------
 -- Table structure for communityservice
 -- ----------------------------
 DROP TABLE IF EXISTS `communityservice`;
 CREATE TABLE `communityservice`  (
-  `identifier` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `identifier` int NOT NULL,
   `actions_remaining` int NOT NULL,
   PRIMARY KEY (`identifier`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
@@ -288,6 +305,7 @@ CREATE TABLE `datastore`  (
 -- Records of datastore
 -- ----------------------------
 INSERT INTO `datastore` VALUES ('society_testonja', 'Testonja', 1);
+INSERT INTO `datastore` VALUES ('society_testara', 'Testara', 1);
 
 -- ----------------------------
 -- Table structure for datastore_data
@@ -301,12 +319,13 @@ CREATE TABLE `datastore_data`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `index_datastore_data_name_owner`(`name`, `owner`) USING BTREE,
   INDEX `index_datastore_data_name`(`name`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of datastore_data
 -- ----------------------------
-INSERT INTO `datastore_data` VALUES (2, 'society_testonja', NULL, '{}');
+INSERT INTO `datastore_data` VALUES (3, 'society_testara', NULL, '{\"weapons\":[{\"count\":1,\"ammo\":250,\"name\":\"weapon_pistol\"}]}');
+INSERT INTO `datastore_data` VALUES (2, 'society_testonja', NULL, '{\"weapons\":[{\"ammo\":6000,\"count\":24,\"name\":\"weapon_pistol\"}]}');
 
 -- ----------------------------
 -- Table structure for droge
@@ -479,11 +498,12 @@ CREATE TABLE `firme`  (
   `Vozila` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Proizvodi` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 31 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 33 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of firme
 -- ----------------------------
+INSERT INTO `firme` VALUES (31, 'trg', 'Firma 5', 1, '{\"x\":25.64538192749023,\"y\":-1346.992919921875,\"z\":29.49702644348144}', '{}', '{}', '{}', NULL, 25, 500000, 0, 0, 0, '{}', '[]');
 INSERT INTO `firme` VALUES (19, 'trgovina1', 'Firma 0', 1, '{\"x\":374.1128845214844,\"y\":326.7154541015625,\"z\":103.56636810302735}', '{}', '{}', '{\"x\":380.20220947265627,\"y\":332.0689392089844,\"z\":103.56636810302735}', NULL, 691, 500000, 1, 0, 0, '{}', '{}');
 INSERT INTO `firme` VALUES (20, 'firmaljantu', 'Firma 1', 1, '{\"x\":1135.74072265625,\"y\":-982.6700439453125,\"z\":46.41584396362305}', '{}', '{}', '{\"x\":1126.34326171875,\"y\":-982.3389282226563,\"z\":45.41582870483398}', NULL, 100, 500000, 1, 0, 0, '{}', '{}');
 INSERT INTO `firme` VALUES (25, 'jebo te bog', 'Firma 4', 1, '{\"x\":990.5723876953125,\"y\":-656.501708984375,\"z\":57.7730598449707}', '{}', '{}', '{\"x\":988.3343505859375,\"y\":-658.9981079101563,\"z\":57.62298965454101}', 10000, -169384, 2000, 0, 0, 653, '{}', '[{\"Stanje\":4,\"Item\":\"mobitel\"},{\"Stanje\":4,\"Item\":\"bread\"}]');
@@ -541,7 +561,7 @@ CREATE TABLE `items`  (
   `can_remove` int NOT NULL DEFAULT 1,
   `weight` int UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 176 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 181 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of items
@@ -721,6 +741,10 @@ INSERT INTO `items` VALUES (172, 'wood', 'Drvo', 20, 0, 1, 0);
 INSERT INTO `items` VALUES (173, 'wool', 'Vuna', 40, 0, 1, 0);
 INSERT INTO `items` VALUES (174, 'zemlja', 'Vreca zemlje', 5, 0, 1, 0);
 INSERT INTO `items` VALUES (175, 'zeton', 'Zeton', -1, 0, 1, 0);
+INSERT INTO `items` VALUES (176, 'novine', 'Novine', 1, 0, 1, 0);
+INSERT INTO `items` VALUES (177, 'fishingrod', 'Stap za pecanje', 1, 0, 1, 1500);
+INSERT INTO `items` VALUES (179, 'fishbait', 'Mamac', 20, 0, 1, 500);
+INSERT INTO `items` VALUES (180, 'fish', 'Riba', 50, 0, 1, 1000);
 
 -- ----------------------------
 -- Table structure for job_grades
@@ -736,7 +760,7 @@ CREATE TABLE `job_grades`  (
   `skin_male` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `skin_female` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 219 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 221 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of job_grades
@@ -807,6 +831,8 @@ INSERT INTO `job_grades` VALUES (200, 'automafija', 4, 'boss', 'Sef', 300, '{}',
 INSERT INTO `job_grades` VALUES (202, 'spasioc', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":129,\"torso_1\":148,\"arms\":1,\"pants_1\":16,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":3,\"shoes\":5,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":-1}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}');
 INSERT INTO `job_grades` VALUES (203, 'fastfood', 0, 'employee', 'Uber Eats', 200, '{\"tshirt_1\":59,\"torso_1\":67,\"arms\":1,\"pants_1\":22,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":3,\"shoes_1\":1,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":5,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":17}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}');
 INSERT INTO `job_grades` VALUES (218, 'testonja', 1, 'boss', 'Sef', 300, '{}', '{}');
+INSERT INTO `job_grades` VALUES (219, 'testara', 0, 'bla', 'Bla', 300, '{}', '{}');
+INSERT INTO `job_grades` VALUES (220, 'testara', 1, 'boss', 'Sefara', 300, '{}', '{}');
 
 -- ----------------------------
 -- Table structure for jobs
@@ -821,7 +847,7 @@ CREATE TABLE `jobs`  (
   PRIMARY KEY (`name`) USING BTREE,
   INDEX `whitelisted`(`whitelisted`) USING BTREE,
   INDEX `pID`(`pID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of jobs
@@ -831,6 +857,7 @@ INSERT INTO `jobs` VALUES (3, 'mechanic', 'Mehanicar', 1, 0);
 INSERT INTO `jobs` VALUES (4, 'police', 'LSPD', 1, 0);
 INSERT INTO `jobs` VALUES (5, 'reporter', 'Reporter', 1, 1);
 INSERT INTO `jobs` VALUES (6, 'taxi', 'Uber', 1, 0);
+INSERT INTO `jobs` VALUES (46, 'testara', 'Testara', 1, 1);
 INSERT INTO `jobs` VALUES (45, 'testonja', 'Testonja', 1, 1);
 INSERT INTO `jobs` VALUES (1, 'unemployed', 'Nezaposlen', 0, 0);
 
@@ -935,8 +962,8 @@ INSERT INTO `kuce` VALUES (25, 'mansion', '{\"x\":-297.89208984375,\"y\":380.315
 INSERT INTO `kuce` VALUES (26, 'lester', '{\"x\":-328.2933044433594,\"y\":369.9056091308594,\"z\":109.05599975585938}', 150000, 0, 0, 20);
 INSERT INTO `kuce` VALUES (27, 'nice', '{\"x\":-371.7889099121094,\"y\":344.114990234375,\"z\":108.9926986694336}', 450000, 0, 0, 20);
 INSERT INTO `kuce` VALUES (28, 'nice', '{\"x\":-409.4172058105469,\"y\":341.6883850097656,\"z\":107.9573974609375}', 450000, 0, 0, 20);
-INSERT INTO `kuce` VALUES (29, 'nice', '{\"x\":-349.23748779296877,\"y\":514.6478881835938,\"z\":119.69670104980469}', 450000, 0, 0, 20);
-INSERT INTO `kuce` VALUES (30, 'nice', '{\"x\":-386.6803894042969,\"y\":504.57440185546877,\"z\":119.46150207519531}', 450000, 0, 0, 20);
+INSERT INTO `kuce` VALUES (29, 'mansion', '{\"x\":-349.23748779296877,\"y\":514.6478881835938,\"z\":119.69670104980469}', 450000, 0, 1, 20);
+INSERT INTO `kuce` VALUES (30, 'nice', '{\"x\":-386.7586669921875,\"y\":504.2430725097656,\"z\":120.41266632080078}', 450000, 0, 0, 20);
 INSERT INTO `kuce` VALUES (31, 'nice', '{\"x\":-406.48748779296877,\"y\":567.513427734375,\"z\":123.65290069580078}', 450000, 0, 0, 20);
 INSERT INTO `kuce` VALUES (32, 'mansion', '{\"x\":-459.1129150390625,\"y\":537.52099609375,\"z\":120.50679779052735}', 750000, 0, 0, 20);
 INSERT INTO `kuce` VALUES (33, 'nice', '{\"x\":-500.55029296875,\"y\":552.2288818359375,\"z\":119.6604995727539}', 450000, 0, 0, 20);
@@ -1236,14 +1263,15 @@ CREATE TABLE `kuce_oruzja`  (
   `ime` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `kuca`(`kuca`, `owner`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of kuce_oruzja
 -- ----------------------------
-INSERT INTO `kuce_oruzja` VALUES (7, 200, 10000, 23, 'WEAPON_PISTOL');
+INSERT INTO `kuce_oruzja` VALUES (17, 200, 10000, 23, 'WEAPON_PISTOL');
 INSERT INTO `kuce_oruzja` VALUES (5, 250, 10000, 23, 'WEAPON_PISTOL');
 INSERT INTO `kuce_oruzja` VALUES (15, 5, 250, 10000, '23');
+INSERT INTO `kuce_oruzja` VALUES (18, 250, 10000, 29, 'WEAPON_PISTOL');
 
 -- ----------------------------
 -- Table structure for kuce_outfit
@@ -1278,13 +1306,16 @@ CREATE TABLE `kuce_stvari`  (
   INDEX `item`(`item`) USING BTREE,
   INDEX `owner`(`owner`) USING BTREE,
   INDEX `kuca`(`kuca`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of kuce_stvari
 -- ----------------------------
-INSERT INTO `kuce_stvari` VALUES (4, '11', '5', 10000, 23);
+INSERT INTO `kuce_stvari` VALUES (4, '11', '4', 10000, 23);
 INSERT INTO `kuce_stvari` VALUES (8, '4', '11', 5, 10000);
+INSERT INTO `kuce_stvari` VALUES (24, '156', '5', 10000, 29);
+INSERT INTO `kuce_stvari` VALUES (23, '11', '1', 10000, 29);
+INSERT INTO `kuce_stvari` VALUES (22, '92', '1', 10000, 23);
 
 -- ----------------------------
 -- Table structure for licenses
@@ -1304,7 +1335,7 @@ INSERT INTO `licenses` VALUES ('dmv', 'Teorija za voznju');
 INSERT INTO `licenses` VALUES ('drive', 'Vozacka dozvola');
 INSERT INTO `licenses` VALUES ('drive_bike', 'Vozacka za motor');
 INSERT INTO `licenses` VALUES ('drive_truck', 'Vozacka za kamion');
-INSERT INTO `licenses` VALUES ('weapon', 'dozvola za posjedovanje oruzja');
+INSERT INTO `licenses` VALUES ('weapon', 'Dozvola za posjedovanje oruzja');
 INSERT INTO `licenses` VALUES ('weed_processing', 'Weed Processing License');
 
 -- ----------------------------
@@ -1341,12 +1372,13 @@ CREATE TABLE `mafije`  (
   `Skladiste2` int NOT NULL DEFAULT 0,
   `Avion` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 12 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mafije
 -- ----------------------------
-INSERT INTO `mafije` VALUES (11, 'testonja', 'Testonja', '[{\"Ime\":\"boss\",\"ID\":1}]', '[271.16070556640627,-895.3273315429688,27.97849655151367]', '[271.7889099121094,-902.3579711914063,28.00102233886718]', '[290.2338562011719,-882.7674560546875,28.15087509155273]', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', 0, '{}', '{}', '[280.1828918457031,-904.6669921875,27.98444747924804]', '[282.318115234375,-895.3967895507813,28.02104568481445,348.2360534667969]', 1, 0, '{}', '{}', '[279.7043151855469,-888.090576171875,28.10346031188965]', '[274.726806640625,-872.55126953125,28.33389663696289,24.65639877319336]', 1, 1);
+INSERT INTO `mafije` VALUES (11, 'testonja', 'Testonja', '[{\"Ime\":\"boss\",\"ID\":1}]', '[271.16070556640627,-895.3273315429688,27.97849655151367]', '[271.7889099121094,-902.3579711914063,28.00102233886718]', '[290.2338562011719,-882.7674560546875,28.15087509155273]', '[273.3567199707031,-877.197265625,28.25421714782715]', '[287.27020263671877,-877.6958618164063,28.29168128967285,356.29022216796877]', '[292.6402282714844,-845.4319458007813,28.07571983337402]', '[{\"Label\":\"Guardian\",\"Ime\":\"guardian\"}]', '[{\"Cijena\":250,\"Ime\":\"weapon_pistol\"}]', '{}', '{}', '{}', 0, '{}', '{}', '[280.1828918457031,-904.6669921875,27.98444747924804]', '[282.318115234375,-895.3967895507813,28.02104568481445,348.2360534667969]', 1, 0, '{}', '{}', '[279.7043151855469,-888.090576171875,28.10346031188965]', '[274.726806640625,-872.55126953125,28.33389663696289,24.65639877319336]', 1, 1);
+INSERT INTO `mafije` VALUES (12, 'testara', 'Testara', '[{\"ID\":0,\"Ime\":\"bla\"},{\"ID\":1,\"Ime\":\"boss\"}]', '[258.4134216308594,-850.906982421875,28.47194290161132]', '{}', '{}', '[260.70599365234377,-857.0223388671875,28.37854957580566]', '{}', '{}', '{}', '{}', '{}', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0);
 
 -- ----------------------------
 -- Table structure for meh_narudzbe
@@ -1360,7 +1392,7 @@ CREATE TABLE `meh_narudzbe`  (
   `broj` int NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `tablica`(`tablica`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 86 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 92 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of meh_narudzbe
@@ -1379,12 +1411,12 @@ CREATE TABLE `minute`  (
 -- ----------------------------
 -- Records of minute
 -- ----------------------------
-INSERT INTO `minute` VALUES (10000, 12000);
+INSERT INTO `minute` VALUES (10000, 14800);
 INSERT INTO `minute` VALUES (10003, 600);
 INSERT INTO `minute` VALUES (10006, 15);
 INSERT INTO `minute` VALUES (10007, 5);
 INSERT INTO `minute` VALUES (10008, 5);
-INSERT INTO `minute` VALUES (10010, 105);
+INSERT INTO `minute` VALUES (10010, 270);
 INSERT INTO `minute` VALUES (10011, 110);
 
 -- ----------------------------
@@ -1404,7 +1436,7 @@ CREATE TABLE `mskladiste`  (
 -- ----------------------------
 -- Records of mskladiste
 -- ----------------------------
-INSERT INTO `mskladiste` VALUES (4, 'testonja', 0, 200, 0, 900);
+INSERT INTO `mskladiste` VALUES (4, 'testonja', 0, 200, 0, 0);
 
 -- ----------------------------
 -- Table structure for narudzbe
@@ -1449,23 +1481,46 @@ CREATE TABLE `owned_vehicles`  (
   PRIMARY KEY (`plate`) USING BTREE,
   INDEX `plate`(`plate`) USING BTREE,
   INDEX `owner`(`owner`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of owned_vehicles
 -- ----------------------------
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'AMN 413', '{\"modTrunk\":-1,\"plateIndex\":1,\"windowTint\":1,\"modDial\":-1,\"modBackWheels\":-1,\"modHydrolic\":-1,\"color1\":17,\"modTransmission\":2,\"modArmor\":4,\"fuel\":54.92000198364258,\"modSpeakers\":-1,\"modEngineBlock\":-1,\"modAerials\":-1,\"modSmokeEnabled\":1,\"modTrimA\":-1,\"modSideSkirt\":0,\"modDashboard\":-1,\"tyres\":[false,false,false,false,false,false,false],\"neonColor\":[255,255,255],\"modDoorSpeaker\":-1,\"modLivery\":-1,\"modRightFender\":0,\"modFrontWheels\":16,\"svijetlaColor\":5,\"modPlateHolder\":-1,\"engineHealth\":999.25,\"modGrille\":1,\"tyreSmokeColor\":[255,255,255],\"dirtLevel\":9.50596141815185,\"modFender\":-1,\"bodyHealth\":956.6404418945313,\"plate\":\"AMN 413\",\"modSuspension\":4,\"modAirFilter\":-1,\"health\":997,\"modVanityPlate\":-1,\"modRearBumper\":0,\"modTrimB\":-1,\"model\":-143695728,\"modStruts\":-1,\"color2\":111,\"modFrame\":0,\"modRoof\":-1,\"extras\":[],\"modAPlate\":-1,\"modHorns\":-1,\"wheels\":7,\"doors\":[false,false,false,false,false,false],\"wheelColor\":4,\"modSteeringWheel\":-1,\"modBrakes\":2,\"modFrontBumper\":0,\"neonEnabled\":[1,1,1,1],\"modSpoilers\":5,\"modWindows\":-1,\"modShifterLeavers\":-1,\"modSeats\":-1,\"modArchCover\":-1,\"modExhaust\":-1,\"modOrnaments\":-1,\"modHood\":0,\"modXenon\":1,\"modEngine\":3,\"modTank\":-1,\"pearlescentColor\":156,\"modTurbo\":1}', 'car', NULL, 0, 0, 1, 0, '-143695728', 86.122, 4, 'talam52v10', 0, 5913, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 0, 'AZX 935', '{\"modDashboard\":-1,\"modTank\":-1,\"modSideSkirt\":-1,\"svijetlaColor\":255,\"modSteeringWheel\":-1,\"wheels\":0,\"fuel\":57.11516952514648,\"tyreSmokeColor\":[255,255,255],\"dirtLevel\":4.80450820922851,\"modOrnaments\":-1,\"modSuspension\":-1,\"modHorns\":-1,\"modArchCover\":-1,\"modStruts\":-1,\"modFender\":-1,\"modTransmission\":-1,\"modExhaust\":-1,\"modAerials\":-1,\"modGrille\":-1,\"modEngineBlock\":-1,\"modAirFilter\":-1,\"modHood\":-1,\"modFrame\":-1,\"modRoof\":-1,\"modTrimB\":-1,\"modVanityPlate\":-1,\"modDial\":-1,\"extras\":{\"1\":true},\"modRightFender\":-1,\"modSpoilers\":-1,\"modWindows\":-1,\"modFrontWheels\":-1,\"modTrimA\":-1,\"modLivery\":-1,\"color2\":0,\"bodyHealth\":990.25,\"modXenon\":false,\"modRearBumper\":-1,\"health\":997,\"modFrontBumper\":-1,\"plateIndex\":1,\"modShifterLeavers\":-1,\"modDoorSpeaker\":-1,\"modSpeakers\":-1,\"modEngine\":1,\"model\":1093697054,\"windowTint\":-1,\"modSmokeEnabled\":1,\"modHydrolic\":-1,\"neonColor\":[255,0,255],\"modSeats\":-1,\"modTurbo\":false,\"tyres\":[false,false,false,false,false,false,false],\"modBackWheels\":-1,\"color1\":0,\"engineHealth\":1000.0,\"modBrakes\":-1,\"modPlateHolder\":-1,\"doors\":[false,false,false,false,false,false],\"plate\":\"AZX 935\",\"neonEnabled\":[false,false,false,false],\"wheelColor\":89,\"modArmor\":-1,\"modAPlate\":-1,\"modTrunk\":-1,\"pearlescentColor\":111}', 'car', NULL, 0, 0, 2, 0, '1093697054', 110.622, 4, 'n55b30t0', 0, 4157, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 0, 'FER 934', '{\"modSpeakers\":-1,\"modGrille\":-1,\"modAPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modStruts\":-1,\"modOrnaments\":-1,\"modArchCover\":-1,\"modXenon\":false,\"modLivery\":-1,\"modFender\":-1,\"modHood\":-1,\"modTrimB\":-1,\"modRoof\":-1,\"modAerials\":-1,\"color1\":0,\"modExhaust\":-1,\"modTurbo\":1,\"health\":991,\"neonEnabled\":[false,false,false,false],\"modFrontWheels\":16,\"modWindows\":-1,\"wheelColor\":0,\"modSuspension\":3,\"extras\":{\"11\":false,\"12\":false},\"modSteeringWheel\":-1,\"modDashboard\":-1,\"windowTint\":-1,\"modSpoilers\":-1,\"modDoorSpeaker\":-1,\"model\":658369190,\"plateIndex\":4,\"modVanityPlate\":-1,\"modPlateHolder\":-1,\"modEngine\":3,\"modHorns\":-1,\"wheels\":7,\"modBrakes\":2,\"neonColor\":[255,0,255],\"modRearBumper\":-1,\"modFrontBumper\":-1,\"modFrame\":-1,\"modAirFilter\":-1,\"fuel\":12.38121032714843,\"modTrunk\":-1,\"dirtLevel\":8.64144802093505,\"modDial\":-1,\"color2\":0,\"modSeats\":-1,\"svijetlaColor\":255,\"modSmokeEnabled\":1,\"pearlescentColor\":0,\"plate\":\"FER 934\",\"modEngineBlock\":-1,\"modArmor\":-1,\"modTank\":-1,\"modTransmission\":2,\"modHydrolic\":-1,\"modRightFender\":-1,\"modShifterLeavers\":-1,\"modTrimA\":-1,\"modSideSkirt\":-1,\"modBackWheels\":-1}', 'car', NULL, 0, 0, 2, 0, '658369190', 91.899, 4, 'n55b30t0', 1, 1719, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'JIR 456', '{\"modOrnaments\":-1,\"modFender\":-1,\"neonColor\":[255,0,255],\"modDial\":-1,\"color2\":0,\"modPlateHolder\":-1,\"modTank\":-1,\"modSeats\":-1,\"modTrunk\":-1,\"neonEnabled\":[false,false,false,false],\"modAerials\":-1,\"modTransmission\":-1,\"modSpeakers\":-1,\"extras\":{\"11\":false,\"10\":true},\"modShifterLeavers\":-1,\"modSpoilers\":-1,\"modLivery\":-1,\"tyreSmokeColor\":[255,255,255],\"model\":-1831563210,\"modRoof\":-1,\"wheels\":0,\"modDoorSpeaker\":-1,\"modHydrolic\":-1,\"wheelColor\":119,\"modFrontWheels\":-1,\"plate\":\"JIR 456\",\"modTrimA\":-1,\"modArmor\":-1,\"modDashboard\":-1,\"modSideSkirt\":-1,\"fuel\":93.27996826171875,\"dirtLevel\":6.89187145233154,\"modSuspension\":-1,\"modWindows\":-1,\"modVanityPlate\":-1,\"modTrimB\":-1,\"color1\":0,\"modStruts\":-1,\"modSmokeEnabled\":1,\"modBackWheels\":-1,\"modRearBumper\":-1,\"modEngineBlock\":-1,\"health\":991,\"modAirFilter\":-1,\"modTurbo\":false,\"modHood\":-1,\"svijetlaColor\":255,\"modEngine\":1,\"modHorns\":-1,\"modRightFender\":-1,\"modSteeringWheel\":-1,\"modArchCover\":-1,\"modBrakes\":-1,\"modGrille\":-1,\"modExhaust\":-1,\"modFrame\":-1,\"windowTint\":-1,\"modFrontBumper\":-1,\"plateIndex\":0,\"pearlescentColor\":36,\"modAPlate\":-1,\"modXenon\":false}', 'car', NULL, 0, 0, 1, 0, '-1831563210', 36.342, 0, 'tamustanggt50', 0, 5886, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'KKU 655', '{\"modStruts\":-1,\"modAerials\":-1,\"modTrunk\":-1,\"pearlescentColor\":4,\"modArmor\":-1,\"color1\":0,\"modRearBumper\":-1,\"modShifterLeavers\":-1,\"modAPlate\":-1,\"modSuspension\":-1,\"health\":1000,\"plate\":\"KKU 655\",\"plateIndex\":2,\"modFender\":-1,\"model\":-2094830781,\"modTurbo\":false,\"modSpeakers\":-1,\"modSmokeEnabled\":false,\"modSeats\":-1,\"neonEnabled\":[false,false,false,false],\"modEngine\":-1,\"extras\":[],\"modBrakes\":-1,\"wheelColor\":156,\"modHydrolic\":-1,\"modGrille\":-1,\"modOrnaments\":-1,\"modTrimB\":-1,\"modRightFender\":-1,\"modEngineBlock\":-1,\"modHood\":-1,\"modSpoilers\":-1,\"modSteeringWheel\":-1,\"modPlateHolder\":-1,\"color2\":0,\"modArchCover\":-1,\"fuel\":64.94400024414063,\"modDashboard\":-1,\"modVanityPlate\":-1,\"svijetlaColor\":255,\"modExhaust\":-1,\"modAirFilter\":-1,\"modRoof\":-1,\"modFrame\":-1,\"modTank\":-1,\"dirtLevel\":0.0,\"modDial\":-1,\"modDoorSpeaker\":-1,\"modXenon\":false,\"modTrimA\":-1,\"wheels\":1,\"windowTint\":-1,\"modFrontWheels\":-1,\"modFrontBumper\":-1,\"modTransmission\":-1,\"tyreSmokeColor\":[255,255,255],\"modHorns\":-1,\"modBackWheels\":-1,\"modSideSkirt\":-1,\"neonColor\":[255,0,255],\"modWindows\":-1,\"modLivery\":0}', 'car', NULL, 0, 0, 2, 0, '-2094830781', 0.168, 0, NULL, 0, 29602, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'TAL 876', '{\"modBrakes\":-1,\"modAPlate\":-1,\"modAerials\":-1,\"extras\":{\"2\":true,\"3\":true},\"modDoorSpeaker\":-1,\"modArmor\":-1,\"pearlescentColor\":0,\"modTrunk\":-1,\"modHood\":-1,\"dirtLevel\":0.0,\"doors\":[false,false,false,false,false,false],\"modTrimA\":-1,\"plateIndex\":4,\"modBackWheels\":-1,\"modArchCover\":-1,\"windowTint\":-1,\"neonEnabled\":[false,false,false,false],\"modRightFender\":-1,\"color1\":0,\"svijetlaColor\":255,\"modRearBumper\":-1,\"modStruts\":-1,\"modShifterLeavers\":-1,\"neonColor\":[255,0,255],\"modEngineBlock\":-1,\"modFrame\":-1,\"model\":1033245328,\"modFrontWheels\":-1,\"modFrontBumper\":-1,\"health\":1000,\"modGrille\":-1,\"modSpeakers\":-1,\"modAirFilter\":-1,\"modPlateHolder\":-1,\"modFender\":-1,\"modSuspension\":-1,\"tyreSmokeColor\":[255,255,255],\"modExhaust\":-1,\"bodyHealth\":1000.0,\"modSmokeEnabled\":1,\"modWindows\":-1,\"modSideSkirt\":-1,\"modXenon\":false,\"color2\":0,\"modDashboard\":-1,\"modSteeringWheel\":-1,\"modSpoilers\":-1,\"modRoof\":-1,\"modSeats\":-1,\"modLivery\":-1,\"modTransmission\":-1,\"modVanityPlate\":-1,\"modEngine\":-1,\"wheels\":0,\"modOrnaments\":-1,\"plate\":\"TAL 876\",\"modTurbo\":false,\"modHorns\":-1,\"modDial\":-1,\"modHydrolic\":-1,\"wheelColor\":156,\"modTrimB\":-1,\"tyres\":[false,false,false,false,false,false,false],\"modTank\":-1,\"engineHealth\":1000.0,\"fuel\":10.0}', 'car', NULL, 0, 0, 1, 1, '1033245328', 0, 0, NULL, 0, NULL, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'UWE 689', '{\"plateIndex\":4,\"wheels\":0,\"tyres\":[false,false,false,false,false,false,false],\"modHood\":-1,\"neonEnabled\":[false,false,false,false],\"modArchCover\":-1,\"doors\":[false,false,false,false,false,false],\"color2\":0,\"health\":1000,\"modHorns\":-1,\"modWindows\":-1,\"modAirFilter\":-1,\"modTrimB\":-1,\"wheelColor\":156,\"modBrakes\":-1,\"modTrunk\":-1,\"tyreSmokeColor\":[255,255,255],\"modSmokeEnabled\":false,\"modOrnaments\":-1,\"modFrame\":-1,\"modHydrolic\":-1,\"modTrimA\":-1,\"extras\":[],\"color1\":0,\"neonColor\":[255,0,255],\"modShifterLeavers\":-1,\"modSuspension\":-1,\"engineHealth\":1000.0,\"modDial\":-1,\"modEngine\":-1,\"modTurbo\":false,\"modSpeakers\":-1,\"pearlescentColor\":4,\"modBackWheels\":-1,\"modTank\":-1,\"modRoof\":-1,\"modAPlate\":-1,\"modEngineBlock\":-1,\"modDashboard\":-1,\"dirtLevel\":0.0,\"modFrontBumper\":-1,\"modSideSkirt\":-1,\"modRightFender\":-1,\"bodyHealth\":1000.0,\"modSteeringWheel\":-1,\"modLivery\":2,\"modTransmission\":-1,\"modVanityPlate\":-1,\"svijetlaColor\":255,\"modExhaust\":-1,\"modGrille\":-1,\"modXenon\":false,\"fuel\":64.9159927368164,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modSpoilers\":-1,\"modArmor\":-1,\"model\":-1513691047,\"modDoorSpeaker\":-1,\"modPlateHolder\":-1,\"modSeats\":-1,\"modStruts\":-1,\"modFender\":-1,\"modAerials\":-1,\"windowTint\":-1,\"plate\":\"UWE 689\"}', 'car', NULL, 0, 0, 1, 0, '-1513691047', 0.362, 0, NULL, 0, 11791, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'XDM 948', '{\"modSpeakers\":-1,\"modGrille\":-1,\"modAPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modStruts\":-1,\"modOrnaments\":-1,\"modArchCover\":-1,\"modXenon\":false,\"modLivery\":1,\"modFender\":-1,\"modHood\":-1,\"modTrimB\":-1,\"modRoof\":-1,\"modAerials\":-1,\"color1\":27,\"modExhaust\":-1,\"modTurbo\":false,\"health\":996,\"neonEnabled\":[false,false,false,false],\"modFrontWheels\":-1,\"modWindows\":-1,\"wheelColor\":0,\"modSuspension\":-1,\"extras\":[],\"modSteeringWheel\":-1,\"modDashboard\":-1,\"windowTint\":-1,\"modSpoilers\":-1,\"modDoorSpeaker\":-1,\"model\":1998346768,\"plateIndex\":0,\"modVanityPlate\":-1,\"modPlateHolder\":-1,\"modEngine\":-1,\"modHorns\":-1,\"wheels\":0,\"modBrakes\":-1,\"neonColor\":[255,0,255],\"modRearBumper\":-1,\"modFrontBumper\":-1,\"modFrame\":-1,\"modAirFilter\":-1,\"fuel\":63.74000549316406,\"modTrunk\":-1,\"dirtLevel\":0.05438466742634,\"modDial\":-1,\"color2\":27,\"modSeats\":-1,\"svijetlaColor\":255,\"modSmokeEnabled\":1,\"pearlescentColor\":89,\"plate\":\"XDM 948\",\"modEngineBlock\":-1,\"modArmor\":-1,\"modTank\":-1,\"modTransmission\":-1,\"modHydrolic\":-1,\"modRightFender\":-1,\"modShifterLeavers\":-1,\"modTrimA\":-1,\"modSideSkirt\":-1,\"modBackWheels\":3}', 'car', NULL, 0, 0, 1, 0, '1998346768', 1.281, 0, 's55b30', 0, NULL, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'XVZ 019', '{\"modOrnaments\":-1,\"modFender\":-1,\"neonColor\":[255,0,255],\"modDial\":-1,\"color2\":0,\"modPlateHolder\":-1,\"modTank\":-1,\"modSeats\":-1,\"modTrunk\":-1,\"neonEnabled\":[false,false,false,false],\"modAerials\":-1,\"modTransmission\":2,\"modSpeakers\":-1,\"extras\":{\"3\":false,\"2\":true,\"1\":false},\"modShifterLeavers\":-1,\"modSpoilers\":-1,\"modLivery\":-1,\"tyreSmokeColor\":[255,255,255],\"model\":-346126645,\"modRoof\":-1,\"wheels\":7,\"modDoorSpeaker\":-1,\"modHydrolic\":-1,\"wheelColor\":0,\"modFrontWheels\":9,\"plate\":\"XVZ 019\",\"modTrimA\":-1,\"modArmor\":-1,\"modDashboard\":-1,\"modSideSkirt\":-1,\"fuel\":59.36002731323242,\"dirtLevel\":1.62653982639312,\"modSuspension\":3,\"modWindows\":-1,\"modVanityPlate\":-1,\"modTrimB\":-1,\"color1\":0,\"modStruts\":-1,\"modSmokeEnabled\":1,\"modBackWheels\":-1,\"modRearBumper\":-1,\"modEngineBlock\":-1,\"health\":994,\"modAirFilter\":-1,\"modTurbo\":1,\"modHood\":-1,\"svijetlaColor\":255,\"modEngine\":3,\"modHorns\":-1,\"modRightFender\":-1,\"modSteeringWheel\":-1,\"modArchCover\":-1,\"modBrakes\":2,\"modGrille\":-1,\"modExhaust\":-1,\"modFrame\":-1,\"windowTint\":-1,\"modFrontBumper\":-1,\"plateIndex\":4,\"pearlescentColor\":0,\"modAPlate\":-1,\"modXenon\":false}', 'car', NULL, 0, 0, 2, 0, '-346126645', 5.072, 4, 'audicrdb', 1, NULL, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 1, 'ZCP 444', '{\"modDial\":-1,\"modHydrolic\":-1,\"neonEnabled\":[false,false,false,false],\"modVanityPlate\":-1,\"modEngine\":-1,\"modAPlate\":-1,\"modFender\":-1,\"modDoorSpeaker\":-1,\"tyreSmokeColor\":[255,255,255],\"modStruts\":-1,\"modTrimA\":-1,\"modGrille\":-1,\"modSideSkirt\":-1,\"modLivery\":3,\"modBackWheels\":-1,\"modTurbo\":false,\"color1\":0,\"model\":1920158251,\"modDashboard\":-1,\"modTrimB\":-1,\"health\":987,\"modBrakes\":-1,\"modSeats\":-1,\"modSmokeEnabled\":1,\"modTrunk\":-1,\"modTank\":-1,\"modRightFender\":-1,\"modShifterLeavers\":-1,\"extras\":{\"2\":false,\"1\":false,\"4\":true,\"3\":false,\"5\":false},\"windowTint\":-1,\"modFrame\":-1,\"modTransmission\":-1,\"modOrnaments\":-1,\"modWindows\":-1,\"fuel\":21.86615371704101,\"wheelColor\":156,\"modAirFilter\":-1,\"modRoof\":-1,\"dirtLevel\":5.29888772964477,\"modSpeakers\":-1,\"modPlateHolder\":-1,\"modArmor\":-1,\"modEngineBlock\":-1,\"pearlescentColor\":111,\"modHorns\":-1,\"modSteeringWheel\":-1,\"modFrontBumper\":-1,\"modXenon\":false,\"wheels\":7,\"modArchCover\":-1,\"modSuspension\":-1,\"modAerials\":-1,\"svijetlaColor\":255,\"color2\":0,\"neonColor\":[255,0,255],\"modSpoilers\":-1,\"plate\":\"ZCP 444\",\"modRearBumper\":-1,\"plateIndex\":0,\"modFrontWheels\":-1,\"modHood\":-1,\"modExhaust\":-1}', 'car', NULL, 0, 0, 2, 0, '1920158251', 27.05, 0, 'ta023l539', 4, 18753, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 0, 'ZMQ 151', '{\"modGrille\":-1,\"modDashboard\":-1,\"modSteeringWheel\":-1,\"modRoof\":-1,\"modFrontBumper\":-1,\"model\":433374210,\"wheelColor\":156,\"modRightFender\":-1,\"modArchCover\":-1,\"modSpeakers\":-1,\"modTrimA\":-1,\"modFender\":-1,\"modDial\":-1,\"color1\":27,\"modTrimB\":-1,\"modHood\":-1,\"plateIndex\":0,\"modBrakes\":-1,\"modShifterLeavers\":-1,\"modSuspension\":-1,\"health\":985,\"modEngineBlock\":-1,\"modFrontWheels\":-1,\"modTrunk\":-1,\"modEngine\":-1,\"dirtLevel\":2.83049774169921,\"fuel\":21.16276931762695,\"neonColor\":[255,0,255],\"neonEnabled\":[false,false,false,false],\"modStruts\":-1,\"modLivery\":0,\"modSideSkirt\":-1,\"modTransmission\":-1,\"modSmokeEnabled\":1,\"modAirFilter\":-1,\"modTank\":-1,\"modSeats\":-1,\"modWindows\":-1,\"modBackWheels\":-1,\"wheels\":0,\"modXenon\":false,\"modHorns\":-1,\"modArmor\":-1,\"modDoorSpeaker\":-1,\"modAPlate\":-1,\"modRearBumper\":-1,\"modTurbo\":1,\"plate\":\"ZMQ 151\",\"modFrame\":-1,\"modHydrolic\":-1,\"windowTint\":-1,\"modSpoilers\":-1,\"extras\":{\"11\":false},\"color2\":31,\"tyreSmokeColor\":[255,255,255],\"svijetlaColor\":255,\"modOrnaments\":-1,\"modVanityPlate\":-1,\"modPlateHolder\":-1,\"pearlescentColor\":31,\"modAerials\":-1,\"modExhaust\":-1}', 'car', NULL, 0, 0, 1, 0, '433374210', 16.644, 4, 'ferrarif154', 1, NULL, 0);
-INSERT INTO `owned_vehicles` VALUES (10000, 0, 'ZUI 620', '{\"modAerials\":-1,\"wheels\":7,\"modEngineBlock\":-1,\"modSuspension\":4,\"modRightFender\":-1,\"modTank\":-1,\"model\":-143695728,\"modArchCover\":-1,\"modEngine\":3,\"modTrimB\":-1,\"tyreSmokeColor\":[255,255,255],\"color1\":0,\"modPlateHolder\":-1,\"neonColor\":[255,0,255],\"modSideSkirt\":-1,\"modFrame\":-1,\"modAPlate\":-1,\"modFrontBumper\":-1,\"modTurbo\":1,\"dirtLevel\":2.27262997627258,\"fuel\":31.28811264038086,\"modBackWheels\":-1,\"modSpoilers\":-1,\"modAirFilter\":-1,\"modSmokeEnabled\":1,\"wheelColor\":4,\"modLivery\":-1,\"modDashboard\":-1,\"modBrakes\":2,\"modWindows\":-1,\"extras\":[],\"modFrontWheels\":-1,\"plate\":\"ZUI 620\",\"modRoof\":-1,\"modShifterLeavers\":-1,\"modTrimA\":-1,\"color2\":0,\"modSpeakers\":-1,\"svijetlaColor\":255,\"modHydrolic\":-1,\"modGrille\":-1,\"windowTint\":-1,\"modFender\":-1,\"modHood\":-1,\"modArmor\":-1,\"modDoorSpeaker\":-1,\"modRearBumper\":-1,\"modDial\":-1,\"pearlescentColor\":156,\"health\":996,\"modTrunk\":-1,\"plateIndex\":0,\"neonEnabled\":[false,false,false,false],\"modOrnaments\":-1,\"modVanityPlate\":-1,\"modSeats\":-1,\"modHorns\":-1,\"modTransmission\":2,\"modExhaust\":-1,\"modStruts\":-1,\"modSteeringWheel\":-1,\"modXenon\":false}', 'car', NULL, 0, 0, 2, 0, '-143695728', 26.938, 4, 'audicrdb', 1, NULL, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'AIY 300', '{\"color1\":4,\"modGrille\":-1,\"modDoorSpeaker\":-1,\"health\":1000,\"modRightFender\":-1,\"modArmor\":-1,\"modDial\":-1,\"modHood\":-1,\"modLivery\":-1,\"bodyHealth\":1000.0,\"modSmokeEnabled\":1,\"plate\":\"AIY 300\",\"tyres\":[false,false,false,false,false,false,false],\"modTrimB\":-1,\"modExhaust\":-1,\"modTransmission\":-1,\"pearlescentColor\":4,\"modSideSkirt\":-1,\"modAPlate\":-1,\"modShifterLeavers\":-1,\"dirtLevel\":0.20720222592353,\"tyreSmokeColor\":[255,255,255],\"fuel\":64.8740005493164,\"modHorns\":-1,\"plateIndex\":4,\"model\":1152513354,\"modSteeringWheel\":-1,\"modStruts\":-1,\"modFrontBumper\":-1,\"modArchCover\":-1,\"engineHealth\":1000.0,\"modBackWheels\":-1,\"neonColor\":[255,0,255],\"modRoof\":-1,\"modSuspension\":-1,\"windowTint\":-1,\"wheelColor\":4,\"modWindows\":-1,\"modEngineBlock\":-1,\"modFrontWheels\":-1,\"modSpoilers\":-1,\"color2\":4,\"extras\":{\"2\":true,\"3\":true,\"4\":true,\"5\":true,\"11\":true,\"12\":false,\"8\":true},\"modFender\":-1,\"modSeats\":-1,\"neonEnabled\":[false,false,false,false],\"svijetlaColor\":255,\"modPlateHolder\":-1,\"modRearBumper\":-1,\"modTrimA\":-1,\"modTrunk\":-1,\"modOrnaments\":-1,\"modAirFilter\":-1,\"modDashboard\":-1,\"modTank\":-1,\"modAerials\":-1,\"modHydrolic\":-1,\"modVanityPlate\":-1,\"modFrame\":-1,\"modBrakes\":-1,\"wheels\":0,\"modTurbo\":false,\"modSpeakers\":-1,\"modEngine\":1,\"modXenon\":false,\"doors\":[false,false,false,false,false,false]}', 'car', NULL, 0, 0, 1, 0, '1152513354', 8.681, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10010, 0, 'AJV 642', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":31,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"AJV 642\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":107,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":31,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":1,\"model\":-1347153492,\"fuel\":64.75994873046875,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-1347153492', 2.81, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'AZU 585', '{\"color1\":138,\"modGrille\":-1,\"modDoorSpeaker\":-1,\"health\":998,\"modRightFender\":-1,\"modArmor\":-1,\"modDial\":-1,\"modHood\":-1,\"modLivery\":-1,\"bodyHealth\":998.75,\"modSmokeEnabled\":1,\"plate\":\"AZU 585\",\"tyres\":[false,false,false,false,false,false,false],\"modTrimB\":-1,\"modExhaust\":-1,\"modTransmission\":-1,\"pearlescentColor\":4,\"modSideSkirt\":-1,\"modAPlate\":-1,\"modShifterLeavers\":-1,\"dirtLevel\":1.98138618469238,\"tyreSmokeColor\":[255,255,255],\"fuel\":64.5479965209961,\"modHorns\":-1,\"plateIndex\":1,\"model\":1932295607,\"modSteeringWheel\":-1,\"modStruts\":-1,\"modFrontBumper\":-1,\"modArchCover\":-1,\"engineHealth\":944.20166015625,\"modBackWheels\":-1,\"neonColor\":[255,0,255],\"modRoof\":-1,\"modSuspension\":-1,\"windowTint\":-1,\"wheelColor\":156,\"modWindows\":-1,\"modEngineBlock\":-1,\"modFrontWheels\":-1,\"modSpoilers\":-1,\"color2\":15,\"extras\":{\"1\":false},\"modFender\":-1,\"modSeats\":-1,\"neonEnabled\":[false,false,false,false],\"svijetlaColor\":255,\"modPlateHolder\":-1,\"modRearBumper\":-1,\"modTrimA\":-1,\"modTrunk\":-1,\"modOrnaments\":-1,\"modAirFilter\":-1,\"modDashboard\":-1,\"modTank\":-1,\"modAerials\":-1,\"modHydrolic\":-1,\"modVanityPlate\":-1,\"modFrame\":-1,\"modBrakes\":-1,\"wheels\":5,\"modTurbo\":false,\"modSpeakers\":-1,\"modEngine\":-1,\"modXenon\":false,\"doors\":[false,false,false,false,false,false]}', 'car', NULL, 0, 0, 1, 0, '1932295607', 10.264, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'CBV 957', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":6,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"CBV 957\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"9\":false,\"8\":false,\"3\":true,\"2\":false,\"5\":false,\"4\":false,\"7\":false,\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":6,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":-243837818,\"fuel\":64.83198547363281,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-243837818', 1.286, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'CCO 124', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":28,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"CCO 124\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":14,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"7\":true,\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":28,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":54381077,\"fuel\":64.81996154785156,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '54381077', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'DBM 622', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":53,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"DBM 622\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":5,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":53,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modBrakes\":-1,\"modRoof\":-1,\"dirtLevel\":0.0,\"modOrnaments\":-1,\"modPlateHolder\":-1,\"modTrimA\":-1,\"modDoorSpeaker\":-1,\"windowTint\":-1,\"wheels\":0,\"neonColor\":[255,0,255],\"modHorns\":-1,\"modFender\":-1,\"model\":1462416745,\"fuel\":64.95802307128906,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modWindows\":-1,\"modLivery\":0,\"modStruts\":-1,\"modDial\":-1,\"modHood\":-1,\"engineHealth\":1000.0,\"modSideSkirt\":-1}', 'car', NULL, 0, 0, 1, 0, '1462416745', 0.059, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10010, 0, 'EBI 256', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":39,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"EBI 256\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":[],\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":67,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":676238631,\"fuel\":64.86207580566406,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '676238631', 2.819, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'FOU 131', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":28,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"FOU 131\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":4,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"4\":false,\"3\":true,\"2\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":28,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":2057197469,\"fuel\":64.76200103759766,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '2057197469', 0.09, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'HBL 461', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":1,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"HBL 461\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":28,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":343720538,\"fuel\":99.85008239746094,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '343720538', 0.082, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'HXR 546', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":10,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"HXR 546\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":10,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"dirtLevel\":0.0,\"modBrakes\":-1,\"modRoof\":-1,\"bodyHealth\":1000.0,\"modTrimA\":-1,\"modHood\":-1,\"neonColor\":[255,0,255],\"wheels\":0,\"windowTint\":-1,\"modDoorSpeaker\":-1,\"modHorns\":-1,\"modWindows\":-1,\"modLivery\":-1,\"modOrnaments\":-1,\"fuel\":64.92504119873047,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modFender\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"modRightFender\":-1,\"modSideSkirt\":-1,\"model\":1820016202}', 'car', NULL, 0, 0, 1, 0, '1820016202', 6.611, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'HZY 976', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":134,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"HZY 976\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":134,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":1376955328,\"fuel\":64.74800109863281,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":3,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1376955328', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'IUY 175', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":38,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"IUY 175\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":2,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"3\":false,\"2\":true,\"5\":true,\"4\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":38,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"dirtLevel\":0.0,\"modBrakes\":-1,\"modRoof\":-1,\"bodyHealth\":1000.0,\"modTrimA\":-1,\"modHood\":-1,\"neonColor\":[255,0,255],\"wheels\":2,\"windowTint\":-1,\"modDoorSpeaker\":-1,\"modHorns\":-1,\"modWindows\":-1,\"modLivery\":0,\"modOrnaments\":-1,\"fuel\":64.8740005493164,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modFender\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"modRightFender\":-1,\"modSideSkirt\":-1,\"model\":-2147282465}', 'car', NULL, 0, 0, 1, 0, '-2147282465', 0.466, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'IUZ 411', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":38,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"IUZ 411\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":38,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1156552856,\"fuel\":64.63600158691406,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1156552856', 1.201, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'LAY 157', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":51,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LAY 157\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":103,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":51,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":-834393917,\"fuel\":64.81996154785156,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":2,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-834393917', 0.83, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'LKU 646', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":111,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LKU 646\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":2,\"wheelColor\":60,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"3\":false,\"2\":true,\"5\":false,\"12\":false,\"11\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":49,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":1148527416,\"fuel\":64.95099639892578,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1148527416', 0.323, 0, NULL, 1, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'LOQ 483', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":138,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LOQ 483\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":5,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":138,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modBrakes\":-1,\"modRoof\":-1,\"dirtLevel\":0.0,\"modOrnaments\":-1,\"modPlateHolder\":-1,\"modTrimA\":-1,\"modDoorSpeaker\":-1,\"windowTint\":-1,\"wheels\":0,\"neonColor\":[255,0,255],\"modHorns\":-1,\"modFender\":-1,\"model\":1462416745,\"fuel\":64.97601318359375,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modWindows\":-1,\"modLivery\":0,\"modStruts\":-1,\"modDial\":-1,\"modHood\":-1,\"engineHealth\":1000.0,\"modSideSkirt\":-1}', 'car', NULL, 0, 0, 1, 0, '1462416745', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'LQU 876', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":15,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LQU 876\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":138,\"modTrunk\":-1,\"modExhaust\":-1,\"modRearBumper\":-1,\"modHydrolic\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modEngine\":-1,\"modRoof\":-1,\"modSmokeEnabled\":false,\"modBrakes\":-1,\"neonColor\":[255,0,255],\"bodyHealth\":1000.0,\"modTrimA\":-1,\"windowTint\":-1,\"modOrnaments\":-1,\"modHood\":-1,\"modDoorSpeaker\":-1,\"modHorns\":-1,\"model\":1932295607,\"fuel\":64.95198059082031,\"modWindows\":-1,\"modFrontWheels\":-1,\"wheels\":5,\"modLivery\":-1,\"modStruts\":-1,\"modDial\":-1,\"engineHealth\":1000.0,\"dirtLevel\":0.0,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1932295607', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'MAF 770', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":123,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":123,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"MAF 770\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":true,\"12\":false,\"11\":false,\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":123,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":-1727242524,\"fuel\":64.8399658203125,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-1727242524', 0.018, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'MAN 322', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":129,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"MAN 322\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"3\":true,\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":129,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1049637452,\"fuel\":64.8399658203125,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1049637452', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'NRV 438', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":134,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"NRV 438\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false,\"4\":true,\"11\":false,\"10\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":134,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":5,\"model\":613402935,\"fuel\":64.69200134277344,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '613402935', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'NUG 310', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":6,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"NUG 310\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":112,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":[],\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":27,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":1,\"model\":1352183536,\"fuel\":59.62200164794922,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1352183536', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'NUO 048', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":1,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"NUO 048\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"3\":false,\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":1,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":1469861679,\"fuel\":64.78398132324219,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":3,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1469861679', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'OCQ 284', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":6,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"OCQ 284\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"8\":false,\"3\":true,\"2\":false,\"5\":false,\"4\":false,\"7\":false,\"9\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":6,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"dirtLevel\":0.0,\"modBrakes\":-1,\"modRoof\":-1,\"modRightFender\":-1,\"modHood\":-1,\"bodyHealth\":1000.0,\"modTrimA\":-1,\"neonColor\":[255,0,255],\"windowTint\":-1,\"modDoorSpeaker\":-1,\"wheels\":7,\"modFender\":-1,\"modHorns\":-1,\"model\":-243837818,\"fuel\":64.97000122070313,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modWindows\":-1,\"modLivery\":0,\"modStruts\":-1,\"modDial\":-1,\"engineHealth\":1000.0,\"modSideSkirt\":-1,\"modOrnaments\":-1}', 'car', NULL, 0, 0, 1, 0, '-243837818', 4.243, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'PQL 575', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":0,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"PQL 575\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":2,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":true,\"3\":false,\"2\":true,\"5\":true,\"4\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":5,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":-2147282465,\"fuel\":64.53800201416016,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-2147282465', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'PSO 533', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":12,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"PSO 533\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true,\"4\":true,\"11\":false,\"10\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":4,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":5,\"model\":336238405,\"fuel\":49.82003021240234,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '336238405', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'QCA 555', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":100,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"QCA 555\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":103,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":100,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":-1825007226,\"fuel\":64.88006591796875,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-1825007226', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'RAV 323', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":112,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":31,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"RAV 323\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":0,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":[],\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":4,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":1,\"model\":-526983904,\"fuel\":59.53800201416015,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-526983904', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'RGS 911', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":111,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"RGS 911\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":68,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"2\":true,\"12\":false,\"11\":false,\"10\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":67,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":640012156,\"fuel\":64.73400115966797,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '640012156', 0.014, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'SGA 921', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":138,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"SGA 921\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":5,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":138,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1462416745,\"fuel\":64.92204284667969,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1462416745', 0.124, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'SKE 718', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":51,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"SKE 718\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":105,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false,\"7\":true,\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":51,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":545326235,\"fuel\":64.8699722290039,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '545326235', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'SRX 150', '{\"modAirFilter\":-1,\"doors\":[false,false,false,false,false,false],\"extras\":{\"12\":false,\"10\":false,\"11\":true},\"modSteeringWheel\":-1,\"modWindows\":-1,\"modStruts\":-1,\"modOrnaments\":-1,\"modDial\":-1,\"modExhaust\":-1,\"wheels\":2,\"plate\":\"SRX 150\",\"modPlateHolder\":-1,\"svijetlaColor\":255,\"modHydrolic\":-1,\"color1\":4,\"modSideSkirt\":-1,\"color2\":12,\"modTrimB\":-1,\"modSuspension\":-1,\"modSeats\":-1,\"health\":996,\"modAPlate\":-1,\"pearlescentColor\":4,\"windowTint\":-1,\"neonColor\":[255,0,255],\"modFrame\":-1,\"bodyHealth\":996.75,\"model\":-58956387,\"tyres\":[false,false,false,false,false,false,false],\"modFender\":-1,\"modArmor\":-1,\"dirtLevel\":0.06516183167695,\"modBrakes\":-1,\"modRightFender\":-1,\"modSpoilers\":-1,\"modSmokeEnabled\":1,\"modXenon\":false,\"modFrontBumper\":-1,\"modLivery\":-1,\"modGrille\":-1,\"modFrontWheels\":-1,\"modBackWheels\":-1,\"modHorns\":-1,\"modRoof\":-1,\"modTrimA\":-1,\"plateIndex\":3,\"modRearBumper\":-1,\"modVanityPlate\":-1,\"engineHealth\":995.875,\"wheelColor\":156,\"tyreSmokeColor\":[255,255,255],\"modTransmission\":-1,\"modSpeakers\":-1,\"modDoorSpeaker\":-1,\"modDashboard\":-1,\"modHood\":-1,\"fuel\":64.04922485351563,\"modEngine\":-1,\"modTank\":-1,\"modTrunk\":-1,\"neonEnabled\":[false,false,false,false],\"modAerials\":-1,\"modShifterLeavers\":-1,\"modEngineBlock\":-1,\"modArchCover\":-1,\"modTurbo\":false}', 'car', NULL, 0, 0, 1, 0, '-58956387', 0.307, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'UWX 023', '{\"modHood\":-1,\"modRightFender\":-1,\"modStruts\":-1,\"modWindows\":-1,\"modRoof\":-1,\"modFrontWheels\":-1,\"tyres\":[false,false,false,false,false,false,false],\"modBackWheels\":-1,\"modDial\":-1,\"modSpoilers\":-1,\"modXenon\":false,\"modSpeakers\":-1,\"color1\":0,\"engineHealth\":998.875,\"modSideSkirt\":-1,\"modFrame\":-1,\"modGrille\":-1,\"modArchCover\":-1,\"doors\":[false,false,false,false,false,false],\"wheels\":0,\"modFender\":-1,\"modTurbo\":false,\"neonColor\":[255,0,255],\"bodyHealth\":999.25,\"modDoorSpeaker\":-1,\"modSeats\":-1,\"modAerials\":-1,\"modTransmission\":-1,\"modSmokeEnabled\":1,\"modEngineBlock\":-1,\"tyreSmokeColor\":[255,255,255],\"modAirFilter\":-1,\"health\":1000,\"modHorns\":-1,\"svijetlaColor\":255,\"neonEnabled\":[false,false,false,false],\"windowTint\":-1,\"color2\":0,\"wheelColor\":4,\"extras\":{\"4\":false,\"1\":true,\"2\":false,\"3\":false},\"modTrimB\":-1,\"modRearBumper\":-1,\"modExhaust\":-1,\"modShifterLeavers\":-1,\"modTrimA\":-1,\"modSteeringWheel\":-1,\"modFrontBumper\":-1,\"modArmor\":-1,\"modPlateHolder\":-1,\"modEngine\":-1,\"modTrunk\":-1,\"modBrakes\":-1,\"modOrnaments\":-1,\"modSuspension\":-1,\"dirtLevel\":0.25937604904174,\"modTank\":-1,\"modDashboard\":-1,\"model\":2057197469,\"plate\":\"UWX 023\",\"modAPlate\":-1,\"modVanityPlate\":-1,\"fuel\":59.4209976196289,\"modHydrolic\":-1,\"pearlescentColor\":0,\"modLivery\":0,\"plateIndex\":3}', 'car', NULL, 0, 0, 1, 0, '2057197469', 3.89, 0, 'ta019b58', 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 1, 'WZK 607', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":29,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":29,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"WZK 607\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":29,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"8\":true,\"3\":true,\"2\":true,\"5\":true,\"12\":false,\"11\":false,\"4\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":29,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1152513354,\"fuel\":64.89805603027344,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1152513354', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10000, 0, 'XXF 098', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":63,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"XXF 098\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"12\":true,\"11\":false,\"10\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":63,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":5,\"model\":1525524859,\"fuel\":49.96000671386719,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1525524859', 0, 0, NULL, 0, 30, 0);
+INSERT INTO `owned_vehicles` VALUES (10010, 0, 'YEJ 388', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":0,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"YEJ 388\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":0,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":0,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":615801459,\"fuel\":64.80400085449219,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '615801459', 0.322, 0, NULL, 0, 30, 0);
 
 -- ----------------------------
 -- Table structure for phone_app_chat
@@ -1580,24 +1635,36 @@ CREATE TABLE `poslovi`  (
   PRIMARY KEY (`name`) USING BTREE,
   INDEX `whitelisted`(`whitelisted`) USING BTREE,
   INDEX `pID`(`pID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of poslovi
 -- ----------------------------
-INSERT INTO `poslovi` VALUES (2, 'deliverer', 'Dostavljac', 0, 0);
-INSERT INTO `poslovi` VALUES (3, 'drvosjeca', 'Drvosjeca', 0, 0);
-INSERT INTO `poslovi` VALUES (4, 'elektricar', 'Elektricar', 0, 0);
-INSERT INTO `poslovi` VALUES (5, 'farmer', 'Farmer', 0, 1);
-INSERT INTO `poslovi` VALUES (6, 'garbage', 'Smetlar', 0, 1);
-INSERT INTO `poslovi` VALUES (7, 'gradjevinar', 'Gradjevinar', 0, 1);
-INSERT INTO `poslovi` VALUES (8, 'kamion', 'Kamiondzija', 0, 1);
-INSERT INTO `poslovi` VALUES (9, 'kosac', 'Kosac trave', 0, 0);
-INSERT INTO `poslovi` VALUES (10, 'ralica', 'Cistac snijega', 1, 1);
+INSERT INTO `poslovi` VALUES (2, 'farmer', 'Farmer', 0, 1);
+INSERT INTO `poslovi` VALUES (3, 'kamion', 'Kamiondzija', 0, 1);
+INSERT INTO `poslovi` VALUES (4, 'kosac', 'Kosac trave', 0, 0);
+INSERT INTO `poslovi` VALUES (5, 'luka', 'Lucki radnik', 0, 1);
 INSERT INTO `poslovi` VALUES (1, 'unemployed', 'Nezaposlen', 0, 0);
-INSERT INTO `poslovi` VALUES (11, 'vatrogasac', 'Vatrogasac', 0, 0);
-INSERT INTO `poslovi` VALUES (12, 'vlak', 'Vlakovodja', 0, 1);
-INSERT INTO `poslovi` VALUES (13, 'vodoinstalater', 'Vodoinstalater', 0, 1);
+
+-- ----------------------------
+-- Table structure for praone
+-- ----------------------------
+DROP TABLE IF EXISTS `praone`;
+CREATE TABLE `praone`  (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `vlasnik` int NULL DEFAULT NULL,
+  `pranje` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `koord` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `cijena` int NULL DEFAULT NULL,
+  `sef` int NULL DEFAULT 0,
+  `kcijena` int NULL DEFAULT 0,
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of praone
+-- ----------------------------
+INSERT INTO `praone` VALUES (1, NULL, '{\"x\":25.20756912231445,\"y\":-1391.8756103515626,\"z\":28.33451271057129}', '{\"x\":-1.5900136232376,\"y\":-1400.3079833984376,\"z\":28.27205467224121}', 55, 88, 10000);
 
 -- ----------------------------
 -- Table structure for prijatelji
@@ -1613,13 +1680,6 @@ CREATE TABLE `prijatelji`  (
 -- ----------------------------
 -- Records of prijatelji
 -- ----------------------------
-INSERT INTO `prijatelji` VALUES (15, 10003, 10000);
-INSERT INTO `prijatelji` VALUES (16, 10003, 10001);
-INSERT INTO `prijatelji` VALUES (17, 10000, 10001);
-INSERT INTO `prijatelji` VALUES (18, 10002, 10003);
-INSERT INTO `prijatelji` VALUES (19, 10002, 10000);
-INSERT INTO `prijatelji` VALUES (20, 10010, 10000);
-INSERT INTO `prijatelji` VALUES (21, 10011, 10000);
 
 -- ----------------------------
 -- Table structure for priority
@@ -1675,11 +1735,11 @@ CREATE TABLE `pumpe`  (
 -- ----------------------------
 -- Records of pumpe
 -- ----------------------------
-INSERT INTO `pumpe` VALUES (5, 'Pumpa 1', '{\"x\":288.7102966308594,\"y\":-1266.9971923828126,\"z\":29.44075202941894}', NULL, 1600000, 7115, 1.5, 250, 918, 0, '{\"x\":284.2962341308594,\"y\":-1251.5218505859376,\"z\":29.25572204589843}', 1);
+INSERT INTO `pumpe` VALUES (5, 'Pumpa 1', '{\"x\":288.7102966308594,\"y\":-1266.9971923828126,\"z\":29.44075202941894}', 10000, 1600000, 7115, 1.5, 250, 918, 0, '{\"x\":284.2962341308594,\"y\":-1251.5218505859376,\"z\":29.25572204589843}', 1);
 INSERT INTO `pumpe` VALUES (6, 'Pumpa 2', '{\"x\":46.5079116821289,\"y\":2789.208740234375,\"z\":57.87831497192383}', NULL, 600000, 0, 1.5, 250, 500, 0, '{\"x\":65.29000854492188,\"y\":2782.740966796875,\"z\":57.8783073425293}', 0);
 INSERT INTO `pumpe` VALUES (7, 'Pumpa 3', '{\"x\":265.904296875,\"y\":2598.3525390625,\"z\":44.83026885986328}', NULL, 500000, 0, 1.5, 250, 500, 0, '{\"x\":243.4324493408203,\"y\":2599.6689453125,\"z\":45.12274551391601}', 0);
 INSERT INTO `pumpe` VALUES (8, 'Pumpa 4', '{\"x\":1039.33837890625,\"y\":2664.4296875,\"z\":39.55110931396484}', NULL, 700000, 0, 1.5, 250, 500, 0, '{\"x\":1057.305908203125,\"y\":2657.41064453125,\"z\":39.55492782592773}', 0);
-INSERT INTO `pumpe` VALUES (9, 'Pumpa 5', '{\"x\":1204.728759765625,\"y\":2663.441162109375,\"z\":37.80981826782226}', NULL, 700000, 389, 1.5, 250, 362, 1, '{\"x\":1208.5582275390626,\"y\":2642.334228515625,\"z\":37.83019256591797}', 0);
+INSERT INTO `pumpe` VALUES (9, 'Pumpa 5', '{\"x\":1204.728759765625,\"y\":2663.441162109375,\"z\":37.80981826782226}', NULL, 700000, 389, 1.5, 250, 500, 0, '{\"x\":1208.5582275390626,\"y\":2642.334228515625,\"z\":37.83019256591797}', 0);
 INSERT INTO `pumpe` VALUES (10, 'Pumpa 6', '{\"x\":2545.087646484375,\"y\":2592.07177734375,\"z\":37.95740509033203}', NULL, 200000, 0, 1.5, 250, 500, 0, '{\"x\":2537.218017578125,\"y\":2587.263427734375,\"z\":37.94486999511719}', 0);
 INSERT INTO `pumpe` VALUES (11, 'Pumpa 7', '{\"x\":2673.765625,\"y\":3267.038330078125,\"z\":55.24057006835937}', NULL, 800000, 0, 1.5, 250, 500, 0, '{\"x\":2685.82470703125,\"y\":3259.474853515625,\"z\":55.24052047729492}', 0);
 INSERT INTO `pumpe` VALUES (12, 'Pumpa 8', '{\"x\":2001.4554443359376,\"y\":3779.962890625,\"z\":32.18083190917969}', NULL, 700000, 0, 1.5, 250, 500, 0, '{\"x\":1985.66357421875,\"y\":3757.26171875,\"z\":32.17351150512695}', 0);
@@ -1689,9 +1749,9 @@ INSERT INTO `pumpe` VALUES (15, 'Pumpa 11', '{\"x\":179.8773956298828,\"y\":6602
 INSERT INTO `pumpe` VALUES (16, 'Pumpa 12', '{\"x\":-92.73368072509766,\"y\":6409.70263671875,\"z\":31.64035034179687}', 10003, 900000, 61, 1.5, 250, 460, 0, '{\"x\":-79.52699279785156,\"y\":6431.9990234375,\"z\":31.49045944213867}', 0);
 INSERT INTO `pumpe` VALUES (17, 'Pumpa 13', '{\"x\":-2544.21923828125,\"y\":2316.140380859375,\"z\":33.21610641479492}', NULL, 1100000, 0, 1.5, 250, 500, 0, '{\"x\":-2544.855224609375,\"y\":2323.4072265625,\"z\":33.0599250793457}', 0);
 INSERT INTO `pumpe` VALUES (18, 'Pumpa 14', '{\"x\":-1801.026611328125,\"y\":804.757080078125,\"z\":138.4710693359375}', NULL, 1200000, 0, 1.5, 250, 500, 0, '{\"x\":-1813.795654296875,\"y\":799.1516723632813,\"z\":138.47694396972657}', 0);
-INSERT INTO `pumpe` VALUES (19, 'Pumpa 15', '{\"x\":-1427.7933349609376,\"y\":-268.3453674316406,\"z\":46.2274169921875}', NULL, 1300000, 1813364, 11, 250, 176, 1, '{\"x\":-1408.90771484375,\"y\":-276.75555419921877,\"z\":46.37263870239258}', 1);
+INSERT INTO `pumpe` VALUES (19, 'Pumpa 15', '{\"x\":-1427.7933349609376,\"y\":-268.3453674316406,\"z\":46.2274169921875}', NULL, 1300000, 1813364, 11, 250, 1000, 0, '{\"x\":-1408.90771484375,\"y\":-276.75555419921877,\"z\":46.37263870239258}', 1);
 INSERT INTO `pumpe` VALUES (20, 'Pumpa 16', '{\"x\":-2073.2041015625,\"y\":-327.2723083496094,\"z\":13.31596565246582}', 10003, 1300000, 90500899, 1000000, 600, 268, 1, '{\"x\":-2064.948974609375,\"y\":-305.96405029296877,\"z\":13.142915725708}', 0);
-INSERT INTO `pumpe` VALUES (21, 'Pumpa 17', '{\"x\":-724.0491333007813,\"y\":-937.43115234375,\"z\":19.03470802307129}', NULL, 1400000, 1901301, 4, 250, 315, 1, '{\"x\":-711.2090454101563,\"y\":-927.6903686523438,\"z\":19.01409339904785}', 1);
+INSERT INTO `pumpe` VALUES (21, 'Pumpa 17', '{\"x\":-724.0491333007813,\"y\":-937.43115234375,\"z\":19.03470802307129}', NULL, 1400000, 1901301, 4, 250, 1000, 0, '{\"x\":-711.2090454101563,\"y\":-927.6903686523438,\"z\":19.01409339904785}', 1);
 INSERT INTO `pumpe` VALUES (22, 'Pumpa 18', '{\"x\":-531.4134521484375,\"y\":-1220.990234375,\"z\":18.45499420166015}', NULL, 1100000, 0, 1.5, 250, 500, 0, '{\"x\":-520.8833618164063,\"y\":-1201.466796875,\"z\":18.56760597229004}', 0);
 INSERT INTO `pumpe` VALUES (23, 'Pumpa 19', '{\"x\":-71.19830322265625,\"y\":-1763.1817626953126,\"z\":29.3459243774414}', NULL, 1300000, 0, 1.5, 250, 500, 0, '{\"x\":-62.38230514526367,\"y\":-1745.2607421875,\"z\":29.33869361877441}', 0);
 INSERT INTO `pumpe` VALUES (24, 'Pumpa 20', '{\"x\":818.1276245117188,\"y\":-1040.5389404296876,\"z\":26.75078582763672}', NULL, 1400000, 0, 1.5, 250, 500, 0, '{\"x\":817.4137573242188,\"y\":-1035.2459716796876,\"z\":26.3928050994873}', 0);
@@ -1808,7 +1868,7 @@ CREATE TABLE `shops`  (
   `price` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `item`(`item`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shops
@@ -1822,27 +1882,13 @@ INSERT INTO `shops` VALUES (17, 'TwentyFourSeven', 'pizza', 9);
 INSERT INTO `shops` VALUES (18, 'TwentyFourSeven', 'kola', 7);
 INSERT INTO `shops` VALUES (23, 'TwentyFourSeven', 'contract', 1);
 INSERT INTO `shops` VALUES (27, 'TwentyFourSeven', 'repairkit', 2500);
-INSERT INTO `shops` VALUES (30, 'TwentyFourSeven', 'headbag', 2);
-INSERT INTO `shops` VALUES (55, 'TwentyFourSeven', 'saksija', 5);
-INSERT INTO `shops` VALUES (58, 'TwentyFourSeven', 'zemlja', 7);
-INSERT INTO `shops` VALUES (61, 'TwentyFourSeven', 'ronjenje', 500);
 INSERT INTO `shops` VALUES (64, 'TwentyFourSeven', 'milk', 10);
-INSERT INTO `shops` VALUES (67, 'TwentyFourSeven', 'acetone', 50);
-INSERT INTO `shops` VALUES (70, 'TwentyFourSeven', 'lithium', 150);
 INSERT INTO `shops` VALUES (73, 'TwentyFourSeven', 'ukosnica', 10);
 INSERT INTO `shops` VALUES (76, 'TwentyFourSeven', 'petarde', 10);
-INSERT INTO `shops` VALUES (79, 'TwentyFourSeven', 'vatromet', 20);
 INSERT INTO `shops` VALUES (82, 'TwentyFourSeven', 'mobitel', 250);
-INSERT INTO `shops` VALUES (85, 'TwentyFourSeven', 'grebalica', 50);
-INSERT INTO `shops` VALUES (88, 'TwentyFourSeven', 'loto', 150);
-INSERT INTO `shops` VALUES (91, 'TuningShop', 'filter', 23000);
-INSERT INTO `shops` VALUES (92, 'TuningShop', 'auspuh', 27000);
-INSERT INTO `shops` VALUES (93, 'TuningShop', 'elektronika', 25000);
-INSERT INTO `shops` VALUES (94, 'TuningShop', 'turbo', 3424);
-INSERT INTO `shops` VALUES (95, 'TuningShop', 'intercooler', 64544);
-INSERT INTO `shops` VALUES (96, 'TuningShop', 'finjectori', 4324);
-INSERT INTO `shops` VALUES (97, 'TuningShop', 'kvacilo', 87576);
-INSERT INTO `shops` VALUES (98, 'TuningShop', 'kmotor', 92424);
+INSERT INTO `shops` VALUES (99, 'TwentyFourSeven', 'novine', 2);
+INSERT INTO `shops` VALUES (101, 'TwentyFourSeven', 'fishingrod', 50);
+INSERT INTO `shops` VALUES (102, 'TwentyFourSeven', 'fishbait', 5);
 
 -- ----------------------------
 -- Table structure for shops2
@@ -1872,7 +1918,7 @@ CREATE TABLE `shops_itemi`  (
   `item` varchar(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `cijena` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shops_itemi
@@ -1884,6 +1930,29 @@ INSERT INTO `shops_itemi` VALUES (7, 'Trgovinica', 'sisanje', 51);
 INSERT INTO `shops_itemi` VALUES (6, 'Trgovinica', 'bread', 10);
 INSERT INTO `shops_itemi` VALUES (11, 'rudar', 'zeljezo', 69);
 INSERT INTO `shops_itemi` VALUES (12, 'tuning', 'turbo', 55000);
+INSERT INTO `shops_itemi` VALUES (13, 'Trgovinica', 'novine', 2);
+
+-- ----------------------------
+-- Table structure for truck_inventory
+-- ----------------------------
+DROP TABLE IF EXISTS `truck_inventory`;
+CREATE TABLE `truck_inventory`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `item` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `itemt` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `count` int NOT NULL,
+  `plate` varchar(8) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `owned` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `item`(`item`, `plate`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of truck_inventory
+-- ----------------------------
+INSERT INTO `truck_inventory` VALUES (1, 'gljive', 'item_standard', 5, 'XIB 746 ', 'Gljive', '0');
+INSERT INTO `truck_inventory` VALUES (3, 'gljive', 'item_standard', 5, 'LKU 646 ', 'Gljive', '0');
 
 -- ----------------------------
 -- Table structure for twitter_accounts
@@ -1975,7 +2044,7 @@ CREATE TABLE `user_inventory`  (
   `item` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `count` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1395 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1399 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_inventory
@@ -2095,7 +2164,7 @@ INSERT INTO `user_inventory` VALUES (112, 10000, 'kvacilo', 0);
 INSERT INTO `user_inventory` VALUES (113, 10000, 'filter', 0);
 INSERT INTO `user_inventory` VALUES (114, 10000, 'copper', 0);
 INSERT INTO `user_inventory` VALUES (115, 10000, 'weapon_combatpdw', 0);
-INSERT INTO `user_inventory` VALUES (116, 10000, 'heroin', 120);
+INSERT INTO `user_inventory` VALUES (116, 10000, 'heroin', 0);
 INSERT INTO `user_inventory` VALUES (117, 10000, 'sulfuric_acid', 0);
 INSERT INTO `user_inventory` VALUES (118, 10000, 'lancic', 0);
 INSERT INTO `user_inventory` VALUES (119, 10000, 'weapon_combatpistol', 0);
@@ -3374,6 +3443,10 @@ INSERT INTO `user_inventory` VALUES (1391, 10011, 'weapon_flashlight', 0);
 INSERT INTO `user_inventory` VALUES (1392, 10011, 'weapon_assaultsmg', 0);
 INSERT INTO `user_inventory` VALUES (1393, 10000, 'sarafciger', 0);
 INSERT INTO `user_inventory` VALUES (1394, 10010, 'sarafciger', 0);
+INSERT INTO `user_inventory` VALUES (1395, 10000, 'novine', 0);
+INSERT INTO `user_inventory` VALUES (1396, 10010, 'novine', 0);
+INSERT INTO `user_inventory` VALUES (1397, 10000, 'fishingrod', 0);
+INSERT INTO `user_inventory` VALUES (1398, 10000, 'fishbait', 0);
 
 -- ----------------------------
 -- Table structure for user_licenses
@@ -3384,11 +3457,14 @@ CREATE TABLE `user_licenses`  (
   `type` varchar(60) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `owner` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_licenses
 -- ----------------------------
+INSERT INTO `user_licenses` VALUES (8, 'drive', 10000);
+INSERT INTO `user_licenses` VALUES (11, 'weapon', 10000);
+INSERT INTO `user_licenses` VALUES (16, 'weapon', 10010);
 
 -- ----------------------------
 -- Table structure for user_races
@@ -3460,13 +3536,13 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (10000, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 29102170, 'Sikora', '{\"shoes_2\":2,\"blush_1\":0,\"torso_2\":0,\"eye_color\":0,\"beard_4\":0,\"ears_2\":-1,\"bracelets_2\":0,\"eye_squint\":0,\"mask_1\":0,\"cheeks_2\":0,\"makeup_3\":0,\"lipstick_3\":32,\"jaw_2\":0,\"watches_1\":-1,\"chain_2\":0,\"chin_1\":0,\"nose_6\":0,\"bracelets_1\":-1,\"skin\":0,\"decals_2\":0,\"beard_1\":2,\"age_1\":0,\"nose_5\":0,\"bproof_2\":0,\"nose_1\":0,\"chin_3\":0,\"cheeks_1\":0,\"watches_2\":-1,\"dad\":12,\"complexion_2\":0,\"eyebrows_3\":0,\"lipstick_1\":0,\"blush_2\":0,\"beard_3\":61,\"makeup_2\":0,\"skin_md_weight\":50,\"blemishes_1\":0,\"nose_4\":0,\"chin_4\":0,\"eyebrows_2\":10,\"eyebrows_1\":2,\"neck_thickness\":0,\"pants_1\":10,\"hair_color_2\":0,\"cheeks_3\":0,\"hair_1\":0,\"bags_2\":0,\"glasses_2\":1,\"tshirt_2\":0,\"lipstick_2\":0,\"eyebrows_6\":0,\"nose_2\":0,\"chin_2\":0,\"face_md_weight\":50,\"hair_color_1\":0,\"bodyb_2\":0,\"arms_2\":0,\"decals_1\":0,\"sex\":0,\"mask_2\":0,\"nose_3\":0,\"pants_2\":0,\"face\":19,\"chain_1\":0,\"sun_1\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"hair_2\":0,\"chest_2\":0,\"bodyb_1\":0,\"glasses_1\":5,\"age_2\":0,\"eyebrows_5\":0,\"chest_1\":0,\"torso_1\":4,\"makeup_1\":0,\"bproof_1\":0,\"chest_3\":0,\"moles_1\":0,\"moles_2\":0,\"shoes_1\":1,\"blemishes_2\":0,\"mom\":21,\"lipstick_4\":0,\"sun_2\":0,\"helmet_1\":-1,\"complexion_1\":0,\"arms\":1,\"jaw_1\":0,\"tshirt_1\":3,\"bags_1\":0,\"helmet_2\":-1,\"lip_thickness\":0,\"blush_3\":\"2\",\"ears_1\":-1,\"beard_2\":10}', 45, 1, '[]', '{\"z\":30.6,\"y\":-783.1,\"x\":235.5}', -57995, 69, 'superadmin', 3555299, '[{\"percent\":51,\"val\":0,\"name\":\"hunger\"},{\"percent\":51,\"val\":0,\"name\":\"thirst\"}]', 'Tony', 'Sikora', '25.9.1998', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"houseId\":23,\"furniture\":[{\"heading\":269.9985046386719,\"object\":\"v_ilev_m_sofa\",\"offset\":[-0.53704833984375,3.9598388671875,-1.48883056640625],\"name\":\"Sofa 7\"},{\"heading\":89.99583435058594,\"object\":\"prop_tv_cabinet_03\",\"offset\":[-7.50311279296875,3.5391845703125,-1.48883056640625],\"name\":\"TV Stol\"},{\"heading\":90.99517059326172,\"object\":\"prop_t_coffe_table_02\",\"offset\":[-1.31781005859375,3.2772216796875,-1.2787857055664],\"name\":\"Coffee Stol 2\"},{\"heading\":90.99917602539063,\"object\":\"prop_tv_06\",\"offset\":[-7.35821533203125,3.5355224609375,-0.53047180175781],\"name\":\"Guzata tv\"},{\"heading\":0.0,\"object\":\"p_mbbed_s\",\"offset\":[6.0108642578125,5.0069580078125,-1.48883056640625],\"name\":\"Krevet 3\"},{\"heading\":88.99886322021485,\"object\":\"hei_heist_str_sideboardl_03\",\"offset\":[-7.5439453125,0.35986328125,-1.48883056640625],\"name\":\"Sideboard\"},{\"heading\":271.4989318847656,\"object\":\"p_dinechair_01_s\",\"offset\":[-2.6800537109375,-2.75048828125,-1.48883056640625],\"name\":\"Kuhinjska stolica\"}]}', '[]', 0, 0, 0, '22/05/2022 14:38:13', 0, 0, 99, 0, 20, 0, 15, 7, 2, 0, NULL, NULL);
+INSERT INTO `users` VALUES (10000, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 5000, 'Sikora', '{\"shoes_2\":2,\"blush_1\":0,\"torso_2\":0,\"eye_color\":0,\"beard_4\":0,\"ears_2\":-1,\"bracelets_2\":0,\"eye_squint\":0,\"mask_1\":0,\"cheeks_2\":0,\"makeup_3\":0,\"lipstick_3\":32,\"jaw_2\":0,\"watches_1\":-1,\"chain_2\":0,\"chin_1\":0,\"nose_6\":0,\"bracelets_1\":-1,\"skin\":0,\"decals_2\":0,\"beard_1\":2,\"age_1\":0,\"nose_5\":0,\"bproof_2\":0,\"nose_1\":0,\"chin_3\":0,\"cheeks_1\":0,\"watches_2\":-1,\"dad\":12,\"complexion_2\":0,\"eyebrows_3\":0,\"lipstick_1\":0,\"blush_2\":0,\"beard_3\":61,\"makeup_2\":0,\"skin_md_weight\":50,\"blemishes_1\":0,\"nose_4\":0,\"chin_4\":0,\"eyebrows_2\":10,\"eyebrows_1\":2,\"neck_thickness\":0,\"pants_1\":10,\"hair_color_2\":0,\"cheeks_3\":0,\"hair_1\":0,\"bags_2\":0,\"glasses_2\":1,\"tshirt_2\":0,\"lipstick_2\":0,\"eyebrows_6\":0,\"nose_2\":0,\"chin_2\":0,\"face_md_weight\":50,\"hair_color_1\":0,\"bodyb_2\":0,\"arms_2\":0,\"decals_1\":0,\"sex\":0,\"mask_2\":0,\"nose_3\":0,\"pants_2\":0,\"face\":19,\"chain_1\":0,\"sun_1\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"hair_2\":0,\"chest_2\":0,\"bodyb_1\":0,\"glasses_1\":5,\"age_2\":0,\"eyebrows_5\":0,\"chest_1\":0,\"torso_1\":4,\"makeup_1\":0,\"bproof_1\":0,\"chest_3\":0,\"moles_1\":0,\"moles_2\":0,\"shoes_1\":1,\"blemishes_2\":0,\"mom\":21,\"lipstick_4\":0,\"sun_2\":0,\"helmet_1\":-1,\"complexion_1\":0,\"arms\":1,\"jaw_1\":0,\"tshirt_1\":3,\"bags_1\":0,\"helmet_2\":-1,\"lip_thickness\":0,\"blush_3\":\"2\",\"ears_1\":-1,\"beard_2\":10}', 1, 0, '[]', '{\"x\":-390.8,\"z\":31.5,\"y\":6043.7}', 415046, 69, 'superadmin', 3555299, '[{\"name\":\"hunger\",\"percent\":96,\"val\":0},{\"name\":\"thirst\",\"percent\":92,\"val\":0}]', 'Tony', 'Sikora', '25.9.1998', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"houseId\":29,\"furniture\":[{\"object\":\"prop_tv_cabinet_03\",\"offset\":[7.640869140625,3.6422119140625,-2.42674255371093],\"heading\":0.0,\"name\":\"TV Stol\"}]}', '{\"prop_ld_farm_table01\":{\"amount\":1,\"name\":\"Farm Stol 2\"}}', 0, 0, 0, '22/06/2022 14:51:04', 0, 0, 136, 0, 20, 0, 24, 8, 4, 0, NULL, '2022-06-04');
 INSERT INTO `users` VALUES (10001, 'steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 0, 'Ficho', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":0,\"complexion_2\":0,\"hair_1\":11,\"makeup_4\":0,\"bproof_1\":0,\"torso_1\":6,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":0,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"watches_1\":-1,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":0,\"moles_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"blush_3\":0,\"tshirt_2\":0,\"eyebrows_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":4,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":24,\"makeup_3\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"ears_1\":-1,\"mask_1\":0,\"pants_2\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"bracelets_1\":-1,\"chest_1\":0,\"hair_color_1\":3,\"eye_color\":0,\"lipstick_4\":0,\"ears_2\":0,\"watches_2\":0,\"blush_1\":0,\"lipstick_1\":0,\"face\":0,\"bags_1\":0,\"shoes_2\":0,\"beard_2\":0,\"sex\":0,\"sun_1\":0,\"skin\":1,\"lipstick_2\":0,\"mask_2\":0}', 1, 0, '[{\"label\":\"Pistol\",\"name\":\"WEAPON_PISTOL\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Micro SMG\",\"name\":\"WEAPON_MICROSMG\",\"ammo\":188,\"components\":[\"clip_default\"]},{\"label\":\"Pump shotgun\",\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":250,\"components\":[]},{\"label\":\"Assault rifle\",\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Sniper rifle\",\"name\":\"WEAPON_SNIPERRIFLE\",\"ammo\":248,\"components\":[\"scope\"]}]', '{\"z\":544.6000000000931,\"y\":-4500.0,\"x\":-502.4000000000233}', 999946950, 69, 'superadmin', 973, '[{\"val\":456000,\"percent\":45.6,\"name\":\"hunger\"},{\"val\":467000,\"percent\":46.7,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Filip', 'Wizzy', '19980208', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 21:27:40', 0, 0, 17, 0, 20, 0, 5, 2, 1, 0, NULL, NULL);
 INSERT INTO `users` VALUES (10011, 'steam:11000010a1d1042', 'license:c7a857dcd5b4160c69d1671f02e52332bd339733', 176, 'chame', '{\"mask_1\":0,\"skin\":3,\"watches_1\":-1,\"lipstick_1\":0,\"beard_3\":0,\"eyebrows_4\":0,\"makeup_3\":0,\"beard_1\":0,\"makeup_4\":0,\"makeup_1\":0,\"watches_2\":0,\"sun_2\":0,\"decals_1\":0,\"age_2\":0,\"blush_2\":0,\"shoes_2\":0,\"hair_2\":3,\"bags_1\":0,\"pants_1\":0,\"beard_2\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"torso_2\":0,\"glasses_1\":0,\"helmet_1\":-1,\"blush_1\":0,\"hair_color_2\":1,\"shoes_1\":0,\"arms\":0,\"blemishes_1\":0,\"blemishes_2\":0,\"helmet_2\":0,\"tshirt_1\":1,\"eyebrows_3\":0,\"arms_2\":0,\"beard_4\":0,\"sun_1\":0,\"eyebrows_1\":0,\"moles_2\":0,\"lipstick_2\":0,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"bproof_2\":0,\"eye_color\":0,\"decals_2\":0,\"mask_2\":0,\"chest_2\":0,\"ears_2\":0,\"hair_1\":3,\"chain_2\":0,\"sex\":0,\"hair_color_1\":2,\"chest_3\":0,\"bags_2\":0,\"bodyb_2\":0,\"makeup_2\":0,\"moles_1\":0,\"bproof_1\":0,\"glasses_2\":0,\"age_1\":0,\"face\":2,\"bracelets_2\":0,\"ears_1\":-1,\"chest_1\":0,\"lipstick_3\":0,\"bodyb_1\":0,\"blush_3\":0,\"tshirt_2\":0,\"torso_1\":3,\"complexion_2\":0,\"bracelets_1\":-1}', 4, 4, '[]', '{\"x\":5103.2,\"y\":-4835.5,\"z\":8.1}', 100, 69, 'superadmin', 9717088, '[{\"percent\":59,\"val\":0,\"name\":\"hunger\"},{\"percent\":59,\"val\":0,\"name\":\"thirst\"}]', 'Murga', 'Vrtiprah', '2.1.1984', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '02/04/2022 13:54:38', 0, 0, 2, 0, 20, 0, 2, 1, 5, 0, NULL, NULL);
 INSERT INTO `users` VALUES (10002, 'steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 0, 'MaZz', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":6,\"complexion_2\":0,\"hair_1\":9,\"makeup_4\":0,\"bproof_1\":4,\"torso_1\":0,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":2,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":4,\"pants_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"shoes_2\":0,\"tshirt_2\":2,\"mask_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":0,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":22,\"chest_1\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"sun_1\":0,\"mask_1\":0,\"lipstick_4\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"moles_2\":0,\"blush_1\":0,\"hair_color_1\":0,\"eye_color\":0,\"makeup_3\":0,\"ears_2\":0,\"watches_2\":0,\"blush_3\":0,\"lipstick_1\":0,\"bags_1\":0,\"ears_1\":-1,\"beard_2\":0,\"watches_1\":-1,\"sex\":0,\"face\":44,\"skin\":2,\"eyebrows_2\":0,\"bracelets_1\":-1}', 1, 0, '[{\"label\":\"Pistol .50\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_PISTOL50\",\"ammo\":130},{\"label\":\"Pump shotgun\",\"components\":[],\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":39},{\"label\":\"Assault rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":59},{\"label\":\"Carbine rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_CARBINERIFLE\",\"ammo\":59},{\"label\":\"Advanced rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ADVANCEDRIFLE\",\"ammo\":59},{\"label\":\"Taser\",\"components\":[],\"name\":\"WEAPON_STUNGUN\",\"ammo\":200},{\"label\":\"Flashlight\",\"components\":[],\"name\":\"WEAPON_FLASHLIGHT\",\"ammo\":0}]', '{\"z\":40.39999999999418,\"y\":3213.4000000003727,\"x\":1569.3999999999069}', 100020599, 69, 'superadmin', 12345, '[{\"val\":994100,\"name\":\"hunger\",\"percent\":99.41},{\"val\":995575,\"name\":\"thirst\",\"percent\":99.5575},{\"val\":0,\"name\":\"drunk\",\"percent\":0.0}]', 'Max', 'Cigarett', '0611199', 'm', '180', 0, NULL, 0, 30, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '01/11/2021 22:19:53', 0, 0, 45, 0, 20, 0, 2, 1, 1, 22, NULL, NULL);
 INSERT INTO `users` VALUES (10003, 'steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 4481549, 'LJANTU', '{\"moles_1\":0,\"sun_1\":0,\"age_2\":0,\"eyebrows_1\":0,\"hair_2\":0,\"chest_2\":0,\"mask_2\":0,\"decals_2\":0,\"bproof_2\":0,\"makeup_3\":0,\"glasses_2\":0,\"eyebrows_2\":0,\"mask_1\":0,\"bodyb_1\":0,\"makeup_1\":0,\"watches_1\":2,\"face\":19,\"makeup_2\":0,\"hair_color_2\":0,\"tshirt_1\":0,\"chest_1\":0,\"shoes_2\":0,\"helmet_2\":0,\"chain_2\":0,\"lipstick_3\":0,\"blemishes_1\":0,\"hair_color_1\":29,\"eye_color\":0,\"shoes\":35,\"torso_2\":0,\"bodyb_2\":0,\"complexion_1\":0,\"sex\":0,\"ears_1\":-1,\"torso_1\":381,\"beard_2\":0,\"moles_2\":0,\"beard_3\":0,\"blush_2\":0,\"blush_1\":0,\"bracelets_2\":0,\"blush_3\":0,\"chest_3\":0,\"hair_1\":22,\"age_1\":0,\"bags_1\":0,\"bags_2\":0,\"shoes_1\":24,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"glasses_1\":30,\"blemishes_2\":0,\"bproof_1\":54,\"eyebrows_3\":0,\"eyebrows_4\":0,\"lipstick_1\":0,\"beard_4\":0,\"makeup_4\":0,\"helmet_1\":-1,\"decals_1\":0,\"tshirt_2\":2,\"skin\":18,\"ears_2\":0,\"watches_2\":0,\"arms\":28,\"pants_1\":130,\"lipstick_2\":0,\"bracelets_1\":-1,\"complexion_2\":0,\"arms_2\":0,\"beard_1\":0,\"sun_2\":0}', 3, 4, '[{\"label\":\"Pistol\",\"components\":[\"clip_default\"],\"ammo\":147,\"name\":\"WEAPON_PISTOL\"}]', '{\"z\":29.0,\"x\":-68.7,\"y\":-1722.6}', 99936001, 69, 'superadmin', 5799678, '[{\"percent\":88,\"val\":465400,\"name\":\"hunger\"},{\"percent\":88,\"val\":474050,\"name\":\"thirst\"},{\"percent\":0.0,\"val\":0,\"name\":\"drunk\"}]', 'Tuljan', 'Ljantu', '33333333', 'm', '195', 0, NULL, 0, 100, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '20/01/2022 21:03:41', 0, 0, 141, 0, 20, 2, 12, 6, 7, 22, NULL, NULL);
 INSERT INTO `users` VALUES (10004, 'steam:110000111cd0aa0', 'license:e4090a08909875dbb99f15633c3ec4ef87d9e9f8', 0, 'GABO', '{\"arms\":1,\"makeup_3\":0,\"hair_1\":19,\"ears_1\":-1,\"eye_color\":0,\"arms_2\":0,\"skin\":1,\"beard_1\":0,\"torso_1\":4,\"ears_2\":0,\"bproof_1\":0,\"hair_color_1\":5,\"age_2\":0,\"lipstick_2\":0,\"sun_2\":0,\"age_1\":0,\"eyebrows_2\":0,\"lipstick_3\":0,\"makeup_1\":0,\"blemishes_2\":0,\"watches_1\":-1,\"bodyb_2\":0,\"tshirt_1\":3,\"beard_3\":0,\"sex\":0,\"glasses_2\":0,\"bags_1\":0,\"helmet_1\":-1,\"pants_1\":7,\"watches_2\":0,\"chain_2\":0,\"blemishes_1\":0,\"tshirt_2\":0,\"decals_2\":0,\"chest_3\":0,\"shoes_1\":1,\"shoes_2\":0,\"glasses_1\":0,\"eyebrows_3\":0,\"blush_3\":0,\"makeup_4\":0,\"sun_1\":0,\"bracelets_2\":0,\"helmet_2\":0,\"bags_2\":0,\"moles_2\":0,\"hair_2\":4,\"lipstick_1\":0,\"bracelets_1\":-1,\"beard_2\":0,\"mask_2\":0,\"mask_1\":0,\"face\":12,\"blush_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"beard_4\":0,\"eyebrows_1\":0,\"bproof_2\":0,\"moles_1\":0,\"makeup_2\":0,\"eyebrows_4\":0,\"complexion_2\":0,\"complexion_1\":0,\"torso_2\":3,\"blush_1\":0,\"hair_color_2\":0,\"decals_1\":0,\"chest_1\":0,\"pants_2\":0,\"bodyb_1\":0,\"chest_2\":0}', 1, 0, '[{\"name\":\"WEAPON_MG\",\"label\":\"MG\",\"components\":[\"clip_default\"],\"ammo\":190}]', '{\"z\":68.39999999999418,\"y\":354.5999999999767,\"x\":-1107.3999999999069}', 3035100, 69, 'superadmin', 5375773, '[{\"val\":314000,\"percent\":31.4,\"name\":\"hunger\"},{\"val\":360500,\"percent\":36.05,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Daniel', 'Deacon', '03.11.1997', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 20:47:33', 0, 0, 16, 0, 20, 0, 1, 2, 1, 0, NULL, NULL);
-INSERT INTO `users` VALUES (10010, 'steam:11000011aee96e0', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 990, 'hashtag.sikora', '{\"arms_2\":0,\"bodyb_2\":0,\"sex\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"hair_color_2\":0,\"bodyb_1\":0,\"pants_2\":0,\"blush_3\":0,\"lipstick_2\":0,\"watches_1\":-1,\"age_2\":0,\"decals_2\":0,\"bags_2\":0,\"arms\":0,\"decals_1\":0,\"face\":0,\"beard_2\":0,\"lipstick_1\":0,\"blush_1\":0,\"hair_color_1\":0,\"hair_2\":0,\"watches_2\":0,\"chest_1\":0,\"torso_1\":0,\"blemishes_1\":0,\"age_1\":0,\"chain_1\":0,\"bproof_1\":0,\"eyebrows_1\":0,\"tshirt_1\":0,\"glasses_1\":0,\"pants_1\":0,\"mask_1\":0,\"mask_2\":0,\"blemishes_2\":0,\"complexion_2\":0,\"beard_4\":0,\"chest_2\":0,\"chain_2\":0,\"glasses_2\":0,\"bproof_2\":0,\"sun_1\":0,\"makeup_2\":0,\"ears_2\":0,\"torso_2\":0,\"sun_2\":0,\"shoes_2\":0,\"skin\":0,\"shoes_1\":0,\"eyebrows_3\":0,\"eyebrows_4\":0,\"helmet_1\":-1,\"helmet_2\":0,\"ears_1\":-1,\"blush_2\":0,\"bracelets_1\":-1,\"hair_1\":0,\"makeup_1\":0,\"lipstick_4\":0,\"bags_1\":0,\"tshirt_2\":0,\"eye_color\":0,\"beard_3\":0,\"moles_1\":0,\"bracelets_2\":0,\"moles_2\":0,\"makeup_4\":0,\"beard_1\":0,\"makeup_3\":0,\"chest_3\":0,\"lipstick_3\":0}', 3, 1, '[]', '{\"x\":1869.7,\"y\":2592.7,\"z\":45.7}', 100, 0, 'user', 555, '[{\"percent\":93,\"val\":0,\"name\":\"hunger\"},{\"percent\":93,\"val\":0,\"name\":\"thirst\"}]', 'Toni', 'Sikora', '9.3.2022', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '17/04/2022 16:28:10', 0, 0, 3, 0, 20, 0, 3, 1, 1, 0, NULL, NULL);
+INSERT INTO `users` VALUES (10010, 'steam:11000011aee96e0', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 514260, 'hashtag.sikora', '{\"arms_2\":0,\"bodyb_2\":0,\"sex\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"hair_color_2\":0,\"bodyb_1\":0,\"pants_2\":0,\"blush_3\":0,\"lipstick_2\":0,\"watches_1\":-1,\"age_2\":0,\"decals_2\":0,\"bags_2\":0,\"arms\":0,\"decals_1\":0,\"face\":0,\"beard_2\":0,\"lipstick_1\":0,\"blush_1\":0,\"hair_color_1\":0,\"hair_2\":0,\"watches_2\":0,\"chest_1\":0,\"torso_1\":0,\"blemishes_1\":0,\"age_1\":0,\"chain_1\":0,\"bproof_1\":0,\"eyebrows_1\":0,\"tshirt_1\":0,\"glasses_1\":0,\"pants_1\":0,\"mask_1\":0,\"mask_2\":0,\"blemishes_2\":0,\"complexion_2\":0,\"beard_4\":0,\"chest_2\":0,\"chain_2\":0,\"glasses_2\":0,\"bproof_2\":0,\"sun_1\":0,\"makeup_2\":0,\"ears_2\":0,\"torso_2\":0,\"sun_2\":0,\"shoes_2\":0,\"skin\":0,\"shoes_1\":0,\"eyebrows_3\":0,\"eyebrows_4\":0,\"helmet_1\":-1,\"helmet_2\":0,\"ears_1\":-1,\"blush_2\":0,\"bracelets_1\":-1,\"hair_1\":0,\"makeup_1\":0,\"lipstick_4\":0,\"bags_1\":0,\"tshirt_2\":0,\"eye_color\":0,\"beard_3\":0,\"moles_1\":0,\"bracelets_2\":0,\"moles_2\":0,\"makeup_4\":0,\"beard_1\":0,\"makeup_3\":0,\"chest_3\":0,\"lipstick_3\":0}', 3, 1, '[]', '{\"z\":30.6,\"y\":-786.6,\"x\":231.4}', 100, 0, 'user', 555, '[{\"percent\":46,\"name\":\"hunger\",\"val\":0},{\"percent\":0,\"name\":\"thirst\",\"val\":0}]', 'Toni', 'Sikora', '9.3.2022', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '12/06/2022 16:50:59', 0, 0, 5, 0, 20, 0, 1, 2, 1, 0, NULL, '2022-06-04');
 INSERT INTO `users` VALUES (10009, 'steam:1100001453fc4a4', 'license:28b3a93ce930a76bb21c53788d5a938c86ed7160', 20, '~r~Owner | ~w~Fuezify', '{\"hair_color_2\":0,\"ears_1\":-1,\"makeup_4\":0,\"tshirt_2\":0,\"skin\":2,\"eyebrows_1\":0,\"complexion_2\":0,\"chain_1\":0,\"hair_color_1\":0,\"chest_1\":0,\"hair_1\":12,\"bracelets_1\":-1,\"bags_1\":0,\"blush_1\":0,\"mask_2\":0,\"shoes_1\":0,\"sex\":0,\"makeup_1\":0,\"tshirt_1\":0,\"blemishes_2\":0,\"decals_1\":2,\"watches_2\":0,\"lipstick_3\":0,\"complexion_1\":0,\"chest_3\":0,\"moles_2\":0,\"pants_1\":0,\"bodyb_2\":0,\"helmet_1\":-1,\"mask_1\":0,\"chain_2\":0,\"shoes_2\":0,\"arms_2\":0,\"moles_1\":0,\"lipstick_2\":0,\"pants_2\":0,\"sun_2\":0,\"face\":0,\"blush_2\":0,\"lipstick_1\":0,\"bproof_1\":0,\"arms\":0,\"beard_4\":0,\"blemishes_1\":0,\"torso_1\":0,\"watches_1\":-1,\"helmet_2\":0,\"hair_2\":0,\"bracelets_2\":0,\"decals_2\":0,\"bodyb_1\":0,\"age_2\":0,\"age_1\":0,\"bags_2\":0,\"beard_1\":0,\"torso_2\":0,\"makeup_2\":0,\"bproof_2\":0,\"blush_3\":0,\"beard_2\":0,\"eyebrows_4\":0,\"eyebrows_3\":0,\"eyebrows_2\":0,\"makeup_3\":0,\"lipstick_4\":0,\"sun_1\":0,\"beard_3\":0,\"glasses_1\":0,\"ears_2\":0,\"eye_color\":0,\"chest_2\":0,\"glasses_2\":0}', 1, 0, '[]', '{\"z\":45.7,\"y\":2592.9,\"x\":1882.1}', 100, 0, 'user', 5721548, '[{\"percent\":98,\"val\":0,\"name\":\"hunger\"},{\"percent\":98,\"val\":0,\"name\":\"thirst\"}]', 'Uzzi', 'Owner', '10.11.1111', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '31/01/2022 21:24:24', 0, 0, 0, 0, 20, 0, 0, 1, 1, 0, NULL, NULL);
 
 -- ----------------------------
@@ -3504,49 +3580,27 @@ CREATE TABLE `vehicle_categories`  (
 -- ----------------------------
 -- Records of vehicle_categories
 -- ----------------------------
-INSERT INTO `vehicle_categories` VALUES ('alfa', 'Alfa Romeo', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('astonmartin', 'Aston Martin', 0, NULL);
+INSERT INTO `vehicle_categories` VALUES ('alfa', 'Alfa Romeo', 0, 'alfa.png');
 INSERT INTO `vehicle_categories` VALUES ('audi', 'Audi', 0, 'audi.png');
+INSERT INTO `vehicle_categories` VALUES ('austin', 'Austin', 0, 'austin.png');
 INSERT INTO `vehicle_categories` VALUES ('bmw', 'BMW', 0, 'bmw.png');
-INSERT INTO `vehicle_categories` VALUES ('bugatti', 'Bugatti', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('dodge', 'Dodge', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('donatorski', 'Donatorski', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('ferrari', 'Ferrari', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('fiat', 'Fiat', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('ford', 'Ford', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('gliser', 'Gliser', 1, NULL);
-INSERT INTO `vehicle_categories` VALUES ('honda', 'Honda', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('hummer', 'Hummer', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('jaguar', 'Jaguar', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('jetski', 'Jet Ski', 1, NULL);
-INSERT INTO `vehicle_categories` VALUES ('kawasaki', 'Kawasaki', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('lada', 'Lada', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('lamborghini', 'Lamborghini', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('lykan', 'Lykan', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('mazda', 'Mazda', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('mclaren', 'McLaren', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('mercedes', 'Mercedes', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('mitsubishi', 'Mitsubishi', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('nissan', 'Nissan', 0, NULL);
+INSERT INTO `vehicle_categories` VALUES ('ferrari', 'Ferrari', 0, 'ferrari.png');
+INSERT INTO `vehicle_categories` VALUES ('gliser', 'Gliser', 1, 'gtav.png');
+INSERT INTO `vehicle_categories` VALUES ('jetski', 'Jet Ski', 1, 'gtav.png');
+INSERT INTO `vehicle_categories` VALUES ('mercedes', 'Mercedes', 0, 'mercedes.png');
+INSERT INTO `vehicle_categories` VALUES ('nsu', 'NSU', 0, 'nsu.png');
 INSERT INTO `vehicle_categories` VALUES ('obrisani', 'Obrisani', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('opel', 'Opel', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('pagani', 'Pagani', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('peugeot', 'Peugeot', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('podmornica', 'Podmornice', 1, NULL);
-INSERT INTO `vehicle_categories` VALUES ('porsche', 'Porsche', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('rangerover', 'Range Rover', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('razz', 'RazzMotoring', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('renault', 'Renault', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('seat', 'Seat', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('shelby', 'Shelby', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('skoda', 'Skoda', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('subaru', 'Subaru', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('suzuki', 'Suzuki', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('tesla', 'Tesla', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('toyota', 'Toyota', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('vw', 'VW', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('yamaha', 'Yamaha', 0, NULL);
-INSERT INTO `vehicle_categories` VALUES ('yugo', 'Yugo', 0, NULL);
+INSERT INTO `vehicle_categories` VALUES ('opel', 'Opel', 0, 'opel.png');
+INSERT INTO `vehicle_categories` VALUES ('peugeot', 'Peugeot', 0, 'peugeot.png');
+INSERT INTO `vehicle_categories` VALUES ('podmornica', 'Podmornice', 1, 'gtav.png');
+INSERT INTO `vehicle_categories` VALUES ('porsche', 'Porsche', 0, 'porsche.png');
+INSERT INTO `vehicle_categories` VALUES ('renault', 'Renault', 0, 'renault.png');
+INSERT INTO `vehicle_categories` VALUES ('simca', 'Simca', 0, 'simca.png');
+INSERT INTO `vehicle_categories` VALUES ('skoda', 'Skoda', 0, 'skoda.png');
+INSERT INTO `vehicle_categories` VALUES ('volvo', 'Volvo', 0, 'volvo.png');
+INSERT INTO `vehicle_categories` VALUES ('vw', 'VW', 0, 'vw.png');
+INSERT INTO `vehicle_categories` VALUES ('wartburg', 'Wartburg', 0, 'wartburg.png');
+INSERT INTO `vehicle_categories` VALUES ('zastava', 'Zastava', 0, 'zastava.png');
 
 -- ----------------------------
 -- Table structure for vehicles
@@ -3564,105 +3618,45 @@ CREATE TABLE `vehicles`  (
 -- ----------------------------
 -- Records of vehicles
 -- ----------------------------
-INSERT INTO `vehicles` VALUES ('VW Passat CC', '16cc', 60000, 'vw', 0);
-INSERT INTO `vehicles` VALUES ('Dodge Charger 2016', '16charger', 190000, 'dodge', 0);
-INSERT INTO `vehicles` VALUES ('BMW M5 Wagon', '16m5', 170000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('Nissan 180SX', '180sx', 48000, 'nissan', 0);
-INSERT INTO `vehicles` VALUES ('Lamborghini Huracan Performante', '18performante', 560000, 'lamborghini', 0);
-INSERT INTO `vehicles` VALUES ('Range Rover Vogue', '18velar', 170000, 'rangerover', 0);
-INSERT INTO `vehicles` VALUES ('Opel Astra H', '2004astra', 14000, 'opel', 0);
-INSERT INTO `vehicles` VALUES ('Seat Leon', '2012leon', 30000, 'seat', 0);
-INSERT INTO `vehicles` VALUES ('Peugeot 206 GTi', '206', 16000, 'peugeot', 0);
-INSERT INTO `vehicles` VALUES ('Nissan 370z', '370z', 130000, 'nissan', 0);
-INSERT INTO `vehicles` VALUES ('Ferrari 458 Italia', '458spc', 400000, 'ferrari', 0);
-INSERT INTO `vehicles` VALUES ('BMW X5', '48is', 90000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('Lamborghini Diablo', '500gtrlam', 360000, 'lamborghini', 0);
-INSERT INTO `vehicles` VALUES ('Dodge Charger 1969', '69charger', 140000, 'dodge', 0);
-INSERT INTO `vehicles` VALUES ('BMW Series 750li', '750li', 286000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('Porsche 911 Turbo', '911turbos', 420000, 'porsche', 0);
-INSERT INTO `vehicles` VALUES ('Audi A6 Avant', 'a6avant', 150000, 'audi', 0);
-INSERT INTO `vehicles` VALUES ('VW Amarok', 'amarok', 120000, 'vw', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes AMG GT C', 'amggtc', 340000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('Aston Martin Vantage', 'amv19', 300000, 'astonmartin', 0);
-INSERT INTO `vehicles` VALUES ('Alfa Romeo Giulia', 'aqv', 80000, 'alfa', 0);
-INSERT INTO `vehicles` VALUES ('Audi Q7', 'as7', 120000, 'audi', 0);
-INSERT INTO `vehicles` VALUES ('BMW M5 F90', 'bmci', 330000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('BMW e90', 'BMWe90', 60000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('BMW M8', 'bmwm8', 280000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('Honda CBR1000RR-R', 'cbrrr', 52000, 'honda', 0);
-INSERT INTO `vehicles` VALUES ('Dodge challenger', 'chall70', 160000, 'dodge', 0);
-INSERT INTO `vehicles` VALUES ('Honda Civic si 1999', 'civic', 16000, 'honda', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes CLS 2015', 'cls2015', 90000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('Shelby Cobra 427 A/C', 'cobra', 500000000, 'shelby', 0);
-INSERT INTO `vehicles` VALUES ('Aston Martin DB11', 'db11', 460000, 'astonmartin', 0);
+INSERT INTO `vehicles` VALUES ('Opel Rekord Coupe', '2dopelr3', 12, 'opel', 0);
+INSERT INTO `vehicles` VALUES ('Opel Rekord', '4dopelr3', 14, 'opel', 0);
+INSERT INTO `vehicles` VALUES ('Porsche 718', '718', 53, 'porsche', 0);
+INSERT INTO `vehicles` VALUES ('Alfa Giulia Sprint', 'agta', 500, 'alfa', 0);
+INSERT INTO `vehicles` VALUES ('Alfa Romeo 75', 'alfa75', 300, 'alfa', 0);
+INSERT INTO `vehicles` VALUES ('Audi 100 Coupe S', 'audi100sc1', 5, 'audi', 0);
+INSERT INTO `vehicles` VALUES ('Audi Union', 'audif103', 9, 'audi', 0);
+INSERT INTO `vehicles` VALUES ('Audi Quattro', 'audquattros', 8, 'audi', 0);
+INSERT INTO `vehicles` VALUES ('Austin Mini Cooper', 'austminlhd', 23, 'austin', 0);
+INSERT INTO `vehicles` VALUES ('BMW 2002t', 'bmw2002t', 26, 'bmw', 0);
+INSERT INTO `vehicles` VALUES ('Ferrari California 250GT', 'cali57', 23, 'ferrari', 0);
 INSERT INTO `vehicles` VALUES ('Dinghy', 'dinghy', 800000, 'gliser', 1);
-INSERT INTO `vehicles` VALUES ('Bugatti Divo', 'divo', 5000000, 'bugatti', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes G Wagon', 'dubsta', 290000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('BMW M5 e34', 'e34', 18000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('Mitsubishi Lancer EVO IX', 'evo9', 50000, 'mitsubishi', 0);
-INSERT INTO `vehicles` VALUES ('BMW M4 f82', 'f82', 150000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('Ferrari Tributo', 'f8t', 472000, 'ferrari', 0);
-INSERT INTO `vehicles` VALUES ('Ford Mustang 67', 'fastback', 270000, 'ford', 0);
-INSERT INTO `vehicles` VALUES ('Ferrari Calfornia', 'fc15', 360000, 'ferrari', 0);
-INSERT INTO `vehicles` VALUES ('Mazda RX7 fc3', 'fc3s', 46000, 'mazda', 0);
-INSERT INTO `vehicles` VALUES ('Civikica', 'fk8', 5000, 'razz', 0);
-INSERT INTO `vehicles` VALUES ('Jaguar F-Type', 'ftype', 260000, 'jaguar', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes G Wagon 2019', 'gclas9', 380000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes GLE 63c', 'gle63c', 230000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('VW Golf R', 'golf7r', 100000, 'vw', 0);
-INSERT INTO `vehicles` VALUES ('Suzuki GSXR1000', 'gsxr', 36000, 'suzuki', 0);
-INSERT INTO `vehicles` VALUES ('Nissan GTR', 'gtr', 230000, 'nissan', 0);
-INSERT INTO `vehicles` VALUES ('Hummer H1', 'h1', 160000, 'hummer', 0);
-INSERT INTO `vehicles` VALUES ('Hummer H2', 'h2m', 160000, 'hummer', 0);
-INSERT INTO `vehicles` VALUES ('Pagani Zonda Huayra R', 'huayrar', 4520000, 'pagani', 0);
-INSERT INTO `vehicles` VALUES ('Mitsubishi Lancer EVO X', 'lancerevox', 70000, 'mitsubishi', 0);
-INSERT INTO `vehicles` VALUES ('Lykan Hypersport', 'lykan', 500000000, 'lykan', 0);
-INSERT INTO `vehicles` VALUES ('Mazda Miata MX-5', 'miata3', 26000, 'mazda', 0);
-INSERT INTO `vehicles` VALUES ('VW Golf 1', 'mk1rabbit', 8000, 'vw', 0);
-INSERT INTO `vehicles` VALUES ('Ford Mustang 2015', 'mst', 130000, 'ford', 0);
-INSERT INTO `vehicles` VALUES ('Kawasaki Ninja NH2R', 'nh2r', 35000, 'kawasaki', 0);
-INSERT INTO `vehicles` VALUES ('Nissan PS13 Silvia', 'ns13', 20000, 'obrisani', 0);
-INSERT INTO `vehicles` VALUES ('Skoda Octavia VRS', 'octaviastyle', 45000, 'skoda', 0);
-INSERT INTO `vehicles` VALUES ('McLaren P1', 'p1', 2700000, 'mclaren', 0);
-INSERT INTO `vehicles` VALUES ('Porsche Panamera Turbo', 'panamera17turbo', 320000, 'porsche', 0);
-INSERT INTO `vehicles` VALUES ('Patrola', 'patroly60', 5000, 'donatorski', 0);
-INSERT INTO `vehicles` VALUES ('VW Polo', 'polo19', 40000, 'vw', 0);
-INSERT INTO `vehicles` VALUES ('Fiat Punto', 'punto1', 7000, 'fiat', 0);
-INSERT INTO `vehicles` VALUES ('Audi R8 2020', 'r820', 320000, 'audi', 0);
-INSERT INTO `vehicles` VALUES ('Renault Captur', 'rencaptur', 26000, 'renault', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes C63', 'rmodamgc63', 340000, 'donatorski', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes GT63', 'rmodgt63', 350000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('Audi RS7 Widebody', 'rmodrs7', 100000000, 'audi', 0);
-INSERT INTO `vehicles` VALUES ('Lamborghini Sian', 'rmodsian', 400000000, 'lamborghini', 0);
-INSERT INTO `vehicles` VALUES ('Range Rover Startech', 'rrst', 150000, 'rangerover', 0);
-INSERT INTO `vehicles` VALUES ('Audi RS5', 'rs5', 150000, 'audi', 0);
-INSERT INTO `vehicles` VALUES ('Audi RS7', 'rs7', 300000, 'audi', 0);
-INSERT INTO `vehicles` VALUES ('Nissan Silvia S15', 's15', 70000, 'nissan', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes s500', 'S500W222', 100000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes S63 AMG', 's63amg', 125000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('VW Scirocco', 'scijo', 38000, 'vw', 0);
+INSERT INTO `vehicles` VALUES ('Ferrari Dino', 'dino', 35, 'ferrari', 0);
+INSERT INTO `vehicles` VALUES ('BMW E21', 'e21', 15, 'bmw', 0);
+INSERT INTO `vehicles` VALUES ('Zastava 1300', 'fiat1300', 233, 'zastava', 0);
+INSERT INTO `vehicles` VALUES ('Zastava 750', 'fiat600', 26, 'zastava', 0);
+INSERT INTO `vehicles` VALUES ('BMW E24', 'm686eu', 17, 'bmw', 0);
+INSERT INTO `vehicles` VALUES ('Porsche 904GTS', 'p904', 235, 'porsche', 0);
+INSERT INTO `vehicles` VALUES ('Porsche 928', 'p928', 634, 'porsche', 0);
+INSERT INTO `vehicles` VALUES ('Peugeot 204', 'peugeot204', 23, 'peugeot', 0);
+INSERT INTO `vehicles` VALUES ('Porsche 911', 'porrs73', 63, 'porsche', 0);
+INSERT INTO `vehicles` VALUES ('NSU Prinz 1000TT', 'prinztt', 12, 'nsu', 0);
+INSERT INTO `vehicles` VALUES ('Renault 4', 'renault4', 12, 'renault', 0);
 INSERT INTO `vehicles` VALUES ('Jet Ski', 'seashark', 500000, 'jetski', 1);
-INSERT INTO `vehicles` VALUES ('Nissan Skyline R34 GTR', 'skyline', 70000, 'nissan', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes SLK 55', 'slk55', 250000, 'mercedes', 0);
+INSERT INTO `vehicles` VALUES ('Simca 1100', 'simca1100', 43, 'simca', 0);
+INSERT INTO `vehicles` VALUES ('Skoda 100', 'skoda100', 23, 'skoda', 0);
+INSERT INTO `vehicles` VALUES ('Alfa Romeo Spider 115', 'spider115', 100, 'alfa', 0);
 INSERT INTO `vehicles` VALUES ('Squalo', 'squalo', 1500000, 'gliser', 1);
-INSERT INTO `vehicles` VALUES ('Ford Focus ST', 'st', 60000, 'ford', 0);
-INSERT INTO `vehicles` VALUES ('Stara Impreza', 'sti', 35000, 'obrisani', 0);
 INSERT INTO `vehicles` VALUES ('Podmornica', 'submersible', 5000000, 'podmornica', 1);
 INSERT INTO `vehicles` VALUES ('Podmornica 2', 'submersible2', 5000000, 'podmornica', 1);
-INSERT INTO `vehicles` VALUES ('Subaru Impreza WRX STi', 'subwrx', 70000, 'subaru', 0);
 INSERT INTO `vehicles` VALUES ('Suntrap', 'suntrap', 700000, 'gliser', 1);
-INSERT INTO `vehicles` VALUES ('Toyota Supra MK4', 'supra2', 160000, 'toyota', 0);
-INSERT INTO `vehicles` VALUES ('Toyota Supra A90', 'supraa90', 130000, 'toyota', 0);
-INSERT INTO `vehicles` VALUES ('Tesla Roadster', 'tr22', 220000, 'tesla', 0);
 INSERT INTO `vehicles` VALUES ('Tropic', 'tropic2', 1000000, 'gliser', 1);
-INSERT INTO `vehicles` VALUES ('Lada Niva', 'urban', 5000, 'lada', 0);
-INSERT INTO `vehicles` VALUES ('VW Golf 4', 'vwgolf', 12000, 'vw', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes W140 AMG', 'w140', 28000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('Mercedes W204', 'w204amgc', 240000, 'mercedes', 0);
-INSERT INTO `vehicles` VALUES ('BMW X6M', 'x6m', 210000, 'bmw', 0);
-INSERT INTO `vehicles` VALUES ('Yugo 45', 'yugo', 3000, 'yugo', 0);
-INSERT INTO `vehicles` VALUES ('Yamaha R6', 'yzfr6', 40000, 'yamaha', 0);
-INSERT INTO `vehicles` VALUES ('BMW Z4', 'z4bmw', 110000, 'bmw', 0);
+INSERT INTO `vehicles` VALUES ('VW Type 3', 'type3fast', 443, 'vw', 0);
+INSERT INTO `vehicles` VALUES ('Volvo 142', 'volvo142', 12, 'volvo', 0);
+INSERT INTO `vehicles` VALUES ('Volvo 144', 'volvo144', 15, 'volvo', 0);
+INSERT INTO `vehicles` VALUES ('Volvo 145', 'volvo145', 43, 'volvo', 0);
+INSERT INTO `vehicles` VALUES ('Mercedes W115', 'w115200d', 45, 'mercedes', 0);
+INSERT INTO `vehicles` VALUES ('Wartburg 353', 'wartburg353', 43, 'wartburg', 0);
+INSERT INTO `vehicles` VALUES ('Zastava 101', 'zastava101', 23, 'zastava', 0);
 
 -- ----------------------------
 -- Table structure for vijesti
@@ -3698,33 +3692,39 @@ CREATE TABLE `vrata`  (
   `posao` int NULL DEFAULT NULL,
   `dist` double(4, 1) NOT NULL,
   `model` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `banka` tinyint NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 46 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of vrata
 -- ----------------------------
-INSERT INTO `vrata` VALUES (40, 'vrata_16', '{\"x\":464.361328125,\"y\":-984.6780395507813,\"z\":43.83443450927734}', 4, 2.0, '-340230128');
-INSERT INTO `vrata` VALUES (39, 'vrata_15', '{\"x\":461.2864990234375,\"y\":-985.320556640625,\"z\":30.83926391601562}', 4, 2.0, '749848321');
-INSERT INTO `vrata` VALUES (38, 'vrata_14', '{\"x\":488.894775390625,\"y\":-1017.2102661132813,\"z\":27.14793968200683}', 4, 10.0, '-1603817716');
-INSERT INTO `vrata` VALUES (37, 'vrata_13', '{\"x\":469.9678955078125,\"y\":-1014.4520263671875,\"z\":26.5362319946289}', 4, 2.0, '-2023754432');
-INSERT INTO `vrata` VALUES (36, 'vrata_12', '{\"x\":467.37164306640627,\"y\":-1014.4520263671875,\"z\":26.5362319946289}', 4, 2.0, '-2023754432');
-INSERT INTO `vrata` VALUES (35, 'vrata_11', '{\"x\":463.4782409667969,\"y\":-1003.5381469726563,\"z\":25.00598907470703}', 4, 2.0, '-1033001619');
-INSERT INTO `vrata` VALUES (34, 'vrata_10', '{\"x\":461.8065185546875,\"y\":-1001.301513671875,\"z\":25.06442642211914}', 4, 2.0, '631614199');
-INSERT INTO `vrata` VALUES (33, 'vrata_9', '{\"x\":461.8064880371094,\"y\":-997.6583251953125,\"z\":25.06442642211914}', 4, 2.0, '631614199');
-INSERT INTO `vrata` VALUES (32, 'vrata_8', '{\"x\":461.8065185546875,\"y\":-994.4085693359375,\"z\":25.06442642211914}', 4, 2.0, '631614199');
-INSERT INTO `vrata` VALUES (31, 'vrata_7', '{\"x\":464.57012939453127,\"y\":-992.6640625,\"z\":25.06442642211914}', 4, 2.0, '631614199');
-INSERT INTO `vrata` VALUES (30, 'vrata_6', '{\"x\":443.0298156738281,\"y\":-994.5411987304688,\"z\":30.83930206298828}', 4, 2.0, '-131296141');
-INSERT INTO `vrata` VALUES (29, 'vrata_5', '{\"x\":443.0298156738281,\"y\":-991.9410400390625,\"z\":30.83930206298828}', 4, 2.0, '-131296141');
-INSERT INTO `vrata` VALUES (28, 'vrata_4', '{\"x\":443.40777587890627,\"y\":-989.4454345703125,\"z\":30.83930206298828}', 4, 2.0, '185711165');
-INSERT INTO `vrata` VALUES (27, 'vrata_3', '{\"x\":446.0079345703125,\"y\":-989.4454345703125,\"z\":30.83930206298828}', 4, 2.0, '185711165');
-INSERT INTO `vrata` VALUES (26, 'vrata_2', '{\"x\":450.1041259765625,\"y\":-985.7384033203125,\"z\":30.83930206298828}', 4, 2.0, '1557126584');
-INSERT INTO `vrata` VALUES (25, 'vrata_1', '{\"x\":434.74786376953127,\"y\":-980.618408203125,\"z\":30.83926391601562}', 4, 2.0, '-1215222675');
-INSERT INTO `vrata` VALUES (24, 'vrata_0', '{\"x\":434.74786376953127,\"y\":-983.215087890625,\"z\":30.83926391601562}', 4, 2.0, '320433149');
-INSERT INTO `vrata` VALUES (41, 'vrata_17', '{\"x\":446.57281494140627,\"y\":-980.0105590820313,\"z\":30.83930206298828}', 4, 2.0, '-1320876379');
-INSERT INTO `vrata` VALUES (42, 'vrata_18', '{\"x\":452.29931640625,\"y\":-1001.1792602539063,\"z\":26.75753021240234}', 4, 5.0, '-190780785');
-INSERT INTO `vrata` VALUES (43, 'vrata_19', '{\"x\":447.48602294921877,\"y\":-1001.1807861328125,\"z\":26.75554847717285}', 4, 5.0, '-190780785');
-INSERT INTO `vrata` VALUES (45, 'vrata_20', '{\"x\":-1104.6572265625,\"y\":-1638.4814453125,\"z\":4.67540407180786}', 2, 3.0, '-502195954');
+INSERT INTO `vrata` VALUES (40, 'vrata_16', '{\"x\":464.361328125,\"y\":-984.6780395507813,\"z\":43.83443450927734}', 4, 2.0, '-340230128', 0);
+INSERT INTO `vrata` VALUES (39, 'vrata_15', '{\"x\":461.2864990234375,\"y\":-985.320556640625,\"z\":30.83926391601562}', 4, 2.0, '749848321', 0);
+INSERT INTO `vrata` VALUES (38, 'vrata_14', '{\"x\":488.894775390625,\"y\":-1017.2102661132813,\"z\":27.14793968200683}', 4, 10.0, '-1603817716', 0);
+INSERT INTO `vrata` VALUES (37, 'vrata_13', '{\"x\":469.9678955078125,\"y\":-1014.4520263671875,\"z\":26.5362319946289}', 4, 2.0, '-2023754432', 0);
+INSERT INTO `vrata` VALUES (36, 'vrata_12', '{\"x\":467.37164306640627,\"y\":-1014.4520263671875,\"z\":26.5362319946289}', 4, 2.0, '-2023754432', 0);
+INSERT INTO `vrata` VALUES (35, 'vrata_11', '{\"x\":463.4782409667969,\"y\":-1003.5381469726563,\"z\":25.00598907470703}', 4, 2.0, '-1033001619', 0);
+INSERT INTO `vrata` VALUES (34, 'vrata_10', '{\"x\":461.8065185546875,\"y\":-1001.301513671875,\"z\":25.06442642211914}', 4, 2.0, '631614199', 0);
+INSERT INTO `vrata` VALUES (33, 'vrata_9', '{\"x\":461.8064880371094,\"y\":-997.6583251953125,\"z\":25.06442642211914}', 4, 2.0, '631614199', 0);
+INSERT INTO `vrata` VALUES (32, 'vrata_8', '{\"x\":461.8065185546875,\"y\":-994.4085693359375,\"z\":25.06442642211914}', 4, 2.0, '631614199', 0);
+INSERT INTO `vrata` VALUES (31, 'vrata_7', '{\"x\":464.57012939453127,\"y\":-992.6640625,\"z\":25.06442642211914}', 4, 2.0, '631614199', 0);
+INSERT INTO `vrata` VALUES (30, 'vrata_6', '{\"x\":443.0298156738281,\"y\":-994.5411987304688,\"z\":30.83930206298828}', 4, 2.0, '-131296141', 0);
+INSERT INTO `vrata` VALUES (29, 'vrata_5', '{\"x\":443.0298156738281,\"y\":-991.9410400390625,\"z\":30.83930206298828}', 4, 2.0, '-131296141', 0);
+INSERT INTO `vrata` VALUES (28, 'vrata_4', '{\"x\":443.40777587890627,\"y\":-989.4454345703125,\"z\":30.83930206298828}', 4, 2.0, '185711165', 0);
+INSERT INTO `vrata` VALUES (27, 'vrata_3', '{\"x\":446.0079345703125,\"y\":-989.4454345703125,\"z\":30.83930206298828}', 4, 2.0, '185711165', 0);
+INSERT INTO `vrata` VALUES (26, 'vrata_2', '{\"x\":450.1041259765625,\"y\":-985.7384033203125,\"z\":30.83930206298828}', 4, 2.0, '1557126584', 0);
+INSERT INTO `vrata` VALUES (25, 'vrata_1', '{\"x\":434.74786376953127,\"y\":-980.618408203125,\"z\":30.83926391601562}', 4, 2.0, '-1215222675', 0);
+INSERT INTO `vrata` VALUES (24, 'vrata_0', '{\"x\":434.74786376953127,\"y\":-983.215087890625,\"z\":30.83926391601562}', 4, 2.0, '320433149', 0);
+INSERT INTO `vrata` VALUES (41, 'vrata_17', '{\"x\":446.57281494140627,\"y\":-980.0105590820313,\"z\":30.83930206298828}', 4, 2.0, '-1320876379', 0);
+INSERT INTO `vrata` VALUES (42, 'vrata_18', '{\"x\":452.29931640625,\"y\":-1001.1792602539063,\"z\":26.75753021240234}', 4, 5.0, '-190780785', 0);
+INSERT INTO `vrata` VALUES (43, 'vrata_19', '{\"x\":447.48602294921877,\"y\":-1001.1807861328125,\"z\":26.75554847717285}', 4, 5.0, '-190780785', 0);
+INSERT INTO `vrata` VALUES (45, 'vrata_20', '{\"x\":-1104.6572265625,\"y\":-1638.4814453125,\"z\":4.67540407180786}', 2, 3.0, '-502195954', 0);
+INSERT INTO `vrata` VALUES (46, 'vrata_21', '{\"x\":256.3115539550781,\"y\":220.65785217285157,\"z\":106.42955780029297}', 4, 3.0, '-222270721', 1);
+INSERT INTO `vrata` VALUES (47, 'vrata_22', '{\"x\":262.1980895996094,\"y\":222.518798828125,\"z\":106.42955780029297}', 4, 3.0, '746855201', 1);
+INSERT INTO `vrata` VALUES (48, 'vrata_23', '{\"x\":251.85757446289063,\"y\":221.0654754638672,\"z\":101.83240509033203}', 4, 3.0, '1655182495', 1);
+INSERT INTO `vrata` VALUES (49, 'vrata_24', '{\"x\":261.3004150390625,\"y\":214.50514221191407,\"z\":101.83240509033203}', 4, 3.0, '-1508355822', 1);
+INSERT INTO `vrata` VALUES (50, 'vrata_25', '{\"x\":266.36236572265627,\"y\":217.5697479248047,\"z\":110.43282318115235}', 4, 3.0, '1956494919', 1);
 
 -- ----------------------------
 -- Table structure for waroruzja
@@ -3823,37 +3823,45 @@ CREATE TABLE `yellow_tweets`  (
   `lastname` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `message` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `time` timestamp(0) NOT NULL DEFAULT current_timestamp(0),
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+  `novine` tinyint NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `novine`(`novine`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of yellow_tweets
 -- ----------------------------
-INSERT INTO `yellow_tweets` VALUES (1, '185-9995', 'Tony', 'Sikora', 'aaa', '2021-10-17 16:41:40');
-INSERT INTO `yellow_tweets` VALUES (2, '579-9678', 'Tuljan', 'Ljantu', 'Prodajem 10 crvenih dijamanata', '2021-10-24 01:00:18');
-INSERT INTO `yellow_tweets` VALUES (3, '579-9678', 'Tuljan', 'Ljantu', 'moze zamjena za plave', '2021-10-24 01:00:28');
-INSERT INTO `yellow_tweets` VALUES (4, '530-0343', 'Max', 'Cigarett', 'Pusis kurac', '2021-10-24 01:01:02');
-INSERT INTO `yellow_tweets` VALUES (5, '579-9678', 'Tuljan', 'Ljantu', 'Kupujem ferrari', '2021-10-28 22:29:24');
-INSERT INTO `yellow_tweets` VALUES (6, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923545071897419786/screenshot.jpg', '2021-12-23 12:58:24');
-INSERT INTO `yellow_tweets` VALUES (7, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923549365455446066/screenshot.jpg', '2021-12-23 13:15:27');
-INSERT INTO `yellow_tweets` VALUES (8, '185-9995', 'Tony', 'Sikora', 'Prodajem corsu', '2021-12-23 13:44:11');
-INSERT INTO `yellow_tweets` VALUES (9, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923605856032030780/screenshot.jpg', '2021-12-23 16:59:55');
-INSERT INTO `yellow_tweets` VALUES (10, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923708434963112016/screenshot.jpg', '2021-12-23 23:47:32');
-INSERT INTO `yellow_tweets` VALUES (11, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923716324633509898/screenshot.jpg', '2021-12-24 00:18:53');
-INSERT INTO `yellow_tweets` VALUES (12, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923716469106294894/screenshot.jpg', '2021-12-24 00:19:27');
-INSERT INTO `yellow_tweets` VALUES (13, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923722215487307926/screenshot.jpg', '2021-12-24 00:42:17');
-INSERT INTO `yellow_tweets` VALUES (14, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/924023616771866654/screenshot.jpg', '2021-12-24 20:39:56');
-INSERT INTO `yellow_tweets` VALUES (15, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/925473260777394306/screenshot.jpg', '2021-12-28 20:40:20');
-INSERT INTO `yellow_tweets` VALUES (16, '579-9678', 'Tuljan', 'Ljantu', 'alo', '2022-01-09 19:00:40');
-INSERT INTO `yellow_tweets` VALUES (17, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/929813748015829142/screenshot.jpg', '2022-01-09 20:07:51');
-INSERT INTO `yellow_tweets` VALUES (18, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/931949644471226478/screenshot.jpg', '2022-01-15 17:35:10');
-INSERT INTO `yellow_tweets` VALUES (19, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/931950397101338684/screenshot.jpg', '2022-01-15 17:38:10');
-INSERT INTO `yellow_tweets` VALUES (20, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/932045967757299752/screenshot.jpg', '2022-01-15 23:57:55');
-INSERT INTO `yellow_tweets` VALUES (21, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/932046930404585472/screenshot.jpg', '2022-01-16 00:01:44');
-INSERT INTO `yellow_tweets` VALUES (22, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933107734629453904/screenshot.jpg', '2022-01-18 22:17:00');
-INSERT INTO `yellow_tweets` VALUES (23, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933110193250783412/screenshot.jpg', '2022-01-18 22:26:46');
-INSERT INTO `yellow_tweets` VALUES (24, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933116659894480986/screenshot.jpg', '2022-01-18 22:52:27');
-INSERT INTO `yellow_tweets` VALUES (25, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/933478241623236628/screenshot.jpg', '2022-01-19 22:49:14');
+INSERT INTO `yellow_tweets` VALUES (1, '185-9995', 'Tony', 'Sikora', 'aaa bbb ccc ddd eee', '2021-10-17 16:41:40', 1);
+INSERT INTO `yellow_tweets` VALUES (2, '579-9678', 'Tuljan', 'Ljantu', 'Prodajem 10 crvenih dijamanata', '2021-10-24 01:00:18', 1);
+INSERT INTO `yellow_tweets` VALUES (3, '579-9678', 'Tuljan', 'Ljantu', 'moze zamjena za plave', '2021-10-24 01:00:28', 1);
+INSERT INTO `yellow_tweets` VALUES (4, '530-0343', 'Max', 'Cigarett', 'Pusis kurac', '2021-10-24 01:01:02', 1);
+INSERT INTO `yellow_tweets` VALUES (5, '579-9678', 'Tuljan', 'Ljantu', 'Kupujem ferrari', '2021-10-28 22:29:24', 1);
+INSERT INTO `yellow_tweets` VALUES (6, '185-9995', 'Tony', 'Sikora', 'dgfdgdf fdsgf', '2021-12-23 12:58:24', 1);
+INSERT INTO `yellow_tweets` VALUES (7, '185-9995', 'Tony', 'Sikora', 'dfsfsdfd sdsdfs', '2021-12-23 13:15:27', 1);
+INSERT INTO `yellow_tweets` VALUES (8, '185-9995', 'Tony', 'Sikora', 'Prodajem corsu', '2021-12-23 13:44:11', 1);
+INSERT INTO `yellow_tweets` VALUES (9, '185-9995', 'Tony', 'Sikora', 'gfdg sdfsdf', '2021-12-23 16:59:55', 1);
+INSERT INTO `yellow_tweets` VALUES (10, '185-9995', 'Tony', 'Sikora', 'h gdghdfgfds fs', '2021-12-23 23:47:32', 1);
+INSERT INTO `yellow_tweets` VALUES (11, '185-9995', 'Tony', 'Sikora', ' gfdgsfd dfsfdsf', '2021-12-24 00:18:53', 1);
+INSERT INTO `yellow_tweets` VALUES (12, '185-9995', 'Tony', 'Sikora', ' hdgfhdfg sgffs', '2021-12-24 00:19:27', 1);
+INSERT INTO `yellow_tweets` VALUES (13, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923722215487307926/screenshot.jpg', '2021-12-24 00:42:17', 1);
+INSERT INTO `yellow_tweets` VALUES (14, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/924023616771866654/screenshot.jpg', '2021-12-24 20:39:56', 1);
+INSERT INTO `yellow_tweets` VALUES (15, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/925473260777394306/screenshot.jpg', '2021-12-28 20:40:20', 1);
+INSERT INTO `yellow_tweets` VALUES (16, '579-9678', 'Tuljan', 'Ljantu', 'alo', '2022-01-09 19:00:40', 1);
+INSERT INTO `yellow_tweets` VALUES (17, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/929813748015829142/screenshot.jpg', '2022-01-09 20:07:51', 1);
+INSERT INTO `yellow_tweets` VALUES (18, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/931949644471226478/screenshot.jpg', '2022-01-15 17:35:10', 1);
+INSERT INTO `yellow_tweets` VALUES (19, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/931950397101338684/screenshot.jpg', '2022-01-15 17:38:10', 1);
+INSERT INTO `yellow_tweets` VALUES (20, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/932045967757299752/screenshot.jpg', '2022-01-15 23:57:55', 1);
+INSERT INTO `yellow_tweets` VALUES (21, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/932046930404585472/screenshot.jpg', '2022-01-16 00:01:44', 1);
+INSERT INTO `yellow_tweets` VALUES (22, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933107734629453904/screenshot.jpg', '2022-01-18 22:17:00', 1);
+INSERT INTO `yellow_tweets` VALUES (23, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933110193250783412/screenshot.jpg', '2022-01-18 22:26:46', 1);
+INSERT INTO `yellow_tweets` VALUES (24, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933116659894480986/screenshot.jpg', '2022-01-18 22:52:27', 1);
+INSERT INTO `yellow_tweets` VALUES (25, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/933478241623236628/screenshot.jpg', '2022-01-19 22:49:14', 1);
+INSERT INTO `yellow_tweets` VALUES (26, '3555299', 'Tony', 'Sikora', 'Testiram nove oglase hehe', '2022-05-23 22:10:14', 1);
+INSERT INTO `yellow_tweets` VALUES (27, '3555299', 'Tony', 'Sikora', 'Prodajem Yugo volim ga puno! Samo dobre ponude', '2022-05-23 22:26:55', 1);
+INSERT INTO `yellow_tweets` VALUES (28, '3555299', 'Tony', 'Sikora', 'Imal ko para da posalje?', '2022-05-23 22:43:04', 1);
+INSERT INTO `yellow_tweets` VALUES (29, '3555299', 'Tony', 'Sikora', 'Hvala Tony Sikora na 50000 dolara', '2022-05-23 22:43:32', 1);
+INSERT INTO `yellow_tweets` VALUES (30, '3555299', 'Tony', 'Sikora', 'Evo mi je jos love poslao lik', '2022-05-23 22:44:00', 1);
+INSERT INTO `yellow_tweets` VALUES (31, '3555299', 'Tony', 'Sikora', 'Prodajem Yuga. $500', '2022-05-24 20:57:07', 1);
 
 -- ----------------------------
 -- Table structure for zemljista
