@@ -10,6 +10,7 @@ client_scripts {
 	'@es_extended/locale.lua',
 	'locales/hr.lua',
 	'config.lua',
+	'client/jaymenu.lua',
 	'client/main.lua'
 }
 
@@ -25,9 +26,9 @@ ui_page "html/index.html"
 
 files {
   "html/index.html",
+  "AllTattoos.json",
   -- ICONS
   "html/items/*.png"
 }
-
 
 dependency 'es_extended'

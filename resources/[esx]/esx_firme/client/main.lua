@@ -26,6 +26,12 @@ local PrviSpawn = false
 local NemaStruje = false
 local Firme = {}
 local Bucket = 0
+local currentTattoos = {}
+local cam = nil
+local back = 1
+local opacity = 1
+local scaleType = nil
+local scaleString = ""
 
 local Cpovi = {}
 local Vozilo = nil
@@ -71,7 +77,7 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 			
 			for i=1, #Firme, 1 do
 				if Firme[i] ~= nil then
-					table.insert(elements, {label = "Firma "..Firme[i].TrgID, value = Firme[i].Ime})
+					table.insert(elements, {label = Firme[i].Label, value = Firme[i].Ime})
 				end
 			end
 			
@@ -111,7 +117,7 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 						table.insert(elements, {label = "Promjeni cijenu", value = "cijena"})
 						table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
 						table.insert(elements, {label = "Port do firme", value = "port"})
-						table.insert(elements, {label = "Zakljucaj/otkljucaj tip firme", value = "kljucaj"})
+						--table.insert(elements, {label = "Zakljucaj/otkljucaj tip firme", value = "kljucaj"})
 						table.insert(elements, {label = "Obrisi firmu", value = "obrisi"})
 						ESX.UI.Menu.Open(
 							'default', GetCurrentResourceName(), 'umafiju2',
@@ -153,6 +159,7 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 									table.insert(elements, {label = "Postavi odjecu", value = "3"})
 									--table.insert(elements, {label = "Postavi tuning shop", value = "4"})
 									--table.insert(elements, {label = "Postavi rudarsku firmu", value = "5"})
+									table.insert(elements, {label = "Postavi tetovaza shop", value = "6"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -751,12 +758,14 @@ function OpenShopMenu4(tip)
 								item       = "podignin",
 								price      = 0,
 							})
-							table.insert(elements, {
-								label      = "Promjenite cijene proizvoda",
-								label_real = "prcijene",
-								item       = "prc",
-								price      = 0,
-							})
+							if tip ~= 6 then
+								table.insert(elements, {
+									label      = "Promjenite cijene proizvoda",
+									label_real = "prcijene",
+									item       = "prc",
+									price      = 0,
+								})
+							end
 							table.insert(elements, {
 								label      = "Prodaj igracu",
 								label_real = "prodaj2",
@@ -1550,6 +1559,31 @@ function ReloadBlip()
 					EndTextCommandSetBlipName(blip[st])
 				end
 			end, st)
+		elseif Firme[i].Tip == 6 then
+			RemoveBlip(blip[st])
+			ESX.TriggerServerCallback('esx_firme:DalJeVlasnik', function(jelje2)
+				if jelje2 == 1 then
+					blip[st] = AddBlipForCoord(koord)
+					SetBlipSprite (blip[st], 75)
+					SetBlipDisplay(blip[st], 4)
+					SetBlipScale  (blip[st], 1.0)
+					SetBlipColour (blip[st], 67)
+					SetBlipAsShortRange(blip[st], true)
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString("Tattoo Shop")
+					EndTextCommandSetBlipName(blip[st])
+				else
+					blip[st] = AddBlipForCoord(koord)
+					SetBlipSprite (blip[st], 75)
+					SetBlipDisplay(blip[st], 4)
+					SetBlipScale  (blip[st], 1.0)
+					SetBlipColour (blip[st], 47)
+					SetBlipAsShortRange(blip[st], true)
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString("Tattoo Shop")
+					EndTextCommandSetBlipName(blip[st])
+				end
+			end, st)
 		elseif Firme[i].Tip == 69 then
 			RemoveBlip(blip[st])
 			ESX.TriggerServerCallback('esx_firme:DalJeVlasnik', function(jelje2)
@@ -1577,6 +1611,417 @@ function ReloadBlip()
 			end, st)
 		end
 	end
+end
+
+AddEventHandler('skinchanger:modelLoaded', function()
+	ESX.TriggerServerCallback('SmallTattoos:GetPlayerTattoos', function(tattooList)
+		if tattooList then
+			ClearPedDecorations(PlayerPedId())
+			for k, v in pairs(tattooList) do
+				if v.Count ~= nil then
+					for i = 1, v.Count do
+						SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+					end
+				else
+					SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+				end
+			end
+			currentTattoos = tattooList
+		end
+	end)
+end)
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(300000)
+		if not IsMenuOpen() then
+			ESX.TriggerServerCallback('SmallTattoos:GetPlayerTattoos', function(tattooList)
+				if tattooList then
+					ClearPedDecorations(PlayerPedId())
+					for k, v in pairs(tattooList) do
+						if v.Count ~= nil then
+							for i = 1, v.Count do
+								SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+							end
+						else
+							SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+						end
+					end
+					currentTattoos = tattooList
+				end
+			end)
+		end
+	end
+end)
+
+function DrawTattoo(collection, name)
+	ClearPedDecorations(PlayerPedId())
+	for k, v in pairs(currentTattoos) do
+		if v.Count ~= nil then
+			for i = 1, v.Count do
+				SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+			end
+		else
+			SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+		end
+	end
+	for i = 1, opacity do
+		SetPedDecoration(PlayerPedId(), collection, name)
+	end
+end
+
+function GetNaked()
+	TriggerEvent('skinchanger:getSkin', function()
+		if GetEntityModel(PlayerPedId()) == `mp_m_freemode_01` then
+			TriggerEvent('skinchanger:loadSkin', {
+				sex      = 0,
+				tshirt_1 = 15,
+				tshirt_2 = 0,
+				arms     = 15,
+				torso_1  = 91,
+				torso_2  = 0,
+				pants_1  = 14,
+				pants_2  = 0,
+				shoes_1 = 5,
+				glasses_1 = 0
+			})
+		else
+			TriggerEvent('skinchanger:loadSkin', {
+				sex      = 1,
+				tshirt_1 = 34,
+				tshirt_2 = 0,
+				arms     = 15,
+				torso_1  = 101,
+				torso_2  = 1,
+				pants_1  = 16,
+				pants_2  = 0,
+				shoes_1 = 5,
+				glasses_1 = 5
+			})
+		end
+	end)
+end
+
+function ResetSkin()
+	ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+		TriggerEvent('skinchanger:loadSkin', skin)
+	end)
+	ClearPedDecorations(PlayerPedId())
+	for k, v in pairs(currentTattoos) do
+		if v.Count ~= nil then
+			for i = 1, v.Count do
+				SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+			end
+		else
+			SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+		end
+	end
+end
+
+function ReqTexts(text, slot)
+	RequestAdditionalText(text, slot)
+	while not HasAdditionalTextLoaded(slot) do
+		Citizen.Wait(0)
+	end
+end
+
+function OpenTattooShop()
+	JayMenu.OpenMenu("tattoo")
+	FreezeEntityPosition(PlayerPedId(), true)
+	GetNaked()
+	ReqTexts("TAT_MNU", 9)
+	TriggerEvent("hud:SaljiF10", true)
+end
+
+function CloseTattooShop()
+	ClearAdditionalText(9, 1)
+	FreezeEntityPosition(PlayerPedId(), false)
+	EnableAllControlActions(0)
+	back = 1
+	opacity = 1
+	ResetSkin()
+	TriggerEvent("hud:SaljiF10", false)
+	return true
+end
+
+function ButtonPress()
+	PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
+end
+
+function IsMenuOpen()
+	return (JayMenu.IsMenuOpened('tattoo') or string.find(tostring(JayMenu.CurrentMenu() or ""), "ZONE_"))	
+end
+
+function BuyTattoo(collection, name, label, price)
+	ESX.TriggerServerCallback('SmallTattoos:PurchaseTattoo', function(success)
+		if success then
+			table.insert(currentTattoos, {collection = collection, nameHash = name, Count = opacity})
+		end
+	end, currentTattoos, price, {collection = collection, nameHash = name, Count = opacity}, GetLabelText(label), CurrentID)
+end
+
+function RemoveTattoo(name, label)
+	for k, v in pairs(currentTattoos) do
+		if v.nameHash == name then
+			table.remove(currentTattoos, k)
+		end
+	end
+	TriggerServerEvent("SmallTattoos:RemoveTattoo", currentTattoos)
+	ESX.ShowNotification("Obrisali ste ~y~" .. GetLabelText(label) .. "~s~ tetovazu")
+end
+
+function CreateScale(sType)
+	if scaleString ~= sType and sType == "OpenShop" then
+		scaleType = setupScaleform("instructional_buttons", "Otvorite Tattoo Shop menu", 38)
+		scaleString = sType
+	elseif scaleString ~= sType and sType == "Control" then
+		scaleType = setupScaleform2("instructional_buttons", "Promjenite kut kamere", 21, "Promjenite vidljivost tetovaze", {90, 89}, "Kupite/Obrisite tetovazu", 191)
+		scaleString = sType
+	end
+end
+
+Citizen.CreateThread(function()
+	JayMenu.CreateMenu("tattoo", "Tattoo Shop", function()
+        return CloseTattooShop()
+    end)
+    JayMenu.SetSubTitle('tattoo', "Kategorije")
+	
+	for k, v in ipairs(Config.TattooCats) do
+		JayMenu.CreateSubMenu(v[1], "tattoo", v[2])
+		JayMenu.SetSubTitle(v[1], v[2])
+	end
+
+    while true do 
+        Citizen.Wait(0)
+		local CanSleep = true
+		-- if not IsMenuOpen() then
+		-- 	for _,interiorId in ipairs(Config.interiorIds) do
+		-- 		if GetInteriorFromEntity(PlayerPedId()) == interiorId then
+		-- 			CanSleep = false
+		-- 			if not IsPedInAnyVehicle(PlayerPedId(), false) then
+		-- 				--CreateScale("OpenShop")
+		-- 				--DrawScaleformMovieFullscreen(scaleType, 255, 255, 255, 255, 0)
+		-- 				ESX.ShowHelpNotification("Pritisnite ~INPUT_PICKUP~ da otvorite menu")
+		-- 				if IsControlJustPressed(0, 38) then
+		-- 					OpenTattooShop()
+		-- 				end
+		-- 			end
+		-- 		end
+		-- 	end
+		-- end
+
+		if IsMenuOpen() then
+			DisableAllControlActions(0)
+			CanSleep = false
+		end
+		
+        if JayMenu.IsMenuOpened('tattoo') then
+			CanSleep = false
+            for k, v in ipairs(Config.TattooCats) do
+				JayMenu.MenuButton(v[2], v[1])
+			end
+			ClearPedDecorations(PlayerPedId())
+			for k,v in pairs(currentTattoos) do
+				if v.Count ~= nil then
+					for i = 1, v.Count do
+						SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+					end
+				else
+					SetPedDecoration(PlayerPedId(), v.collection, v.nameHash)
+				end
+			end
+			if DoesCamExist(cam) then
+				DetachCam(cam)
+				SetCamActive(cam, false)
+				RenderScriptCams(false, false, 0, 1, 0)
+				DestroyCam(cam, false)
+			end
+			JayMenu.Display()
+        end
+		for k, v in ipairs(Config.TattooCats) do
+			if JayMenu.IsMenuOpened(v[1]) then
+				CanSleep = false
+				if not DoesCamExist(cam) then
+					cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", 1)
+					SetCamActive(cam, true)
+					RenderScriptCams(true, false, 0, true, true)
+					StopCamShaking(cam, true)
+				end
+				CreateScale("Control")
+				DrawScaleformMovieFullscreen(scaleType, 255, 255, 255, 255, 0)
+				if IsDisabledControlJustPressed(0, 21) then
+					ButtonPress()
+					if back == #v[3] then
+						back = 1
+					else
+						back = back + 1
+					end
+				end
+				if IsDisabledControlJustPressed(0, 90) then
+					ButtonPress()
+					if opacity == 10 then
+						opacity = 10
+					else
+						opacity = opacity + 1
+					end
+				end
+				if IsDisabledControlJustPressed(0, 89) then
+					ButtonPress()
+					if opacity == 1 then
+						opacity = 1
+					else
+						opacity = opacity - 1
+					end
+				end
+				if GetCamCoord(cam) ~= GetOffsetFromEntityInWorldCoords(PlayerPedId(), v[3][back]) then
+					SetCamCoord(cam, GetOffsetFromEntityInWorldCoords(PlayerPedId(), v[3][back]))
+					PointCamAtCoord(cam, GetOffsetFromEntityInWorldCoords(PlayerPedId(), v[4]))
+				end
+				for _, tattoo in pairs(Config.AllTattooList) do
+					if tattoo.Zone == v[1] then
+						if GetEntityModel(PlayerPedId()) == `mp_m_freemode_01` then
+							if tattoo.HashNameMale ~= '' then
+								local found = false
+								for k, v in pairs(currentTattoos) do
+									if v.nameHash == tattoo.HashNameMale then
+										found = true
+										break
+									end
+								end
+								if found then
+									local clicked, hovered = JayMenu.SpriteButton(GetLabelText(tattoo.Name), "commonmenu", "shop_tattoos_icon_a", "shop_tattoos_icon_b")
+									if clicked then
+										RemoveTattoo(tattoo.HashNameMale, tattoo.Name)
+									end
+								else
+									local price = math.ceil(tattoo.Price / 20) == 0 and 100 or math.ceil(tattoo.Price / 20)
+									local clicked, hovered = JayMenu.Button(GetLabelText(tattoo.Name), "~HUD_COLOUR_GREENDARK~$" .. price)
+									if clicked then
+										BuyTattoo(tattoo.Collection, tattoo.HashNameMale, tattoo.Name, price)
+									elseif hovered then
+										DrawTattoo(tattoo.Collection, tattoo.HashNameMale)
+									end
+								end
+							end
+						else
+							if tattoo.HashNameFemale ~= '' then
+								local found = false
+								for k, v in pairs(currentTattoos) do
+									if v.nameHash == tattoo.HashNameFemale then
+										found = true
+										break
+									end
+								end
+								if found then
+									local clicked, hovered = JayMenu.SpriteButton(GetLabelText(tattoo.Name), "commonmenu", "shop_tattoos_icon_a", "shop_tattoos_icon_b")
+									if clicked then
+										RemoveTattoo(tattoo.HashNameFemale, tattoo.Name)
+									end
+								else
+									local price = math.ceil(tattoo.Price / 20) == 0 and 100 or math.ceil(tattoo.Price / 20)
+									local clicked, hovered = JayMenu.Button(GetLabelText(tattoo.Name), "~HUD_COLOUR_GREENDARK~$" .. price)
+									if clicked then
+										BuyTattoo(tattoo.Collection, tattoo.HashNameFemale, tattoo.Name, price)
+									elseif hovered then
+										DrawTattoo(tattoo.Collection, tattoo.HashNameFemale)
+									end
+								end
+							end
+						end
+					end
+				end
+				JayMenu.Display()
+			end
+		end
+		if CanSleep then
+			Citizen.Wait(3000)
+		end
+    end
+end)
+
+function ButtonMessage(text)
+    BeginTextCommandScaleformString("STRING")
+    AddTextComponentScaleform(text)
+    EndTextCommandScaleformString()
+end
+
+function Button(ControlButton)
+    PushScaleformMovieMethodParameterButtonName(ControlButton)
+end
+
+function setupScaleform2(scaleform, message, button, message2, buttons, message3, button2)
+    local scaleform = RequestScaleformMovie(scaleform)
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+    PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
+    PopScaleformMovieFunctionVoid()
+    
+    PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
+    PushScaleformMovieFunctionParameterInt(200)
+    PopScaleformMovieFunctionVoid()
+	
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(0)
+    Button(GetControlInstructionalButton(2, buttons[1], true))
+    Button(GetControlInstructionalButton(2, buttons[2], true))
+    ButtonMessage(message2)
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(1)
+    Button(GetControlInstructionalButton(2, button, true))
+    ButtonMessage(message)
+    PopScaleformMovieFunctionVoid()
+	
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(2)
+    Button(GetControlInstructionalButton(2, button2, true))
+    ButtonMessage(message3)
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_BACKGROUND_COLOUR")
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(80)
+    PopScaleformMovieFunctionVoid()
+
+    return scaleform
+end
+
+function setupScaleform(scaleform, message, button)
+    local scaleform = RequestScaleformMovie(scaleform)
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+    PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
+    PopScaleformMovieFunctionVoid()
+    
+    PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
+    PushScaleformMovieFunctionParameterInt(200)
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(0)
+    Button(GetControlInstructionalButton(2, button, true))
+    ButtonMessage(message)
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_BACKGROUND_COLOUR")
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(80)
+    PopScaleformMovieFunctionVoid()
+
+    return scaleform
 end
 
 RegisterNetEvent('esx_firme:DostaviRobu')
@@ -1701,6 +2146,9 @@ function SpawnCpove()
 		elseif Firme[i].Tip == 4 then
 			lab = "tuning_menu"
 			tp = 4
+		elseif Firme[i].Tip == 6 then
+			lab = "tattoo_menu"
+			tp = 6
 		end
 		local svijet = 0
 		if Firme[i].Ulaz then
@@ -1802,6 +2250,15 @@ Citizen.CreateThread(function()
 						cpid = Cpovi[i].Svijet
 						TrgID = Cpovi[i].fID
 						break
+					elseif Cpovi[i].Ime == "tattoo_menu" then
+						isInMarker  = true
+						currentZone = "tattoo_menu"
+						LastZone    = i
+						ID = Cpovi[i].Trgovina
+						Tip = Cpovi[i].Tip
+						cpid = Cpovi[i].Svijet
+						TrgID = Cpovi[i].fID
+						break
 					elseif Cpovi[i].Ime == "vlasnik" then
 						isInMarker  = true
 						currentZone = "vlasnik_menu"
@@ -1889,6 +2346,13 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'tuning_menu' then
 					if not NemaStruje then
 						OpenShopMenu5()
+					else
+						ESX.ShowNotification("Ne mozemo vam naplatiti trenutno posto nema struje.")
+					end
+				end
+				if CurrentAction == 'tattoo_menu' then
+					if not NemaStruje then
+						OpenTattooShop()
 					else
 						ESX.ShowNotification("Ne mozemo vam naplatiti trenutno posto nema struje.")
 					end

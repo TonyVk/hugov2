@@ -229,6 +229,55 @@ AddEventHandler('firme:PostaviTip', function(maf, br, igrac)
 	end
 end)
 
+ESX.RegisterServerCallback('SmallTattoos:GetPlayerTattoos', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer then
+		MySQL.Async.fetchScalar('SELECT tattoos FROM users WHERE ID = @identifier', {
+			['@identifier'] = xPlayer.getID()
+		}, function(result)
+			if result then
+				cb(json.decode(result))
+			else
+				cb()
+			end
+		end)
+	else
+		cb()
+	end
+end)
+
+ESX.RegisterServerCallback('SmallTattoos:PurchaseTattoo', function(source, cb, tattooList, price, tattoo, tattooName, id)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	if xPlayer.getMoney() >= price then
+		xPlayer.removeMoney(price)
+		DajFirmi(id, price/2)
+		table.insert(tattooList, tattoo)
+
+		MySQL.Async.execute('UPDATE users SET tattoos = @tattoos WHERE ID = @identifier', {
+			['@tattoos'] = json.encode(tattooList),
+			['@identifier'] = xPlayer.getID()
+		})
+
+		TriggerClientEvent('esx:showNotification', source, "Kupili ste ~y~" .. tattooName .. "~s~ tetovazu za ~g~$" .. price)
+		cb(true)
+	else
+		TriggerClientEvent('esx:showNotification', source, "Nemate dovoljno novca za ovu tetovazu!")
+		cb(false)
+	end
+end)
+
+RegisterServerEvent('SmallTattoos:RemoveTattoo')
+AddEventHandler('SmallTattoos:RemoveTattoo', function (tattooList)
+	local xPlayer = ESX.GetPlayerFromId(source)
+
+	MySQL.Async.execute('UPDATE users SET tattoos = @tattoos WHERE ID = @identifier', {
+		['@tattoos'] = json.encode(tattooList),
+		['@identifier'] = xPlayer.getID()
+	})
+end)
+
 RegisterNetEvent('firme:ZakljucajFirmu')
 AddEventHandler('firme:ZakljucajFirmu', function(maf, br)
 	local Postoji = 0
