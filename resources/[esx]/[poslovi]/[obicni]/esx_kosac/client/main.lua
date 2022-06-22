@@ -529,8 +529,8 @@ function SpawnObjekte()
 									TriggerServerEvent("biznis:DodajTuru", ESX.PlayerData.posao.name)
 									table.remove(Objekti, i)
 									if #Objekti == 0 then
-										local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-										ESX.Game.DeleteVehicle(vehicle)
+										--local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+										--ESX.Game.DeleteVehicle(vehicle)
 										ESX.ShowNotification("Uspjesno zavrsen posao!")
 									end
 								end
