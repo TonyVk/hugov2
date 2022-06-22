@@ -86,40 +86,28 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 				},
 				function(data, menu)
 					if data.current.value == "novafirma" then
-						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime', {
-							title = "Upisite ime firme",
-						}, function (datari, menuri)
-							local mIme = datari.value						
-							if mIme == nil then
+						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime2aaa', {
+							title = "Upisite cijenu firme",
+						}, function (datari2, menuri2)
+							local mCijena = datari2.value
+							if mCijena == nil then
 								ESX.ShowNotification('Greska.')
 							else
-								menuri.close()
-								ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'rankime2', {
-									title = "Upisite cijenu firme",
-								}, function (datari2, menuri2)
-									local mCijena = datari2.value						
-									if mCijena == nil then
-										ESX.ShowNotification('Greska.')
-									else
-										menuri2.close()
-										menu.close()
-										TriggerServerEvent("firme:NapraviFirmu", mIme, mCijena)
-										Wait(500)
-										ExecuteCommand("uredifirmu")
-									end
-								end, function (datari2, menuri2)
-									menuri2.close()
-								end)
+								menuri2.close()
+								menu.close()
+								TriggerServerEvent("firme:NapraviFirmu", mCijena)
+								Wait(500)
+								ExecuteCommand("uredifirmu")
 							end
-						end, function (datari, menuri)
-							menuri.close()
+						end, function (datari2, menuri2)
+							menuri2.close()
 						end)
 					else
 						local ImeFirme = data.current.value
 						elements = {}
 						table.insert(elements, {label = "Koordinate", value = "koord"})
 						table.insert(elements, {label = "Promjeni tip firme", value = "tip"})
-						table.insert(elements, {label = "Promjeni ime", value = "ime"})
+						--table.insert(elements, {label = "Promjeni ime", value = "ime"})
 						table.insert(elements, {label = "Promjeni cijenu", value = "cijena"})
 						table.insert(elements, {label = "Makni vlasnika", value = "vlasnik"})
 						table.insert(elements, {label = "Port do firme", value = "port"})

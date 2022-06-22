@@ -43,7 +43,7 @@ function DodajPeda()
             {
                 event = "oglas:DajOglas",
                 icon = "far fa-comment",
-                label = "Kupite oglas ($30)"
+                label = "Kupite oglas ($50)"
             }
         },
         distance = 3.5

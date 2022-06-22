@@ -93,9 +93,10 @@ ESX.RegisterServerCallback('esx_firme:getOnlinePlayers', function(source, cb, jo
 end)
 
 RegisterNetEvent('firme:NapraviFirmu')
-AddEventHandler('firme:NapraviFirmu', function(maf, cij)
+AddEventHandler('firme:NapraviFirmu', function(cij)
 	local src = source
 	local Postoji = 0
+	local maf = "firma"..#Firme
 	for i=1, #Firme, 1 do
 		if Firme[i] ~= nil and Firme[i].Ime == maf then
 			Postoji = 1
@@ -111,7 +112,7 @@ AddEventHandler('firme:NapraviFirmu', function(maf, cij)
 			table.insert(Firme, {TrgID = insertId, Ime = maf, Label = "Firma "..#Firme, Tip = 69, Vlasnik = nil, Sef = 0, Cijena = cij, Zakljucana = 0, Posao = 0, Skladiste = 0, Stanje = {}})
 			TriggerClientEvent("firme:PosaljiFirme", -1, Firme)
 			
-			TriggerClientEvent('esx:showNotification', src, 'Firma '..maf..' uspjesno kreirana!')
+			TriggerClientEvent('esx:showNotification', src, "Firma "..#Firme..' uspjesno kreirana!')
 		end)
 	else
 		TriggerClientEvent('esx:showNotification', src, 'Firma s tim imenom vec postoji!')
