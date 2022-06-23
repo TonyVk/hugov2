@@ -51,7 +51,9 @@ TriggerEvent('es:addGroupCommand', 'setmafija', 'jobmaster', function(source, ar
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Ta mafija/orga ne postoji.' } })
 				TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Lista mafija/orgi:' } })
 				for i=1, #ESX.JobsHelper, 1 do
-					TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'ID: '..ESX.JobsHelper[i].ID.." | Ime: "..ESX.JobsHelper[i].Label } })
+					if ESX.JobsHelper[i] ~= nil then
+						TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'ID: '..ESX.JobsHelper[i].ID.." | Ime: "..ESX.JobsHelper[i].Label } })
+					end
 				end
 			end
 		else

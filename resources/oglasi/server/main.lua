@@ -54,7 +54,7 @@ function DohvatiOglase()
     Oglasi = {}
     MySQL.Async.fetchAll("select id, phone_number as broj, firstname, lastname, message as tekst from yellow_tweets where novine = 0 limit 16", {}, function(result)
 		Oglasi = result
-        TriggerClientEvent('chat:addMessage', -1, { args = { 'Novine ', "Izašo je novi broj oglasnika!" } })
+        TriggerClientEvent('chat:addMessage', -1, { args = { '^1NOVINE', 'Izašao je novi broj oglasnika!' } })
         for i=1, #result, 1 do
             MySQL.Async.execute('UPDATE yellow_tweets SET novine = 1 WHERE id = @id', {
 				['@id'] = result[i].id

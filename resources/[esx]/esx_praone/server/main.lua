@@ -37,6 +37,18 @@ function UcitajPraone()
     )
 end
 
+ESX.RegisterServerCallback('praone:DajBrojPraona', function(source, cb)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local br = 0
+	for i=1, #Praone, 1 do
+		if Praone[i] ~= nil and Praone[i].vlasnik == xPlayer.getID() then
+			br = br+1
+		end
+	end
+	cb(br)
+end)
+
 RegisterNetEvent('praone:DodajNovu')
 AddEventHandler('praone:DodajNovu', function(coord, cijena)
     local xPlayer = ESX.GetPlayerFromId(source)

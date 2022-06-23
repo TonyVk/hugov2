@@ -881,17 +881,19 @@ AddEventHandler('mafije:NapraviMafiju', function(maf, lab)
 			
 			table.insert(Mafije, {Ime = maf, Label = lab, Posao = 0, Skladiste = 0, Skladiste2 = 0, Avion = 0})
 			TriggerClientEvent("mafije:UpdateMafije", -1, Mafije)
-			
-			MySQL.Async.insert('INSERT INTO jobs (name, label, whitelisted) VALUES (@ime, @lab, @white)',{
-                ['@ime'] = maf,
-				['@lab'] = label,
-				['@white'] = 1
-            }, function(insertId)
-				MySQL.Async.execute('INSERT INTO addon_inventory (name, label, shared) VALUES (@ime, @lab, @sh)',{
-					['@ime'] = insertId,
+			MySQL.Async.fetchAll('select max(pID)+1 as br from jobs', {}, function(rez)
+				MySQL.Async.insert('INSERT INTO jobs (pID, name, label, whitelisted) VALUES (@id, @ime, @lab, @white)',{
+					['@id'] = rez[1].br,
+					['@ime'] = maf,
 					['@lab'] = label,
-					['@sh'] = 1
-				})
+					['@white'] = 1
+				}, function(insertId)
+					MySQL.Async.execute('INSERT INTO addon_inventory (name, label, shared) VALUES (@ime, @lab, @sh)',{
+						['@ime'] = insertId,
+						['@lab'] = label,
+						['@sh'] = 1
+					})
+				end)
 			end)
 			
 			local soc = "society_"..maf
@@ -970,6 +972,16 @@ AddEventHandler('mafije:ObrisiMafiju', function(maf)
 					table.remove(Skladiste, i)
 				end
 			end
+
+			MySQL.Async.fetchAll('select pID from jobs where name = @name', { ['@name'] = maf }, function(rez)
+				MySQL.Async.execute('DELETE FROM addon_inventory WHERE name = @ime',{
+					['@ime'] = rez[1].pID
+				})
+				
+				MySQL.Async.execute('DELETE FROM addon_inventory_items WHERE inventory_name = @ime',{
+					['@ime'] = rez[1].pID
+				})
+			end)
 			
 			MySQL.Async.execute('DELETE FROM jobs WHERE name = @ime',{
 				['@ime'] = maf
@@ -994,14 +1006,6 @@ AddEventHandler('mafije:ObrisiMafiju', function(maf)
 			})
 			
 			MySQL.Async.execute('DELETE FROM datastore_data WHERE name = @ime',{
-				['@ime'] = soc
-			})
-			
-			MySQL.Async.execute('DELETE FROM addon_inventory WHERE name = @ime',{
-				['@ime'] = soc
-			})
-			
-			MySQL.Async.execute('DELETE FROM addon_inventory_items WHERE inventory_name = @ime',{
 				['@ime'] = soc
 			})
 			

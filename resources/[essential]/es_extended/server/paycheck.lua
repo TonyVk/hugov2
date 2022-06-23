@@ -187,6 +187,7 @@ ESX.StartPayCheck = function()
 							MySQL.Async.execute("UPDATE users SET brplaca=@brpl, exp=@exp, level=@lvl WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@brpl'] = place, ['@exp'] = exper, ['@lvl'] = level})
 						end
 					end)
+					TriggerClientEvent("esx:SjelaPlaca", xPlayer.source)
 				end
 			end
 		end

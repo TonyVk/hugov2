@@ -1373,9 +1373,10 @@ RegisterNetEvent("prodajoruzje:PlatiPorez")
 AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	xPlayer.removeAccountMoney('bank', kol*1000)
-	TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(kol*1000)), "Plaćanje poreza")
-	TriggerClientEvent('esx:showNotification', src, "Platili ste porez u iznosu od $"..(kol*1000))
+	local porez = 2500
+	xPlayer.removeAccountMoney('bank', kol*porez)
+	TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(kol*porez)), "Plaćanje poreza")
+	TriggerClientEvent('esx:showNotification', src, "Platili ste porez u iznosu od $"..(kol*porez))
 end)
 
 -- ESX.RegisterUsableItem("loto", function(source)

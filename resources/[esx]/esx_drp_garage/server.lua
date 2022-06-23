@@ -29,6 +29,14 @@ ESX.RegisterServerCallback('eden_garage:getVehicles', function(source, cb)
 end)
 -- End vehicle fetch
 
+ESX.RegisterServerCallback('garaza:DajBrojVozila', function(source, cb)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	MySQL.Async.fetchAll("SELECT count(owner) as br FROM owned_vehicles WHERE owner=@identifier",{['@identifier'] = xPlayer.getID()}, function(data) 
+		cb(data[1].br)
+	end)
+end)
+
 ESX.RegisterServerCallback('garaza:JelIstiModel',function(source,cb, plate, model)
 	local naso = false
 	local xPlayer = ESX.GetPlayerFromId(source)

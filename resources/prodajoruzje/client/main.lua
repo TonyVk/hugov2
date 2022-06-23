@@ -69,9 +69,8 @@ Citizen.CreateThread(function()
   ProvjeriPosao()
 end)
 
-Citizen.CreateThread(function()
-  while	true do
-	Citizen.Wait(3600000) --1h
+RegisterNetEvent('esx:SjelaPlaca')
+AddEventHandler('esx:SjelaPlaca', function()
 	local porez = 0
 	--kuca
 	ESX.TriggerServerCallback('loaf_housing:ImalKucu', function(br)
@@ -91,11 +90,18 @@ Citizen.CreateThread(function()
 	ESX.TriggerServerCallback('pumpe:DajBrojPumpi', function(br)
 		porez = porez+br
 	end)
+	--Praone
+	ESX.TriggerServerCallback('praone:DajBrojPraona', function(br)
+		porez = porez+br
+	end)
+	--Vozila
+	ESX.TriggerServerCallback('garaza:DajBrojVozila', function(br)
+		porez = porez+br
+	end)
 	Citizen.Wait(2000)
 	if porez > 0 then
 		TriggerServerEvent("prodajoruzje:PlatiPorez", porez)
 	end
-  end
 end)
 
 local count = 0

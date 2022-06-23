@@ -39,7 +39,7 @@ MySQL.ready(function()
 		ESX.Poslovi[tonumber(result4[i].pID)] = result4[i]
 	end
 
-	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
+	local result = MySQL.Sync.fetchAll('SELECT * FROM jobs order by pID', {})
 
 	for i=1, #result do
 		ESX.Jobs[tonumber(result[i].pID)] = result[i]
@@ -57,11 +57,11 @@ MySQL.ready(function()
 	end
 
 	for k,v in pairs(ESX.Jobs) do
+		table.insert(ESX.JobsHelper, {ID = v.pID, Label = v.label})
 		if next(v.grades) == nil then
 			ESX.Jobs[tonumber(v.pID)] = nil
+			table.remove(ESX.JobsHelper, #ESX.JobsHelper)
 			print(('es_extended: ignoring job "%s" due to missing job grades!'):format(v.name))
-		else
-			table.insert(ESX.JobsHelper, {ID = v.pID, Label = v.label})
 		end
 	end
 end)
@@ -88,11 +88,11 @@ AddEventHandler('RefreshPoslove', function()
 	end
 
 	for k,v in pairs(ESX.Jobs) do
+		table.insert(ESX.JobsHelper, {ID = v.pID, Label = v.label})
 		if next(v.grades) == nil then
 			ESX.Jobs[tonumber(v.pID)] = nil
+			table.remove(ESX.JobsHelper, #ESX.JobsHelper)
 			print(('es_extended: ignoring job "%s" due to missing job grades!'):format(v.name))
-		else
-			table.insert(ESX.JobsHelper, {ID = v.pID, Label = v.label})
 		end
 	end
 end)
