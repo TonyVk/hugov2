@@ -20,12 +20,8 @@ function UcitajDroge()
 			if data ~= nil then
             	branje = vector3(data.x, data.y, data.z)
 			end
-            local data2 = json.decode(result[i].prerada)
-			local prerada = nil
-			if data2 ~= nil then
-            	prerada = vector3(data2.x, data2.y, data2.z)
-			end
-			table.insert(Droge, {ID = result[i].ID, vrsta = result[i].vrsta, branje = branje, prerada = prerada})
+			local heading = tonumber(result[i].heading)
+			table.insert(Droge, {ID = result[i].ID, vrsta = result[i].vrsta, branje = branje, heading = heading, Ped = nil})
         end
         Ucitao = true
       end
@@ -40,7 +36,7 @@ ESX.RegisterServerCallback('droge:DohvatiDroge', function(source, cb)
 end)
 
 RegisterServerEvent("droge:PostaviKoord")
-AddEventHandler("droge:PostaviKoord", function(vrsta, br, koord)
+AddEventHandler("droge:PostaviKoord", function(vrsta, br, koord, head)
     local _source = source	
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.getPerm() > 0 then
@@ -49,15 +45,11 @@ AddEventHandler("droge:PostaviKoord", function(vrsta, br, koord)
             if Droge[i].vrsta == vrsta then
                 naso = true
                 if br == 1 then
+					Droge[i].heading = head
                     Droge[i].branje = koord
-                    MySQL.Async.execute('UPDATE droge SET branje = @kor WHERE ID = @id', {
+                    MySQL.Async.execute('UPDATE droge SET branje = @kor, heading = @head WHERE ID = @id', {
                         ['@kor'] = json.encode(koord),
-                        ['@id'] = Droge[i].ID
-                    })
-                else
-                    Droge[i].prerada = koord
-                    MySQL.Async.execute('UPDATE droge SET prerada = @kor WHERE ID = @id', {
-                        ['@kor'] = json.encode(koord),
+						['@head'] = head,
                         ['@id'] = Droge[i].ID
                     })
                 end
@@ -66,19 +58,12 @@ AddEventHandler("droge:PostaviKoord", function(vrsta, br, koord)
         end
         if not naso then
             if br == 1 then
-                MySQL.Async.insert('INSERT INTO droge (vrsta, branje) VALUES (@vr, @ko)',{
+                MySQL.Async.insert('INSERT INTO droge (vrsta, branje, heading) VALUES (@vr, @ko, @head)',{
                     ['@vr'] = vrsta,
+					['@head'] = head,
                     ['@ko'] = json.encode(koord)
                 }, function(id)
-                    table.insert(Droge, {ID = id, vrsta = vrsta, branje = koord, prerada = nil})
-                    TriggerClientEvent("droge:VratiDroge", -1, Droge)
-                end)
-            else
-                MySQL.Async.insert('INSERT INTO droge (vrsta, prerada) VALUES (@vr, @ko)',{
-                    ['@vr'] = vrsta,
-                    ['@ko'] = json.encode(koord)
-                }, function(id)
-                    table.insert(Droge, {ID = id, vrsta = vrsta, prerada = koord, branje = nil})
+                    table.insert(Droge, {ID = id, vrsta = vrsta, branje = koord, heading = head, Ped = nil})
                     TriggerClientEvent("droge:VratiDroge", -1, Droge)
                 end)
             end

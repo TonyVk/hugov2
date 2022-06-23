@@ -33,11 +33,20 @@ Citizen.CreateThread(function()
 	end
     ESX.TriggerServerCallback('droge:DohvatiDroge', function(vr)
 		Droge = vr
+        Wait(2000)
+        SpawnNPC()
 	end)
 end)
 
 RegisterNetEvent('droge:VratiDroge')
 AddEventHandler('droge:VratiDroge', function(vr)
+    for i=1, #Droge, 1 do
+        if Droge[i].Ped ~= nil then
+            DeleteEntity(Droge[i].Ped)
+            Droge[i].Ped = nil
+            exports.qtarget:RemoveZone("marihuana_ped")
+        end
+	end
 	Droge = vr
     if spawned then
         locations = {}
@@ -48,7 +57,96 @@ AddEventHandler('droge:VratiDroge', function(vr)
         locations2 = {}
     end
     spawned2 = false
+    SpawnNPC()
 end)
+
+LoadModel = function(model)
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Wait(10)
+	end
+end
+
+function SpawnNPC()
+    local pedmodel = GetHashKey("s_m_y_dealer_01")
+	LoadModel(pedmodel)
+	for i=1, #Droge, 1 do
+		if Droge[i] ~= nil and Droge[i].vrsta == 3 and Droge[i].heading ~= nil then
+			Droge[i].Ped = CreatePed(0, pedmodel, Droge[i].branje, Droge[i].heading, false, true)
+			SetEntityInvincible(Droge[i].Ped, true)
+			SetBlockingOfNonTemporaryEvents(Droge[i].Ped, true)
+			SetPedDiesWhenInjured(Droge[i].Ped, false)
+			SetPedFleeAttributes(Droge[i].Ped, 2)
+			FreezeEntityPosition(Droge[i].Ped, true)
+			SetPedCanPlayAmbientAnims(Droge[i].Ped, false)
+			SetPedCanRagdollFromPlayerImpact(Droge[i].Ped, false)
+			exports.qtarget:AddEntityZone("marihuana", Droge[i].Ped, 
+			{
+				name = "marihuana_ped",
+				debugPoly = false,
+				useZ = true
+			}, {
+				options = {
+					{
+						event = "marihuana:KupiSjeme",
+						icon = "far fa-comment",
+						label = "Kupi sjeme marihuane ($200)",
+						idzona = i
+					}
+				},
+				distance = 2.5
+			})
+		end
+	end
+	SetModelAsNoLongerNeeded(pedmodel)
+end
+
+RegisterNetEvent('marihuana:KupiSjeme')
+AddEventHandler('marihuana:KupiSjeme', function(data)
+	OpenDrugShop(data.idzona)
+end)
+
+function OpenDrugShop(i)
+	ESX.UI.Menu.CloseAll()
+	local elements = {}
+	menuOpen = true
+	table.insert(elements, {
+        label = ('%s - <span style="color:green;">%s</span>'):format("Sjeme", 200),
+        name = "seed",
+        price = 200,
+
+        -- menu properties
+        type = 'slider',
+        value = 1,
+        min = 1,
+        max = 20
+	})
+	
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'drug_shop', {
+		title    = "Diler",
+		--align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+        if #(GetEntityCoords(PlayerPedId())-Droge[i].branje) > 4.0 then
+            menuOpen = false
+            menu.close()
+        else
+            local torba = 0
+            TriggerEvent('skinchanger:getSkin', function(skin)
+                torba = skin['bags_1']
+            end)
+            if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
+                TriggerServerEvent('droge:prodajih', data.current.name, data.current.value, true)
+            else
+                TriggerServerEvent('droge:prodajih', data.current.name, data.current.value, false)
+            end
+        end
+	end, function(data, menu)
+		menu.close()
+		menuOpen = false
+	end)
+end
 
 RegisterCommand("uredidroge", function(source, args, raw)
 	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
@@ -56,7 +154,8 @@ RegisterCommand("uredidroge", function(source, args, raw)
 			ESX.UI.Menu.CloseAll()
 			local elements = {
 				{label = "Heroin", value = "heroin"},
-                {label = "Kokain", value = "kokain"}
+                {label = "Kokain", value = "kokain"},
+                {label = "Marihuana", value = "marihuana"}
 			}
 
 			ESX.UI.Menu.Open(
@@ -81,7 +180,7 @@ RegisterCommand("uredidroge", function(source, args, raw)
                             },
                             function(data2, menu2)
                                 local koord = GetEntityCoords(PlayerPedId())
-                                TriggerServerEvent("droge:PostaviKoord", 1, data2.current.value, koord-vector3(0.0, 0.0, 1.0))
+                                TriggerServerEvent("droge:PostaviKoord", 1, data2.current.value, koord-vector3(0.0, 0.0, 1.0), nil)
                                 menu2.close()
                                 menu.close()
                             end,
@@ -104,7 +203,31 @@ RegisterCommand("uredidroge", function(source, args, raw)
                             },
                             function(data2, menu2)
                                 local koord = GetEntityCoords(PlayerPedId())
-                                TriggerServerEvent("droge:PostaviKoord", 2, data2.current.value, koord-vector3(0.0, 0.0, 1.0))
+                                TriggerServerEvent("droge:PostaviKoord", 2, data2.current.value, koord-vector3(0.0, 0.0, 1.0), nil)
+                                menu2.close()
+                                menu.close()
+                            end,
+                            function(data2, menu2)
+                                menu2.close()
+                                menu.close()
+                            end
+                        )
+                    elseif data.current.value == "marihuana" then
+                        elements = {
+                            {label = "Postavite koordinate kupovine sjemena", value = 1}
+                        }
+            
+                        ESX.UI.Menu.Open(
+                            'default', GetCurrentResourceName(), 'udkoraa',
+                            {
+                                title    = "Izaberite opciju",
+                                align    = 'top-left',
+                                elements = elements,
+                            },
+                            function(data2, menu2)
+                                local koord = GetEntityCoords(PlayerPedId())
+                                local head = GetEntityHeading(PlayerPedId())
+                                TriggerServerEvent("droge:PostaviKoord", 3, data2.current.value, koord-vector3(0.0, 0.0, 1.0), head)
                                 menu2.close()
                                 menu.close()
                             end,

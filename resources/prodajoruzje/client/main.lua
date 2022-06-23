@@ -104,6 +104,10 @@ AddEventHandler('esx:SjelaPlaca', function()
 	end
 end)
 
+local radioname = "RADIO_22_DLC_BATTLE_MIX1_RADIO" -- radio to replace with your own | pastebin.com/Kj9t38KF <-- full list of radio names
+local volume = GetProfileSetting(306) / 100
+local previousVolume = volume
+
 local count = 0
 -- Key controls
 Citizen.CreateThread(function()
@@ -207,6 +211,26 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 			end
 		end)
 	end
+	Citizen.CreateThread(function ()
+		while UVozilu do
+			Citizen.Wait(100)
+			SetRadioTrack(radioname, 255)
+			if IsPlayerVehicleRadioEnabled() and GetPlayerRadioStationName()==radioname and not wasenabled then
+				SendNuiMessage(json.encode({type="enable",state=true}))
+				SendNuiMessage(json.encode({type="volume",volume=volume}))
+				SetAudioFlag("FrontendRadioDisabled", true)
+			elseif (not IsPlayerVehicleRadioEnabled() or GetPlayerRadioStationName()~=radioname) and wasenabled then
+				SendNuiMessage(json.encode({type="enable",state=false}))
+				SetAudioFlag("FrontendRadioDisabled", false)
+			end
+			local volume = GetProfileSetting(306)/100
+			if previousVolume ~= volume then
+				SendNuiMessage(json.encode({type="volume",volume=volume}))
+				previousVolume = volume
+			end
+			wasenabled = IsPlayerVehicleRadioEnabled() and GetPlayerRadioStationName()==radioname
+		end
+	end)
 	if GetVehicleClass(Vozilo) == 18 then
 		ModifyVehicleTopSpeed(GetVehiclePedIsIn(Vozilo, false), 70.0)
 	end

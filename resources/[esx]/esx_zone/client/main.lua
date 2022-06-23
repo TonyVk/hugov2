@@ -80,6 +80,12 @@ function SpawnNpcove()
 						icon = "far fa-comment",
 						label = "Prodaj gljive ($"..Config.CijenaGljive..")",
 						idzona = i
+					},
+					{
+						event = "zone:ProdajMarihuanu",
+						icon = "far fa-comment",
+						label = "Prodaj marihuanu ($"..Config.CijenaMarihuane..")",
+						idzona = i
 					}
 				},
 				distance = 2.5
@@ -117,6 +123,17 @@ AddEventHandler('zone:ProdajGljive', function(data)
 	else
 		ESX.ShowNotification("Trenutno nam ne treba gljiva!")
 	end
+end)
+
+RegisterNetEvent("zone:ProdajMarihuanu")
+AddEventHandler('zone:ProdajMarihuanu', function(data)
+	ESX.TriggerServerCallback('zone:ProdajMarihuanu', function(br, kol, cij)
+		if br then
+			ESX.ShowNotification("Prodali ste "..kol.."g marihuane za $"..cij)
+		else
+			ESX.ShowNotification("Nemate marihuane za prodati!")
+		end
+	end)
 end)
 
 if Config.DinamicneMafije then
@@ -278,6 +295,12 @@ AddEventHandler('zone:DodajPeda', function(ime, koord, head)
 								event = "zone:ProdajGljive",
 								icon = "far fa-comment",
 								label = "Prodaj gljive ($"..Config.CijenaGljive..")",
+								idzona = i
+							},
+							{
+								event = "zone:ProdajMarihuanu",
+								icon = "far fa-comment",
+								label = "Prodaj marihuanu ($"..Config.CijenaMarihuane..")",
 								idzona = i
 							}
 						},

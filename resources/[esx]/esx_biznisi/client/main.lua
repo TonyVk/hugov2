@@ -14,6 +14,7 @@ local Keys = {
 
 local Biznisi = {}
 local Blipovi = {}
+local Cpovi = {}
 
 local HasAlreadyEnteredMarker   = false
 local LastStation               = nil
@@ -23,6 +24,7 @@ local CurrentAction             = nil
 local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local GUI                       = {}
+local bizID 					= nil
 GUI.Time                        = 0
 
 Citizen.CreateThread(function()
@@ -39,7 +41,30 @@ Citizen.CreateThread(function()
 	end)
 	Wait(1000)
 	SpawnBlipove()
+	SpawnCpove()
 end)
+
+function SpawnCpove()
+	if #Cpovi > 0 then
+		for i=1, #Cpovi, 1 do
+		  	if Cpovi[i] ~= nil then
+			  	if Cpovi[i].Spawnan then
+					DeleteCheckpoint(Cpovi[i].ID)
+					Cpovi[i].Spawnan = false
+			  	end
+		  	end
+		end
+	end
+	Cpovi = {}
+	for i=1, #Biznisi, 1 do
+		if Biznisi[i] ~= nil and Biznisi[i].Coord ~= nil then
+			local x,y,z = table.unpack(Biznisi[i].Coord)
+			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+				table.insert(Cpovi, {bID = Biznisi[i].ID, Ime = "Biznis", Label = Biznisi[i].Label, Kupljen = Biznisi[i].Kupljen, Vlasnik = Biznisi[i].VlasnikIme, Tjedan = Biznisi[i].Tjedan, ID = check, Koord = vector3(x, y, z), Spawnan = false, r = 50, g = 50, b = 204})
+			end
+		end
+	end
+end
 
 RegisterNetEvent('es_admin:setPerm')
 AddEventHandler('es_admin:setPerm', function()
@@ -408,7 +433,16 @@ Citizen.CreateThread(function()
 	if CurrentAction ~= nil then
 	  waitara = 0
 	  naso = 1
-	  
+
+	  local x,y,z = table.unpack(Biznisi[bizID].Coord)
+	  Draw3DText( x, y, z  -1.400, Biznisi[bizID].Label, 4, 0.1, 0.1)
+	  if not Biznisi[bizID].Kupljen then
+		Draw3DText( x, y, z  -1.600, "Firma na prodaju!", 4, 0.1, 0.1)
+	  else
+		Draw3DText( x, y, z  -1.600, "Vlasnik: "..Biznisi[bizID].VlasnikIme, 4, 0.1, 0.1)
+	  end
+	  Draw3DText( x, y, z  -1.800, "Tjedna zarada: $"..Biznisi[bizID].Tjedan, 4, 0.1, 0.1)
+
       SetTextComponentFormat('STRING')
       AddTextComponentString(CurrentActionMsg)
       DisplayHelpTextFromStringLabel(0, 0, 1, -1)
@@ -433,31 +467,68 @@ Citizen.CreateThread(function()
 	local currentStation = nil
     local currentPart    = nil
     local currentPartNum = nil
-	for i=1, #Biznisi, 1 do
-		if Biznisi[i] ~= nil and Biznisi[i].Coord ~= nil then
-			local x,y,z = table.unpack(Biznisi[i].Coord)
-			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-				if GetDistanceBetweenCoords(coords, x, y, z, true) < 50.0 then
-					waitara = 0
-					naso = 1
-					DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
-					Draw3DText( x, y, z  -1.400, Biznisi[i].Label, 4, 0.1, 0.1)
-					if not Biznisi[i].Kupljen then
-						Draw3DText( x, y, z  -1.600, "Firma na prodaju!", 4, 0.1, 0.1)
-					else
-						Draw3DText( x, y, z  -1.600, "Vlasnik: "..Biznisi[i].VlasnikIme, 4, 0.1, 0.1)
-					end
-					Draw3DText( x, y, z  -1.800, "Tjedna zarada: $"..Biznisi[i].Tjedan, 4, 0.1, 0.1)
-				end
-				if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- for i=1, #Biznisi, 1 do
+	-- 	if Biznisi[i] ~= nil and Biznisi[i].Coord ~= nil then
+	-- 		local x,y,z = table.unpack(Biznisi[i].Coord)
+	-- 		if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+	-- 			if GetDistanceBetweenCoords(coords, x, y, z, true) < 50.0 then
+	-- 				waitara = 0
+	-- 				naso = 1
+	-- 				DrawMarker(1, x, y, z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+	-- 				Draw3DText( x, y, z  -1.400, Biznisi[i].Label, 4, 0.1, 0.1)
+	-- 				if not Biznisi[i].Kupljen then
+	-- 					Draw3DText( x, y, z  -1.600, "Firma na prodaju!", 4, 0.1, 0.1)
+	-- 				else
+	-- 					Draw3DText( x, y, z  -1.600, "Vlasnik: "..Biznisi[i].VlasnikIme, 4, 0.1, 0.1)
+	-- 				end
+	-- 				Draw3DText( x, y, z  -1.800, "Tjedna zarada: $"..Biznisi[i].Tjedan, 4, 0.1, 0.1)
+	-- 			end
+	-- 			if GetDistanceBetweenCoords(coords, x, y, z, true) < 1.5 then
+	-- 				isInMarker     = true
+	-- 				currentStation = Biznisi[i].ID
+	-- 				currentPart    = 'Biznis'
+	-- 				currentPartNum = i
+	-- 			end
+	-- 		end
+	-- 	end
+	-- end
+
+	if #Cpovi > 0 then
+		for i=1, #Cpovi, 1 do
+		  if Cpovi[i] ~= nil then
+			if #(coords-Cpovi[i].Koord) > 100 then
+			  if Cpovi[i].Spawnan then
+				DeleteCheckpoint(Cpovi[i].ID)
+				Cpovi[i].Spawnan = false
+			  end
+			else
+			  if Cpovi[i].Spawnan == false then
+				local kord = Cpovi[i].Koord
+				local range = 2.0
+				local check = CreateCheckpoint(47, kord.x, kord.y, kord.z, 0, 0, 0, range, Cpovi[i].r, Cpovi[i].g, Cpovi[i].b, 100)
+				SetCheckpointCylinderHeight(check, range, range, range)
+				Cpovi[i].ID = check
+				Cpovi[i].Spawnan = true
+			  end
+			end
+		  end
+		end
+		for i=1, #Cpovi, 1 do
+		  if Cpovi[i] ~= nil and Cpovi[i].Spawnan then
+			if #(coords-Cpovi[i].Koord) < 1.5 then
+				if Cpovi[i].Ime == "Biznis" then
 					isInMarker     = true
+					bizID = i
 					currentStation = Biznisi[i].ID
 					currentPart    = 'Biznis'
 					currentPartNum = i
+					break
 				end
 			end
+		  end
 		end
 	end
+
 	local hasExited = false
 
 	if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then

@@ -407,6 +407,19 @@ ESX.RegisterServerCallback('zone:ProdajGljive', function(source, cb, maf)
 	end
 end)
 
+ESX.RegisterServerCallback('zone:ProdajMarihuanu', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local xItem = xPlayer.getInventoryItem("marijuana")
+	if xItem.count > 0 then
+		local cij = xItem.count*Config.CijenaMarihuane
+		xPlayer.removeInventoryItem("marijuana", xItem.count)
+		xPlayer.addMoney(cij)
+		cb(true, xItem.count, cij)
+	else
+		cb(false, nil, nil)
+	end
+end)
+
 local brojcic = 0
 function Odbrojavaj()
 	brojcic = brojcic+1
