@@ -10,6 +10,78 @@ ESX.RegisterServerCallback('banka::server:GetPlayerName', function(source, cb)
 	end)
 end)
 
+RegisterServerEvent('banka:VratiKredit')
+AddEventHandler('banka:VratiKredit', function()
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+	local base = xPlayer.getAccount('bank').money
+	MySQL.Async.fetchAll('SELECT kredit FROM users WHERE ID = @ident', {
+		['@ident'] = xPlayer.getID()
+	}, function(result)
+		if result[1].kredit <= base then
+			xPlayer.removeAccountMoney('bank', tonumber(result[1].kredit))
+			TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(result[1].kredit)), "Vraćanje kredita")
+			MySQL.Async.execute("UPDATE users SET kredit=0, rata=0 WHERE ID=@identifier", {['@identifier'] = xPlayer.getID()})
+			TriggerClientEvent('esx:showAdvancedNotification', _source, 'Banka',
+                               'Zatvaranje kredita',
+                               'Kredit uspjesno zatvoren!',
+                               'CHAR_BANK_MAZE', 9)
+		else
+			TriggerClientEvent('esx:showAdvancedNotification', _source, 'Banka',
+                               'Zatvaranje kredita',
+                               'Nemate dovoljno novca na racunu za zatvaranje kredita!',
+                               'CHAR_BANK_MAZE', 9)
+		end
+	end)
+end)
+
+ESX.RegisterServerCallback('banka:DohvatiKredit', function(source, cb)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+
+	MySQL.Async.fetchAll('SELECT kredit, rata, brplaca FROM users WHERE ID = @ident', {
+		['@ident'] = xPlayer.getID()
+	}, function(result)
+		cb(result[1])
+	end)
+end)
+
+RegisterServerEvent('banka:podignikredit')
+AddEventHandler('banka:podignikredit', function(amount)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    amount = tonumber(amount)
+    if amount == nil or (amount ~= 25000 and amount ~= 50000 and amount ~= 75000 and amount ~= 100000) then
+        TriggerClientEvent('chatMessage', _source, "Krivi iznos kredita!")
+    else
+        xPlayer.addAccountMoney('bank', amount)
+		TriggerEvent("banka:Povijest", xPlayer.source, tonumber(amount), "Isplata kredita")
+		local amounte = 0
+		local rata = 0
+		if amount == 25000 then
+			amounte = amount*1.10
+			rata = 25000/100
+		elseif amount == 50000 then
+			amounte = amount*1.15
+			rata = 50000/100
+		elseif amount == 75000 then
+			amounte = amount*1.20
+			rata = 75000/100
+		elseif amount == 100000 then
+			amounte = amount*1.25
+			rata = 100000/100
+		end
+		MySQL.Async.execute("UPDATE users SET kredit=@kr, rata=@rat WHERE ID=@identifier", {['@identifier'] = xPlayer.getID(), ['@kr'] = amounte, ['@rat'] = rata})
+		ESX.SavePlayer(xPlayer, function() 
+		end)
+		local tekse = "Kredit od $"..amount.." uspjesno podignut!"
+		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Banka',
+		'Podizanje kredita',
+		tekse,
+		'CHAR_BANK_MAZE', 9)
+    end
+end)
+
 RegisterServerEvent('banka::server:depositvb')
 AddEventHandler('banka::server:depositvb', function(amount, inMenu)
 	local _src = source

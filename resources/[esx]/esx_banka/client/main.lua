@@ -27,7 +27,14 @@ RegisterCommand('+banka', function()
   if nearBankorATM() then
     inMenu = true
     SetNuiFocus(true,true)
-    SendNUIMessage({type = 'openGeneral', banco = atbank})
+    SendNUIMessage({type = 'openGeneral', banka = atbank})
+    ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)
+      SendNUIMessage({
+        type = "narediKredit",
+        kredit = br.kredit,
+        rata = br.rata
+      })
+    end)
     TriggerServerEvent('banka::server:balance', inMenu)
   end
 end, false)
@@ -116,6 +123,56 @@ end)
 --
 -- NUI CALLBACKS
 --
+
+RegisterNUICallback('kredit', function(data)
+	ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)
+		if br.kredit == 0 then
+			local PlayerData = ESX.GetPlayerData()
+			if PlayerData.job.name ~= "unemployed" or PlayerData.posao.name ~= "unemployed" then
+				if br.brplaca >= 400 then
+					TriggerServerEvent('banka:podignikredit', tonumber(data.amount))
+					Wait(200)
+					ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)
+						SendNUIMessage({
+							type = "narediKredit",
+							kredit = br.kredit,
+							rata = br.rata
+						})
+					end)
+				else
+					local brojic = 400-br.brplaca
+					if brojic >= 1 and brojic <= 4 then
+						ESX.ShowNotification("Nije vam jos dozvoljeno podizati kredit, moci cete nakon "..brojic.." primljene place!")
+					else
+						ESX.ShowNotification("Nije vam jos dozvoljeno podizati kredit, moci cete nakon "..brojic.." primljenih placa!")
+					end
+				end
+			else
+				ESX.ShowNotification("Ne mozete podici kredit ako ste nezaposleni!")
+			end
+		else
+			ESX.ShowNotification("Vec imate podignut kredit koji nije vracen do kraja!")
+		end
+	end)
+end)
+
+RegisterNUICallback('vratikredit', function()
+	ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)
+		if br.kredit == 0 then
+			ESX.ShowNotification("Nemate podignut kredit!")
+		else
+			TriggerServerEvent("banka:VratiKredit")
+			Wait(200)
+			ESX.TriggerServerCallback('banka:DohvatiKredit', function(br)
+				SendNUIMessage({
+					type = "narediKredit",
+					kredit = br.kredit,
+					rata = br.rata
+				})
+			end)
+		end
+	end)
+end)
 
 RegisterNUICallback('deposit', function(data)
 	TriggerServerEvent('banka::server:depositvb', tonumber(data.amount), inMenu)

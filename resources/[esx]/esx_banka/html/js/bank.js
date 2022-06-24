@@ -2,6 +2,11 @@ $(function() {
     window.addEventListener('message', function(event) {
         if (event.data.type === "openGeneral"){
             $('body').fadeIn(500);
+            if(!event.data.banka){
+                $("#kredit").fadeOut(1);
+            }else{
+                $("#kredit").fadeIn(1);
+            }
         } else if(event.data.type === "balanceHUD") {
             var balance = event.data.balance;
             $('.vb-banking-creditcard-footer-cardholder').html(event.data.player);
@@ -37,6 +42,9 @@ $(function() {
             $('.vb-banking-tarjetas-historytransactions').html(velkiHtml);
         } else if (event.data.type === "closeAll"){
             $('body').fadeOut(500);
+        } else if(event.data.type === "narediKredit") {
+            $('#iznoskr').html("$"+event.data.kredit);
+            $('#ratakr').html("$"+event.data.rata);
         }
     });
 });
@@ -44,6 +52,11 @@ $(function() {
 $(document).on('click','#inicio',function(){
     hideall();
     $(".vb-banking-container-inicio").fadeIn(500);
+})
+
+$(document).on('click','#kredit',function(){
+    hideall();
+    $(".vb-banking-container-kredit").fadeIn(500);
 })
 
 $(document).on('click','#mycards',function(){
@@ -81,37 +94,100 @@ $(document).on('click','#faq',function(){
     $(".vb-banking-bigcontainerfaq").fadeIn(500);
 })
 
-$(document).on('click','#closebanking',function(){
+$(document).on('click','#kredit25',function(e){
+    hideall();
+    e.preventDefault();
+    $.post('http://esx_banka/kredit', JSON.stringify({
+        amount: 25000
+    }));
     $('body').fadeOut(500);
     $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
+})
+
+$(document).on('click','#kredit50',function(e){
+    hideall();
+    e.preventDefault();
+    $.post('http://esx_banka/kredit', JSON.stringify({
+        amount: 50000
+    }));
+    $('body').fadeOut(500);
+    $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
+})
+
+$(document).on('click','#kredit75',function(e){
+    hideall();
+    e.preventDefault();
+    $.post('http://esx_banka/kredit', JSON.stringify({
+        amount: 75000
+    }));
+    $('body').fadeOut(500);
+    $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
+})
+
+$(document).on('click','#kredit100',function(e){
+    hideall();
+    e.preventDefault();
+    $.post('http://esx_banka/kredit', JSON.stringify({
+        amount: 100000
+    }));
+    $('body').fadeOut(500);
+    $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
+})
+
+$(document).on('click','#zatvoriKredit',function(e){
+    hideall();
+    e.preventDefault();
+    $.post('http://esx_banka/vratikredit', JSON.stringify({
+        
+    }));
+    $('body').fadeOut(500);
+    $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
+})
+
+$(document).on('click','#closebanking',function(){
+    hideall();
+    $('body').fadeOut(500);
+    $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
 })
 
 $(document).on('click','#withdraw',function(e){
     e.preventDefault();
+    hideall();
     $.post('http://esx_banka/withdraw', JSON.stringify({
         amountw: $("#withdrawnumber").val()
     }));
     $('body').fadeOut(500);
     $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
 })
 
 $(document).on('click','#depositarpasta',function(e){
     e.preventDefault();
+    hideall();
     $.post('http://esx_banka/deposit', JSON.stringify({
         amount: $("#cantidaddepositar").val()
     }));
     $('body').fadeOut(500);
     $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
 })
 
 $(document).on('click','#transferirpasta',function(e){
     e.preventDefault();
+    hideall();
     $.post('http://esx_banka/transfer', JSON.stringify({
         to: $("#iddestinatario").val(),
         amountt: $("#cantidadtransfer").val()
     }));
     $('body').fadeOut(500);
     $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+    $(".vb-banking-container-inicio").fadeIn(500);
 })
 
 function hideall() {
@@ -121,11 +197,14 @@ function hideall() {
     $(".vb-banking-bigcontainertransfer").hide();
     $(".vb-banking-bigcontainermyaccount").hide();
     $(".vb-banking-bigcontainerfaq").hide();
+    $(".vb-banking-container-kredit").hide();
 }
 
 document.onkeyup = function(data){
     if (data.which == 27){
+        hideall();
         $('body').fadeOut(500);
         $.post('http://esx_banka/NUIFocusOff', JSON.stringify({}));
+        $(".vb-banking-container-inicio").fadeIn(500);
     }
 }
