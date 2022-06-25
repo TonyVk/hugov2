@@ -11,6 +11,8 @@ if Config.UseESX then
 		ESX.TriggerServerCallback('pumpe:DohvatiPumpe', function(pumpe)
 			Pumpe = pumpe
 		end)
+		Wait(1000)
+		SpawnCpove()
 	end)
 end
 
@@ -33,6 +35,30 @@ GUI.Time                        = 0
 local BlizuPumpe 				= nil
 local ZadnjeGorivo 				= 0.0
 local NemaStruje 				= false
+local Cpovi 					= {}
+local pumID 					= nil
+
+function SpawnCpove()
+	if #Cpovi > 0 then
+		for i=1, #Cpovi, 1 do
+		  	if Cpovi[i] ~= nil then
+			  	if Cpovi[i].Spawnan then
+					DeleteCheckpoint(Cpovi[i].ID)
+					Cpovi[i].Spawnan = false
+			  	end
+		  	end
+		end
+	end
+	Cpovi = {}
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil and Pumpe[i].Koord ~= nil then
+			local x,y,z = table.unpack(Pumpe[i].Koord)
+			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
+				table.insert(Cpovi, {iID = i, pID = Pumpe[i].Ime, Ime = "Pumpa", ID = check, Koord = vector3(x, y, z), Spawnan = false, r = 50, g = 50, b = 204})
+			end
+		end
+	end
+end
 
 function ManageFuelUsage(vehicle)
 	if not DecorExistOn(vehicle, Config.FuelDecor) then
@@ -225,23 +251,34 @@ Citizen.CreateThread(function()
 	local naso = 0
 	
 	if CurrentAction ~= nil then
-	  waitara = 0
-	  naso = 1
+	  	waitara = 0
+	  	naso = 1
+
+		local kordara = Pumpe[pumID].Koord
+		Draw3DText(kordara.x, kordara.y, kordara.z-1.800, Pumpe[pumID].Ime, 4, 0.1, 0.1)
+		if not Pumpe[pumID].Vlasnik then
+			Draw3DText( kordara.x, kordara.y, kordara.z  -2.000, "Benzinska pumpa na prodaju!", 4, 0.1, 0.1)
+			Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, Pumpe[pumID].Cijena.."$", 4, 0.1, 0.1)
+		else
+			Draw3DText( kordara.x, kordara.y, kordara.z  -2.000, "Vlasnik: "..Pumpe[pumID].VlasnikIme, 4, 0.1, 0.1)
+			Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, "Cijena goriva: $"..Pumpe[pumID].GCijena, 4, 0.1, 0.1)
+			Draw3DText( kordara.x, kordara.y, kordara.z  -2.400, "Kolicina goriva: "..Pumpe[pumID].Gorivo.." litara", 4, 0.1, 0.1)
+		end
 	  
-      SetTextComponentFormat('STRING')
-      AddTextComponentString(CurrentActionMsg)
-      DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+		SetTextComponentFormat('STRING')
+		AddTextComponentString(CurrentActionMsg)
+		DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 
-      if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
+		if IsControlPressed(0,  38) and (GetGameTimer() - GUI.Time) > 150 then
 
-        if CurrentAction == 'menu_pumpa' then
-          OpenPumpaMenu(CurrentActionData.ime)
-        end
+			if CurrentAction == 'menu_pumpa' then
+			OpenPumpaMenu(CurrentActionData.ime)
+			end
 
-        CurrentAction = nil
-        GUI.Time      = GetGameTimer()
+			CurrentAction = nil
+			GUI.Time      = GetGameTimer()
 
-      end
+		end
 
     end
 
@@ -252,33 +289,70 @@ Citizen.CreateThread(function()
 	local currentStation = nil
     local currentPart    = nil
     local currentPartNum = nil
-	for i=1, #Pumpe, 1 do
-		if Pumpe[i] ~= nil and Pumpe[i].Koord ~= nil then
-			local kordara = Pumpe[i].Koord
-			if (kordara.x ~= 0 and kordara.x ~= nil) and (kordara.y ~= 0 and kordara.y ~= nil) and (kordara.z ~= 0 and kordara.z ~= nil) then
-				if #(coords-kordara) < 50.0 then
-					waitara = 0
-					naso = 1
-					DrawMarker(1, kordara.x, kordara.y, kordara.z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
-					Draw3DText(kordara.x, kordara.y, kordara.z-1.800, Pumpe[i].Ime, 4, 0.1, 0.1)
-					if not Pumpe[i].Vlasnik then
-						Draw3DText( kordara.x, kordara.y, kordara.z  -2.000, "Benzinska pumpa na prodaju!", 4, 0.1, 0.1)
-						Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, Pumpe[i].Cijena.."$", 4, 0.1, 0.1)
-					else
-						Draw3DText( kordara.x, kordara.y, kordara.z  -2.000, "Vlasnik: "..Pumpe[i].VlasnikIme, 4, 0.1, 0.1)
-						Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, "Cijena goriva: $"..Pumpe[i].GCijena, 4, 0.1, 0.1)
-						Draw3DText( kordara.x, kordara.y, kordara.z  -2.400, "Kolicina goriva: "..Pumpe[i].Gorivo.." litara", 4, 0.1, 0.1)
-					end
-				end
-				if #(coords-kordara) < 1.5 then
+	-- for i=1, #Pumpe, 1 do
+	-- 	if Pumpe[i] ~= nil and Pumpe[i].Koord ~= nil then
+	-- 		local kordara = Pumpe[i].Koord
+	-- 		if (kordara.x ~= 0 and kordara.x ~= nil) and (kordara.y ~= 0 and kordara.y ~= nil) and (kordara.z ~= 0 and kordara.z ~= nil) then
+	-- 			if #(coords-kordara) < 50.0 then
+	-- 				waitara = 0
+	-- 				naso = 1
+	-- 				DrawMarker(1, kordara.x, kordara.y, kordara.z-1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 50, 50, 204, 100, false, true, 2, false, false, false, false)
+	-- 				Draw3DText(kordara.x, kordara.y, kordara.z-1.800, Pumpe[i].Ime, 4, 0.1, 0.1)
+	-- 				if not Pumpe[i].Vlasnik then
+	-- 					Draw3DText( kordara.x, kordara.y, kordara.z  -2.000, "Benzinska pumpa na prodaju!", 4, 0.1, 0.1)
+	-- 					Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, Pumpe[i].Cijena.."$", 4, 0.1, 0.1)
+	-- 				else
+	-- 					Draw3DText( kordara.x, kordara.y, kordara.z  -2.000, "Vlasnik: "..Pumpe[i].VlasnikIme, 4, 0.1, 0.1)
+	-- 					Draw3DText( kordara.x, kordara.y, kordara.z  -2.200, "Cijena goriva: $"..Pumpe[i].GCijena, 4, 0.1, 0.1)
+	-- 					Draw3DText( kordara.x, kordara.y, kordara.z  -2.400, "Kolicina goriva: "..Pumpe[i].Gorivo.." litara", 4, 0.1, 0.1)
+	-- 				end
+	-- 			end
+	-- 			if #(coords-kordara) < 1.5 then
+	-- 				isInMarker     = true
+	-- 				currentStation = Pumpe[i].Ime
+	-- 				currentPart    = 'Pumpa'
+	-- 				currentPartNum = i
+	-- 			end
+	-- 		end
+	-- 	end
+	-- end
+
+	if #Cpovi > 0 then
+		for i=1, #Cpovi, 1 do
+		  if Cpovi[i] ~= nil then
+			if #(coords-Cpovi[i].Koord) > 100 then
+			  if Cpovi[i].Spawnan then
+				DeleteCheckpoint(Cpovi[i].ID)
+				Cpovi[i].Spawnan = false
+			  end
+			else
+			  if Cpovi[i].Spawnan == false then
+				local kord = Cpovi[i].Koord
+				local range = 2.0
+				local check = CreateCheckpoint(47, kord.x, kord.y, kord.z-1.0, 0, 0, 0, range, Cpovi[i].r, Cpovi[i].g, Cpovi[i].b, 100)
+				SetCheckpointCylinderHeight(check, range, range, range)
+				Cpovi[i].ID = check
+				Cpovi[i].Spawnan = true
+			  end
+			end
+		  end
+		end
+		for i=1, #Cpovi, 1 do
+		  if Cpovi[i] ~= nil and Cpovi[i].Spawnan then
+			if #(coords-Cpovi[i].Koord) < 1.5 then
+				if Cpovi[i].Ime == "Pumpa" then
 					isInMarker     = true
-					currentStation = Pumpe[i].Ime
+					pumID = Cpovi[i].iID
+					currentStation = Cpovi[i].pID
 					currentPart    = 'Pumpa'
 					currentPartNum = i
+					break
 				end
 			end
+		  end
 		end
 	end
+
 	local hasExited = false
 
 	if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart or LastPartNum ~= currentPartNum) ) then
@@ -314,25 +388,25 @@ Citizen.CreateThread(function()
 end)
 
 function Draw3DText(x,y,z,textInput,fontId,scaleX,scaleY)
-         local px,py,pz=table.unpack(GetGameplayCamCoords())
-         local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)    
-         local scale = (1/dist)*20
-         local fov = (1/GetGameplayCamFov())*100
-         local scale = scale*fov   
-         SetTextScale(scaleX*scale, scaleY*scale)
-         SetTextFont(fontId)
-         SetTextProportional(1)
-         SetTextColour(250, 250, 250, 255)		-- You can change the text color here
-         SetTextDropshadow(1, 1, 1, 1, 255)
-         SetTextEdge(2, 0, 0, 0, 150)
-         SetTextDropShadow()
-         SetTextOutline()
-         SetTextEntry("STRING")
-         SetTextCentre(1)
-         AddTextComponentString(textInput)
-         SetDrawOrigin(x,y,z+2, 0)
-         DrawText(0.0, 0.0)
-         ClearDrawOrigin()
+	local px,py,pz=table.unpack(GetGameplayCamCoords())
+	local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)    
+	local scale = (1/dist)*20
+	local fov = (1/GetGameplayCamFov())*100
+	local scale = scale*fov   
+	SetTextScale(scaleX*scale, scaleY*scale)
+	SetTextFont(fontId)
+	SetTextProportional(1)
+	SetTextColour(250, 250, 250, 255)		-- You can change the text color here
+	SetTextDropshadow(1, 1, 1, 1, 255)
+	SetTextEdge(2, 0, 0, 0, 150)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextEntry("STRING")
+	SetTextCentre(1)
+	AddTextComponentString(textInput)
+	SetDrawOrigin(x,y,z+2, 0)
+	DrawText(0.0, 0.0)
+	ClearDrawOrigin()
 end
 
 AddEventHandler('pumpe:hasEnteredMarker', function(station, part, partNum)
@@ -764,6 +838,7 @@ end)
 RegisterNetEvent('pumpe:SaljiPumpe')
 AddEventHandler('pumpe:SaljiPumpe', function(pumpe) 
 	Pumpe = pumpe
+	SpawnCpove()
 end)
 
 RegisterNetEvent('pumpe:PitajProdaju')

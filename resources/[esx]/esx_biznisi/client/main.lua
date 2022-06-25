@@ -60,7 +60,7 @@ function SpawnCpove()
 		if Biznisi[i] ~= nil and Biznisi[i].Coord ~= nil then
 			local x,y,z = table.unpack(Biznisi[i].Coord)
 			if (x ~= 0 and x ~= nil) and (y ~= 0 and y ~= nil) and (z ~= 0 and z ~= nil) then
-				table.insert(Cpovi, {bID = Biznisi[i].ID, Ime = "Biznis", Label = Biznisi[i].Label, Kupljen = Biznisi[i].Kupljen, Vlasnik = Biznisi[i].VlasnikIme, Tjedan = Biznisi[i].Tjedan, ID = check, Koord = vector3(x, y, z), Spawnan = false, r = 50, g = 50, b = 204})
+				table.insert(Cpovi, {iID = i, bID = Biznisi[i].ID, Ime = "Biznis", ID = check, Koord = vector3(x, y, z), Spawnan = false, r = 50, g = 50, b = 204})
 			end
 		end
 	end
@@ -120,11 +120,23 @@ RegisterCommand("uredibiznise", function(source, args, raw)
 											ESX.ShowNotification('Greska.')
 										else
 											menuri2.close()
-											menu.close()
-											TriggerServerEvent("biznis:NapraviBiznis", pIme, pLabel)
-											ESX.ShowNotification("Uspjesno napravljen biznis")
-											Wait(100)
-                                			ExecuteCommand("uredibiznise")
+											ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'pcijbiz', {
+												title = "Upisite cijenu biznisa",
+											}, function (datari3, menuri3)
+												local pCijena = datari3.value
+												if pCijena == nil or pCijena <= 0 then
+													ESX.ShowNotification('Greska.')
+												else
+													menuri3.close()
+													menu.close()
+													TriggerServerEvent("biznis:NapraviBiznis", pIme, pLabel, pCijena)
+													ESX.ShowNotification("Uspjesno napravljen biznis")
+													Wait(100)
+													ExecuteCommand("uredibiznise")
+												end
+											end, function (datari3, menuri3)
+												menuri3.close()
+											end)
 										end
 									end, function (datari2, menuri2)
 										menuri2.close()
@@ -152,6 +164,7 @@ RegisterCommand("uredibiznise", function(source, args, raw)
 						table.insert(elements, {label = "Posao biznisa", value = "posao"})
 						table.insert(elements, {label = "Vlasnik biznisa", value = "vlasnik"})
 						table.insert(elements, {label = "Label biznisa", value = "label"})
+						table.insert(elements, {label = "Cijena biznisa", value = "cijena"})
 						table.insert(elements, {label = "Obrisi biznis", value = "obrisi"})
 						ESX.UI.Menu.Open(
 							'default', GetCurrentResourceName(), 'ubiz',
@@ -218,6 +231,21 @@ RegisterCommand("uredibiznise", function(source, args, raw)
 									end, function (datari2, menuri2)
 										menuri2.close()
 									end)
+								elseif data2.current.value == "cijena" then
+									ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'urcijbiz', {
+										title = "Upisite cijenu biznisa",
+									}, function (datari2, menuri2)
+										local pCijena = datari2.value
+										if pCijena == nil or pCijena <= 0 then
+											ESX.ShowNotification('Greska.')
+										else
+											menuri2.close()
+											TriggerServerEvent("biznis:PostaviCijenu", bID, pCijena)
+											ESX.ShowNotification("Uspjesno postavljena nova cijena biznisa!")
+										end
+									end, function (datari2, menuri2)
+										menuri2.close()
+									end)
 								elseif data2.current.value == "obrisi" then
 									TriggerServerEvent("biznis:ObrisiBiznis", bID, Biznisi[id].Ime)
 									menu2.close()
@@ -235,137 +263,6 @@ RegisterCommand("uredibiznise", function(source, args, raw)
 					menu.close()
 				end
 			)
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
-RegisterCommand("napravibiznis", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
-		if perm == 69 then
-			if args[1] ~= nil and args[2] ~= nil then
-				local ime = args[1]
-				local naso = 0
-				for i=1, #Biznisi, 1 do
-					if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
-						naso = 1
-						break
-					end
-				end
-				if naso == 0 then
-					table.remove(args, 1)
-					local label = table.concat(args, ' ')
-					TriggerServerEvent("biznis:NapraviBiznis", ime, label)
-				else
-					ESX.ShowNotification("Biznis sa tim imenom vec postoji!")
-				end
-			else
-				ESX.ShowNotification("[System] /napravibiznis [Ime][Label]")
-			end
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
-RegisterCommand("bizniskoord", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
-		if perm == 69 then
-			if args[1] ~= nil then
-				local ime = args[1]
-				local naso = 0
-				for i=1, #Biznisi, 1 do
-					if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
-						naso = 1
-						local koord = GetEntityCoords(PlayerPedId())
-						TriggerServerEvent("biznis:PostaviKoord", ime, koord)
-						break
-					end
-				end
-				if naso == 0 then
-					ESX.ShowNotification("Biznis sa tim imenom ne postoji!")
-				end
-			else
-				ESX.ShowNotification("[System] /bizniskoord [Ime]")
-			end
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
-RegisterCommand("biznisvlasnik", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
-		if perm == 69 then
-			if args[1] ~= nil and args[2] ~= nil then
-				local ime = args[1]
-				local id = args[2]
-				local naso = 0
-				for i=1, #Biznisi, 1 do
-					if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
-						naso = 1
-						TriggerServerEvent("biznis:PostaviVlasnika", ime, id)
-						break
-					end
-				end
-				if naso == 0 then
-					ESX.ShowNotification("Biznis sa tim imenom ne postoji!")
-				end
-			else
-				ESX.ShowNotification("[System] /biznisvlasnik [Ime][ID]")
-			end
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
-RegisterCommand("biznisposao", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
-		if perm == 69 then
-			if args[1] ~= nil and args[2] ~= nil then
-				local ime = args[1]
-				local posao = args[2]
-				local naso = 0
-				for i=1, #Biznisi, 1 do
-					if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
-						naso = 1
-						TriggerServerEvent("biznis:PostaviPosao", ime, posao)
-						break
-					end
-				end
-				if naso == 0 then
-					ESX.ShowNotification("Biznis sa tim imenom ne postoji!")
-				end
-			else
-				ESX.ShowNotification("[System] /biznisposao [Ime][Ime posla]")
-			end
-		else
-			ESX.ShowNotification("Nemate pristup ovoj komandi!")
-		end
-	end)
-end, false)
-
-RegisterCommand("obrisibiznis", function(source, args, rawCommandString)
-	ESX.TriggerServerCallback('DajMiPermLevelCall', function(perm)
-		if perm == 69 then
-			if args[1] ~= nil then
-				local ime = args[1]
-				local naso = 0
-				for i=1, #Biznisi, 1 do
-					if Biznisi[i] ~= nil and Biznisi[i].Ime == ime then
-						naso = 1
-						TriggerServerEvent("biznis:ObrisiBiznis", ime)
-						break
-					end
-				end
-				if naso == 0 then
-					ESX.ShowNotification("Biznis sa tim imenom ne postoji!")
-				end
-			else
-				ESX.ShowNotification("[System] /obrisibiznis [Ime]")
-			end
 		else
 			ESX.ShowNotification("Nemate pristup ovoj komandi!")
 		end
@@ -407,10 +304,10 @@ function SpawnBlipove()
 				local label = "Nema"
 				if Biznisi[i].Kupljen == false then
 					SetBlipSprite (Blipovi[Biznisi[i].Ime], 375)
-					label = "[Firma] "..Biznisi[i].Label.." na prodaju!"
+					label = "[Biznis] "..Biznisi[i].Label.." na prodaju!"
 				else
 					SetBlipSprite (Blipovi[Biznisi[i].Ime], 374)
-					label = "[Firma] "..Biznisi[i].Label
+					label = "[Biznis] "..Biznisi[i].Label
 				end
 				SetBlipColour(Blipovi[Biznisi[i].Ime], 3)
 				SetBlipAsShortRange(Blipovi[Biznisi[i].Ime], true)
@@ -437,7 +334,7 @@ Citizen.CreateThread(function()
 	  local x,y,z = table.unpack(Biznisi[bizID].Coord)
 	  Draw3DText( x, y, z  -1.400, Biznisi[bizID].Label, 4, 0.1, 0.1)
 	  if not Biznisi[bizID].Kupljen then
-		Draw3DText( x, y, z  -1.600, "Firma na prodaju!", 4, 0.1, 0.1)
+		Draw3DText( x, y, z  -1.600, "Biznis na prodaju ($"..Biznisi[bizID].Cijena..")", 4, 0.1, 0.1)
 	  else
 		Draw3DText( x, y, z  -1.600, "Vlasnik: "..Biznisi[bizID].VlasnikIme, 4, 0.1, 0.1)
 	  end
@@ -518,8 +415,8 @@ Citizen.CreateThread(function()
 			if #(coords-Cpovi[i].Koord) < 1.5 then
 				if Cpovi[i].Ime == "Biznis" then
 					isInMarker     = true
-					bizID = i
-					currentStation = Biznisi[i].ID
+					bizID = Cpovi[i].iID
+					currentStation = Cpovi[i].bID
 					currentPart    = 'Biznis'
 					currentPartNum = i
 					break
@@ -563,124 +460,180 @@ Citizen.CreateThread(function()
   end
 end)
 
-function OpenBiznisMenu(ime)
-  local elements = {}
-  ESX.UI.Menu.CloseAll()
-  
-  local Kupljen = false
-  local Posao = nil
-  for i=1, #Biznisi, 1 do
-	if Biznisi[i] ~= nil and Biznisi[i].ID == ime then
-		if Biznisi[i].Kupljen == true then
-			Posao = Biznisi[i].Posao
-			Kupljen = true
-		end
-		break
-	end
-  end
-  local mere = false
-  if Kupljen == true then
-	ESX.TriggerServerCallback('biznis:JelVlasnik', function(vlasnik)
-		if vlasnik then
-			table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
-			table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
-			table.insert(elements, {label = "Radnici", value = 'radnici'})
+RegisterNUICallback(
+    "zatvoriupit",
+    function(data, cb)
+		local br = data.br
+		local args = data.args
+		if br == 1 then
+			if args.kupi then
+				TriggerServerEvent("biznis:KupiBiznis", args.id, args.ime)
+				HasAlreadyEnteredMarker = false
+			else
+				TriggerServerEvent("biznis:PrihvatiPonudu", args.orgIgr, args.id, args.cijena)
+			end
 		else
-			table.insert(elements, {label = "Ovaj biznis nije tvoj!", value = 'error'})
+			if args.cijena then
+				TriggerServerEvent("biznis:OdbijPonudu", args.orgIgr)
+			else
+				HasAlreadyEnteredMarker = false
+			end
 		end
-		mere = true
-	end, ime)
-  else
-	table.insert(elements, {label = "Kako kupiti biznis saznajte na nasem discordu", value = 'error'})
-	mere = true
-  end
-	while not mere do
+    end
+)
+
+function OpenBiznisMenu(ime)
+	local elements = {}
+	ESX.UI.Menu.CloseAll()
+	
+	local Kupljen = false
+	local Posao = nil
+	local bCijena = 0
+	local bIme = nil
+	for i=1, #Biznisi, 1 do
+		if Biznisi[i] ~= nil and Biznisi[i].ID == ime then
+			if Biznisi[i].Kupljen == true then
+				Posao = Biznisi[i].Posao
+				Kupljen = true
+			end
+			bCijena = Biznisi[i].Cijena
+			bIme = Biznisi[i].Ime
+			break
+		end
+	end
+	local mere = false
+	if Kupljen == true then
+		ESX.TriggerServerCallback('biznis:JelVlasnik', function(vlasnik)
+			if vlasnik then
+				table.insert(elements, {label = "Stanje sefa", value = 'stanje'})
+				table.insert(elements, {label = "Uzmi iz sefa", value = 'sef'})
+				table.insert(elements, {label = "Radnici", value = 'radnici'})
+				table.insert(elements, {label = "Prodaj drzavi ($"..math.ceil(bCijena/2)..")", value = 'prodaj'})
+				table.insert(elements, {label = "Prodaj igracu", value = 'prodaj2'})
+			else
+				table.insert(elements, {label = "Ovaj biznis nije tvoj!", value = 'error'})
+			end
+			mere = true
+		end, ime)
+	else
+		TriggerEvent("upit:OtvoriPitanje", GetCurrentResourceName(), "Biznis", "Zelite li kupiti biznis za $"..bCijena.."?", {kupi = true, id = ime, ime = bIme})
+		mere = 2
+	end
+	while mere == false do
 		Wait(100)
 	end
-    ESX.UI.Menu.Open(
-      'default', GetCurrentResourceName(), 'biznis',
-      {
-        title    = "Biznis",
-        align    = 'top-left',
-        elements = elements,
-        },
-
-        function(data, menu)
-
-      menu.close()
-
-      if data.current.value == 'stanje' then
-		TriggerServerEvent("biznis:DajStanje", ime)
-      end
-
-      if data.current.value == 'sef' then
+	if mere == true then
 		ESX.UI.Menu.Open(
-			'dialog', GetCurrentResourceName(), 'biznis_daj_lovu',
-			{
-				title = "Unesite koliko novca zelite podici"
+		'default', GetCurrentResourceName(), 'biznis',
+		{
+			title    = "Biznis",
+			align    = 'top-left',
+			elements = elements,
 			},
-			function(data3, menu3)
 
-			local count = tonumber(data3.value)
+			function(data, menu)
 
-			if count == nil then
-				ESX.ShowNotification("Kriva vrijednost!")
-			else
-				menu3.close()
-				TriggerServerEvent("biznis:UzmiIzSefa", ime, count)
+			menu.close()
+
+			if data.current.value == 'stanje' then
+				TriggerServerEvent("biznis:DajStanje", ime)
 			end
+
+			if data.current.value == 'sef' then
+				ESX.UI.Menu.Open(
+					'dialog', GetCurrentResourceName(), 'biznis_daj_lovu',
+					{
+						title = "Unesite koliko novca zelite podici"
+					},
+					function(data3, menu3)
+
+					local count = tonumber(data3.value)
+
+					if count == nil then
+						ESX.ShowNotification("Kriva vrijednost!")
+					else
+						menu3.close()
+						TriggerServerEvent("biznis:UzmiIzSefa", ime, count)
+					end
+					end,
+					function(data3, menu3)
+						menu3.close()
+					end
+				)
+			end
+			
+			if data.current.value == 'radnici' then
+				ESX.TriggerServerCallback('biznis:DohvatiRadnike', function(radnici)
+					local elements = {
+						head = { "Ime radnika", "Broj odradjenih tura" },
+						rows = {}
+					}
+					for i=1, #radnici, 1 do
+						if radnici[i].Posao == Posao then
+							table.insert(elements.rows, {
+								data = radnici[i],
+								cols = {
+									radnici[i].Ime,
+									radnici[i].Ture
+								}
+							})
+						end
+					end
+
+					ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'biznis_radnici', elements, function(data2, menu2)
+
+					end, function(data2, menu2)
+						menu2.close()
+					end)
+				end)
+			end
+
+			if data.current.value == 'prodaj' then
+				ESX.UI.Menu.CloseAll()
+				TriggerServerEvent("biznis:ProdajBiznis", ime, bIme)
+			end
+
+			if data.current.value == 'prodaj2' then
+				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'cijprpaa', {
+					title = "Upisite cijenu",
+				}, function (datar, menur)
+					local cij = tonumber(datar.value)
+					if cij == nil or cij <= 0 then
+						ESX.ShowNotification('Greska.')
+					else
+						menur.close()
+						local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+						if closestPlayer ~= -1 and closestDistance <= 3.0 then
+							TriggerServerEvent("biznis:PonudiIgracu", ime, cij, GetPlayerServerId(closestPlayer))
+							ESX.UI.Menu.CloseAll()
+						else
+							ESX.ShowNotification("Nema igraca u blizini!")
+						end
+					end
+				end, function (datar, menur)
+					menur.close()
+				end)
+			end
+			
+			if data.current.value == "error" then
+				ExecuteCommand("discord")
+			end
+			
+			CurrentAction     = 'menu_biznis'
+			CurrentActionMsg  = "Pritisnite E da otvorite biznis menu!"
+			CurrentActionData = { ime = ime }
+
 			end,
-			function(data3, menu3)
-				menu3.close()
+			function(data, menu)
+
+			menu.close()
+
+			CurrentAction     = 'menu_biznis'
+			CurrentActionMsg  = "Pritisnite E da otvorite biznis menu!"
+			CurrentActionData = { ime = ime }
 			end
 		)
-      end
-	  
-	  if data.current.value == 'radnici' then
-		ESX.TriggerServerCallback('biznis:DohvatiRadnike', function(radnici)
-			local elements = {
-				head = { "Ime radnika", "Broj odradjenih tura" },
-				rows = {}
-			}
-			for i=1, #radnici, 1 do
-				if radnici[i].Posao == Posao then
-					table.insert(elements.rows, {
-						data = radnici[i],
-						cols = {
-							radnici[i].Ime,
-							radnici[i].Ture
-						}
-					})
-				end
-			end
-
-			ESX.UI.Menu.Open('list', GetCurrentResourceName(), 'biznis_radnici', elements, function(data2, menu2)
-
-			end, function(data2, menu2)
-				menu2.close()
-			end)
-		end)
-      end
-	  
-	  if data.current.value == "error" then
-		ExecuteCommand("discord")
-	  end
-	  
-      CurrentAction     = 'menu_biznis'
-      CurrentActionMsg  = "Pritisnite E da otvorite biznis menu!"
-	  CurrentActionData = { ime = ime }
-
-    end,
-    function(data, menu)
-
-      menu.close()
-
-      CurrentAction     = 'menu_biznis'
-      CurrentActionMsg  = "Pritisnite E da otvorite biznis menu!"
-	  CurrentActionData = { ime = ime }
-    end
-  )
-
+	end
 end
 
 AddEventHandler('biznis:hasEnteredMarker', function(station, part, partNum)
@@ -715,10 +668,10 @@ AddEventHandler('biznis:KreirajBlip', function(co, biz)
 			if Biznisi[j] ~= nil and Biznisi[j].Ime == biz then
 				if Biznisi[j].Kupljen == false then
 					SetBlipSprite (Blipovi[biz], 375)
-					label = "[Firma] "..Biznisi[j].Label.." na prodaju!"
+					label = "[Biznis] "..Biznisi[j].Label.." na prodaju!"
 				else
 					SetBlipSprite (Blipovi[biz], 374)
-					label = "[Firma] "..Biznisi[j].Label
+					label = "[Biznis] "..Biznisi[j].Label
 				end
 			end
 		end
@@ -754,10 +707,10 @@ AddEventHandler('biznis:UpdateBlip', function(biz)
 			if Biznisi[j] ~= nil and Biznisi[j].Ime == biz then
 				if Biznisi[j].Kupljen == false then
 					SetBlipSprite (Blipovi[biz], 375)
-					label = "[Firma] "..Biznisi[j].Label.." na prodaju!"
+					label = "[Biznis] "..Biznisi[j].Label.." na prodaju!"
 				else
 					SetBlipSprite (Blipovi[biz], 374)
-					label = "[Firma] "..Biznisi[j].Label
+					label = "[Biznis] "..Biznisi[j].Label
 				end
 			end
 		end
@@ -772,4 +725,5 @@ end)
 RegisterNetEvent('biznis:UpdateBiznise')
 AddEventHandler('biznis:UpdateBiznise', function(biz)
 	Biznisi = biz
+	SpawnCpove()
 end)

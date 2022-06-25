@@ -18,11 +18,11 @@ function UcitajBiznise()
         for i=1, #result, 1 do
 			local data2 = json.decode(result[i].Koord)
 			if result[i].Vlasnik == nil then
-				table.insert(Biznisi, {ID = result[i].ID, Ime = result[i].Ime, Label = result[i].Label, Vlasnik = nil, Posao = result[i].Posao, Kupljen = false, Sef = result[i].Sef, VlasnikIme = "Nema", Coord = data2, Tjedan = result[i].Tjedan})
+				table.insert(Biznisi, {ID = result[i].ID, Ime = result[i].Ime, Label = result[i].Label, Vlasnik = nil, Posao = result[i].Posao, Kupljen = false, Sef = result[i].Sef, VlasnikIme = "Nema", Coord = data2, Tjedan = result[i].Tjedan, Cijena = tonumber(result[i].Cijena)})
 			else
 				GetRPName2(result[i].Vlasnik, function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname
-					table.insert(Biznisi, {ID = result[i].ID, Ime = result[i].Ime, Label = result[i].Label, Vlasnik = tonumber(result[i].Vlasnik), Posao = result[i].Posao, Kupljen = true, Sef = result[i].Sef, VlasnikIme = im, Coord = data2, Tjedan = result[i].Tjedan})
+					table.insert(Biznisi, {ID = result[i].ID, Ime = result[i].Ime, Label = result[i].Label, Vlasnik = tonumber(result[i].Vlasnik), Posao = result[i].Posao, Kupljen = true, Sef = result[i].Sef, VlasnikIme = im, Coord = data2, Tjedan = result[i].Tjedan, Cijena = tonumber(result[i].Cijena)})
 				end)
 			end
 			local data3 = json.decode(result[i].Sati)
@@ -83,15 +83,17 @@ ESX.RegisterServerCallback('biznis:DohvatiBiznise', function(source, cb)
 end)
 
 RegisterNetEvent('biznis:NapraviBiznis')
-AddEventHandler('biznis:NapraviBiznis', function(ime,label)
+AddEventHandler('biznis:NapraviBiznis', function(ime,label,cijena)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.getPerm() == 69 then
-		MySQL.Async.insert('INSERT INTO biznisi (Ime, Label) VALUES (@ime, @lab)',{
+		cijena = tonumber(cijena)
+		MySQL.Async.insert('INSERT INTO biznisi (Ime, Label, Cijena) VALUES (@ime, @lab, @cij)',{
 			['@ime'] = ime,
-			['@lab'] = label
+			['@lab'] = label,
+			['@cij'] = cijena
 		}, function(id)
-			table.insert(Biznisi, {ID = id, Ime = ime, Label = label, Posao = "Nema", Kupljen = false, Sef = 0, VlasnikIme = "Nema", Tjedan = 0})
+			table.insert(Biznisi, {ID = id, Ime = ime, Label = label, Posao = "Nema", Kupljen = false, Sef = 0, VlasnikIme = "Nema", Tjedan = 0, Cijena = cijena})
 			TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
 		end)
 	end
@@ -156,6 +158,135 @@ AddEventHandler('biznis:PostaviLabel', function(id, ime, lab)
 		end
 		TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
 		TriggerClientEvent("biznis:UpdateBlip", -1, ime)
+	end
+end)
+
+RegisterNetEvent('biznis:PostaviCijenu')
+AddEventHandler('biznis:PostaviCijenu', function(id, cij)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	if xPlayer.getPerm() == 69 then
+		MySQL.Async.execute('UPDATE biznisi SET Cijena = @cij WHERE ID = @im', {
+			['@cij'] = tonumber(cij),
+			['@im'] = id
+		})
+		for i=1, #Biznisi, 1 do
+			if Biznisi[i] ~= nil and Biznisi[i].ID == id then
+				Biznisi[i].Cijena = tonumber(cij)
+				break
+			end
+		end
+		TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
+	end
+end)
+
+RegisterNetEvent('biznis:KupiBiznis')
+AddEventHandler('biznis:KupiBiznis', function(bid, ime)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	for i=1, #Biznisi, 1 do
+		if Biznisi[i] ~= nil and Biznisi[i].ID == bid then
+			if xPlayer.getMoney() >= Biznisi[i].Cijena then
+				MySQL.Async.execute('UPDATE biznisi SET Vlasnik = @vl WHERE ID = @im', {
+					['@vl'] = xPlayer.getID(),
+					['@im'] = bid
+				})
+				Biznisi[i].Kupljen = true
+				Biznisi[i].Vlasnik = xPlayer.getID()
+				local im = xPlayer.getFirstname().." "..xPlayer.getLastname()
+				Biznisi[i].VlasnikIme = im
+				TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
+				TriggerClientEvent("biznis:UpdateBlip", -1, ime)
+				TriggerClientEvent('esx:showNotification', _source, "Kupili ste biznis za $"..Biznisi[i].Cijena)
+			end
+			break
+		end
+	end
+end)
+
+RegisterNetEvent('biznis:PonudiIgracu')
+AddEventHandler('biznis:PonudiIgracu', function(id, cij, prIgr)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    for i=1, #Biznisi, 1 do
+        if Biznisi[i] ~= nil then
+            if Biznisi[i].ID == id then
+                if Biznisi[i].Vlasnik == xPlayer.getID() then
+                    xPlayer.showNotification("Poslali ste ponudu igracu.")
+                    TriggerClientEvent("upit:OtvoriPitanje", prIgr, "esx_biznisi", "Kupovina biznisa", "Zelite li kupiti biznis za $"..cij.." ?", {cijena = cij, id = id, orgIgr = src})
+                end
+                break
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('biznis:PrihvatiPonudu')
+AddEventHandler('biznis:PrihvatiPonudu', function(orgIgr, id, cij)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local vlPlayer = ESX.GetPlayerFromId(orgIgr)
+    if xPlayer.getMoney() >= cij then
+        for i=1, #Biznisi, 1 do
+            if Biznisi[i] ~= nil then
+                if Biznisi[i].ID == id then
+                    if Biznisi[i].Vlasnik == vlPlayer.getID() then
+                        xPlayer.removeMoney(cij)
+                        vlPlayer.addMoney(cij)
+                        MySQL.Async.execute('UPDATE biznisi SET `Vlasnik` = @vl WHERE ID = @id',{
+                            ['@vl'] = xPlayer.getID(),
+                            ['@id'] = id
+                        })
+                        Biznisi[i].Vlasnik = xPlayer.getID()
+						Biznisi[i].Kupljen = true
+						local im = xPlayer.getFirstname().." "..xPlayer.getLastname()
+						Biznisi[i].VlasnikIme = im
+						TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
+						TriggerClientEvent("biznis:UpdateBlip", -1, Biznisi[i].Ime)
+                        xPlayer.showNotification("Kupili ste biznis za $"..cij)
+                        vlPlayer.showNotification("Prodali ste biznis za $"..cij)
+                    else
+                        xPlayer.showNotification("Igrac nije vlasnik biznisa!")
+                        vlPlayer.showNotification("Niste vlasnik biznisa!")
+                    end
+                    break
+                end
+            end
+        end
+    else
+        xPlayer.showNotification("Nemate dovoljno novca kod sebe.")
+        vlPlayer.showNotification("Igrac nema dovoljno novca.")
+    end
+end)
+
+RegisterNetEvent('biznis:OdbijPonudu')
+AddEventHandler('biznis:OdbijPonudu', function(orgIgr)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local vlPlayer = ESX.GetPlayerFromId(orgIgr)
+    xPlayer.showNotification("Odbili ste ponudu!")
+    vlPlayer.showNotification("Igrac je odbio ponudu!")
+end)
+
+RegisterNetEvent('biznis:ProdajBiznis')
+AddEventHandler('biznis:ProdajBiznis', function(bid, ime)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	for i=1, #Biznisi, 1 do
+		if Biznisi[i] ~= nil and Biznisi[i].ID == bid then
+			MySQL.Async.execute('UPDATE biznisi SET Vlasnik = @vl WHERE ID = @im', {
+				['@vl'] = nil,
+				['@im'] = bid
+			})
+			Biznisi[i].Kupljen = false
+			Biznisi[i].Vlasnik = nil
+			Biznisi[i].VlasnikIme = "Nema"
+			xPlayer.addMoney(math.ceil(Biznisi[i].Cijena/2))
+			TriggerClientEvent("biznis:UpdateBiznise", -1, Biznisi)
+			TriggerClientEvent("biznis:UpdateBlip", -1, ime)
+			TriggerClientEvent('esx:showNotification', _source, "Prodali ste biznis drzavi za $"..math.ceil(Biznisi[i].Cijena/2))
+			break
+		end
 	end
 end)
 
