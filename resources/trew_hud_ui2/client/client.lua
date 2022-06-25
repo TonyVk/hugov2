@@ -13,6 +13,8 @@ local Tablica = nil
 local glad = 0
 local zedj = 0
 local Statusi = {}
+local IsAlreadyDrunk = false
+local DrunkLevel     = -1
 local IsDead = false
 local IsAnimated = false
 local ZabraniCmd = false
@@ -114,10 +116,22 @@ RegisterNetEvent('status:set')
 AddEventHandler('status:set', function(ime, br)
 	local playerStatus 
 	playerStatus = { action = 'setStatus', status = {} }
+	local naso = false
 	for i=1, #Statusi, 1 do
 		if Statusi[i].name == ime then
+			naso = true
 			Statusi[i].percent = math.floor(br)
 		end
+	end
+	if not naso then
+		local broj = br
+		if broj > 100 then
+			broj = 100
+		end
+		if broj < 0 then
+			broj = 0
+		end
+		table.insert(Statusi, {val = 0, percent = broj, name = ime})
 	end
 	TriggerServerEvent("status:SpremiStatuse", Statusi)
 	local glad = 0
@@ -144,13 +158,22 @@ RegisterNetEvent('status:add')
 AddEventHandler('status:add', function(ime, br)
 	local playerStatus 
 	playerStatus = { action = 'setStatus', status = {} }
+	local naso = false
 	for i=1, #Statusi, 1 do
 		if Statusi[i].name == ime then
-			Statusi[i].percent = Statusi[i].percent-math.floor(br)
-			if Statusi[i].percent < 0 then
-				Statusi[i].percent = 0
+			naso = true
+			Statusi[i].percent = Statusi[i].percent+math.floor(br)
+			if Statusi[i].percent > 100 then
+				Statusi[i].percent = 100
 			end
 		end
+	end
+	if not naso then
+		local broj = br
+		if broj > 100 then
+			broj = 100
+		end
+		table.insert(Statusi, {val = 0, percent = broj, name = ime})
 	end
 	TriggerServerEvent("status:SpremiStatuse", Statusi)
 	local glad = 0
@@ -689,60 +712,6 @@ function SmokeAnimation()
 	end)
 end
 
--- Optionalneeds
-function Drunk(level, start)
-  
-  Citizen.CreateThread(function()
-     local playerPed = GetPlayerPed(-1)
-     if start then
-      DoScreenFadeOut(800)
-      Wait(1000)
-    end
-     if level == 0 then
-       RequestAnimSet("move_m@drunk@slightlydrunk")
-      
-      while not HasAnimSetLoaded("move_m@drunk@slightlydrunk") do
-        Citizen.Wait(0)
-      end
-       SetPedMovementClipset(playerPed, "move_m@drunk@slightlydrunk", true)
-     elseif level == 1 then
-       RequestAnimSet("move_m@drunk@moderatedrunk")
-      
-      while not HasAnimSetLoaded("move_m@drunk@moderatedrunk") do
-        Citizen.Wait(0)
-      end
-       SetPedMovementClipset(playerPed, "move_m@drunk@moderatedrunk", true)
-     elseif level == 2 then
-       RequestAnimSet("move_m@drunk@verydrunk")
-      
-      while not HasAnimSetLoaded("move_m@drunk@verydrunk") do
-        Citizen.Wait(0)
-      end
-       SetPedMovementClipset(playerPed, "move_m@drunk@verydrunk", true)
-     end
-     SetTimecycleModifier("spectator5")
-     SetPedMotionBlur(playerPed, true)
-     SetPedIsDrunk(playerPed, true)
-     if start then
-      DoScreenFadeIn(800)
-     end
-   end)
-end
-
-function Reality()
-   Citizen.CreateThread(function()
-     	local playerPed = GetPlayerPed(-1)
-     	DoScreenFadeOut(800)
-     	Wait(1000)
-     	ClearTimecycleModifier()
-    	ResetScenarioTypesEnabled()
-    	ResetPedMovementClipset(playerPed, 0)
-    	SetPedIsDrunk(playerPed, false)
-    	SetPedMotionBlur(playerPed, false)
-     	DoScreenFadeIn(800)
-   end)
-end
-
 RegisterNetEvent('iens:Dozvoljeno')
 AddEventHandler('iens:Dozvoljeno', function(br)
 	Dozvoljeno = br
@@ -1110,6 +1079,38 @@ function Status()
 				end
 			end
 			Statusi[i].percent = zedj
+		elseif Statusi[i].name == 'drunk' then
+			local pijan = math.floor(Statusi[i].percent)
+			if pijan > 0 then
+				pijan = pijan-1
+				local start = true
+				if IsAlreadyDrunk then
+					start = false
+				end
+				local level = -1
+				if pijan > 30 and pijan <= 45 then
+					level = 0
+				elseif pijan > 45 and pijan <= 60 then
+					level = 1
+				elseif pijan > 60 then
+					level = 2
+				end
+				if level ~= -1 then
+					if level ~= DrunkLevel then
+						Drunk(level, start)
+					end
+				end
+				IsAlreadyDrunk = true
+				DrunkLevel     = level
+				Statusi[i].percent = pijan
+			end
+			if pijan == 0 then
+				if IsAlreadyDrunk then
+					Reality()
+				end
+				IsAlreadyDrunk = false
+				DrunkLevel     = -1
+			end
 		end
 	end
 	TriggerServerEvent("status:SpremiStatuse", Statusi)
@@ -1123,6 +1124,55 @@ function Status()
 	}
 	SendNUIMessage(playerStatus)
 	SetTimeout(60000, Status)
+end
+
+function Drunk(level, start)
+	Citizen.CreateThread(function()
+		local playerPed = GetPlayerPed(-1)
+		if start then
+			DoScreenFadeOut(800)
+			Wait(1000)
+		end
+		if level == 0 then
+			RequestAnimSet("move_m@drunk@slightlydrunk")
+			while not HasAnimSetLoaded("move_m@drunk@slightlydrunk") do
+				Citizen.Wait(0)
+			end
+			SetPedMovementClipset(playerPed, "move_m@drunk@slightlydrunk", true)
+		elseif level == 1 then
+			RequestAnimSet("move_m@drunk@moderatedrunk")
+			while not HasAnimSetLoaded("move_m@drunk@moderatedrunk") do
+				Citizen.Wait(0)
+			end
+			SetPedMovementClipset(playerPed, "move_m@drunk@moderatedrunk", true)
+		elseif level == 2 then
+			RequestAnimSet("move_m@drunk@verydrunk")
+			while not HasAnimSetLoaded("move_m@drunk@verydrunk") do
+				Citizen.Wait(0)
+			end
+			SetPedMovementClipset(playerPed, "move_m@drunk@verydrunk", true)
+		end
+		SetTimecycleModifier("spectator5")
+		SetPedMotionBlur(playerPed, true)
+		SetPedIsDrunk(playerPed, true)
+		if start then
+			DoScreenFadeIn(800)
+		end
+	end)
+end
+
+function Reality()
+	Citizen.CreateThread(function()
+	local playerPed = GetPlayerPed(-1)
+	DoScreenFadeOut(800)
+	Wait(1000)
+	ClearTimecycleModifier()
+	ResetScenarioTypesEnabled()
+	ResetPedMovementClipset(playerPed, 0)
+	SetPedIsDrunk(playerPed, false)
+	SetPedMotionBlur(playerPed, false)
+	DoScreenFadeIn(800)
+	end)
 end
 
 RegisterNetEvent('MakniHud')

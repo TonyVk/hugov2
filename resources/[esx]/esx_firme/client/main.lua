@@ -160,6 +160,7 @@ RegisterCommand("uredifirmu", function(source, args, raw)
 									--table.insert(elements, {label = "Postavi tuning shop", value = "4"})
 									--table.insert(elements, {label = "Postavi rudarsku firmu", value = "5"})
 									table.insert(elements, {label = "Postavi tetovaza shop", value = "6"})
+									table.insert(elements, {label = "Postavi bar", value = "7"})
 
 									ESX.UI.Menu.Open(
 									  'default', GetCurrentResourceName(), 'listarankova',
@@ -432,6 +433,37 @@ function OpenCijeneMenu(zone, st, tip)
 				item       = item,
 				price      = 50,
 			})
+		end
+	elseif tip == 7 then
+		for i=1, #Config.Zones[zone].Items, 1 do
+			local item = Config.Zones[zone].Items[i]
+			
+			if #NoveCijene > 0 then
+				local naso = false
+				for j=1, #NoveCijene, 1 do
+					if NoveCijene[j].store == st and NoveCijene[j].item == item.item then
+						naso = true
+						table.insert(elements2, {
+							label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(NoveCijene[j].cijena))),
+							item       = item.item,
+							price      = NoveCijene[j].cijena,
+						})
+					end
+				end
+				if not naso then
+					table.insert(elements2, {
+						label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
+						item       = item.item,
+						price      = item.price,
+					})
+				end
+			else
+				table.insert(elements2, {
+					label      = ('%s - <span style="color:green;">%s</span>'):format(item.label, _U('shop_item', ESX.Math.GroupDigits(item.price))),
+					item       = item.item,
+					price      = item.price,
+				})
+			end
 		end
 	end
 	ESX.UI.Menu.CloseAll()
@@ -723,7 +755,12 @@ function OpenShopMenu4(tip)
 	local elements = {}
 	local st = CurrentID
 	local lova = 0
-	local zone = "TwentyFourSeven"
+	local zone
+	if tip == 1 then
+		zone = "TwentyFourSeven"
+	elseif tip == 7 then
+		zone = "Bar"
+	end
 	ESX.TriggerServerCallback('esx_firme:DajSef', function(lov)
 		lova = lov
 	end, st)
@@ -786,7 +823,7 @@ function OpenShopMenu4(tip)
 								item       = "tip",
 								price      = 0,
 							})
-						end]]
+						end
 						if tip == 1 then
 							table.insert(elements, {
 								label      = "Naruci proizvode",
@@ -794,7 +831,7 @@ function OpenShopMenu4(tip)
 								item       = "naruci2",
 								price      = 0,
 							})
-						end
+						end]]
 						if tip == 4 then
 							table.insert(elements, {
 								label      = "Naruci proizvode",
@@ -841,9 +878,9 @@ function OpenShopMenu4(tip)
 						end
 					else
 						table.insert(elements, {
-							label      = "Pregledaj narudzbe",
-							label_real = "narpra",
-							item       = "pnar",
+							label      = "Niste vlasnik!",
+							label_real = "greska",
+							item       = "greska",
 							price      = 0,
 						})
 					end
@@ -1263,6 +1300,49 @@ RegisterNUICallback(
     end
 )
 
+function OpenBarMenu()
+	local elements = {}
+	local zone = "Bar"
+	local st = CurrentID
+	SendNUIMessage({
+		ocisti = true
+	})
+	for i=1, #Config.Zones[zone].Items, 1 do
+		local item = Config.Zones[zone].Items[i]
+		local br = 0
+		for j = 1, #Firme, 1 do
+			if Firme[j].Ime == st then
+				br = Firme[j].Skladiste
+				break
+			end
+		end
+		local label = item.label
+		if #NoveCijene > 0 then
+			for j=1, #NoveCijene, 1 do
+				if NoveCijene[j].store == st and NoveCijene[j].item == item.item then
+					item.price = NoveCijene[j].cijena
+				end
+			end
+		end
+		SendNUIMessage({
+			dodajitem = true,
+			naziv = label,
+			cijena = item.price,
+			ime = item.item,
+			trg = st,
+			zone = zone,
+			stanje = br
+		})
+	end
+	Wait(500)
+
+	ESX.UI.Menu.CloseAll()
+	SendNUIMessage({
+		prikazi = true
+	})
+	SetNuiFocus(true, true)
+end
+
 function OpenShopMenu()
 	local elements = {}
 	local zone = "TwentyFourSeven"
@@ -1581,6 +1661,32 @@ function ReloadBlip()
 					SetBlipAsShortRange(blip[st], true)
 					BeginTextCommandSetBlipName("STRING")
 					AddTextComponentString("Tattoo Shop")
+					EndTextCommandSetBlipName(blip[st])
+				end
+			end, st)
+		elseif Firme[i].Tip == 7 then
+			ESX.TriggerServerCallback('esx_firme:DalJeVlasnik', function(jelje2)
+				if jelje2 == 1 then
+					RemoveBlip(blip[st])
+					blip[st] = AddBlipForCoord(koord)
+					SetBlipSprite (blip[st], 93)
+					SetBlipDisplay(blip[st], 4)
+					SetBlipScale  (blip[st], 1.0)
+					SetBlipColour (blip[st], 67)
+					SetBlipAsShortRange(blip[st], true)
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString("Bar")
+					EndTextCommandSetBlipName(blip[st])
+				else
+					RemoveBlip(blip[st])
+					blip[st] = AddBlipForCoord(koord)
+					SetBlipSprite (blip[st], 93)
+					SetBlipDisplay(blip[st], 4)
+					SetBlipScale  (blip[st], 1.0)
+					SetBlipColour (blip[st], 2)
+					SetBlipAsShortRange(blip[st], true)
+					BeginTextCommandSetBlipName("STRING")
+					AddTextComponentString("Bar")
 					EndTextCommandSetBlipName(blip[st])
 				end
 			end, st)
@@ -2149,6 +2255,9 @@ function SpawnCpove()
 		elseif Firme[i].Tip == 6 then
 			lab = "tattoo_menu"
 			tp = 6
+		elseif Firme[i].Tip == 7 then
+			lab = "bar_menu"
+			tp = 7
 		end
 		local svijet = 0
 		if Firme[i].Ulaz then
@@ -2259,6 +2368,15 @@ Citizen.CreateThread(function()
 						cpid = Cpovi[i].Svijet
 						TrgID = Cpovi[i].fID
 						break
+					elseif Cpovi[i].Ime == "bar_menu" then
+						isInMarker  = true
+						currentZone = "bar_menu"
+						LastZone    = i
+						ID = Cpovi[i].Trgovina
+						Tip = Cpovi[i].Tip
+						cpid = Cpovi[i].Svijet
+						TrgID = Cpovi[i].fID
+						break
 					elseif Cpovi[i].Ime == "vlasnik" then
 						isInMarker  = true
 						currentZone = "vlasnik_menu"
@@ -2353,6 +2471,13 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'tattoo_menu' then
 					if not NemaStruje then
 						OpenTattooShop()
+					else
+						ESX.ShowNotification("Ne mozemo vam naplatiti trenutno posto nema struje.")
+					end
+				end
+				if CurrentAction == 'bar_menu' then
+					if not NemaStruje then
+						OpenBarMenu()
 					else
 						ESX.ShowNotification("Ne mozemo vam naplatiti trenutno posto nema struje.")
 					end
