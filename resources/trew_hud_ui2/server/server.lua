@@ -256,7 +256,7 @@ ESX.RegisterUsableItem('milk', function(source)
 	xPlayer.removeInventoryItem('milk', 1)
 
 	TriggerClientEvent('status:add', source, 'thirst', 100)
-	TriggerClientEvent('status:add', source, 'drunk', -100)
+	TriggerClientEvent('status:set', source, 'drunk', 0)
 	TriggerClientEvent('esx_basicneeds:onDrinkMilk', source)
 	TriggerClientEvent('esx:showNotification', source, "Popili ste mlijeko!")
 end)
