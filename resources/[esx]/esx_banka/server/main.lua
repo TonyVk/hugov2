@@ -1,6 +1,15 @@
 ESX = nil
+local Bankomati = {}
+local Ucitao = false
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+ESX.RegisterServerCallback('atm:DohvatiBankomate', function(source, cb)
+    while not Ucitao do
+        Wait(100)
+    end
+	cb(Bankomati)
+end)
 
 ESX.RegisterServerCallback('banka::server:GetPlayerName', function(source, cb)
 	local _char = ESX.GetPlayerFromId(source)
@@ -8,6 +17,101 @@ ESX.RegisterServerCallback('banka::server:GetPlayerName', function(source, cb)
 	MySQL.Async.fetchAll('SELECT ID, Tekst, Iznos from banka_transakcije WHERE Vlasnik = @vl ORDER BY ID desc limit 14', {['@vl'] = _char.getID()}, function(result)
 		cb(_charname, result)
 	end)
+end)
+
+MySQL.ready(function()
+	UcitajBankomate()
+end)
+
+function UcitajBankomate()
+	Bankomati = {}
+	MySQL.Async.fetchAll(
+      'SELECT ID, Koord, bKoord, Iznos FROM atm order by ID',
+      {},
+      function(result)
+        for i=1, #result, 1 do
+			local kord = nil
+			if result[i].Koord then
+				local ete = json.decode(result[i].Koord)
+				kord = vector3(ete.x, ete.y, ete.z)
+			end
+			local kord2 = nil
+			if result[i].bKoord then
+				local ete2 = json.decode(result[i].bKoord)
+            	kord2 = vector3(ete2.x, ete2.y, ete2.z)
+			end
+			table.insert(Bankomati, {ID = tonumber(result[i].ID), Koord = kord, bKoord = kord2, Iznos = tonumber(result[i].Iznos)})
+        end
+		Ucitao = true
+		TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
+      end
+    )
+end
+
+RegisterNetEvent('atm:DodajBankomat')
+AddEventHandler('atm:DodajBankomat', function(coord)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.getPerm() >= 1 then
+		MySQL.Async.insert('INSERT INTO atm (Koord) VALUES (@ko)',{
+			['@ko'] = json.encode(coord)
+		}, function(id)
+			table.insert(Bankomati, {ID = id, Koord = vector3(coord.x, coord.y, coord.z), bKoord = nil, Iznos = 50000})
+        	TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
+		end)
+    end
+end)
+
+RegisterNetEvent('atm:UrediIznos')
+AddEventHandler('atm:UrediIznos', function(id, iznos)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.getPerm() >= 1 then
+        for i=1, #Bankomati, 1 do
+            if Bankomati[i].ID == id then
+                Bankomati[i].Iznos = iznos
+                break
+            end
+        end
+        MySQL.Async.execute('UPDATE atm SET `Iznos` = @iz WHERE ID = @id',{
+            ['@iz'] = iznos,
+            ['@id'] = id
+        })
+        TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
+    end
+end)
+
+RegisterNetEvent('atm:SpremiKoord')
+AddEventHandler('atm:SpremiKoord', function(id, koord)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.getPerm() >= 1 then
+        for i=1, #Bankomati, 1 do
+            if Bankomati[i].ID == id then
+                Bankomati[i].Koord = vector3(koord.x, koord.y, koord.z)
+                break
+            end
+        end
+        MySQL.Async.execute('UPDATE atm SET `Koord` = @ko WHERE ID = @id',{
+            ['@ko'] = json.encode(koord),
+            ['@id'] = id
+        })
+        TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
+    end
+end)
+
+RegisterNetEvent('atm:ObrisiBankomat')
+AddEventHandler('atm:ObrisiBankomat', function(id)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.getPerm() >= 1 then
+        for i=1, #Bankomati, 1 do
+            if Bankomati[i].ID == id then
+                table.remove(Bankomati, i)
+                break
+            end
+        end
+        MySQL.Async.execute('DELETE FROM atm WHERE ID = @id',{
+            ['@id'] = id
+        })
+        TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
+    end
 end)
 
 RegisterServerEvent('banka:VratiKredit')

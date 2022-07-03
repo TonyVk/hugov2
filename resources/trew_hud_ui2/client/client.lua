@@ -83,6 +83,7 @@ end)
 AddEventHandler('esx_basicneeds:resetStatus', function()
 	TriggerEvent('status:set', 'hunger', 50)
 	TriggerEvent('status:set', 'thirst', 50)
+	TriggerEvent('status:set', 'drunk', 0)
 end)
 
 RegisterNetEvent('esx_basicneeds:healPlayer')
@@ -166,12 +167,18 @@ AddEventHandler('status:add', function(ime, br)
 			if Statusi[i].percent > 100 then
 				Statusi[i].percent = 100
 			end
+			if Statusi[i].percent < 0 then
+				Statusi[i].percent = 0
+			end
 		end
 	end
 	if not naso then
 		local broj = br
 		if broj > 100 then
 			broj = 100
+		end
+		if broj < 0 then
+			broj = 0
 		end
 		table.insert(Statusi, {val = 0, percent = broj, name = ime})
 	end
@@ -1104,7 +1111,7 @@ function Status()
 				DrunkLevel     = level
 				Statusi[i].percent = pijan
 			end
-			if pijan == 0 then
+			if pijan <= 0 then
 				if IsAlreadyDrunk then
 					Reality()
 				end

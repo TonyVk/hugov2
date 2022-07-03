@@ -40,6 +40,19 @@ Citizen.CreateThread(function()
 	end)
 end)
 
+AddEventHandler("playerSpawned", function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
+RegisterNetEvent('es_admin:setPerm')
+AddEventHandler('es_admin:setPerm', function()
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
+end)
+
 function SpawnCpove()
 	if #Cpovi > 0 then
 		for i=1, #Cpovi, 1 do

@@ -3,9 +3,10 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 local Praone = {}
+local Ucitao = false
 
 ESX.RegisterServerCallback('praone:DohvatiPraone', function(source, cb)
-    while #Praone == 0 do
+    while not Ucitao do
         Wait(100)
     end
 	cb(Praone)
@@ -32,6 +33,7 @@ function UcitajPraone()
 			end
 			table.insert(Praone, {ID = tonumber(result[i].ID), koord = kord, pranje = kord2, vlasnik = result[i].vlasnik, cijena = tonumber(result[i].cijena), sef = tonumber(result[i].sef), kcijena = tonumber(result[i].kcijena)})
         end
+        Ucitao = true
 		TriggerClientEvent("praone:VratiPraone", -1, Praone)
       end
     )
