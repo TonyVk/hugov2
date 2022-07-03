@@ -26,7 +26,7 @@ end)
 function UcitajBankomate()
 	Bankomati = {}
 	MySQL.Async.fetchAll(
-      'SELECT ID, Koord, bKoord, Objekt, Heading Iznos FROM atm order by ID',
+      'SELECT ID, Koord, bKoord, Objekt, Heading, Iznos FROM atm order by ID',
       {},
       function(result)
         for i=1, #result, 1 do

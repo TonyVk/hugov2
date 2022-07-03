@@ -79,6 +79,7 @@ function SpawnBlipove()
 	for i=1, #Blipovi, 1 do
 		RemoveBlip(Blipovi[i].blip)
 	end
+	Blipovi = {}
 	for i=1, #Praone, 1 do
 		if Praone[i] ~= nil then
 			if Praone[i].pranje then
