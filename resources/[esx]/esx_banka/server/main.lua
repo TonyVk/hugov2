@@ -26,7 +26,7 @@ end)
 function UcitajBankomate()
 	Bankomati = {}
 	MySQL.Async.fetchAll(
-      'SELECT ID, Koord, bKoord, Iznos FROM atm order by ID',
+      'SELECT ID, Koord, bKoord, Objekt, Heading Iznos FROM atm order by ID',
       {},
       function(result)
         for i=1, #result, 1 do
@@ -73,10 +73,33 @@ AddEventHandler('atm:SpremiObjekt', function(id, kord, head, model)
                 break
             end
         end
+		print(head)
         MySQL.Async.execute('UPDATE atm SET `Objekt` = @obj, `bKoord` = @ko, `Heading` = @he WHERE ID = @id',{
             ['@ko'] = json.encode(kord),
 			['@obj'] = model,
 			['@he'] = head,
+            ['@id'] = id
+        })
+        TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
+    end
+end)
+
+RegisterNetEvent('atm:ObrisiObjekt')
+AddEventHandler('atm:ObrisiObjekt', function(id)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.getPerm() >= 1 then
+        for i=1, #Bankomati, 1 do
+            if Bankomati[i].ID == id then
+                Bankomati[i].Objekt = nil
+				Bankomati[i].bKoord = nil
+				Bankomati[i].Heading = nil
+                break
+            end
+        end
+        MySQL.Async.execute('UPDATE atm SET `Objekt` = @obj, `bKoord` = @ko, `Heading` = @he WHERE ID = @id',{
+            ['@ko'] = nil,
+			['@obj'] = nil,
+			['@he'] = nil,
             ['@id'] = id
         })
         TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)

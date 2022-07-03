@@ -23,7 +23,7 @@
 	ESX_MENU.open = function(namespace, name, data) {
 		if(data.elements.length == 0){
 			//$.post('http://' + ESX_MENU.ResourceName + '/menu_prazan');
-			ESX_MENU.close(namespace, name);
+			//ESX_MENU.close(namespace, name);
 			$.post('http://' + ESX_MENU.ResourceName + '/menu_prazan', JSON.stringify({
 				_namespace: namespace,
 				_name     : name
@@ -79,8 +79,9 @@
 	};
 
 	ESX_MENU.close = function(namespace, name) {
-		
-		delete ESX_MENU.opened[namespace][name];
+		if(ESX_MENU.opened[namespace]){
+			delete ESX_MENU.opened[namespace][name];
+		}
 
 		for (let i=0; i<ESX_MENU.focus.length; i++) {
 			if (ESX_MENU.focus[i].namespace == namespace && ESX_MENU.focus[i].name == name) {

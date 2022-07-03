@@ -32,6 +32,18 @@ Citizen.CreateThread(function()
 	end)
 end)
 
+-- AddEventHandler('onResourceStop', function(resource)
+-- 	if resource == GetCurrentResourceName() then
+-- 		print("stopirano")
+--     for i=1, #Blipovi, 1 do
+--       RemoveBlip(Blipovi[i].blip)
+--     end
+--     for i=1, #Objekti, 1 do
+--       DeleteObject(Objekti[i].objekt)
+--     end
+-- 	end
+-- end)
+
 RegisterKeyMapping('+banka', 'Banka', 'keyboard', 'E')
 -- Main thread
 RegisterCommand('-banka', function()
@@ -76,10 +88,11 @@ function SpawnBankomate()
 	for i=1, #Objekti, 1 do
 		DeleteObject(Objekti[i].objekt)
 	end
+  Objekti = {}
 	for i=1, #Bankomati, 1 do
 		if Bankomati[i] ~= nil then
 			if Bankomati[i].bKoord then
-        local model = Bankomati[i].Objekt
+        local model = GetHashKey(Bankomati[i].Objekt)
         RequestModel(model)
         while not HasModelLoaded(model) do
           Citizen.Wait(1)
@@ -96,6 +109,7 @@ function SpawnBlipove()
 	for i=1, #Blipovi, 1 do
 		RemoveBlip(Blipovi[i].blip)
 	end
+  Blipovi = {}
 	for i=1, #Bankomati, 1 do
 		if Bankomati[i] ~= nil then
 			if Bankomati[i].Koord then
@@ -159,6 +173,8 @@ RegisterCommand("urediatm", function(source, args, raw)
         elements = {}
         table.insert(elements, {label = "Postavi koordinate teksta", value = "koord"})
         table.insert(elements, {label = "Postavi objekt bankomata", value = "bobj"})
+        table.insert(elements, {label = "Uredi objekt bankomata", value = "ubobj"})
+        table.insert(elements, {label = "Obrisi objekt bankomata", value = "obobj"})
         table.insert(elements, {label = "Portaj se", value = "port"})
         table.insert(elements, {label = "Promjeni iznos na bankomatu", value = "iznos"})
         table.insert(elements, {label = "Obrisi bankomat", value = "obrisi"})
@@ -194,6 +210,8 @@ RegisterCommand("urediatm", function(source, args, raw)
               local kord = GetEntityCoords(PlayerPedId())
               TriggerServerEvent("atm:SpremiKoord", pID, kord)
             elseif data2.current.value == "bobj" then
+              menu2.close()
+              Wait(500)
               Citizen.CreateThread(function()
                 local kord = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 4.0, -1.0)
                 local model = "prop_atm_01"
@@ -209,6 +227,7 @@ RegisterCommand("urediatm", function(source, args, raw)
                 local controls = CreateControls()
 			          ButtonsScaleform = Instructional.Create(controls)
                 local brojic = 1
+                local kordac = GetEntityCoords(obj)
                 local postavlja = true
                 while postavlja do
                   DrawScaleformMovieFullscreen(ButtonsScaleform,255,255,255,255,0)
@@ -263,22 +282,22 @@ RegisterCommand("urediatm", function(source, args, raw)
                     end
                   end
                   if IsControlPressed(0, 32) then
-                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.1, 0.0)
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.01, 0.0)
                     SetEntityCoords(obj, corde)
                     --PlaceObjectOnGroundProperly(obj)
                   end
                   if IsControlPressed(0, 33) then
-                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, -0.1, 0.0)
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, -0.01, 0.0)
                     SetEntityCoords(obj, corde)
                     --PlaceObjectOnGroundProperly(obj)
                   end
                   if IsControlPressed(0, 34) then
-                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.1, 0.0, 0.0)
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.01, 0.0, 0.0)
                     SetEntityCoords(obj, corde)
                     --PlaceObjectOnGroundProperly(obj)
                   end
                   if IsControlPressed(0, 35) then
-                    local corde = GetOffsetFromEntityInWorldCoords(obj, -0.1, 0.0, 0.0)
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, -0.01, 0.0, 0.0)
                     SetEntityCoords(obj, corde)
                     --PlaceObjectOnGroundProperly(obj)
                   end
@@ -297,6 +316,7 @@ RegisterCommand("urediatm", function(source, args, raw)
                     local korda = GetEntityCoords(obj)
                     local heading = GetEntityHeading(obj)
                     DeleteObject(obj)
+                    ESX.ShowNotification("Postavili ste objekt bankomata!")
                     TriggerServerEvent("atm:SpremiObjekt", pID, korda, heading, Config.ATM[brojic])
                     postavlja = false
                   end
@@ -309,6 +329,150 @@ RegisterCommand("urediatm", function(source, args, raw)
                   Citizen.Wait(1)
                 end
               end)
+            elseif data2.current.value == "ubobj" then
+              if Bankomati[id].Objekt ~= nil then
+                menu2.close()
+                Wait(500)
+                Citizen.CreateThread(function()
+                  local kord = nil
+                  local head = nil
+                  local model = Bankomati[id].Objekt
+                  for i=1, #Objekti, 1 do
+                    if Objekti[i].ID == pID then
+                      kord = GetEntityCoords(Objekti[i].objekt)
+                      head = GetEntityHeading(Objekti[i].objekt)
+                      ESX.Game.DeleteObject(Objekti[i].objekt)
+                      break
+                    end
+                  end
+                  for i=1, #Config.ATM, 1 do
+                    if Config.ATM[i] == model then
+                      brojic = i
+                      break
+                    end
+                  end
+                  model = GetHashKey(Config.ATM[brojic])
+                  RequestModel(model)
+                  while not HasModelLoaded(model) do
+                    Citizen.Wait(1)
+                  end
+                  local obj = CreateObject(model, kord, false)
+                  SetEntityHeading(obj, head)
+                  SetModelAsNoLongerNeeded(model)
+                  FreezeEntityPosition(obj, true)
+                  --PlaceObjectOnGroundProperly(obj)
+                  FreezeEntityPosition(PlayerPedId(), true)
+                  local controls = CreateControls()
+                  ButtonsScaleform = Instructional.Create(controls)
+                  local brojic = 1
+                  local kordac = GetEntityCoords(obj)
+                  local postavlja = true
+                  while postavlja do
+                    DrawScaleformMovieFullscreen(ButtonsScaleform,255,255,255,255,0)
+                    if IsControlJustPressed(0, 175) then
+                      if (brojic+1) <= 4 then
+                        brojic = brojic+1
+                        local kordara = GetEntityCoords(obj)
+                        local model = GetHashKey(Config.ATM[brojic])
+                        DeleteObject(obj)
+                        RequestModel(model)
+                        while not HasModelLoaded(model) do
+                          Citizen.Wait(1)
+                        end
+                        obj = CreateObject(model, kordara.x, kordara.y, kordara.z, false, false, false)
+                        FreezeEntityPosition(obj, true)
+                        Wait(100)
+                        --PlaceObjectOnGroundProperly(obj)
+                        SetModelAsNoLongerNeeded(model)
+                      end
+                    end
+                    if IsControlJustPressed(0, 174) then
+                      if (brojic-1) >= 1 then
+                        brojic = brojic-1
+                        local kordara = GetEntityCoords(obj)
+                        local model = GetHashKey(Config.ATM[brojic])
+                        DeleteObject(obj)
+                        RequestModel(model)
+                        while not HasModelLoaded(model) do
+                          Citizen.Wait(1)
+                        end
+                        obj = CreateObject(model, kordara.x, kordara.y, kordara.z, false, false, false)
+                        FreezeEntityPosition(obj, true)
+                        Wait(100)
+                        --PlaceObjectOnGroundProperly(obj)
+                        SetModelAsNoLongerNeeded(model)
+                      end
+                    end
+                    if IsControlPressed(0, 172) then
+                      local korde1 = nil
+                      local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.0, 0.01)
+                      if corde.z < kordac.z+0.5 then
+                        SetEntityCoords(obj, corde)
+                        --PlaceObjectOnGroundProperly(Kuca)
+                      end
+                    end
+                    if IsControlPressed(0, 173) then
+                      local korde1 = nil
+                      local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.0, -0.01)
+                      if corde.z > kordac.z-0.5 then
+                        SetEntityCoords(obj, corde)
+                        --PlaceObjectOnGroundProperly(Kuca)
+                      end
+                    end
+                    if IsControlPressed(0, 32) then
+                      local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.01, 0.0)
+                      SetEntityCoords(obj, corde)
+                      --PlaceObjectOnGroundProperly(obj)
+                    end
+                    if IsControlPressed(0, 33) then
+                      local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, -0.01, 0.0)
+                      SetEntityCoords(obj, corde)
+                      --PlaceObjectOnGroundProperly(obj)
+                    end
+                    if IsControlPressed(0, 34) then
+                      local corde = GetOffsetFromEntityInWorldCoords(obj, 0.01, 0.0, 0.0)
+                      SetEntityCoords(obj, corde)
+                      --PlaceObjectOnGroundProperly(obj)
+                    end
+                    if IsControlPressed(0, 35) then
+                      local corde = GetOffsetFromEntityInWorldCoords(obj, -0.01, 0.0, 0.0)
+                      SetEntityCoords(obj, corde)
+                      --PlaceObjectOnGroundProperly(obj)
+                    end
+                    if IsControlPressed(0, 52) then
+                      local head = GetEntityHeading(obj)
+                      SetEntityHeading(obj, head+1.0)
+                      --PlaceObjectOnGroundProperly(Kuca)
+                    end
+                    if IsControlPressed(0, 51) then
+                      local head = GetEntityHeading(obj)
+                      SetEntityHeading(obj, head-1.0)
+                      --PlaceObjectOnGroundProperly(Kuca)
+                    end
+                    if IsControlJustPressed(0, 191) then
+                      FreezeEntityPosition(PlayerPedId(), false)
+                      local korda = GetEntityCoords(obj)
+                      local heading = GetEntityHeading(obj)
+                      print(heading)
+                      DeleteObject(obj)
+                      ESX.ShowNotification("Postavili ste objekt bankomata!")
+                      TriggerServerEvent("atm:SpremiObjekt", pID, korda, heading, Config.ATM[brojic])
+                      postavlja = false
+                    end
+                    if IsControlJustPressed(0, 73) then
+                      FreezeEntityPosition(PlayerPedId(), false)
+                      DeleteObject(obj)
+                      postavlja = false
+                      break
+                    end
+                    Citizen.Wait(1)
+                  end
+                end)
+              else
+                ESX.ShowNotification("Objekt bankomata prvo mora biti postavljen!")
+              end
+            elseif data2.current.value == "obobj" then
+              TriggerServerEvent("atm:ObrisiObjekt", pID)
             elseif data2.current.value == "obrisi" then
               for i=1, #Blipovi, 1 do
                 if Blipovi[i].ID == pID then
@@ -318,7 +482,7 @@ RegisterCommand("urediatm", function(source, args, raw)
               end
               for i=1, #Objekti, 1 do
                 if Objekti[i].ID == pID then
-                  RemoveBlip(Objekti[i].objekt)
+                  DeleteObject(Objekti[i].objekt)
                   break
                 end
               end
