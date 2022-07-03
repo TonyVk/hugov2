@@ -40,7 +40,7 @@ function UcitajBankomate()
 				local ete2 = json.decode(result[i].bKoord)
             	kord2 = vector3(ete2.x, ete2.y, ete2.z)
 			end
-			table.insert(Bankomati, {ID = tonumber(result[i].ID), Koord = kord, bKoord = kord2, Iznos = tonumber(result[i].Iznos)})
+			table.insert(Bankomati, {ID = tonumber(result[i].ID), Koord = kord, bKoord = kord2, Iznos = tonumber(result[i].Iznos), Objekt = result[i].Objekt, Heading = result[i].Heading})
         end
 		Ucitao = true
 		TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
@@ -55,9 +55,31 @@ AddEventHandler('atm:DodajBankomat', function(coord)
 		MySQL.Async.insert('INSERT INTO atm (Koord) VALUES (@ko)',{
 			['@ko'] = json.encode(coord)
 		}, function(id)
-			table.insert(Bankomati, {ID = id, Koord = vector3(coord.x, coord.y, coord.z), bKoord = nil, Iznos = 50000})
+			table.insert(Bankomati, {ID = id, Koord = vector3(coord.x, coord.y, coord.z), bKoord = nil, Iznos = 50000, Objekt = nil, Heading = nil})
         	TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
 		end)
+    end
+end)
+
+RegisterNetEvent('atm:SpremiObjekt')
+AddEventHandler('atm:SpremiObjekt', function(id, kord, head, model)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.getPerm() >= 1 then
+        for i=1, #Bankomati, 1 do
+            if Bankomati[i].ID == id then
+                Bankomati[i].Objekt = model
+				Bankomati[i].bKoord = kord
+				Bankomati[i].Heading = head
+                break
+            end
+        end
+        MySQL.Async.execute('UPDATE atm SET `Objekt` = @obj, `bKoord` = @ko, `Heading` = @he WHERE ID = @id',{
+            ['@ko'] = json.encode(kord),
+			['@obj'] = model,
+			['@he'] = head,
+            ['@id'] = id
+        })
+        TriggerClientEvent("atm:VratiBankomate", -1, Bankomati)
     end
 end)
 

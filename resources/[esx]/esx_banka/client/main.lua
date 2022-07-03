@@ -8,7 +8,9 @@ local atbank = false
 local perm 						= 0
 local Bankomati = {}
 local Blipovi = {}
+local Objekti = {}
 local ATMID = nil
+Scaleforms    = mLibs:Scaleforms()
 
 --
 -- MAIN THREAD
@@ -26,6 +28,7 @@ Citizen.CreateThread(function()
   ESX.TriggerServerCallback('atm:DohvatiBankomate', function(ba)
 		Bankomati = ba
 		SpawnBlipove()
+    SpawnBankomate()
 	end)
 end)
 
@@ -69,6 +72,26 @@ Citizen.CreateThread(function()
   end
 end)
 
+function SpawnBankomate()
+	for i=1, #Objekti, 1 do
+		DeleteObject(Objekti[i].objekt)
+	end
+	for i=1, #Bankomati, 1 do
+		if Bankomati[i] ~= nil then
+			if Bankomati[i].bKoord then
+        local model = Bankomati[i].Objekt
+        RequestModel(model)
+        while not HasModelLoaded(model) do
+          Citizen.Wait(1)
+        end
+        local obj = CreateObject(model, Bankomati[i].bKoord, false)
+        SetEntityHeading(obj, Bankomati[i].Heading)
+        table.insert(Objekti, {ID = Bankomati[i].ID, objekt = obj})
+			end
+		end
+	end
+end
+
 function SpawnBlipove()
 	for i=1, #Blipovi, 1 do
 		RemoveBlip(Blipovi[i].blip)
@@ -95,6 +118,7 @@ RegisterNetEvent('atm:VratiBankomate')
 AddEventHandler('atm:VratiBankomate', function(atm)
 	Bankomati = atm
 	SpawnBlipove()
+  SpawnBankomate()
 end)
 
 RegisterCommand("urediatm", function(source, args, raw)
@@ -170,11 +194,131 @@ RegisterCommand("urediatm", function(source, args, raw)
               local kord = GetEntityCoords(PlayerPedId())
               TriggerServerEvent("atm:SpremiKoord", pID, kord)
             elseif data2.current.value == "bobj" then
-              --Ovdje ce ici biranje objekta i postavljanje
+              Citizen.CreateThread(function()
+                local kord = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 4.0, -1.0)
+                local model = "prop_atm_01"
+                RequestModel(model)
+                while not HasModelLoaded(model) do
+                  Citizen.Wait(1)
+                end
+                local obj = CreateObject(model, kord, false)
+                SetModelAsNoLongerNeeded(model)
+                FreezeEntityPosition(obj, true)
+			          PlaceObjectOnGroundProperly(obj)
+                FreezeEntityPosition(PlayerPedId(), true)
+                local controls = CreateControls()
+			          ButtonsScaleform = Instructional.Create(controls)
+                local brojic = 1
+                local postavlja = true
+                while postavlja do
+                  DrawScaleformMovieFullscreen(ButtonsScaleform,255,255,255,255,0)
+                  if IsControlJustPressed(0, 175) then
+                    if (brojic+1) <= 4 then
+                      brojic = brojic+1
+                      local kordara = GetEntityCoords(obj)
+                      local model = GetHashKey(Config.ATM[brojic])
+                      DeleteObject(obj)
+                      RequestModel(model)
+                      while not HasModelLoaded(model) do
+                        Citizen.Wait(1)
+                      end
+                      obj = CreateObject(model, kordara.x, kordara.y, kordara.z, false, false, false)
+                      FreezeEntityPosition(obj, true)
+                      Wait(100)
+                      PlaceObjectOnGroundProperly(obj)
+                      SetModelAsNoLongerNeeded(model)
+                    end
+                  end
+                  if IsControlJustPressed(0, 174) then
+                    if (brojic-1) >= 1 then
+                      brojic = brojic-1
+                      local kordara = GetEntityCoords(obj)
+                      local model = GetHashKey(Config.ATM[brojic])
+                      DeleteObject(obj)
+                      RequestModel(model)
+                      while not HasModelLoaded(model) do
+                        Citizen.Wait(1)
+                      end
+                      obj = CreateObject(model, kordara.x, kordara.y, kordara.z, false, false, false)
+                      FreezeEntityPosition(obj, true)
+                      Wait(100)
+                      PlaceObjectOnGroundProperly(obj)
+                      SetModelAsNoLongerNeeded(model)
+                    end
+                  end
+                  if IsControlPressed(0, 172) then
+                    local korde1 = nil
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.0, 0.01)
+                    if corde.z < kordac.z+0.5 then
+                      SetEntityCoords(obj, corde)
+                      --PlaceObjectOnGroundProperly(Kuca)
+                    end
+                  end
+                  if IsControlPressed(0, 173) then
+                    local korde1 = nil
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.0, -0.01)
+                    if corde.z > kordac.z-0.5 then
+                      SetEntityCoords(obj, corde)
+                      --PlaceObjectOnGroundProperly(Kuca)
+                    end
+                  end
+                  if IsControlPressed(0, 32) then
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, 0.1, 0.0)
+                    SetEntityCoords(obj, corde)
+                    --PlaceObjectOnGroundProperly(obj)
+                  end
+                  if IsControlPressed(0, 33) then
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.0, -0.1, 0.0)
+                    SetEntityCoords(obj, corde)
+                    --PlaceObjectOnGroundProperly(obj)
+                  end
+                  if IsControlPressed(0, 34) then
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, 0.1, 0.0, 0.0)
+                    SetEntityCoords(obj, corde)
+                    --PlaceObjectOnGroundProperly(obj)
+                  end
+                  if IsControlPressed(0, 35) then
+                    local corde = GetOffsetFromEntityInWorldCoords(obj, -0.1, 0.0, 0.0)
+                    SetEntityCoords(obj, corde)
+                    --PlaceObjectOnGroundProperly(obj)
+                  end
+                  if IsControlPressed(0, 52) then
+                    local head = GetEntityHeading(obj)
+                    SetEntityHeading(obj, head+1.0)
+                    --PlaceObjectOnGroundProperly(Kuca)
+                  end
+                  if IsControlPressed(0, 51) then
+                    local head = GetEntityHeading(obj)
+                    SetEntityHeading(obj, head-1.0)
+                    --PlaceObjectOnGroundProperly(Kuca)
+                  end
+                  if IsControlJustPressed(0, 191) then
+                    FreezeEntityPosition(PlayerPedId(), false)
+                    local korda = GetEntityCoords(obj)
+                    local heading = GetEntityHeading(obj)
+                    DeleteObject(obj)
+                    TriggerServerEvent("atm:SpremiObjekt", pID, korda, heading, Config.ATM[brojic])
+                    postavlja = false
+                  end
+                  if IsControlJustPressed(0, 73) then
+                    FreezeEntityPosition(PlayerPedId(), false)
+                    DeleteObject(obj)
+                    postavlja = false
+                    break
+                  end
+                  Citizen.Wait(1)
+                end
+              end)
             elseif data2.current.value == "obrisi" then
               for i=1, #Blipovi, 1 do
                 if Blipovi[i].ID == pID then
                   RemoveBlip(Blipovi[i].blip)
+                  break
+                end
+              end
+              for i=1, #Objekti, 1 do
+                if Objekti[i].ID == pID then
+                  RemoveBlip(Objekti[i].objekt)
                   break
                 end
               end
@@ -199,6 +343,53 @@ RegisterCommand("urediatm", function(source, args, raw)
       ESX.ShowNotification("Niste admin!")
   end
 end, false)
+
+CreateControls = function()
+  local controls
+  controls = {
+    [1] = Config.Controls["direction"],
+    [2] = Config.Controls["heading"],
+    [3] = Config.Controls["height"],
+    [4] = Config.Controls["kuce"],
+    [5] = Config.Controls["camera"],
+    [6] = Config.Controls["zoom"],
+  }
+  return controls
+end
+
+Instructional = {}
+
+Instructional.Init = function()
+  local scaleform = Scaleforms.LoadMovie('INSTRUCTIONAL_BUTTONS')
+
+  Scaleforms.PopVoid(scaleform,'CLEAR_ALL')
+  Scaleforms.PopInt(scaleform,'SET_CLEAR_SPACE',200) 
+
+  return scaleform
+end
+
+Instructional.SetControls = function(scaleform,controls)
+  for i=1,#controls,1 do
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(i-1)
+    for k=1,#controls[i].codes,1 do
+      ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, controls[i].codes[k], true))
+    end
+    BeginTextCommandScaleformString("STRING")
+    AddTextComponentScaleform(controls[i].text)
+    EndTextCommandScaleformString()
+    PopScaleformMovieFunctionVoid()
+  end
+
+  Scaleforms.PopVoid(scaleform,'DRAW_INSTRUCTIONAL_BUTTONS')
+  --Scaleforms.PopMulti(scaleform,'SET_BACKGROUND_COLOUR',1,1,1,1)
+end
+
+Instructional.Create = function(controls)
+  local scaleform = Instructional.Init()
+  Instructional.SetControls(scaleform,controls)
+  return scaleform
+end
 
 AddEventHandler("playerSpawned", function()
 	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)

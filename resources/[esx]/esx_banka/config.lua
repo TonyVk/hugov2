@@ -82,3 +82,39 @@ Config.Zonas = {
         {name="ATM", id=277, x=5.134, y=-919.949, z=29.557}
     }   
 }
+
+Config.ATM = {
+	"prop_atm_01",
+	"prop_atm_02",
+	"prop_atm_03",
+	"prop_fleeca_atm"
+}
+
+Config.Controls = {
+    ["direction"] = {
+      codes = {35,34,33,32},
+      text = "Smjer",
+    },
+    ["heading"] = {
+      codes = {51,52},
+      text = "Rotacija",
+    },
+    ["height"] = {
+      codes = {172,173},
+      text = "Visina",
+    },
+    ["kuce"] = {
+      codes = {190,189},
+      text = "Izbor bankomata",
+    },
+    ["camera"] = {
+      codes = {191},
+      text = "Postavi",
+    },
+    ["zoom"] = {
+      codes = {73},
+      text = "Odustani",
+    },
+}
+
+mLibs = exports["meta_libs"]
