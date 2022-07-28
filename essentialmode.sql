@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 22/06/2022 17:23:30
+ Date: 10/07/2022 13:34:42
 */
 
 SET NAMES utf8mb4;
@@ -32,8 +32,6 @@ CREATE TABLE `addon_account`  (
 -- Records of addon_account
 -- ----------------------------
 INSERT INTO `addon_account` VALUES ('society_mechanic', 'Mehanicar', 1);
-INSERT INTO `addon_account` VALUES ('society_testonja', 'Testonja', 1);
-INSERT INTO `addon_account` VALUES ('society_testara', 'Testara', 1);
 
 -- ----------------------------
 -- Table structure for addon_account_data
@@ -47,14 +45,12 @@ CREATE TABLE `addon_account_data`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `index_addon_account_data_account_name_owner`(`account_name`, `owner`) USING BTREE,
   INDEX `index_addon_account_data_account_name`(`account_name`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of addon_account_data
 -- ----------------------------
 INSERT INTO `addon_account_data` VALUES (1, 'society_mechanic', 111708, NULL);
-INSERT INTO `addon_account_data` VALUES (7, 'society_testonja', 7410000, NULL);
-INSERT INTO `addon_account_data` VALUES (8, 'society_testara', 0, NULL);
 
 -- ----------------------------
 -- Table structure for addon_inventory
@@ -71,10 +67,6 @@ CREATE TABLE `addon_inventory`  (
 -- Records of addon_inventory
 -- ----------------------------
 INSERT INTO `addon_inventory` VALUES (3, 'Mehanicar', 1);
-INSERT INTO `addon_inventory` VALUES (43, 'Testonja', 1);
-INSERT INTO `addon_inventory` VALUES (44, 'Testara', 1);
-INSERT INTO `addon_inventory` VALUES (45, 'Testonja', 1);
-INSERT INTO `addon_inventory` VALUES (46, 'Testara', 1);
 
 -- ----------------------------
 -- Table structure for addon_inventory_items
@@ -90,14 +82,98 @@ CREATE TABLE `addon_inventory_items`  (
   INDEX `index_addon_inventory_items_inventory_name_name`(`inventory_name`, `name`) USING BTREE,
   INDEX `index_addon_inventory_items_inventory_name_name_owner`(`inventory_name`, `name`, `owner`) USING BTREE,
   INDEX `index_addon_inventory_inventory_name`(`inventory_name`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 47 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of addon_inventory_items
 -- ----------------------------
-INSERT INTO `addon_inventory_items` VALUES (45, 3, 'filter', 1, NULL);
-INSERT INTO `addon_inventory_items` VALUES (46, 3, 'turbo', 1, NULL);
-INSERT INTO `addon_inventory_items` VALUES (33, 44, 'bread', 5, NULL);
+INSERT INTO `addon_inventory_items` VALUES (50, 3, 'turbo', 1, NULL);
+INSERT INTO `addon_inventory_items` VALUES (49, 3, 'filter', 1, NULL);
+
+-- ----------------------------
+-- Table structure for atm
+-- ----------------------------
+DROP TABLE IF EXISTS `atm`;
+CREATE TABLE `atm`  (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Koord` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `bKoord` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `Iznos` int NULL DEFAULT 50000,
+  `Heading` float(200, 11) NULL DEFAULT NULL,
+  `Objekt` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 68 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of atm
+-- ----------------------------
+INSERT INTO `atm` VALUES (1, '{\"x\":-386.7330017089844,\"y\":6045.953125,\"z\":31.50099945068359}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (2, '{\"x\":-284.0369873046875,\"y\":6224.384765625,\"z\":31.1870002746582}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (3, '{\"x\":-110.75299835205078,\"y\":6467.703125,\"z\":31.78400039672851}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (4, '{\"x\":155.42999267578126,\"y\":6641.9912109375,\"z\":31.78400039672851}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (5, '{\"x\":174.6719970703125,\"y\":6637.2177734375,\"z\":31.78400039672851}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (6, '{\"x\":1703.137939453125,\"y\":6426.783203125,\"z\":32.72999954223633}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (7, '{\"x\":1702.842041015625,\"y\":4933.5927734375,\"z\":42.05099868774414}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (8, '{\"x\":1967.3330078125,\"y\":3744.29296875,\"z\":32.27199935913086}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (9, '{\"x\":1821.9169921875,\"y\":3683.48291015625,\"z\":34.24399948120117}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (10, '{\"x\":540.0419921875,\"y\":2671.007080078125,\"z\":42.17699813842773}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (11, '{\"x\":-284.0369873046875,\"y\":6224.384765625,\"z\":31.1870002746582}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (12, '{\"x\":-94.96900177001953,\"y\":6455.30078125,\"z\":31.78400039672851}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (13, '{\"x\":1735.114013671875,\"y\":6411.03515625,\"z\":35.16400146484375}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (14, '{\"x\":-135.1649932861328,\"y\":6365.73779296875,\"z\":31.10099983215332}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (15, '{\"x\":2564.39892578125,\"y\":2585.10009765625,\"z\":38.01599884033203}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (16, '{\"x\":1168.9749755859376,\"y\":-457.2409973144531,\"z\":66.64099884033203}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (17, '{\"x\":1153.884033203125,\"y\":-326.5400085449219,\"z\":69.24500274658203}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (18, '{\"x\":381.28271484375,\"y\":323.2518005371094,\"z\":103.2699966430664}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (19, '{\"x\":236.46380615234376,\"y\":217.4718017578125,\"z\":106.83999633789063}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (20, '{\"x\":265.0043029785156,\"y\":212.1717071533203,\"z\":106.77999877929688}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (21, '{\"x\":285.2029113769531,\"y\":143.56900024414063,\"z\":104.97000122070313}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (22, '{\"x\":157.76980590820313,\"y\":233.5449981689453,\"z\":106.44999694824219}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (23, '{\"x\":-164.5679931640625,\"y\":233.50660705566407,\"z\":94.91899871826172}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (24, '{\"x\":-1827.0400390625,\"y\":785.5159301757813,\"z\":138.02000427246095}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (25, '{\"x\":-1409.3900146484376,\"y\":-99.26029968261719,\"z\":52.4729995727539}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (26, '{\"x\":-1205.3499755859376,\"y\":-325.5790100097656,\"z\":37.86999893188476}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (27, '{\"x\":-1215.6400146484376,\"y\":-332.2309875488281,\"z\":37.88100051879883}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (28, '{\"x\":-2072.409912109375,\"y\":-316.9590148925781,\"z\":13.3450002670288}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (29, '{\"x\":-2975.719970703125,\"y\":379.7737121582031,\"z\":14.99199962615966}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (30, '{\"x\":-2955.699951171875,\"y\":488.7218017578125,\"z\":15.48600006103515}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (31, '{\"x\":-3044.219970703125,\"y\":595.242919921875,\"z\":7.59499979019165}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (32, '{\"x\":-3144.1298828125,\"y\":1127.4150390625,\"z\":20.86800003051757}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (33, '{\"x\":-3241.10009765625,\"y\":996.6881103515625,\"z\":12.5}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (34, '{\"x\":-3241.110107421875,\"y\":1009.1519775390625,\"z\":12.8769998550415}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (35, '{\"x\":-1305.4000244140626,\"y\":-706.239990234375,\"z\":25.35199928283691}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (36, '{\"x\":2558.68310546875,\"y\":349.60101318359377,\"z\":108.05000305175781}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (37, '{\"x\":2558.051025390625,\"y\":389.481689453125,\"z\":108.66000366210938}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (38, '{\"x\":-538.2249755859375,\"y\":-854.4229736328125,\"z\":29.23399925231933}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (39, '{\"x\":-711.156005859375,\"y\":-818.9580078125,\"z\":23.76799964904785}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (40, '{\"x\":-717.614013671875,\"y\":-915.8800048828125,\"z\":19.26799964904785}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (41, '{\"x\":-526.5659790039063,\"y\":-1222.9000244140626,\"z\":18.43400001525879}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (42, '{\"x\":-256.83099365234377,\"y\":-719.64599609375,\"z\":33.44400024414062}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (43, '{\"x\":-203.54800415039063,\"y\":-861.5880126953125,\"z\":30.20499992370605}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (44, '{\"x\":112.41020202636719,\"y\":-776.1619873046875,\"z\":31.42700004577636}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (45, '{\"x\":112.92900085449219,\"y\":-818.7100219726563,\"z\":31.38599967956543}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (46, '{\"x\":119.9000015258789,\"y\":-883.8259887695313,\"z\":31.19099998474121}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (47, '{\"x\":-846.3040161132813,\"y\":-340.4020080566406,\"z\":38.6870002746582}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (48, '{\"x\":-1204.3499755859376,\"y\":-324.3909912109375,\"z\":37.87699890136719}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (49, '{\"x\":-56.19350051879883,\"y\":-1752.530029296875,\"z\":29.45199966430664}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (50, '{\"x\":-261.6919860839844,\"y\":-2012.6400146484376,\"z\":30.12100028991699}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (51, '{\"x\":-273.0010070800781,\"y\":-2025.5999755859376,\"z\":30.19700050354004}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (52, '{\"x\":24.58900070190429,\"y\":-946.0560302734375,\"z\":29.35700035095215}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (53, '{\"x\":-254.11199951171876,\"y\":-692.4829711914063,\"z\":33.61600112915039}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (54, '{\"x\":-1570.197021484375,\"y\":-546.6510009765625,\"z\":34.95500183105469}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (55, '{\"x\":-1415.9090576171876,\"y\":-211.8249969482422,\"z\":46.5}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (56, '{\"x\":-1430.112060546875,\"y\":-211.01400756835938,\"z\":46.5}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (57, '{\"x\":33.23199844360351,\"y\":-1347.8489990234376,\"z\":29.49699974060058}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (58, '{\"x\":129.21600341796876,\"y\":-1292.3470458984376,\"z\":29.26899909973144}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (59, '{\"x\":1077.6920166015626,\"y\":-775.7960205078125,\"z\":58.21799850463867}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (60, '{\"x\":287.6449890136719,\"y\":-1282.64599609375,\"z\":29.65900039672851}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (61, '{\"x\":289.0119934082031,\"y\":-1256.5450439453126,\"z\":29.44000053405761}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (62, '{\"x\":295.8389892578125,\"y\":-895.6400146484375,\"z\":29.21699905395507}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (63, '{\"x\":1686.7530517578126,\"y\":4815.80908203125,\"z\":42.00799942016601}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (64, '{\"x\":-302.4079895019531,\"y\":-829.9450073242188,\"z\":32.41699981689453}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (65, '{\"x\":5.13399982452392,\"y\":-919.948974609375,\"z\":29.55699920654297}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (66, '{\"x\":1139.0179443359376,\"y\":-469.885986328125,\"z\":66.78900146484375}', NULL, 50000, NULL, NULL);
+INSERT INTO `atm` VALUES (67, '{\"x\":327.63372802734377,\"y\":-1373.388671875,\"z\":31.90983009338379}', '{\"x\":328.00469970703127,\"y\":-1372.8931884765626,\"z\":30.91242218017578}', 50000, 319.79721069336, 'prop_atm_01');
 
 -- ----------------------------
 -- Table structure for baninfo
@@ -117,7 +193,7 @@ CREATE TABLE `baninfo`  (
 -- ----------------------------
 -- Records of baninfo
 -- ----------------------------
-INSERT INTO `baninfo` VALUES ('steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:192.168.1.7', 'Sikora');
+INSERT INTO `baninfo` VALUES ('steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:192.168.1.8', 'Sikora');
 INSERT INTO `baninfo` VALUES ('steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 'live:1688852646456500', 'xbl:2533274866168124', 'discord:275436547317301248', 'ip:91.49.45.110', 'Ficho');
 INSERT INTO `baninfo` VALUES ('steam:11000010a1d1042', 'license:c7a857dcd5b4160c69d1671f02e52332bd339733', 'live:1829578983319685', 'xbl:2535460133546917', 'discord:293992988936241153', 'ip:109.237.34.43', 'chame');
 INSERT INTO `baninfo` VALUES ('steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 'live:1829582274463247', 'xbl:2535463957312212', 'no info', 'ip:92.195.157.176', 'MaZz');
@@ -139,11 +215,27 @@ CREATE TABLE `banka_transakcije`  (
   `Iznos` int NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `vlasnik`(`Vlasnik`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 43 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of banka_transakcije
 -- ----------------------------
+INSERT INTO `banka_transakcije` VALUES (42, 10000, 'Spremanje novca na račun', 12);
+INSERT INTO `banka_transakcije` VALUES (41, 10000, 'Podizanje novca s računa', -189);
+INSERT INTO `banka_transakcije` VALUES (40, 10000, 'Podizanje novca s računa', -16);
+INSERT INTO `banka_transakcije` VALUES (38, 10000, 'Plaćanje poreza', -92500);
+INSERT INTO `banka_transakcije` VALUES (37, 10000, 'Podizanje novca s računa', -1);
+INSERT INTO `banka_transakcije` VALUES (34, 10000, 'Spremanje novca na račun', 1);
+INSERT INTO `banka_transakcije` VALUES (32, 10000, 'Isplata kredita', 50000);
+INSERT INTO `banka_transakcije` VALUES (33, 10000, 'Vraćanje kredita', -57500);
+INSERT INTO `banka_transakcije` VALUES (39, 10000, 'Podizanje novca s računa', -14);
+INSERT INTO `banka_transakcije` VALUES (29, 10000, 'Spremanje novca na račun', 15);
+INSERT INTO `banka_transakcije` VALUES (36, 10000, 'Plaćanje poreza', -92500);
+INSERT INTO `banka_transakcije` VALUES (35, 10000, 'Podizanje novca s računa', -1);
+INSERT INTO `banka_transakcije` VALUES (31, 10000, 'Vraćanje kredita', -125000);
+INSERT INTO `banka_transakcije` VALUES (30, 10000, 'Isplata kredita', 100000);
+INSERT INTO `banka_transakcije` VALUES (28, 10000, 'Podizanje novca s računa', -15);
+INSERT INTO `banka_transakcije` VALUES (27, 10000, 'Plaćanje poreza', -92500);
 
 -- ----------------------------
 -- Table structure for banlist
@@ -250,16 +342,17 @@ CREATE TABLE `biznisi`  (
   `Posao` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `Sati` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Tjedan` int NOT NULL DEFAULT 0,
+  `Cijena` int NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of biznisi
 -- ----------------------------
-INSERT INTO `biznisi` VALUES (1, 'kosac', 'Kosac trave', '[-1366.4168701171876,56.53075408935547,53.09845733642578]', 727, NULL, 'kosac', '[{\"Ime\":\"Sikora\",\"Posao\":\"kosac\",\"Identifier\":\"steam:11000010441bee9\",\"Ture\":4}]', 16);
-INSERT INTO `biznisi` VALUES (2, 'farmer', 'Farmer', '[2415.745849609375,4993.283203125,45.2213249206543]', 917, NULL, 'farmer', '{}', 0);
-INSERT INTO `biznisi` VALUES (3, 'kamion', 'Kamiondzija', '[1183.4019775390626,-3303.89501953125,5.9168572425842289]', 23280, NULL, 'kamion', '[{\"Ture\":5,\"Ime\":\"Sikora\",\"Identifier\":\"steam:11000010441bee9\",\"Posao\":\"kamion\"}]', 2070);
-INSERT INTO `biznisi` VALUES (4, 'luka', 'Lucki radnik', '[926.2833862304688,-2935.85009765625,4.90115547180175]', 210, 10000, 'luka', '[{\"Posao\":\"luka\",\"Ture\":1,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\"}]', 210);
+INSERT INTO `biznisi` VALUES (1, 'kosac', 'Kosac trave', '[-1366.4168701171876,56.53075408935547,53.09845733642578]', 0, NULL, 'kosac', '[{\"Ime\":\"Sikora\",\"Identifier\":\"steam:11000010441bee9\",\"Ture\":29,\"Posao\":\"kosac\"}]', 61, 150000);
+INSERT INTO `biznisi` VALUES (2, 'farmer', 'Farmer', '[2415.745849609375,4993.283203125,45.2213249206543]', 917, NULL, 'farmer', '{}', 0, 100000);
+INSERT INTO `biznisi` VALUES (3, 'kamion', 'Kamiondzija', '[1183.4019775390626,-3303.89501953125,5.9168572425842289]', 23280, NULL, 'kamion', '[{\"Ture\":5,\"Ime\":\"Sikora\",\"Identifier\":\"steam:11000010441bee9\",\"Posao\":\"kamion\"}]', 2070, 120000);
+INSERT INTO `biznisi` VALUES (4, 'luka', 'Lucki radnik', '[926.2833862304688,-2935.85009765625,4.90115547180175]', 0, 10000, 'luka', '[{\"Posao\":\"luka\",\"Ture\":1,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\"}]', 210, 115000);
 
 -- ----------------------------
 -- Table structure for bought_houses
@@ -304,8 +397,6 @@ CREATE TABLE `datastore`  (
 -- ----------------------------
 -- Records of datastore
 -- ----------------------------
-INSERT INTO `datastore` VALUES ('society_testonja', 'Testonja', 1);
-INSERT INTO `datastore` VALUES ('society_testara', 'Testara', 1);
 
 -- ----------------------------
 -- Table structure for datastore_data
@@ -319,13 +410,11 @@ CREATE TABLE `datastore_data`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `index_datastore_data_name_owner`(`name`, `owner`) USING BTREE,
   INDEX `index_datastore_data_name`(`name`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of datastore_data
 -- ----------------------------
-INSERT INTO `datastore_data` VALUES (3, 'society_testara', NULL, '{\"weapons\":[{\"count\":1,\"ammo\":250,\"name\":\"weapon_pistol\"}]}');
-INSERT INTO `datastore_data` VALUES (2, 'society_testonja', NULL, '{\"weapons\":[{\"ammo\":6000,\"count\":24,\"name\":\"weapon_pistol\"}]}');
 
 -- ----------------------------
 -- Table structure for droge
@@ -335,15 +424,16 @@ CREATE TABLE `droge`  (
   `ID` int NOT NULL AUTO_INCREMENT,
   `vrsta` int NULL DEFAULT NULL COMMENT '1 - heroin',
   `branje` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  `prerada` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `heading` decimal(11, 2) NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of droge
 -- ----------------------------
 INSERT INTO `droge` VALUES (1, 1, '{\"x\":-1240.41064453125,\"y\":73.79826354980469,\"z\":51.98569869995117}', NULL);
 INSERT INTO `droge` VALUES (2, 2, '{\"x\":-1015.3260498046875,\"y\":0.84805941581726,\"z\":47.87119674682617}', NULL);
+INSERT INTO `droge` VALUES (3, 3, '{\"x\":1522.4974365234376,\"y\":6329.16845703125,\"z\":23.60689353942871}', 332.71);
 
 -- ----------------------------
 -- Table structure for elektricar
@@ -495,20 +585,62 @@ CREATE TABLE `firme`  (
   `Zakljucana` int NOT NULL DEFAULT 0,
   `Posao` int NOT NULL DEFAULT 0,
   `Skladiste` int NOT NULL DEFAULT 0,
-  `Vozila` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Proizvodi` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `Vozila` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
+  `Proizvodi` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 33 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 90 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of firme
 -- ----------------------------
-INSERT INTO `firme` VALUES (31, 'trg', 'Firma 5', 1, '{\"x\":25.64538192749023,\"y\":-1346.992919921875,\"z\":29.49702644348144}', '{}', '{}', '{}', NULL, 25, 500000, 0, 0, 0, '{}', '[]');
-INSERT INTO `firme` VALUES (19, 'trgovina1', 'Firma 0', 1, '{\"x\":374.1128845214844,\"y\":326.7154541015625,\"z\":103.56636810302735}', '{}', '{}', '{\"x\":380.20220947265627,\"y\":332.0689392089844,\"z\":103.56636810302735}', NULL, 691, 500000, 1, 0, 0, '{}', '{}');
-INSERT INTO `firme` VALUES (20, 'firmaljantu', 'Firma 1', 1, '{\"x\":1135.74072265625,\"y\":-982.6700439453125,\"z\":46.41584396362305}', '{}', '{}', '{\"x\":1126.34326171875,\"y\":-982.3389282226563,\"z\":45.41582870483398}', NULL, 100, 500000, 1, 0, 0, '{}', '{}');
-INSERT INTO `firme` VALUES (25, 'jebo te bog', 'Firma 4', 1, '{\"x\":990.5723876953125,\"y\":-656.501708984375,\"z\":57.7730598449707}', '{}', '{}', '{\"x\":988.3343505859375,\"y\":-658.9981079101563,\"z\":57.62298965454101}', 10000, -169384, 2000, 0, 0, 653, '{}', '[{\"Stanje\":4,\"Item\":\"mobitel\"},{\"Stanje\":4,\"Item\":\"bread\"}]');
-INSERT INTO `firme` VALUES (27, 'test', 'Firma 6', 1, '{\"x\":2170.153076171875,\"y\":2791.618408203125,\"z\":49.26880264282226}', '{}', '{}', '{}', NULL, 0, 1, 0, 0, 0, '{}', '[]');
-INSERT INTO `firme` VALUES (28, 'Majne shop', 'Firma 7', 1, '{\"x\":1392.7906494140626,\"y\":3605.072021484375,\"z\":34.98093032836914}', '{}', '{}', '{}', NULL, 0, 150000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (51, 'firma9', 'Firma 9', 1, '{\"x\":1135.608642578125,\"y\":-982.2374877929688,\"z\":46.41579055786133}', '{}', '{}', '{\"x\":1130.785400390625,\"y\":-983.2907104492188,\"z\":46.41579055786133}', NULL, 0, 105000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (50, 'firma8', 'Firma 8', 1, '{\"x\":25.74614143371582,\"y\":-1346.8341064453126,\"z\":29.49701118469238}', '{}', '{}', '{\"x\":30.63790321350097,\"y\":-1339.8995361328126,\"z\":29.49701118469238}', NULL, 0, 125000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (49, 'firma7', 'Firma 7', 1, '{\"x\":1729.101806640625,\"y\":6415.0322265625,\"z\":35.03721237182617}', '{}', '{}', '{\"x\":1736.4447021484376,\"y\":6419.095703125,\"z\":35.03721237182617}', NULL, 0, 56000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (48, 'firma6', 'Firma 6', 1, '{\"x\":2678.23388671875,\"y\":3280.870849609375,\"z\":55.24111938476562}', '{}', '{}', '{\"x\":2674.646240234375,\"y\":3288.287353515625,\"z\":55.24111938476562}', NULL, 0, 74000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (47, 'firma5', 'Firma 5', 1, '{\"x\":1960.943603515625,\"y\":3741.1650390625,\"z\":32.34373092651367}', '{}', '{}', '{\"x\":1961.6397705078126,\"y\":3749.4482421875,\"z\":32.34373092651367}', NULL, 0, 65000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (46, 'firma4', 'Firma 4', 1, '{\"x\":547.8786010742188,\"y\":2670.676513671875,\"z\":42.1564826965332}', '{}', '{}', '{\"x\":543.9300537109375,\"y\":2663.234375,\"z\":42.1564826965332}', NULL, 85, 73000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (45, 'firma3', 'Firma 3', 1, '{\"x\":-3242.785400390625,\"y\":1001.221923828125,\"z\":12.83070373535156}', '{}', '{}', '{\"x\":-3248.99658203125,\"y\":1006.9669799804688,\"z\":12.83070373535156}', NULL, 0, 76000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (44, 'firma2', 'Firma 2', 1, '{\"x\":-3039.935791015625,\"y\":585.5108032226563,\"z\":7.90892839431762}', '{}', '{}', '{\"x\":-3047.92138671875,\"y\":588.3067626953125,\"z\":7.90892839431762}', NULL, 0, 85000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (43, 'firma1', 'Firma 1', 1, '{\"x\":2556.7587890625,\"y\":382.1427307128906,\"z\":108.6229248046875}', '{}', '{}', '{\"x\":2550.07763671875,\"y\":387.1881408691406,\"z\":108.6229248046875}', NULL, 0, 80000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (42, 'firma0', 'Firma 0', 1, '{\"x\":373.9737854003906,\"y\":326.5569152832031,\"z\":103.56635284423828}', '{}', '{}', '{\"x\":380.04425048828127,\"y\":332.1336975097656,\"z\":103.56635284423828}', NULL, 0, 120000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (52, 'firma10', 'Firma 10', 1, '{\"x\":-1222.769287109375,\"y\":-907.1284790039063,\"z\":12.32633876800537}', '{}', '{}', '{\"x\":-1219.471923828125,\"y\":-910.6727905273438,\"z\":12.32676029205322}', NULL, 0, 108000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (53, 'firma11', 'Firma 11', 1, '{\"x\":-1487.2860107421876,\"y\":-378.93603515625,\"z\":40.16337203979492}', '{}', '{}', '{\"x\":-1484.6513671875,\"y\":-374.9789123535156,\"z\":40.16360855102539}', NULL, 0, 110000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (54, 'firma12', 'Firma 12', 1, '{\"x\":-2968.155029296875,\"y\":390.91717529296877,\"z\":15.04329872131347}', '{}', '{}', '{\"x\":-2963.06787109375,\"y\":391.6311340332031,\"z\":15.04332065582275}', NULL, 0, 87000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (55, 'firma13', 'Firma 13', 1, '{\"x\":1166.02197265625,\"y\":2708.996826171875,\"z\":38.15761947631836}', '{}', '{}', '{\"x\":1164.896240234375,\"y\":2714.0908203125,\"z\":38.15814590454101}', NULL, 0, 78000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (56, 'firma14', 'Firma 14', 1, '{\"x\":1392.4520263671876,\"y\":3604.804443359375,\"z\":34.98087692260742}', '{}', '{}', '{\"x\":1393.780517578125,\"y\":3609.297119140625,\"z\":34.98087692260742}', NULL, 0, 65000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (57, 'firma15', 'Firma 15', 1, '{\"x\":-47.98810958862305,\"y\":-1757.4256591796876,\"z\":29.42098808288574}', '{}', '{}', '{\"x\":-45.04561233520508,\"y\":-1750.4444580078126,\"z\":29.42101860046386}', NULL, 0, 109000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (58, 'firma16', 'Firma 16', 1, '{\"x\":1163.539306640625,\"y\":-323.42889404296877,\"z\":69.20502471923828}', '{}', '{}', '{\"x\":1160.241455078125,\"y\":-316.27947998046877,\"z\":69.20502471923828}', NULL, 0, 103000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (59, 'firma17', 'Firma 17', 1, '{\"x\":-707.3284301757813,\"y\":-914.1729125976563,\"z\":19.2155818939209}', '{}', '{}', '{\"x\":-709.3485107421875,\"y\":-906.6134643554688,\"z\":19.2155818939209}', NULL, 0, 112000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (60, 'firma18', 'Firma 18', 1, '{\"x\":-1820.8211669921876,\"y\":793.1325073242188,\"z\":138.11141967773438}', '{}', '{}', '{\"x\":-1827.2333984375,\"y\":797.1124267578125,\"z\":138.17434692382813}', NULL, 0, 88000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (61, 'firma19', 'Firma 19', 1, '{\"x\":1698.5770263671876,\"y\":4924.3095703125,\"z\":42.06361389160156}', '{}', '{}', '{\"x\":1705.5875244140626,\"y\":4921.49462890625,\"z\":42.06361389160156}', NULL, 0, 78000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (62, 'firma20', 'Firma 20', 2, '{\"x\":-814.3079833984375,\"y\":-183.82350158691407,\"z\":37.54518508911133}', '{}', '{}', '{\"x\":-809.01513671875,\"y\":-180.4512939453125,\"z\":37.56887817382812}', NULL, 0, 75000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (63, 'firma21', 'Firma 21', 2, '{\"x\":136.82125854492188,\"y\":-1708.3829345703126,\"z\":29.29155158996582}', '{}', '{}', '{\"x\":141.14288330078126,\"y\":-1706.326171875,\"z\":29.29162979125976}', NULL, 0, 66000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (64, 'firma22', 'Firma 22', 2, '{\"x\":-1282.60400390625,\"y\":-1116.7569580078126,\"z\":6.99002647399902}', '{}', '{}', '{\"x\":-1278.7142333984376,\"y\":-1119.0989990234376,\"z\":6.9901213645935}', NULL, 0, 75000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (65, 'firma23', 'Firma 23', 2, '{\"x\":1931.512939453125,\"y\":3729.6708984375,\"z\":32.84412002563476}', '{}', '{}', '{\"x\":1931.2784423828126,\"y\":3734.667724609375,\"z\":32.84447860717773}', NULL, 0, 51000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (66, 'firma24', 'Firma 24', 2, '{\"x\":1212.8399658203126,\"y\":-472.9211730957031,\"z\":66.20800018310547}', '{}', '{}', '{\"x\":1215.8123779296876,\"y\":-475.5716247558594,\"z\":66.20800018310547}', NULL, 0, 65000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (67, 'firma25', 'Firma 25', 2, '{\"x\":-32.88523864746094,\"y\":-152.3190460205078,\"z\":57.0761489868164}', '{}', '{}', '{\"x\":-36.25354766845703,\"y\":-155.8475799560547,\"z\":57.07655715942383}', NULL, 0, 67000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (68, 'firma26', 'Firma 26', 2, '{\"x\":-278.0769958496094,\"y\":6228.462890625,\"z\":31.69512939453125}', '{}', '{}', '{\"x\":-276.7023620605469,\"y\":6224.1083984375,\"z\":31.69554138183593}', NULL, 0, 45000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (69, 'firma27', 'Firma 27', 3, '{\"x\":72.24475860595703,\"y\":-1399.10205078125,\"z\":29.37605667114257}', '{}', '{}', '{\"x\":71.25747680664063,\"y\":-1391.0709228515626,\"z\":29.37615394592285}', NULL, 0, 88000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (70, 'firma28', 'Firma 28', 3, '{\"x\":-703.7697143554688,\"y\":-152.24977111816407,\"z\":37.41505813598633}', '{}', '{}', '{\"x\":-708.8536376953125,\"y\":-151.46649169921876,\"z\":37.41512298583984}', NULL, 0, 100000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (71, 'firma29', 'Firma 29', 3, '{\"x\":-167.86314392089845,\"y\":-298.96905517578127,\"z\":39.73307418823242}', '{}', '{}', '{\"x\":-164.94041442871095,\"y\":-302.9537658691406,\"z\":39.73327255249023}', NULL, 0, 95000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (72, 'firma30', 'Firma 30', 3, '{\"x\":428.69403076171877,\"y\":-800.1060180664063,\"z\":29.49103546142578}', '{}', '{}', '{\"x\":429.4186096191406,\"y\":-808.0657958984375,\"z\":29.49115753173828}', NULL, 0, 99000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (73, 'firma31', 'Firma 31', 3, '{\"x\":-829.4130859375,\"y\":-1073.7099609375,\"z\":11.32802772521972}', '{}', '{}', '{\"x\":-822.722900390625,\"y\":-1069.21630859375,\"z\":11.32811546325683}', NULL, 0, 92000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (74, 'firma32', 'Firma 32', 3, '{\"x\":-1447.7969970703126,\"y\":-242.4613037109375,\"z\":49.8082389831543}', '{}', '{}', '{\"x\":-1448.7855224609376,\"y\":-237.90692138671876,\"z\":49.81341552734375}', NULL, 0, 98000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (75, 'firma33', 'Firma 33', 3, '{\"x\":11.6318244934082,\"y\":6514.22412109375,\"z\":31.87721443176269}', '{}', '{}', '{\"x\":6.26214742660522,\"y\":6508.384765625,\"z\":31.87786102294922}', NULL, 0, 67000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (76, 'firma34', 'Firma 34', 3, '{\"x\":123.63652038574219,\"y\":-219.4370880126953,\"z\":54.55775833129883}', '{}', '{}', '{\"x\":117.81684875488281,\"y\":-233.59048461914063,\"z\":54.55780029296875}', NULL, 0, 89000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (77, 'firma35', 'Firma 35', 3, '{\"x\":1696.291015625,\"y\":4829.31201171875,\"z\":42.06302261352539}', '{}', '{}', '{\"x\":1698.141357421875,\"y\":4821.568359375,\"z\":42.06315994262695}', NULL, 0, 56000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (78, 'firma36', 'Firma 36', 3, '{\"x\":618.0931396484375,\"y\":2759.62890625,\"z\":42.0880241394043}', '{}', '{}', '{\"x\":617.5364990234375,\"y\":2775.14794921875,\"z\":42.08807373046875}', NULL, 0, 73000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (79, 'firma37', 'Firma 37', 3, '{\"x\":1190.550048828125,\"y\":2713.44091796875,\"z\":38.22215270996094}', '{}', '{}', '{\"x\":1198.62841796875,\"y\":2714.277099609375,\"z\":38.22265625}', NULL, 0, 61000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (80, 'firma38', 'Firma 38', 3, '{\"x\":-1193.428955078125,\"y\":-772.2621459960938,\"z\":17.32410812377929}', '{}', '{}', '{\"x\":-1180.7735595703126,\"y\":-764.0654907226563,\"z\":17.32663345336914}', NULL, 0, 82000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (81, 'firma39', 'Firma 39', 3, '{\"x\":-3172.49609375,\"y\":1048.133056640625,\"z\":20.86305999755859}', '{}', '{}', '{\"x\":-3179.291259765625,\"y\":1034.1827392578126,\"z\":20.86320686340332}', NULL, 0, 62000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (82, 'firma40', 'Firma 40', 3, '{\"x\":-1108.4410400390626,\"y\":2708.923095703125,\"z\":19.09982681274414}', '{}', '{}', '{\"x\":-1102.66162109375,\"y\":2714.638671875,\"z\":19.1078872680664}', NULL, 0, 56000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (83, 'firma41', 'Firma 41', 6, '{\"x\":1322.5963134765626,\"y\":-1651.894287109375,\"z\":52.27481079101562}', '{}', '{}', '{\"x\":1324.929931640625,\"y\":-1650.32861328125,\"z\":52.27517318725586}', NULL, 313, 63000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (84, 'firma42', 'Firma 42', 6, '{\"x\":-1153.5999755859376,\"y\":-1425.612060546875,\"z\":4.95368719100952}', '{}', '{}', '{\"x\":-1151.9586181640626,\"y\":-1423.6500244140626,\"z\":4.95445775985717}', NULL, 0, 54000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (85, 'firma43', 'Firma 43', 6, '{\"x\":322.0897216796875,\"y\":180.39585876464845,\"z\":103.58580017089844}', '{}', '{}', '{\"x\":319.534912109375,\"y\":181.13531494140626,\"z\":103.58647155761719}', NULL, 0, 60000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (86, 'firma44', 'Firma 44', 6, '{\"x\":-3170.0,\"y\":1074.988037109375,\"z\":20.82843208312988}', '{}', '{}', '{\"x\":-3170.63623046875,\"y\":1072.7921142578126,\"z\":20.82915878295898}', NULL, 0, 53000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (87, 'firma45', 'Firma 45', 6, '{\"x\":1864.610595703125,\"y\":3747.699951171875,\"z\":33.03106689453125}', '{}', '{}', '{\"x\":1862.3421630859376,\"y\":3748.359619140625,\"z\":33.03609848022461}', NULL, 0, 42000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (88, 'firma46', 'Firma 46', 6, '{\"x\":-293.7037048339844,\"y\":6200.0,\"z\":31.4818058013916}', '{}', '{}', '{\"x\":-291.94317626953127,\"y\":6199.90869140625,\"z\":31.4883918762207}', NULL, 0, 44000, 0, 0, 0, '{}', '[]');
+INSERT INTO `firme` VALUES (89, 'firma47', 'Firma 47', 7, '{\"x\":934.3333129882813,\"y\":-2952.836669921875,\"z\":5.87173986434936}', '{}', '{}', '{\"x\":933.8359375,\"y\":-2957.855712890625,\"z\":5.90115642547607}', 10000, 159, 500, 0, 0, 0, NULL, '[]');
 
 -- ----------------------------
 -- Table structure for firme_kraft
@@ -760,7 +892,7 @@ CREATE TABLE `job_grades`  (
   `skin_male` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `skin_female` longtext CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 221 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 240 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of job_grades
@@ -830,9 +962,6 @@ INSERT INTO `job_grades` VALUES (191, 'vlak', 0, 'employee', 'Radnik', 200, '{\"
 INSERT INTO `job_grades` VALUES (200, 'automafija', 4, 'boss', 'Sef', 300, '{}', '{}');
 INSERT INTO `job_grades` VALUES (202, 'spasioc', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":129,\"torso_1\":148,\"arms\":1,\"pants_1\":16,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":3,\"shoes\":5,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":-1}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}');
 INSERT INTO `job_grades` VALUES (203, 'fastfood', 0, 'employee', 'Uber Eats', 200, '{\"tshirt_1\":59,\"torso_1\":67,\"arms\":1,\"pants_1\":22,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":3,\"shoes_1\":1,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":5,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":17}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}');
-INSERT INTO `job_grades` VALUES (218, 'testonja', 1, 'boss', 'Sef', 300, '{}', '{}');
-INSERT INTO `job_grades` VALUES (219, 'testara', 0, 'bla', 'Bla', 300, '{}', '{}');
-INSERT INTO `job_grades` VALUES (220, 'testara', 1, 'boss', 'Sefara', 300, '{}', '{}');
 
 -- ----------------------------
 -- Table structure for jobs
@@ -847,7 +976,7 @@ CREATE TABLE `jobs`  (
   PRIMARY KEY (`name`) USING BTREE,
   INDEX `whitelisted`(`whitelisted`) USING BTREE,
   INDEX `pID`(`pID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of jobs
@@ -857,8 +986,6 @@ INSERT INTO `jobs` VALUES (3, 'mechanic', 'Mehanicar', 1, 0);
 INSERT INTO `jobs` VALUES (4, 'police', 'LSPD', 1, 0);
 INSERT INTO `jobs` VALUES (5, 'reporter', 'Reporter', 1, 1);
 INSERT INTO `jobs` VALUES (6, 'taxi', 'Uber', 1, 0);
-INSERT INTO `jobs` VALUES (46, 'testara', 'Testara', 1, 1);
-INSERT INTO `jobs` VALUES (45, 'testonja', 'Testonja', 1, 1);
 INSERT INTO `jobs` VALUES (1, 'unemployed', 'Nezaposlen', 0, 0);
 
 -- ----------------------------
@@ -1372,13 +1499,11 @@ CREATE TABLE `mafije`  (
   `Skladiste2` int NOT NULL DEFAULT 0,
   `Avion` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 13 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 28 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mafije
 -- ----------------------------
-INSERT INTO `mafije` VALUES (11, 'testonja', 'Testonja', '[{\"Ime\":\"boss\",\"ID\":1}]', '[271.16070556640627,-895.3273315429688,27.97849655151367]', '[271.7889099121094,-902.3579711914063,28.00102233886718]', '[290.2338562011719,-882.7674560546875,28.15087509155273]', '[273.3567199707031,-877.197265625,28.25421714782715]', '[287.27020263671877,-877.6958618164063,28.29168128967285,356.29022216796877]', '[292.6402282714844,-845.4319458007813,28.07571983337402]', '[{\"Label\":\"Guardian\",\"Ime\":\"guardian\"}]', '[{\"Cijena\":250,\"Ime\":\"weapon_pistol\"}]', '{}', '{}', '{}', 0, '{}', '{}', '[280.1828918457031,-904.6669921875,27.98444747924804]', '[282.318115234375,-895.3967895507813,28.02104568481445,348.2360534667969]', 1, 0, '{}', '{}', '[279.7043151855469,-888.090576171875,28.10346031188965]', '[274.726806640625,-872.55126953125,28.33389663696289,24.65639877319336]', 1, 1);
-INSERT INTO `mafije` VALUES (12, 'testara', 'Testara', '[{\"ID\":0,\"Ime\":\"bla\"},{\"ID\":1,\"Ime\":\"boss\"}]', '[258.4134216308594,-850.906982421875,28.47194290161132]', '{}', '{}', '[260.70599365234377,-857.0223388671875,28.37854957580566]', '{}', '{}', '{}', '{}', '{}', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0);
 
 -- ----------------------------
 -- Table structure for meh_narudzbe
@@ -1411,7 +1536,7 @@ CREATE TABLE `minute`  (
 -- ----------------------------
 -- Records of minute
 -- ----------------------------
-INSERT INTO `minute` VALUES (10000, 14800);
+INSERT INTO `minute` VALUES (10000, 15205);
 INSERT INTO `minute` VALUES (10003, 600);
 INSERT INTO `minute` VALUES (10006, 15);
 INSERT INTO `minute` VALUES (10007, 5);
@@ -1436,7 +1561,6 @@ CREATE TABLE `mskladiste`  (
 -- ----------------------------
 -- Records of mskladiste
 -- ----------------------------
-INSERT INTO `mskladiste` VALUES (4, 'testonja', 0, 200, 0, 0);
 
 -- ----------------------------
 -- Table structure for narudzbe
@@ -1659,12 +1783,14 @@ CREATE TABLE `praone`  (
   `sef` int NULL DEFAULT 0,
   `kcijena` int NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of praone
 -- ----------------------------
-INSERT INTO `praone` VALUES (1, NULL, '{\"x\":25.20756912231445,\"y\":-1391.8756103515626,\"z\":28.33451271057129}', '{\"x\":-1.5900136232376,\"y\":-1400.3079833984376,\"z\":28.27205467224121}', 55, 88, 10000);
+INSERT INTO `praone` VALUES (1, NULL, '{\"x\":25.20756912231445,\"y\":-1391.8756103515626,\"z\":28.33451271057129}', '{\"x\":-1.5900136232376,\"y\":-1400.3079833984376,\"z\":28.27205467224121}', 50, 0, 70000);
+INSERT INTO `praone` VALUES (2, NULL, '{\"x\":-699.8239135742188,\"y\":-932.6240234375,\"z\":18.01389694213867}', '{\"x\":-703.8509521484375,\"y\":-941.4659423828125,\"z\":18.27253723144531}', 50, 0, 67000);
+INSERT INTO `praone` VALUES (3, NULL, '{\"x\":168.01113891601563,\"y\":-1715.1614990234376,\"z\":28.29169845581054}', '{\"x\":167.40232849121095,\"y\":-1709.40869140625,\"z\":28.29169845581054}', 50, 0, 55000);
 
 -- ----------------------------
 -- Table structure for prijatelji
@@ -1735,7 +1861,7 @@ CREATE TABLE `pumpe`  (
 -- ----------------------------
 -- Records of pumpe
 -- ----------------------------
-INSERT INTO `pumpe` VALUES (5, 'Pumpa 1', '{\"x\":288.7102966308594,\"y\":-1266.9971923828126,\"z\":29.44075202941894}', 10000, 1600000, 7115, 1.5, 250, 918, 0, '{\"x\":284.2962341308594,\"y\":-1251.5218505859376,\"z\":29.25572204589843}', 1);
+INSERT INTO `pumpe` VALUES (5, 'Pumpa 1', '{\"x\":288.7102966308594,\"y\":-1266.9971923828126,\"z\":29.44075202941894}', 10000, 1600000, 0, 1.5, 250, 918, 0, '{\"x\":284.2962341308594,\"y\":-1251.5218505859376,\"z\":29.25572204589843}', 1);
 INSERT INTO `pumpe` VALUES (6, 'Pumpa 2', '{\"x\":46.5079116821289,\"y\":2789.208740234375,\"z\":57.87831497192383}', NULL, 600000, 0, 1.5, 250, 500, 0, '{\"x\":65.29000854492188,\"y\":2782.740966796875,\"z\":57.8783073425293}', 0);
 INSERT INTO `pumpe` VALUES (7, 'Pumpa 3', '{\"x\":265.904296875,\"y\":2598.3525390625,\"z\":44.83026885986328}', NULL, 500000, 0, 1.5, 250, 500, 0, '{\"x\":243.4324493408203,\"y\":2599.6689453125,\"z\":45.12274551391601}', 0);
 INSERT INTO `pumpe` VALUES (8, 'Pumpa 4', '{\"x\":1039.33837890625,\"y\":2664.4296875,\"z\":39.55110931396484}', NULL, 700000, 0, 1.5, 250, 500, 0, '{\"x\":1057.305908203125,\"y\":2657.41064453125,\"z\":39.55492782592773}', 0);
@@ -1794,12 +1920,15 @@ CREATE TABLE `rent`  (
   `vozila` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `cijena` int NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of rent
 -- ----------------------------
-INSERT INTO `rent` VALUES (4, 'Rent 1', '{\"x\":1868.9818115234376,\"y\":2588.28076171875,\"z\":45.67206192016601}', 10000, 12090, '[{\"label\":\"infernus\",\"value\":\"Infernus\",\"cijena\":500},{\"label\":\"BMW M8\",\"value\":\"bmwm8\",\"cijena\":650}]', 500);
+INSERT INTO `rent` VALUES (10, 'Rent 1', '{\"x\":-1054.64697265625,\"y\":-2650.354736328125,\"z\":13.83067226409912}', NULL, 0, NULL, 77000);
+INSERT INTO `rent` VALUES (11, 'Rent 2', '{\"x\":302.8141784667969,\"y\":-1360.2646484375,\"z\":31.82571411132812}', NULL, 0, NULL, 110000);
+INSERT INTO `rent` VALUES (12, 'Rent 3', '{\"x\":1875.635986328125,\"y\":2595.276123046875,\"z\":45.67189025878906}', NULL, 0, NULL, 110000);
+INSERT INTO `rent` VALUES (13, 'Rent 4', '{\"x\":776.5717163085938,\"y\":-294.40673828125,\"z\":59.89569854736328}', NULL, 0, NULL, 105000);
 
 -- ----------------------------
 -- Table structure for safezone
@@ -1810,12 +1939,17 @@ CREATE TABLE `safezone`  (
   `ime` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `koord` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of safezone
 -- ----------------------------
-INSERT INTO `safezone` VALUES (5, 'Glavna garaza', '[{\"x\":240.67172241210938,\"y\":-821.02783203125},{\"x\":274.28546142578127,\"y\":-739.99267578125},{\"x\":230.57421875,\"y\":-725.113525390625},{\"x\":199.0867919921875,\"y\":-806.93798828125}]');
+INSERT INTO `safezone` VALUES (10, 'glavna', '[{\"x\":239.93370056152345,\"y\":-820.5496215820313},{\"x\":252.9431610107422,\"y\":-784.9127807617188},{\"x\":258.3884582519531,\"y\":-786.8402709960938},{\"x\":271.971435546875,\"y\":-748.6876831054688},{\"x\":271.0832214355469,\"y\":-748.18896484375},{\"x\":273.9598693847656,\"y\":-740.0704956054688},{\"x\":230.616943359375,\"y\":-725.1278686523438},{\"x\":228.08004760742188,\"y\":-733.128662109375},{\"x\":226.43548583984376,\"y\":-733.0758056640625},{\"x\":200.08319091796876,\"y\":-805.68408203125}]');
+INSERT INTO `safezone` VALUES (11, 'autosalon', '[{\"x\":-53.24832153320312,\"y\":-1070.0604248046876},{\"x\":-69.05958557128906,\"y\":-1112.1873779296876},{\"x\":-70.43431854248047,\"y\":-1117.7276611328126},{\"x\":-65.0376968383789,\"y\":-1122.7342529296876},{\"x\":-15.5457592010498,\"y\":-1119.916748046875},{\"x\":-6.6758337020874,\"y\":-1095.316650390625},{\"x\":-9.83181190490722,\"y\":-1094.0692138671876},{\"x\":-7.35445833206176,\"y\":-1087.0889892578126},{\"x\":-4.17888164520263,\"y\":-1087.8802490234376},{\"x\":-1.7010498046875,\"y\":-1081.6832275390626},{\"x\":-19.44866561889648,\"y\":-1075.230224609375},{\"x\":-21.92529106140136,\"y\":-1081.390869140625}]');
+INSERT INTO `safezone` VALUES (12, 'bolnica', '[{\"x\":301.5224914550781,\"y\":-580.6475219726563},{\"x\":295.1348571777344,\"y\":-598.2900390625},{\"x\":309.683349609375,\"y\":-603.6087036132813},{\"x\":310.2927551269531,\"y\":-601.929931640625},{\"x\":309.4479675292969,\"y\":-601.6220703125},{\"x\":309.0680236816406,\"y\":-601.9281616210938},{\"x\":308.369384765625,\"y\":-601.5979614257813},{\"x\":309.099609375,\"y\":-599.4801025390625},{\"x\":310.9760437011719,\"y\":-599.8125610351563},{\"x\":310.83624267578127,\"y\":-597.642333984375},{\"x\":309.7562561035156,\"y\":-596.654052734375},{\"x\":307.5167236328125,\"y\":-596.6908569335938},{\"x\":307.11041259765627,\"y\":-595.835693359375},{\"x\":309.0647277832031,\"y\":-595.1116943359375},{\"x\":314.92376708984377,\"y\":-597.0712280273438},{\"x\":315.0846252441406,\"y\":-598.5751342773438},{\"x\":320.0685729980469,\"y\":-600.3942260742188},{\"x\":320.6708984375,\"y\":-599.5848999023438},{\"x\":322.2093200683594,\"y\":-600.088134765625},{\"x\":324.7198181152344,\"y\":-600.4616088867188},{\"x\":326.26629638671877,\"y\":-596.3926391601563},{\"x\":328.18585205078127,\"y\":-590.5992431640625},{\"x\":327.2596740722656,\"y\":-590.041748046875},{\"x\":327.38043212890627,\"y\":-589.4888916015625},{\"x\":340.135009765625,\"y\":-593.9307861328125},{\"x\":340.9674072265625,\"y\":-591.7803344726563},{\"x\":335.1116638183594,\"y\":-589.5942993164063},{\"x\":335.03173828125,\"y\":-588.8463134765625},{\"x\":332.26763916015627,\"y\":-586.6532592773438},{\"x\":335.6513366699219,\"y\":-586.967041015625},{\"x\":337.17486572265627,\"y\":-583.317626953125},{\"x\":337.7951354980469,\"y\":-583.4755249023438},{\"x\":337.6179504394531,\"y\":-584.6915893554688},{\"x\":344.7341613769531,\"y\":-587.3118286132813},{\"x\":343.9301452636719,\"y\":-590.0260620117188},{\"x\":345.3067321777344,\"y\":-591.1328735351563},{\"x\":361.43316650390627,\"y\":-596.2994384765625},{\"x\":362.63665771484377,\"y\":-594.9241333007813},{\"x\":364.3063659667969,\"y\":-595.152099609375},{\"x\":365.3849182128906,\"y\":-594.5413818359375},{\"x\":365.9935302734375,\"y\":-592.6533203125},{\"x\":364.03350830078127,\"y\":-590.7156982421875},{\"x\":364.1548156738281,\"y\":-588.1041259765625},{\"x\":348.8278503417969,\"y\":-581.4805908203125},{\"x\":340.3348693847656,\"y\":-578.9035034179688},{\"x\":339.6134033203125,\"y\":-579.18310546875},{\"x\":339.04205322265627,\"y\":-580.0820922851563},{\"x\":338.374267578125,\"y\":-579.6240844726563},{\"x\":337.8008117675781,\"y\":-579.1429443359375},{\"x\":332.705322265625,\"y\":-577.01953125},{\"x\":335.39794921875,\"y\":-569.6507568359375},{\"x\":333.3100891113281,\"y\":-568.8583374023438},{\"x\":330.5888366699219,\"y\":-576.2100830078125},{\"x\":319.1648254394531,\"y\":-572.3121948242188},{\"x\":318.3216247558594,\"y\":-574.5162963867188},{\"x\":317.1072082519531,\"y\":-580.1129760742188},{\"x\":320.8567810058594,\"y\":-581.556884765625},{\"x\":328.4813232421875,\"y\":-584.4320068359375},{\"x\":328.30682373046877,\"y\":-585.5811767578125},{\"x\":316.16009521484377,\"y\":-581.4279174804688},{\"x\":314.93182373046877,\"y\":-584.6820068359375},{\"x\":323.79595947265627,\"y\":-588.331298828125},{\"x\":323.282958984375,\"y\":-588.7969970703125},{\"x\":315.45391845703127,\"y\":-586.2540893554688},{\"x\":313.95855712890627,\"y\":-588.2510986328125},{\"x\":311.9985656738281,\"y\":-586.8328857421875},{\"x\":312.2513122558594,\"y\":-584.552001953125}]');
+INSERT INTO `safezone` VALUES (13, 'zatvor', '[{\"x\":1717.608642578125,\"y\":2620.87939453125},{\"x\":1753.0115966796876,\"y\":2620.19775390625},{\"x\":1752.0853271484376,\"y\":2653.36376953125},{\"x\":1717.3988037109376,\"y\":2652.41357421875}]');
+INSERT INTO `safezone` VALUES (14, 'ilegalni_spawn', '[{\"x\":1839.854736328125,\"y\":2520.874267578125},{\"x\":1888.5780029296876,\"y\":2521.9765625},{\"x\":1890.042724609375,\"y\":2688.80517578125},{\"x\":1844.316162109375,\"y\":2685.1474609375}]');
+INSERT INTO `safezone` VALUES (15, 'spawn', '[{\"x\":447.3916931152344,\"y\":-665.4242553710938},{\"x\":467.1252136230469,\"y\":-665.395263671875},{\"x\":482.904541015625,\"y\":-577.4111938476563},{\"x\":433.0160827636719,\"y\":-568.398193359375},{\"x\":396.25439453125,\"y\":-621.6254272460938},{\"x\":384.4376220703125,\"y\":-646.1737670898438},{\"x\":383.411376953125,\"y\":-657.136962890625},{\"x\":391.5892028808594,\"y\":-664.6533813476563},{\"x\":417.5921936035156,\"y\":-665.3952026367188}]');
 
 -- ----------------------------
 -- Table structure for saloni
@@ -1834,7 +1968,6 @@ CREATE TABLE `saloni`  (
 -- ----------------------------
 -- Records of saloni
 -- ----------------------------
-INSERT INTO `saloni` VALUES (2, 'Salon 1', 50000, NULL, '{\"x\":1030.9527587890626,\"y\":-762.7195434570313,\"z\":57.99230194091797}', 15259000);
 
 -- ----------------------------
 -- Table structure for saloni_vozila
@@ -1868,7 +2001,7 @@ CREATE TABLE `shops`  (
   `price` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `item`(`item`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 110 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shops
@@ -1889,6 +2022,13 @@ INSERT INTO `shops` VALUES (82, 'TwentyFourSeven', 'mobitel', 250);
 INSERT INTO `shops` VALUES (99, 'TwentyFourSeven', 'novine', 2);
 INSERT INTO `shops` VALUES (101, 'TwentyFourSeven', 'fishingrod', 50);
 INSERT INTO `shops` VALUES (102, 'TwentyFourSeven', 'fishbait', 5);
+INSERT INTO `shops` VALUES (103, 'Bar', 'beer', 30);
+INSERT INTO `shops` VALUES (104, 'Bar', 'wine', 25);
+INSERT INTO `shops` VALUES (105, 'Bar', 'vodka', 60);
+INSERT INTO `shops` VALUES (106, 'Bar', 'tequila', 40);
+INSERT INTO `shops` VALUES (107, 'Bar', 'whisky', 50);
+INSERT INTO `shops` VALUES (108, 'Bar', 'cigarett', 30);
+INSERT INTO `shops` VALUES (109, 'Bar', 'lighter', 25);
 
 -- ----------------------------
 -- Table structure for shops2
@@ -1906,7 +2046,6 @@ CREATE TABLE `shops2`  (
 -- ----------------------------
 -- Records of shops2
 -- ----------------------------
-INSERT INTO `shops2` VALUES (1, 'Trgovinica', NULL, 42);
 
 -- ----------------------------
 -- Table structure for shops_itemi
@@ -1918,19 +2057,18 @@ CREATE TABLE `shops_itemi`  (
   `item` varchar(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `cijena` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 21 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shops_itemi
 -- ----------------------------
-INSERT INTO `shops_itemi` VALUES (10, 'ljantu', 'bread', 500);
-INSERT INTO `shops_itemi` VALUES (9, 'Trgovinica', 'water', 6);
-INSERT INTO `shops_itemi` VALUES (8, 'Trgovinica', 'odjeca', 100);
-INSERT INTO `shops_itemi` VALUES (7, 'Trgovinica', 'sisanje', 51);
-INSERT INTO `shops_itemi` VALUES (6, 'Trgovinica', 'bread', 10);
-INSERT INTO `shops_itemi` VALUES (11, 'rudar', 'zeljezo', 69);
-INSERT INTO `shops_itemi` VALUES (12, 'tuning', 'turbo', 55000);
-INSERT INTO `shops_itemi` VALUES (13, 'Trgovinica', 'novine', 2);
+INSERT INTO `shops_itemi` VALUES (20, 'firma47', 'wine', 30);
+INSERT INTO `shops_itemi` VALUES (19, 'firma47', 'whisky', 55);
+INSERT INTO `shops_itemi` VALUES (18, 'firma47', 'vodka', 65);
+INSERT INTO `shops_itemi` VALUES (17, 'firma47', 'tequila', 45);
+INSERT INTO `shops_itemi` VALUES (16, 'firma47', 'lighter', 30);
+INSERT INTO `shops_itemi` VALUES (15, 'firma47', 'cigarett', 35);
+INSERT INTO `shops_itemi` VALUES (14, 'firma47', 'beer', 55);
 
 -- ----------------------------
 -- Table structure for truck_inventory
@@ -3527,6 +3665,7 @@ CREATE TABLE `users`  (
   `firma` int NOT NULL DEFAULT 0,
   `rentKuca` int NULL DEFAULT NULL,
   `rentDatum` date NULL DEFAULT NULL,
+  `tattoos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
   PRIMARY KEY (`identifier`) USING BTREE,
   UNIQUE INDEX `phone`(`phone_number`) USING BTREE,
   INDEX `ident`(`identifier`) USING BTREE,
@@ -3536,14 +3675,14 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (10000, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 5000, 'Sikora', '{\"shoes_2\":2,\"blush_1\":0,\"torso_2\":0,\"eye_color\":0,\"beard_4\":0,\"ears_2\":-1,\"bracelets_2\":0,\"eye_squint\":0,\"mask_1\":0,\"cheeks_2\":0,\"makeup_3\":0,\"lipstick_3\":32,\"jaw_2\":0,\"watches_1\":-1,\"chain_2\":0,\"chin_1\":0,\"nose_6\":0,\"bracelets_1\":-1,\"skin\":0,\"decals_2\":0,\"beard_1\":2,\"age_1\":0,\"nose_5\":0,\"bproof_2\":0,\"nose_1\":0,\"chin_3\":0,\"cheeks_1\":0,\"watches_2\":-1,\"dad\":12,\"complexion_2\":0,\"eyebrows_3\":0,\"lipstick_1\":0,\"blush_2\":0,\"beard_3\":61,\"makeup_2\":0,\"skin_md_weight\":50,\"blemishes_1\":0,\"nose_4\":0,\"chin_4\":0,\"eyebrows_2\":10,\"eyebrows_1\":2,\"neck_thickness\":0,\"pants_1\":10,\"hair_color_2\":0,\"cheeks_3\":0,\"hair_1\":0,\"bags_2\":0,\"glasses_2\":1,\"tshirt_2\":0,\"lipstick_2\":0,\"eyebrows_6\":0,\"nose_2\":0,\"chin_2\":0,\"face_md_weight\":50,\"hair_color_1\":0,\"bodyb_2\":0,\"arms_2\":0,\"decals_1\":0,\"sex\":0,\"mask_2\":0,\"nose_3\":0,\"pants_2\":0,\"face\":19,\"chain_1\":0,\"sun_1\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"hair_2\":0,\"chest_2\":0,\"bodyb_1\":0,\"glasses_1\":5,\"age_2\":0,\"eyebrows_5\":0,\"chest_1\":0,\"torso_1\":4,\"makeup_1\":0,\"bproof_1\":0,\"chest_3\":0,\"moles_1\":0,\"moles_2\":0,\"shoes_1\":1,\"blemishes_2\":0,\"mom\":21,\"lipstick_4\":0,\"sun_2\":0,\"helmet_1\":-1,\"complexion_1\":0,\"arms\":1,\"jaw_1\":0,\"tshirt_1\":3,\"bags_1\":0,\"helmet_2\":-1,\"lip_thickness\":0,\"blush_3\":\"2\",\"ears_1\":-1,\"beard_2\":10}', 1, 0, '[]', '{\"x\":-390.8,\"z\":31.5,\"y\":6043.7}', 415046, 69, 'superadmin', 3555299, '[{\"name\":\"hunger\",\"percent\":96,\"val\":0},{\"name\":\"thirst\",\"percent\":92,\"val\":0}]', 'Tony', 'Sikora', '25.9.1998', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"houseId\":29,\"furniture\":[{\"object\":\"prop_tv_cabinet_03\",\"offset\":[7.640869140625,3.6422119140625,-2.42674255371093],\"heading\":0.0,\"name\":\"TV Stol\"}]}', '{\"prop_ld_farm_table01\":{\"amount\":1,\"name\":\"Farm Stol 2\"}}', 0, 0, 0, '22/06/2022 14:51:04', 0, 0, 136, 0, 20, 0, 24, 8, 4, 0, NULL, '2022-06-04');
-INSERT INTO `users` VALUES (10001, 'steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 0, 'Ficho', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":0,\"complexion_2\":0,\"hair_1\":11,\"makeup_4\":0,\"bproof_1\":0,\"torso_1\":6,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":0,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"watches_1\":-1,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":0,\"moles_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"blush_3\":0,\"tshirt_2\":0,\"eyebrows_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":4,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":24,\"makeup_3\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"ears_1\":-1,\"mask_1\":0,\"pants_2\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"bracelets_1\":-1,\"chest_1\":0,\"hair_color_1\":3,\"eye_color\":0,\"lipstick_4\":0,\"ears_2\":0,\"watches_2\":0,\"blush_1\":0,\"lipstick_1\":0,\"face\":0,\"bags_1\":0,\"shoes_2\":0,\"beard_2\":0,\"sex\":0,\"sun_1\":0,\"skin\":1,\"lipstick_2\":0,\"mask_2\":0}', 1, 0, '[{\"label\":\"Pistol\",\"name\":\"WEAPON_PISTOL\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Micro SMG\",\"name\":\"WEAPON_MICROSMG\",\"ammo\":188,\"components\":[\"clip_default\"]},{\"label\":\"Pump shotgun\",\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":250,\"components\":[]},{\"label\":\"Assault rifle\",\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Sniper rifle\",\"name\":\"WEAPON_SNIPERRIFLE\",\"ammo\":248,\"components\":[\"scope\"]}]', '{\"z\":544.6000000000931,\"y\":-4500.0,\"x\":-502.4000000000233}', 999946950, 69, 'superadmin', 973, '[{\"val\":456000,\"percent\":45.6,\"name\":\"hunger\"},{\"val\":467000,\"percent\":46.7,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Filip', 'Wizzy', '19980208', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 21:27:40', 0, 0, 17, 0, 20, 0, 5, 2, 1, 0, NULL, NULL);
-INSERT INTO `users` VALUES (10011, 'steam:11000010a1d1042', 'license:c7a857dcd5b4160c69d1671f02e52332bd339733', 176, 'chame', '{\"mask_1\":0,\"skin\":3,\"watches_1\":-1,\"lipstick_1\":0,\"beard_3\":0,\"eyebrows_4\":0,\"makeup_3\":0,\"beard_1\":0,\"makeup_4\":0,\"makeup_1\":0,\"watches_2\":0,\"sun_2\":0,\"decals_1\":0,\"age_2\":0,\"blush_2\":0,\"shoes_2\":0,\"hair_2\":3,\"bags_1\":0,\"pants_1\":0,\"beard_2\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"torso_2\":0,\"glasses_1\":0,\"helmet_1\":-1,\"blush_1\":0,\"hair_color_2\":1,\"shoes_1\":0,\"arms\":0,\"blemishes_1\":0,\"blemishes_2\":0,\"helmet_2\":0,\"tshirt_1\":1,\"eyebrows_3\":0,\"arms_2\":0,\"beard_4\":0,\"sun_1\":0,\"eyebrows_1\":0,\"moles_2\":0,\"lipstick_2\":0,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"bproof_2\":0,\"eye_color\":0,\"decals_2\":0,\"mask_2\":0,\"chest_2\":0,\"ears_2\":0,\"hair_1\":3,\"chain_2\":0,\"sex\":0,\"hair_color_1\":2,\"chest_3\":0,\"bags_2\":0,\"bodyb_2\":0,\"makeup_2\":0,\"moles_1\":0,\"bproof_1\":0,\"glasses_2\":0,\"age_1\":0,\"face\":2,\"bracelets_2\":0,\"ears_1\":-1,\"chest_1\":0,\"lipstick_3\":0,\"bodyb_1\":0,\"blush_3\":0,\"tshirt_2\":0,\"torso_1\":3,\"complexion_2\":0,\"bracelets_1\":-1}', 4, 4, '[]', '{\"x\":5103.2,\"y\":-4835.5,\"z\":8.1}', 100, 69, 'superadmin', 9717088, '[{\"percent\":59,\"val\":0,\"name\":\"hunger\"},{\"percent\":59,\"val\":0,\"name\":\"thirst\"}]', 'Murga', 'Vrtiprah', '2.1.1984', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '02/04/2022 13:54:38', 0, 0, 2, 0, 20, 0, 2, 1, 5, 0, NULL, NULL);
-INSERT INTO `users` VALUES (10002, 'steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 0, 'MaZz', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":6,\"complexion_2\":0,\"hair_1\":9,\"makeup_4\":0,\"bproof_1\":4,\"torso_1\":0,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":2,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":4,\"pants_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"shoes_2\":0,\"tshirt_2\":2,\"mask_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":0,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":22,\"chest_1\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"sun_1\":0,\"mask_1\":0,\"lipstick_4\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"moles_2\":0,\"blush_1\":0,\"hair_color_1\":0,\"eye_color\":0,\"makeup_3\":0,\"ears_2\":0,\"watches_2\":0,\"blush_3\":0,\"lipstick_1\":0,\"bags_1\":0,\"ears_1\":-1,\"beard_2\":0,\"watches_1\":-1,\"sex\":0,\"face\":44,\"skin\":2,\"eyebrows_2\":0,\"bracelets_1\":-1}', 1, 0, '[{\"label\":\"Pistol .50\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_PISTOL50\",\"ammo\":130},{\"label\":\"Pump shotgun\",\"components\":[],\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":39},{\"label\":\"Assault rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":59},{\"label\":\"Carbine rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_CARBINERIFLE\",\"ammo\":59},{\"label\":\"Advanced rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ADVANCEDRIFLE\",\"ammo\":59},{\"label\":\"Taser\",\"components\":[],\"name\":\"WEAPON_STUNGUN\",\"ammo\":200},{\"label\":\"Flashlight\",\"components\":[],\"name\":\"WEAPON_FLASHLIGHT\",\"ammo\":0}]', '{\"z\":40.39999999999418,\"y\":3213.4000000003727,\"x\":1569.3999999999069}', 100020599, 69, 'superadmin', 12345, '[{\"val\":994100,\"name\":\"hunger\",\"percent\":99.41},{\"val\":995575,\"name\":\"thirst\",\"percent\":99.5575},{\"val\":0,\"name\":\"drunk\",\"percent\":0.0}]', 'Max', 'Cigarett', '0611199', 'm', '180', 0, NULL, 0, 30, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '01/11/2021 22:19:53', 0, 0, 45, 0, 20, 0, 2, 1, 1, 22, NULL, NULL);
-INSERT INTO `users` VALUES (10003, 'steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 4481549, 'LJANTU', '{\"moles_1\":0,\"sun_1\":0,\"age_2\":0,\"eyebrows_1\":0,\"hair_2\":0,\"chest_2\":0,\"mask_2\":0,\"decals_2\":0,\"bproof_2\":0,\"makeup_3\":0,\"glasses_2\":0,\"eyebrows_2\":0,\"mask_1\":0,\"bodyb_1\":0,\"makeup_1\":0,\"watches_1\":2,\"face\":19,\"makeup_2\":0,\"hair_color_2\":0,\"tshirt_1\":0,\"chest_1\":0,\"shoes_2\":0,\"helmet_2\":0,\"chain_2\":0,\"lipstick_3\":0,\"blemishes_1\":0,\"hair_color_1\":29,\"eye_color\":0,\"shoes\":35,\"torso_2\":0,\"bodyb_2\":0,\"complexion_1\":0,\"sex\":0,\"ears_1\":-1,\"torso_1\":381,\"beard_2\":0,\"moles_2\":0,\"beard_3\":0,\"blush_2\":0,\"blush_1\":0,\"bracelets_2\":0,\"blush_3\":0,\"chest_3\":0,\"hair_1\":22,\"age_1\":0,\"bags_1\":0,\"bags_2\":0,\"shoes_1\":24,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"glasses_1\":30,\"blemishes_2\":0,\"bproof_1\":54,\"eyebrows_3\":0,\"eyebrows_4\":0,\"lipstick_1\":0,\"beard_4\":0,\"makeup_4\":0,\"helmet_1\":-1,\"decals_1\":0,\"tshirt_2\":2,\"skin\":18,\"ears_2\":0,\"watches_2\":0,\"arms\":28,\"pants_1\":130,\"lipstick_2\":0,\"bracelets_1\":-1,\"complexion_2\":0,\"arms_2\":0,\"beard_1\":0,\"sun_2\":0}', 3, 4, '[{\"label\":\"Pistol\",\"components\":[\"clip_default\"],\"ammo\":147,\"name\":\"WEAPON_PISTOL\"}]', '{\"z\":29.0,\"x\":-68.7,\"y\":-1722.6}', 99936001, 69, 'superadmin', 5799678, '[{\"percent\":88,\"val\":465400,\"name\":\"hunger\"},{\"percent\":88,\"val\":474050,\"name\":\"thirst\"},{\"percent\":0.0,\"val\":0,\"name\":\"drunk\"}]', 'Tuljan', 'Ljantu', '33333333', 'm', '195', 0, NULL, 0, 100, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '20/01/2022 21:03:41', 0, 0, 141, 0, 20, 2, 12, 6, 7, 22, NULL, NULL);
-INSERT INTO `users` VALUES (10004, 'steam:110000111cd0aa0', 'license:e4090a08909875dbb99f15633c3ec4ef87d9e9f8', 0, 'GABO', '{\"arms\":1,\"makeup_3\":0,\"hair_1\":19,\"ears_1\":-1,\"eye_color\":0,\"arms_2\":0,\"skin\":1,\"beard_1\":0,\"torso_1\":4,\"ears_2\":0,\"bproof_1\":0,\"hair_color_1\":5,\"age_2\":0,\"lipstick_2\":0,\"sun_2\":0,\"age_1\":0,\"eyebrows_2\":0,\"lipstick_3\":0,\"makeup_1\":0,\"blemishes_2\":0,\"watches_1\":-1,\"bodyb_2\":0,\"tshirt_1\":3,\"beard_3\":0,\"sex\":0,\"glasses_2\":0,\"bags_1\":0,\"helmet_1\":-1,\"pants_1\":7,\"watches_2\":0,\"chain_2\":0,\"blemishes_1\":0,\"tshirt_2\":0,\"decals_2\":0,\"chest_3\":0,\"shoes_1\":1,\"shoes_2\":0,\"glasses_1\":0,\"eyebrows_3\":0,\"blush_3\":0,\"makeup_4\":0,\"sun_1\":0,\"bracelets_2\":0,\"helmet_2\":0,\"bags_2\":0,\"moles_2\":0,\"hair_2\":4,\"lipstick_1\":0,\"bracelets_1\":-1,\"beard_2\":0,\"mask_2\":0,\"mask_1\":0,\"face\":12,\"blush_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"beard_4\":0,\"eyebrows_1\":0,\"bproof_2\":0,\"moles_1\":0,\"makeup_2\":0,\"eyebrows_4\":0,\"complexion_2\":0,\"complexion_1\":0,\"torso_2\":3,\"blush_1\":0,\"hair_color_2\":0,\"decals_1\":0,\"chest_1\":0,\"pants_2\":0,\"bodyb_1\":0,\"chest_2\":0}', 1, 0, '[{\"name\":\"WEAPON_MG\",\"label\":\"MG\",\"components\":[\"clip_default\"],\"ammo\":190}]', '{\"z\":68.39999999999418,\"y\":354.5999999999767,\"x\":-1107.3999999999069}', 3035100, 69, 'superadmin', 5375773, '[{\"val\":314000,\"percent\":31.4,\"name\":\"hunger\"},{\"val\":360500,\"percent\":36.05,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Daniel', 'Deacon', '03.11.1997', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 20:47:33', 0, 0, 16, 0, 20, 0, 1, 2, 1, 0, NULL, NULL);
-INSERT INTO `users` VALUES (10010, 'steam:11000011aee96e0', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 514260, 'hashtag.sikora', '{\"arms_2\":0,\"bodyb_2\":0,\"sex\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"hair_color_2\":0,\"bodyb_1\":0,\"pants_2\":0,\"blush_3\":0,\"lipstick_2\":0,\"watches_1\":-1,\"age_2\":0,\"decals_2\":0,\"bags_2\":0,\"arms\":0,\"decals_1\":0,\"face\":0,\"beard_2\":0,\"lipstick_1\":0,\"blush_1\":0,\"hair_color_1\":0,\"hair_2\":0,\"watches_2\":0,\"chest_1\":0,\"torso_1\":0,\"blemishes_1\":0,\"age_1\":0,\"chain_1\":0,\"bproof_1\":0,\"eyebrows_1\":0,\"tshirt_1\":0,\"glasses_1\":0,\"pants_1\":0,\"mask_1\":0,\"mask_2\":0,\"blemishes_2\":0,\"complexion_2\":0,\"beard_4\":0,\"chest_2\":0,\"chain_2\":0,\"glasses_2\":0,\"bproof_2\":0,\"sun_1\":0,\"makeup_2\":0,\"ears_2\":0,\"torso_2\":0,\"sun_2\":0,\"shoes_2\":0,\"skin\":0,\"shoes_1\":0,\"eyebrows_3\":0,\"eyebrows_4\":0,\"helmet_1\":-1,\"helmet_2\":0,\"ears_1\":-1,\"blush_2\":0,\"bracelets_1\":-1,\"hair_1\":0,\"makeup_1\":0,\"lipstick_4\":0,\"bags_1\":0,\"tshirt_2\":0,\"eye_color\":0,\"beard_3\":0,\"moles_1\":0,\"bracelets_2\":0,\"moles_2\":0,\"makeup_4\":0,\"beard_1\":0,\"makeup_3\":0,\"chest_3\":0,\"lipstick_3\":0}', 3, 1, '[]', '{\"z\":30.6,\"y\":-786.6,\"x\":231.4}', 100, 0, 'user', 555, '[{\"percent\":46,\"name\":\"hunger\",\"val\":0},{\"percent\":0,\"name\":\"thirst\",\"val\":0}]', 'Toni', 'Sikora', '9.3.2022', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '12/06/2022 16:50:59', 0, 0, 5, 0, 20, 0, 1, 2, 1, 0, NULL, '2022-06-04');
-INSERT INTO `users` VALUES (10009, 'steam:1100001453fc4a4', 'license:28b3a93ce930a76bb21c53788d5a938c86ed7160', 20, '~r~Owner | ~w~Fuezify', '{\"hair_color_2\":0,\"ears_1\":-1,\"makeup_4\":0,\"tshirt_2\":0,\"skin\":2,\"eyebrows_1\":0,\"complexion_2\":0,\"chain_1\":0,\"hair_color_1\":0,\"chest_1\":0,\"hair_1\":12,\"bracelets_1\":-1,\"bags_1\":0,\"blush_1\":0,\"mask_2\":0,\"shoes_1\":0,\"sex\":0,\"makeup_1\":0,\"tshirt_1\":0,\"blemishes_2\":0,\"decals_1\":2,\"watches_2\":0,\"lipstick_3\":0,\"complexion_1\":0,\"chest_3\":0,\"moles_2\":0,\"pants_1\":0,\"bodyb_2\":0,\"helmet_1\":-1,\"mask_1\":0,\"chain_2\":0,\"shoes_2\":0,\"arms_2\":0,\"moles_1\":0,\"lipstick_2\":0,\"pants_2\":0,\"sun_2\":0,\"face\":0,\"blush_2\":0,\"lipstick_1\":0,\"bproof_1\":0,\"arms\":0,\"beard_4\":0,\"blemishes_1\":0,\"torso_1\":0,\"watches_1\":-1,\"helmet_2\":0,\"hair_2\":0,\"bracelets_2\":0,\"decals_2\":0,\"bodyb_1\":0,\"age_2\":0,\"age_1\":0,\"bags_2\":0,\"beard_1\":0,\"torso_2\":0,\"makeup_2\":0,\"bproof_2\":0,\"blush_3\":0,\"beard_2\":0,\"eyebrows_4\":0,\"eyebrows_3\":0,\"eyebrows_2\":0,\"makeup_3\":0,\"lipstick_4\":0,\"sun_1\":0,\"beard_3\":0,\"glasses_1\":0,\"ears_2\":0,\"eye_color\":0,\"chest_2\":0,\"glasses_2\":0}', 1, 0, '[]', '{\"z\":45.7,\"y\":2592.9,\"x\":1882.1}', 100, 0, 'user', 5721548, '[{\"percent\":98,\"val\":0,\"name\":\"hunger\"},{\"percent\":98,\"val\":0,\"name\":\"thirst\"}]', 'Uzzi', 'Owner', '10.11.1111', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '31/01/2022 21:24:24', 0, 0, 0, 0, 20, 0, 0, 1, 1, 0, NULL, NULL);
+INSERT INTO `users` VALUES (10000, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 208, 'Sikora', '{\"shoes_2\":2,\"blush_1\":0,\"torso_2\":0,\"eye_color\":0,\"beard_4\":0,\"ears_2\":-1,\"bracelets_2\":0,\"eye_squint\":0,\"mask_1\":0,\"cheeks_2\":0,\"makeup_3\":0,\"lipstick_3\":32,\"jaw_2\":0,\"watches_1\":-1,\"chain_2\":0,\"chin_1\":0,\"nose_6\":0,\"bracelets_1\":-1,\"skin\":0,\"decals_2\":0,\"beard_1\":2,\"age_1\":0,\"nose_5\":0,\"bproof_2\":0,\"nose_1\":0,\"chin_3\":0,\"cheeks_1\":0,\"watches_2\":-1,\"dad\":12,\"complexion_2\":0,\"eyebrows_3\":0,\"lipstick_1\":0,\"blush_2\":0,\"beard_3\":61,\"makeup_2\":0,\"skin_md_weight\":50,\"blemishes_1\":0,\"nose_4\":0,\"chin_4\":0,\"eyebrows_2\":10,\"eyebrows_1\":2,\"neck_thickness\":0,\"pants_1\":10,\"hair_color_2\":0,\"cheeks_3\":0,\"hair_1\":0,\"bags_2\":0,\"glasses_2\":1,\"tshirt_2\":0,\"lipstick_2\":0,\"eyebrows_6\":0,\"nose_2\":0,\"chin_2\":0,\"face_md_weight\":50,\"hair_color_1\":0,\"bodyb_2\":0,\"arms_2\":0,\"decals_1\":0,\"sex\":0,\"mask_2\":0,\"nose_3\":0,\"pants_2\":0,\"face\":19,\"chain_1\":0,\"sun_1\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"hair_2\":0,\"chest_2\":0,\"bodyb_1\":0,\"glasses_1\":5,\"age_2\":0,\"eyebrows_5\":0,\"chest_1\":0,\"torso_1\":4,\"makeup_1\":0,\"bproof_1\":0,\"chest_3\":0,\"moles_1\":0,\"moles_2\":0,\"shoes_1\":1,\"blemishes_2\":0,\"mom\":21,\"lipstick_4\":0,\"sun_2\":0,\"helmet_1\":-1,\"complexion_1\":0,\"arms\":1,\"jaw_1\":0,\"tshirt_1\":3,\"bags_1\":0,\"helmet_2\":-1,\"lip_thickness\":0,\"blush_3\":\"2\",\"ears_1\":-1,\"beard_2\":10}', 3, 4, '[]', '{\"x\":319.6,\"z\":31.9,\"y\":-1371.5}', 104938, 69, 'superadmin', 3555299, '[{\"val\":0,\"name\":\"hunger\",\"percent\":86},{\"val\":0,\"name\":\"thirst\",\"percent\":72},{\"val\":0,\"name\":\"drunk\",\"percent\":0}]', 'Tony', 'Sikora', '25.9.1998', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"houseId\":29,\"furniture\":[{\"object\":\"prop_tv_cabinet_03\",\"offset\":[7.640869140625,3.6422119140625,-2.42674255371093],\"heading\":0.0,\"name\":\"TV Stol\"}]}', '{\"prop_ld_farm_table01\":{\"amount\":1,\"name\":\"Farm Stol 2\"}}', 0, 0, 0, '03/07/2022 20:03:52', 0, 0, 502, 0, 20, 0, 27, 8, 5, 0, NULL, '2022-06-04', '[{\"nameHash\":\"MP_Buis_M_Neck_000\",\"Count\":1,\"collection\":\"mpbusiness_overlays\"}]');
+INSERT INTO `users` VALUES (10001, 'steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 0, 'Ficho', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":0,\"complexion_2\":0,\"hair_1\":11,\"makeup_4\":0,\"bproof_1\":0,\"torso_1\":6,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":0,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"watches_1\":-1,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":0,\"moles_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"blush_3\":0,\"tshirt_2\":0,\"eyebrows_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":4,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":24,\"makeup_3\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"ears_1\":-1,\"mask_1\":0,\"pants_2\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"bracelets_1\":-1,\"chest_1\":0,\"hair_color_1\":3,\"eye_color\":0,\"lipstick_4\":0,\"ears_2\":0,\"watches_2\":0,\"blush_1\":0,\"lipstick_1\":0,\"face\":0,\"bags_1\":0,\"shoes_2\":0,\"beard_2\":0,\"sex\":0,\"sun_1\":0,\"skin\":1,\"lipstick_2\":0,\"mask_2\":0}', 1, 0, '[{\"label\":\"Pistol\",\"name\":\"WEAPON_PISTOL\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Micro SMG\",\"name\":\"WEAPON_MICROSMG\",\"ammo\":188,\"components\":[\"clip_default\"]},{\"label\":\"Pump shotgun\",\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":250,\"components\":[]},{\"label\":\"Assault rifle\",\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Sniper rifle\",\"name\":\"WEAPON_SNIPERRIFLE\",\"ammo\":248,\"components\":[\"scope\"]}]', '{\"z\":544.6000000000931,\"y\":-4500.0,\"x\":-502.4000000000233}', 999946950, 69, 'superadmin', 973, '[{\"val\":456000,\"percent\":45.6,\"name\":\"hunger\"},{\"val\":467000,\"percent\":46.7,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Filip', 'Wizzy', '19980208', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 21:27:40', 0, 0, 17, 0, 20, 0, 5, 2, 1, 0, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (10011, 'steam:11000010a1d1042', 'license:c7a857dcd5b4160c69d1671f02e52332bd339733', 176, 'chame', '{\"mask_1\":0,\"skin\":3,\"watches_1\":-1,\"lipstick_1\":0,\"beard_3\":0,\"eyebrows_4\":0,\"makeup_3\":0,\"beard_1\":0,\"makeup_4\":0,\"makeup_1\":0,\"watches_2\":0,\"sun_2\":0,\"decals_1\":0,\"age_2\":0,\"blush_2\":0,\"shoes_2\":0,\"hair_2\":3,\"bags_1\":0,\"pants_1\":0,\"beard_2\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"torso_2\":0,\"glasses_1\":0,\"helmet_1\":-1,\"blush_1\":0,\"hair_color_2\":1,\"shoes_1\":0,\"arms\":0,\"blemishes_1\":0,\"blemishes_2\":0,\"helmet_2\":0,\"tshirt_1\":1,\"eyebrows_3\":0,\"arms_2\":0,\"beard_4\":0,\"sun_1\":0,\"eyebrows_1\":0,\"moles_2\":0,\"lipstick_2\":0,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"bproof_2\":0,\"eye_color\":0,\"decals_2\":0,\"mask_2\":0,\"chest_2\":0,\"ears_2\":0,\"hair_1\":3,\"chain_2\":0,\"sex\":0,\"hair_color_1\":2,\"chest_3\":0,\"bags_2\":0,\"bodyb_2\":0,\"makeup_2\":0,\"moles_1\":0,\"bproof_1\":0,\"glasses_2\":0,\"age_1\":0,\"face\":2,\"bracelets_2\":0,\"ears_1\":-1,\"chest_1\":0,\"lipstick_3\":0,\"bodyb_1\":0,\"blush_3\":0,\"tshirt_2\":0,\"torso_1\":3,\"complexion_2\":0,\"bracelets_1\":-1}', 4, 4, '[]', '{\"x\":5103.2,\"y\":-4835.5,\"z\":8.1}', 100, 69, 'superadmin', 9717088, '[{\"percent\":59,\"val\":0,\"name\":\"hunger\"},{\"percent\":59,\"val\":0,\"name\":\"thirst\"}]', 'Murga', 'Vrtiprah', '2.1.1984', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '02/04/2022 13:54:38', 0, 0, 2, 0, 20, 0, 2, 1, 5, 0, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (10002, 'steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 0, 'MaZz', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":6,\"complexion_2\":0,\"hair_1\":9,\"makeup_4\":0,\"bproof_1\":4,\"torso_1\":0,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":2,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":4,\"pants_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"shoes_2\":0,\"tshirt_2\":2,\"mask_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":0,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":22,\"chest_1\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"sun_1\":0,\"mask_1\":0,\"lipstick_4\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"moles_2\":0,\"blush_1\":0,\"hair_color_1\":0,\"eye_color\":0,\"makeup_3\":0,\"ears_2\":0,\"watches_2\":0,\"blush_3\":0,\"lipstick_1\":0,\"bags_1\":0,\"ears_1\":-1,\"beard_2\":0,\"watches_1\":-1,\"sex\":0,\"face\":44,\"skin\":2,\"eyebrows_2\":0,\"bracelets_1\":-1}', 1, 0, '[{\"label\":\"Pistol .50\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_PISTOL50\",\"ammo\":130},{\"label\":\"Pump shotgun\",\"components\":[],\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":39},{\"label\":\"Assault rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":59},{\"label\":\"Carbine rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_CARBINERIFLE\",\"ammo\":59},{\"label\":\"Advanced rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ADVANCEDRIFLE\",\"ammo\":59},{\"label\":\"Taser\",\"components\":[],\"name\":\"WEAPON_STUNGUN\",\"ammo\":200},{\"label\":\"Flashlight\",\"components\":[],\"name\":\"WEAPON_FLASHLIGHT\",\"ammo\":0}]', '{\"z\":40.39999999999418,\"y\":3213.4000000003727,\"x\":1569.3999999999069}', 100020599, 69, 'superadmin', 12345, '[{\"val\":994100,\"name\":\"hunger\",\"percent\":99.41},{\"val\":995575,\"name\":\"thirst\",\"percent\":99.5575},{\"val\":0,\"name\":\"drunk\",\"percent\":0.0}]', 'Max', 'Cigarett', '0611199', 'm', '180', 0, NULL, 0, 30, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '01/11/2021 22:19:53', 0, 0, 45, 0, 20, 0, 2, 1, 1, 22, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (10003, 'steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 4481549, 'LJANTU', '{\"moles_1\":0,\"sun_1\":0,\"age_2\":0,\"eyebrows_1\":0,\"hair_2\":0,\"chest_2\":0,\"mask_2\":0,\"decals_2\":0,\"bproof_2\":0,\"makeup_3\":0,\"glasses_2\":0,\"eyebrows_2\":0,\"mask_1\":0,\"bodyb_1\":0,\"makeup_1\":0,\"watches_1\":2,\"face\":19,\"makeup_2\":0,\"hair_color_2\":0,\"tshirt_1\":0,\"chest_1\":0,\"shoes_2\":0,\"helmet_2\":0,\"chain_2\":0,\"lipstick_3\":0,\"blemishes_1\":0,\"hair_color_1\":29,\"eye_color\":0,\"shoes\":35,\"torso_2\":0,\"bodyb_2\":0,\"complexion_1\":0,\"sex\":0,\"ears_1\":-1,\"torso_1\":381,\"beard_2\":0,\"moles_2\":0,\"beard_3\":0,\"blush_2\":0,\"blush_1\":0,\"bracelets_2\":0,\"blush_3\":0,\"chest_3\":0,\"hair_1\":22,\"age_1\":0,\"bags_1\":0,\"bags_2\":0,\"shoes_1\":24,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"glasses_1\":30,\"blemishes_2\":0,\"bproof_1\":54,\"eyebrows_3\":0,\"eyebrows_4\":0,\"lipstick_1\":0,\"beard_4\":0,\"makeup_4\":0,\"helmet_1\":-1,\"decals_1\":0,\"tshirt_2\":2,\"skin\":18,\"ears_2\":0,\"watches_2\":0,\"arms\":28,\"pants_1\":130,\"lipstick_2\":0,\"bracelets_1\":-1,\"complexion_2\":0,\"arms_2\":0,\"beard_1\":0,\"sun_2\":0}', 3, 4, '[{\"label\":\"Pistol\",\"components\":[\"clip_default\"],\"ammo\":147,\"name\":\"WEAPON_PISTOL\"}]', '{\"z\":29.0,\"x\":-68.7,\"y\":-1722.6}', 99936001, 69, 'superadmin', 5799678, '[{\"percent\":88,\"val\":465400,\"name\":\"hunger\"},{\"percent\":88,\"val\":474050,\"name\":\"thirst\"},{\"percent\":0.0,\"val\":0,\"name\":\"drunk\"}]', 'Tuljan', 'Ljantu', '33333333', 'm', '195', 0, NULL, 0, 100, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '20/01/2022 21:03:41', 0, 0, 141, 0, 20, 2, 12, 6, 7, 22, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (10004, 'steam:110000111cd0aa0', 'license:e4090a08909875dbb99f15633c3ec4ef87d9e9f8', 0, 'GABO', '{\"arms\":1,\"makeup_3\":0,\"hair_1\":19,\"ears_1\":-1,\"eye_color\":0,\"arms_2\":0,\"skin\":1,\"beard_1\":0,\"torso_1\":4,\"ears_2\":0,\"bproof_1\":0,\"hair_color_1\":5,\"age_2\":0,\"lipstick_2\":0,\"sun_2\":0,\"age_1\":0,\"eyebrows_2\":0,\"lipstick_3\":0,\"makeup_1\":0,\"blemishes_2\":0,\"watches_1\":-1,\"bodyb_2\":0,\"tshirt_1\":3,\"beard_3\":0,\"sex\":0,\"glasses_2\":0,\"bags_1\":0,\"helmet_1\":-1,\"pants_1\":7,\"watches_2\":0,\"chain_2\":0,\"blemishes_1\":0,\"tshirt_2\":0,\"decals_2\":0,\"chest_3\":0,\"shoes_1\":1,\"shoes_2\":0,\"glasses_1\":0,\"eyebrows_3\":0,\"blush_3\":0,\"makeup_4\":0,\"sun_1\":0,\"bracelets_2\":0,\"helmet_2\":0,\"bags_2\":0,\"moles_2\":0,\"hair_2\":4,\"lipstick_1\":0,\"bracelets_1\":-1,\"beard_2\":0,\"mask_2\":0,\"mask_1\":0,\"face\":12,\"blush_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"beard_4\":0,\"eyebrows_1\":0,\"bproof_2\":0,\"moles_1\":0,\"makeup_2\":0,\"eyebrows_4\":0,\"complexion_2\":0,\"complexion_1\":0,\"torso_2\":3,\"blush_1\":0,\"hair_color_2\":0,\"decals_1\":0,\"chest_1\":0,\"pants_2\":0,\"bodyb_1\":0,\"chest_2\":0}', 1, 0, '[{\"name\":\"WEAPON_MG\",\"label\":\"MG\",\"components\":[\"clip_default\"],\"ammo\":190}]', '{\"z\":68.39999999999418,\"y\":354.5999999999767,\"x\":-1107.3999999999069}', 3035100, 69, 'superadmin', 5375773, '[{\"val\":314000,\"percent\":31.4,\"name\":\"hunger\"},{\"val\":360500,\"percent\":36.05,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Daniel', 'Deacon', '03.11.1997', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 20:47:33', 0, 0, 16, 0, 20, 0, 1, 2, 1, 0, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (10010, 'steam:11000011aee96e0', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 514260, 'hashtag.sikora', '{\"arms_2\":0,\"bodyb_2\":0,\"sex\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"hair_color_2\":0,\"bodyb_1\":0,\"pants_2\":0,\"blush_3\":0,\"lipstick_2\":0,\"watches_1\":-1,\"age_2\":0,\"decals_2\":0,\"bags_2\":0,\"arms\":0,\"decals_1\":0,\"face\":0,\"beard_2\":0,\"lipstick_1\":0,\"blush_1\":0,\"hair_color_1\":0,\"hair_2\":0,\"watches_2\":0,\"chest_1\":0,\"torso_1\":0,\"blemishes_1\":0,\"age_1\":0,\"chain_1\":0,\"bproof_1\":0,\"eyebrows_1\":0,\"tshirt_1\":0,\"glasses_1\":0,\"pants_1\":0,\"mask_1\":0,\"mask_2\":0,\"blemishes_2\":0,\"complexion_2\":0,\"beard_4\":0,\"chest_2\":0,\"chain_2\":0,\"glasses_2\":0,\"bproof_2\":0,\"sun_1\":0,\"makeup_2\":0,\"ears_2\":0,\"torso_2\":0,\"sun_2\":0,\"shoes_2\":0,\"skin\":0,\"shoes_1\":0,\"eyebrows_3\":0,\"eyebrows_4\":0,\"helmet_1\":-1,\"helmet_2\":0,\"ears_1\":-1,\"blush_2\":0,\"bracelets_1\":-1,\"hair_1\":0,\"makeup_1\":0,\"lipstick_4\":0,\"bags_1\":0,\"tshirt_2\":0,\"eye_color\":0,\"beard_3\":0,\"moles_1\":0,\"bracelets_2\":0,\"moles_2\":0,\"makeup_4\":0,\"beard_1\":0,\"makeup_3\":0,\"chest_3\":0,\"lipstick_3\":0}', 3, 1, '[]', '{\"z\":30.6,\"y\":-786.6,\"x\":231.4}', 100, 0, 'user', 555, '[{\"percent\":46,\"name\":\"hunger\",\"val\":0},{\"percent\":0,\"name\":\"thirst\",\"val\":0}]', 'Toni', 'Sikora', '9.3.2022', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '12/06/2022 16:50:59', 0, 0, 5, 0, 20, 0, 1, 2, 1, 0, NULL, '2022-06-04', NULL);
+INSERT INTO `users` VALUES (10009, 'steam:1100001453fc4a4', 'license:28b3a93ce930a76bb21c53788d5a938c86ed7160', 20, '~r~Owner | ~w~Fuezify', '{\"hair_color_2\":0,\"ears_1\":-1,\"makeup_4\":0,\"tshirt_2\":0,\"skin\":2,\"eyebrows_1\":0,\"complexion_2\":0,\"chain_1\":0,\"hair_color_1\":0,\"chest_1\":0,\"hair_1\":12,\"bracelets_1\":-1,\"bags_1\":0,\"blush_1\":0,\"mask_2\":0,\"shoes_1\":0,\"sex\":0,\"makeup_1\":0,\"tshirt_1\":0,\"blemishes_2\":0,\"decals_1\":2,\"watches_2\":0,\"lipstick_3\":0,\"complexion_1\":0,\"chest_3\":0,\"moles_2\":0,\"pants_1\":0,\"bodyb_2\":0,\"helmet_1\":-1,\"mask_1\":0,\"chain_2\":0,\"shoes_2\":0,\"arms_2\":0,\"moles_1\":0,\"lipstick_2\":0,\"pants_2\":0,\"sun_2\":0,\"face\":0,\"blush_2\":0,\"lipstick_1\":0,\"bproof_1\":0,\"arms\":0,\"beard_4\":0,\"blemishes_1\":0,\"torso_1\":0,\"watches_1\":-1,\"helmet_2\":0,\"hair_2\":0,\"bracelets_2\":0,\"decals_2\":0,\"bodyb_1\":0,\"age_2\":0,\"age_1\":0,\"bags_2\":0,\"beard_1\":0,\"torso_2\":0,\"makeup_2\":0,\"bproof_2\":0,\"blush_3\":0,\"beard_2\":0,\"eyebrows_4\":0,\"eyebrows_3\":0,\"eyebrows_2\":0,\"makeup_3\":0,\"lipstick_4\":0,\"sun_1\":0,\"beard_3\":0,\"glasses_1\":0,\"ears_2\":0,\"eye_color\":0,\"chest_2\":0,\"glasses_2\":0}', 1, 0, '[]', '{\"z\":45.7,\"y\":2592.9,\"x\":1882.1}', 100, 0, 'user', 5721548, '[{\"percent\":98,\"val\":0,\"name\":\"hunger\"},{\"percent\":98,\"val\":0,\"name\":\"thirst\"}]', 'Uzzi', 'Owner', '10.11.1111', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '31/01/2022 21:24:24', 0, 0, 0, 0, 20, 0, 0, 1, 1, 0, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for uteknark
@@ -3559,7 +3698,7 @@ CREATE TABLE `uteknark`  (
   `soil` bigint NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `stage`(`stage`, `time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of uteknark

@@ -138,7 +138,7 @@ ESX.RegisterServerCallback('status:dohvatiStatuse', function(source, cb)
 		tablica = {}
 		table.insert(tablica, {val = 0, percent = 100, name = "hunger"})
 		table.insert(tablica, {val = 0, percent = 100, name = "thirst"})
-		table.insert(tablica, {val = 0, percent = 100, name = "drunk"})
+		table.insert(tablica, {val = 0, percent = 0, name = "drunk"})
 	end
 	cb(tablica)
 end)
