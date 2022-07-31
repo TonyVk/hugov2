@@ -72,11 +72,11 @@ set mysql_ui true
 
 # Add system admins
 add_ace group.admin command allow # allow all commands
-add_ace group.admin command.quit deny # but don't allow quit
+
 # Jure Francetic steam
 add_principal identifier.steam:1100001049beec1 group.admin
 # #Sikora steam
-#add_principal identifier.steam:11000010441bee9 group.admin
+add_principal identifier.steam:11000010441bee9 group.admin
 
 # Hide player endpoints in external log output.
 sv_endpointprivacy true
@@ -131,14 +131,21 @@ start esx_taxijob
 start esx_jb_weashops
 start esx_jail
 start esx_spectate
+start esx_banka
+start esx_praone
 
 #Mape
-start taxi
-start ikea
-start PillboxHos
-start PillboxHosDoors
-start policija
-start prison-map
+start mape
+
+#Pljacke
+start utk_hackdependency
+start utk_fingerprint 
+start mhacking
+start esx_lockpicking
+start esx_advanced_holdup
+start pacific_bank_robbery
+start pljackaZlatare
+start pljackekuca
 
 # Add any new content addons here
 
@@ -163,9 +170,10 @@ start esx_anticheat
 start Seal
 start connectqueue
 start trew_hud_ui2
-start HousingShells
+start Shells
 start loaf_housing2
 start esx_droge
+start trava
 start oglasi
 
 # developement/ remove later
@@ -185,6 +193,11 @@ start esx_farmer
 start esx_kamion
 start esx_luka
 
+#EUP
+start NativeUI
+start eup-stream
+start eup-ui
+
 ##
 start mumble-voip
 start rp-radio
@@ -198,9 +211,11 @@ start manual
 start skriptice
 start MugShotBase64
 start dpemotes
+start dpclothing
+start pecanje
 
 # Server player slot limit (must be between 1 and 32, unless using OneSync)
-sv_maxclients 48
+sv_maxclients 8
 
 # License key for your server (https://keymaster.fivem.net)
 sv_licenseKey 9quib8epkaogkbdoh083rhv8ifosd0o3
