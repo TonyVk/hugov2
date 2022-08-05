@@ -29,6 +29,7 @@ local helicam = false
 local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode
 local UpaljenaSirena = false
+local UVozilu = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -1221,6 +1222,7 @@ function OpenPoliceActionsMenu()
 			--{label = _U('object_spawner'), value = 'object_spawner'},
 			{label = "Jail menu", value = 'jail_menu'},
 			{label = 'Dosije', value = 'criminalrecords'},
+			{label = "Spikeovi", value = "spike"}
 	}}, function(data, menu)
 		if data.current.value == 'citizen_interaction' then
 			local elements = {
@@ -1403,6 +1405,8 @@ function OpenPoliceActionsMenu()
 			else
 				ESX.ShowNotification(_U('no_players_nearby'))
 			end
+		elseif data.current.value == 'spike' then
+			TriggerEvent('loaf_spikestrips:spikestripMenu')
 		end
 	end, function(data, menu)
 		menu.close()
@@ -2959,3 +2963,222 @@ function ImpoundVehicle(vehicle)
 		end
 	end, VehToNet(vehicle))
 end
+
+--Spikeovi
+wheels = {
+    ["wheel_lf"] = 0,
+    ["wheel_rf"] = 1,
+    ["wheel_rr"] = 5,
+    ["wheel_lr"] = 4,
+}
+
+function DeployStinger()
+    local stinger = CreateObject(LoadModel("p_ld_stinger_s").model, GetOffsetFromEntityInWorldCoords(PlayerPedId(), -0.2, 2.0, 0.0), true, true, 0)
+    SetEntityAsMissionEntity(stinger, true, true)
+    SetEntityHeading(stinger, GetEntityHeading(PlayerPedId()))
+    FreezeEntityPosition(stinger, true)
+    PlaceObjectOnGroundProperly(stinger)
+    SetEntityVisible(stinger, false)
+
+    -- init scene
+    local scene = NetworkCreateSynchronisedScene(GetEntityCoords(PlayerPedId()), GetEntityRotation(PlayerPedId(), 2), 2, false, false, 1065353216, 0, 1.0)
+    NetworkAddPedToSynchronisedScene(PlayerPedId(), scene, LoadDict("amb@medic@standing@kneel@enter"), "enter", 8.0, -8.0, 3341, 16, 1148846080, 0)
+    NetworkStartSynchronisedScene(scene)
+    -- wait for the scene to start
+    while not IsSynchronizedSceneRunning(NetworkConvertSynchronisedSceneToSynchronizedScene(scene)) do
+        Wait(0)
+    end
+    -- make the scene faster (looks better)
+    SetSynchronizedSceneRate(NetworkConvertSynchronisedSceneToSynchronizedScene(scene), 3.0)
+    -- wait a bit
+    while GetSynchronizedScenePhase(NetworkConvertSynchronisedSceneToSynchronizedScene(scene)) < 0.14 do
+        Wait(0)
+    end
+    -- stop the scene early
+    NetworkStopSynchronisedScene(scene)
+
+    -- play deploy animation for stinger
+    PlayEntityAnim(stinger, "P_Stinger_S_Deploy", LoadDict("p_ld_stinger_s"), 1000.0, false, true, 0, 0.0, 0)
+    while not IsEntityPlayingAnim(stinger, "p_ld_stinger_s", "P_Stinger_S_Deploy", 3) do
+        Wait(0)
+    end
+    SetEntityVisible(stinger, true)
+    while IsEntityPlayingAnim(stinger, "p_ld_stinger_s", "P_Stinger_S_Deploy", 3) and GetEntityAnimCurrentTime(stinger, "p_ld_stinger_s", "P_Stinger_S_Deploy") <= 0.99 do
+        Wait(0)
+    end
+    PlayEntityAnim(stinger, "p_stinger_s_idle_deployed", LoadDict("p_ld_stinger_s"), 1000.0, false, true, 0, 0.99, 0)
+	SetModelAsNoLongerNeeded(GetHashKey("p_ld_stinger_s"))
+	RemoveAnimDict("p_ld_stinger_s")
+    return stinger
+end
+
+exports.qtarget:AddTargetModel({GetHashKey("p_ld_stinger_s")}, {
+	options = {
+		{
+			event = "spike:ObrisiGa",
+			icon = "fas fa-box-circle-check",
+			label = "Makni spike"
+		}
+	},
+	distance = 2
+})
+
+RegisterNetEvent("spike:ObrisiGa")
+AddEventHandler("spike:ObrisiGa", function()
+    RemoveStinger()
+end)
+
+RegisterNetEvent("loaf_spikestrips:placeSpikestrip")
+AddEventHandler("loaf_spikestrips:placeSpikestrip", function()
+    DeployStinger()
+end)
+
+function RemoveStinger()
+    if DoesEntityExist(closestStinger) then
+        NetworkRequestControlOfEntity(closestStinger)
+        SetEntityAsMissionEntity(closestStinger, true, true)
+        DeleteEntity(closestStinger)
+
+        Wait(250)
+        if not DoesEntityExist(closestStinger) then
+            TriggerServerEvent("loaf_spikestrips:removedSpike")
+        end
+    end
+end
+
+RegisterNetEvent("loaf_spikestrips:removeSpikestrip")
+AddEventHandler("loaf_spikestrips:removeSpikestrip", function()
+    RemoveStinger()
+end)
+
+function TouchingStinger(coords, stinger)
+    local min, max = GetModelDimensions(GetEntityModel(stinger))
+    local size = max - min
+    local w, l, h = size.x, size.y, size.z
+
+    local offset1 = GetOffsetFromEntityInWorldCoords(stinger, 0.0, l/2, h*-1)
+    local offset2 = GetOffsetFromEntityInWorldCoords(stinger, 0.0, l/2 * -1, h)
+
+    return IsPointInAngledArea(coords, offset1, offset2, w*2, 0, false)
+end
+
+function LoadDict(Dict)
+    while not HasAnimDictLoaded(Dict) do 
+        Wait(0)
+        RequestAnimDict(Dict)
+    end
+
+    return Dict
+end
+
+function LoadModel(model)
+    model = type(model) == "string" and GetHashKey(model) or model
+
+    if not HasModelLoaded(model) and IsModelInCdimage(model) then
+        local timer = GetGameTimer() + 20000 -- 20 seconds to load
+        RequestModel(model)
+        while not HasModelLoaded(model) and timer >= GetGameTimer() do -- wait for the model to load
+            Wait(50)
+        end
+    end
+
+    return {loaded = HasModelLoaded(model), model = model}
+end
+
+function HelpText(text, sound)
+    AddTextEntry(GetCurrentResourceName(), text)
+    BeginTextCommandDisplayHelp(GetCurrentResourceName())
+    EndTextCommandDisplayHelp(0, 0, (sound == true), -1)
+end
+
+-- thread to find the closest stinger / spikestrip
+CreateThread(function()
+	while true do
+		local driving = UVozilu
+		Wait((driving and 50) or 1000)
+		local coords = GetEntityCoords((driving and GetVehiclePedIsUsing(PlayerPedId())) or PlayerPedId())
+
+		local stinger = GetClosestObjectOfType(coords, 10.0, GetHashKey("p_ld_stinger_s"), false, false, false)
+		if DoesEntityExist(stinger) then
+			closestStinger = stinger
+			closestStingerDistance = #(coords - GetEntityCoords(stinger))
+		end
+
+		if not DoesEntityExist(closestStinger) or #(coords - GetEntityCoords(closestStinger)) > 10.0 then
+			closestStinger = 0
+		end
+	end
+end)
+
+RegisterNetEvent('baseevents:enteredVehicle')
+AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	UVozilu = true
+	CreateThread(function()
+		while UVozilu do
+			Wait(50)
+			local vehicle = currentVehicle
+			while DoesEntityExist(closestStinger) and closestStingerDistance <= 5.0 do
+				Wait(5)
+				if IsEntityTouchingEntity(vehicle, closestStinger) then
+					for boneName, wheelId in pairs(wheels) do
+						if not IsVehicleTyreBurst(vehicle, wheelId, false) then
+							if TouchingStinger(GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, boneName)), closestStinger) then
+								SetVehicleTyreBurst(vehicle, wheelId, 1, 1148846080)
+							end
+						end
+					end
+				end
+			end
+		end
+	end)
+end)
+
+RegisterNetEvent('baseevents:leftVehicle')
+AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, modelName, netId)
+	UVozilu = false
+end)
+
+CreateThread(function()
+	while not NetworkIsSessionStarted() do
+		Wait(500)
+	end
+
+	while not ESX do
+		Wait(500)
+	end
+
+	RegisterNetEvent("loaf_spikestrips:spikestripMenu")
+	AddEventHandler("loaf_spikestrips:spikestripMenu", function()
+		if PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sipa') then
+			ESX.UI.Menu.CloseAll()
+
+			local elements = {}
+			if PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sipa') then
+				table.insert(elements, {
+					label = Strings["place_spikestrip"],
+					value = "place_spikestrip"
+				})
+			end
+			table.insert(elements, {
+				label = Strings["remove_spikestrip"],
+				value = "remove_spikestrip"
+			})
+	
+			ESX.UI.Menu.Open("default", GetCurrentResourceName(), "spikestrip_menu", {
+				title = Strings["menu_label"],
+				align = "bottom-right",
+				elements = elements,
+			}, function(data, menu)
+				if data.current.value == "place_spikestrip" then
+					DeployStinger()
+				elseif data.current.value == "remove_spikestrip" then
+					RemoveStinger()
+				end
+			end, function(data, menu)
+				menu.close()
+			end)
+		else
+			ESX.ShowNotification(Strings["not_police"])
+		end
+	end)
+end)

@@ -1,4 +1,17 @@
-Config                            = {}
+Config                            = {
+    RequireJobPlace = true, -- require job to place a spike strip?
+    RequireJobRemove = false, -- should everyone be able to remove a spikestrip, or just people with job allowed to place spikestrips?
+    
+    FrameworkFeatures = { -- these features are only if you use Config.Framework "esx" or "qb"
+        Item = false, -- item to deploy a spikestrip (set to false if you don't want to have this enabled)
+        ReceiveRemove = false, -- receive spikestrip item if you remove a spikestrip?
+        ReceiveJob = false, -- false = police won't receive a spikestrip when they remove it | true = police will receive a spikestrip item when they remove a spikestrip
+        PoliceJobs = { -- police jobs
+            "police",
+            "sheriff",
+        },
+    }
+}
 
 Config.DrawDistance               = 100.0
 Config.MarkerType                 = 1
@@ -959,4 +972,12 @@ Config.Uniforms = {
 			['tshirt_1'] = 36,  ['tshirt_2'] = 1
 		}
 	}
+}
+
+Strings = {
+    ["not_police"] = "Niste policajac",
+    ["menu_label"] = "Spike menu",
+    ["place_spikestrip"] = "Postavite spike",
+    ["remove_spikestrip"] = "Obrišite najbliži spike",
+    ["close_menu"] = "Zatvori menu"
 }
