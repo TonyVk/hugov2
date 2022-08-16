@@ -285,3 +285,22 @@ body, html {
 	color:black !important;
 	border:0 !important;
 }
+body{
+	margin: 0;
+}
+#anno{
+	background-color: orange;
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+	border-radius: 10px;
+	transition: ease-in 2s;
+	opacity: 0;
+}
+#anNaslov{
+	text-align: center;
+    font-size: 30px;
+}
+#anTekst{
+	font-size: 20px;
+}

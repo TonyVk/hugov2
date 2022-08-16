@@ -233,10 +233,11 @@ AddEventHandler('amenu:Announce', function(args)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	if xPlayer.getPerm() > 0 then
-		TriggerClientEvent('chat:addMessage', -1, {
-			template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 0, 0, 0.6); border-radius: 3px;"><i class="fas fa-bullhorn"></i> {0}:<br> {1}</div>',
-			args = {"OBAVIJEST", table.concat(args, " ")}
-		})
+		TriggerClientEvent('amenu:PrikaziObavijest', -1, table.concat(args, " "))
+		-- TriggerClientEvent('chat:addMessage', -1, {
+		-- 	template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 0, 0, 0.6); border-radius: 3px;"><i class="fas fa-bullhorn"></i> {0}:<br> {1}</div>',
+		-- 	args = {"OBAVIJEST", table.concat(args, " ")}
+		-- })
 	end
 end)
 

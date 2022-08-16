@@ -10,6 +10,7 @@
 	<script type="text/javascript">
 		let selected = 0;
 		$(function () {
+			let obPrikazana = false;
 			$(document).keydown(function (e) {
 				if (e.keyCode == 27) {
 					$("#admin").fadeOut();
@@ -54,6 +55,16 @@
 				}else if (event.data.type == "closeQuick") {
 					$('#mainD').css('display', 'none');
 					$('#str2').css('display', 'none');
+				}else if (event.data.type == "obavijest") {
+					if(!obPrikazana){
+						obPrikazana = true;
+						$('#anTekst').text(event.data.tekst);
+						$('#anno').css('opacity', '100');
+						setTimeout(function(){
+							obPrikazana = false;
+							$('#anno').css('opacity', '0');
+						}, 5000);
+					}
 				}
 			});
 
@@ -220,6 +231,14 @@
 			</div>
 		
 			<button class="noclip" onclick="NoClip()">Upali/ugasi noclip</button>
+		</div>
+	</div>
+	<div id="anno">
+		<div id="anNaslov">
+			OBAVIJEST
+		</div>
+		<div id="anTekst">
+			Ovo je ta nova notifikacija sto ce ici za obavijesti! Puno toga ovdje stane bkte. Moram vidjeti koliki je maksimum ovoga tu.
 		</div>
 	</div>
 	<script>

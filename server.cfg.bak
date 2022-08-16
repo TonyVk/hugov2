@@ -6,7 +6,8 @@ set mysql_connection_string "server=localhost;uid=root;database=essentialmode"
 set es_enableCustomData 1
 set mysql_debug "File"
 
-set sv_enforcegamebuild 2545
+#set sv_enforcegamebuild 2545
+sv_enforcegamebuild 2699
 
 # These resources will start by default.
 ensure mapmanager

@@ -59,6 +59,8 @@ RegisterCommand('announce', function(source, args, rawCommand)
     if duznost then
 		if args[1] ~= nil then
 			TriggerServerEvent("amenu:Announce", args)
+			local komando = "/announce "..table.concat(args, " ")
+			TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 		else
 			TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", " /announce [Poruka]"} })
 		end
@@ -309,6 +311,11 @@ end)
 
 RegisterNUICallback('close', function(data, cb)
 	SetNuiFocus(false)
+end)
+
+RegisterNetEvent('amenu:PrikaziObavijest')
+AddEventHandler('amenu:PrikaziObavijest', function(args)
+	SendNUIMessage({type = 'obavijest', tekst = args})
 end)
 
 RegisterNUICallback('ADuznost', function(data, cb)
