@@ -681,6 +681,29 @@ Config.Weapons = {
 		name = 'WEAPON_CARBINERIFLE_MK2',
 		label = "carbine rifle mk2",
 		components = {}
+	},
+	{
+		name = 'WEAPON_METALDETECTOR',
+		label = "metal detector",
+		components = {}
+	},
+	{
+		name = 'WEAPON_PRECISIONRIFLE',
+		label = "precision rifle",
+		components = {
+			{ name = 'clip_default', label = _U('component_clip_default'), hash = GetHashKey('COMPONENT_PRECISIONRIFLE_CLIP_01') }
+		}
+	},
+	{
+		name = 'WEAPON_TACTICALRIFLE',
+		label = "tactical rifle",
+		components = {
+			{ name = 'clip_default', label = _U('component_clip_default'), hash = GetHashKey('COMPONENT_TACTICALRIFLE_CLIP_01') },
+			{ name = 'clip_extended', label = _U('component_clip_extended'), hash = GetHashKey('COMPONENT_TACTICALRIFLE_CLIP_02') },
+			{ name = 'flashlight', label = _U('component_flashlight'), hash = GetHashKey('COMPONENT_AT_AR_FLSH_REH') },
+			{ name = 'suppressor', label = _U('component_suppressor'), hash = GetHashKey('COMPONENT_AT_AR_SUPP_02') },
+			{ name = 'grip', label = _U('component_grip'), hash = GetHashKey('COMPONENT_AT_AR_AFGRIP') }
+		}
 	}
 
 }
