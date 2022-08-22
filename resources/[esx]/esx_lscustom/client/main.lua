@@ -135,7 +135,7 @@ AddEventHandler('esx_lscustom:cancelInstallMod', function()
 	if not (myCar.modXenon) then
 		ToggleVehicleMod(vehicle,  22, false)
 	end
-	if not (myCar.windowTint) then
+	if myCar.windowTint == -1 then
 		SetVehicleWindowTint(vehicle, 0)
 	end
 end)

@@ -220,6 +220,9 @@ function ListVehiclesMenu()
 						--if not br then
 							local hashVehicule = v.model
 							local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+							if v.naziv then
+								vehicleName = v.naziv
+							end
 							local labelvehicle
 							if v.state == 1 then
 								labelvehicle = vehicleName..' <font color="green">U garazi</font>'
@@ -236,6 +239,9 @@ function ListVehiclesMenu()
 				if v.brod == 1 then
 					local hashVehicule = v.model
 					local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
+					if v.naziv then
+						vehicleName = v.naziv
+					end
 					local labelvehicle
 					if v.state == 1 then
 						labelvehicle = vehicleName..' <font color="green">U garazi</font>'
