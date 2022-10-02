@@ -1914,6 +1914,176 @@ RegisterNUICallback(
 --     end
 -- )
 
+local rope = nil
+local kurac = nil
+local prop = nil
+local attObj = nil
+RegisterCommand("testrope", function(source, args, rawCommandString)
+	local ped = GetPlayerPed(PlayerId())
+	local pedPos = GetEntityCoords(ped, false)
+	RopeLoadTextures()
+	rope = AddRope(pedPos.x, pedPos.y, pedPos.z, 0.0, 0.0, 0.0, 100.0, 2, 10.0, 1.0, 0, 0, 0, 0, 0, 0, 0)
+
+	local modele = "prop_dock_crane_02_hook"
+	ESX.Streaming.RequestModel(modele)
+	local x,y,z = table.unpack(GetEntityCoords(ped))
+	prop = CreateObject(GetHashKey(modele), x, y, z+5.2, true, true, true)
+	local modele2 = "prop_towercrane_03d"
+	ESX.Streaming.RequestModel(modele2)
+	kurac = CreateObject(GetHashKey(modele2), x, y, z+12.0, true, true, true)
+	FreezeEntityPosition(kurac, true)
+	local x2,y2,z2 = table.unpack(GetEntityCoords(kurac))
+	x,y,z = table.unpack(GetEntityCoords(prop))
+	local rot = GetEntityRotation(prop, 2)
+	y2 = y2-8.0
+	local head = GetEntityHeading(kurac)
+	AttachEntitiesToRope(
+		rope, 
+		kurac, 
+		prop, 
+		x2, 
+		y2, 
+		z2+4.0, 
+		x, 
+		y, 
+		z+0.8,
+		100
+	)
+	Wait(1500)
+	local len = 10.0
+	StopRopeUnwindingFront(rope)
+	StartRopeWinding(rope)
+	RopeForceLength(rope, len)
+	local koric = -8.0
+
+	local modele3 = "prop_pipes_01a"
+	ESX.Streaming.RequestModel(modele3)
+	local x3,y3,z3 = table.unpack(GetEntityCoords(ped))
+	attObj = CreateObject(GetHashKey(modele3), x, y, z+5.2, true, true, true)
+	AttachEntityToEntity(attObj, prop, 0, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0, false, false, true, false, 20, true)
+
+	Citizen.CreateThread(function()
+		while rope ~= nil do
+			if IsControlPressed(0, 10) then 
+				if (len-0.1) > 2.2 then
+					len = len-0.1
+					StopRopeUnwindingFront(rope)
+					StartRopeWinding(rope)
+					RopeForceLength(rope, len)
+					SetEntityRotation(prop, rot, 2)
+				end
+			end
+			if IsControlPressed(0, 11) then 
+				len = len+0.1
+				x,y,z = table.unpack(GetEntityCoords(prop))
+				StopRopeUnwindingFront(rope)
+				StartRopeWinding(rope)
+				RopeForceLength(rope, len)
+				SetEntityRotation(prop, rot, 2)
+				SetEntityCoords(prop, x, y, z-0.1)
+				Wait(5)
+			end
+			if IsControlPressed(0, 21) then 
+				if (koric-0.1) > -59.60 then
+					koric = koric-0.1
+					local kor = GetOffsetFromEntityInWorldCoords(kurac, 0.0, koric, 0.0)
+					x,y,z = table.unpack(GetEntityCoords(prop))
+					SetEntityRotation(prop, rot, 2)
+					AttachEntitiesToRope(
+						rope,
+						kurac,
+						prop,
+						kor.x,
+						kor.y,
+						kor.z+4.0,
+						x,
+						y,
+						z+0.8,
+						100
+					)
+					Wait(10)
+					StopRopeUnwindingFront(rope)
+					StartRopeWinding(rope)
+					RopeForceLength(rope, len)
+				end
+			end
+			if IsControlPressed(0, 36) then 
+				if (koric+0.1) < -2.8 then
+					koric = koric+0.1
+					local kor = GetOffsetFromEntityInWorldCoords(kurac, 0.0, koric, 0.0)
+					x,y,z = table.unpack(GetEntityCoords(prop))
+					SetEntityRotation(prop, rot, 2)
+					AttachEntitiesToRope(
+						rope,
+						kurac,
+						prop,
+						kor.x,
+						kor.y,
+						kor.z+4.0,
+						x,
+						y,
+						z+0.8,
+						100
+					)
+					Wait(10)
+					StopRopeUnwindingFront(rope)
+					StartRopeWinding(rope)
+					RopeForceLength(rope, len)
+				end
+			end
+			if IsControlPressed(0, 46) then --E
+				head = GetEntityHeading(kurac)
+				SetEntityHeading(kurac, head-0.1)
+				x2,y2,z2 = table.unpack(GetEntityCoords(kurac))
+			end
+			if IsControlPressed(0, 52) then --Q
+				head = GetEntityHeading(kurac)
+				SetEntityHeading(kurac, head+0.1)
+				x2,y2,z2 = table.unpack(GetEntityCoords(kurac))
+			end
+			Citizen.Wait(0)
+		end
+	end)
+end, false)
+
+RegisterCommand("testrope2", function(source, args, rawCommandString)
+	RopeUnloadTextures()
+	DeleteRope(rope)
+	DeleteObject(kurac)
+	DeleteObject(prop)
+	DeleteObject(attObj)
+end, false)
+
+RegisterCommand("testrope3", function(source, args, rawCommandString)
+	local ped = GetPlayerPed(PlayerId())
+	local pedPos = GetEntityCoords(ped, false)
+	local modele = "prop_dock_crane_02_hook"
+	ESX.Streaming.RequestModel(modele)
+	local x,y,z = table.unpack(GetEntityCoords(ped))
+	local prop = CreateObject(GetHashKey(modele), x, y, z, true, true, true)
+	local modele2 = "prop_towercrane_02d_kuka"
+	ESX.Streaming.RequestModel(modele2)
+	kurac = CreateObject(GetHashKey(modele2), x, y, z, true, true, true)
+	--FreezeEntityPosition(kurac, true)
+	AttachEntityToEntity(
+		prop, 
+		kurac, 
+		0.0, 
+		10.0, 
+		0.0, 
+		0.0, 
+		0.0, 
+		0.0, 
+		0.0, 
+		true, 
+		false, 
+		false, 
+		false, 
+		1, 
+		true
+	)
+end, false)
+
 RegisterCommand("lc", function(source, args, rawCommandString)
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
 		local deri = true
