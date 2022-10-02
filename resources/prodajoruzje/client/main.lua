@@ -1918,6 +1918,7 @@ local rope = nil
 local kurac = nil
 local prop = nil
 local attObj = nil
+local attObj2 = nil
 local soundID = GetSoundId()
 local soundID2 = GetSoundId()
 local soundID3 = GetSoundId()
@@ -1940,10 +1941,10 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 	local modele = "prop_dock_crane_02_hook"
 	ESX.Streaming.RequestModel(modele)
 	local x,y,z = table.unpack(GetEntityCoords(ped))
-	prop = CreateObject(GetHashKey(modele), x, y, z+5.2, true, true, true)
+	prop = CreateObject(GetHashKey(modele), x, y, z+5.2, false, false, false)
 	local modele2 = "prop_towercrane_03d"
 	ESX.Streaming.RequestModel(modele2)
-	kurac = CreateObjectNoOffset(GetHashKey(modele2), 128.0898, -347.8978, 97.47646, true, true, true)
+	kurac = CreateObjectNoOffset(GetHashKey(modele2), 128.0898, -347.8978, 97.47646, false, false, false)
 	FreezeEntityPosition(kurac, true)
 	local x2,y2,z2 = table.unpack(GetEntityCoords(kurac))
 	x,y,z = table.unpack(GetEntityCoords(prop))
@@ -1962,7 +1963,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 		z+0.8,
 		100
 	)
-	Wait(1500)
+	Wait(500)
 	local len = 10.0
 	StopRopeUnwindingFront(rope)
 	StartRopeWinding(rope)
@@ -1971,15 +1972,19 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 
 	local modele3 = "prop_woodpile_02a"
 	ESX.Streaming.RequestModel(modele3)
-	local x3,y3,z3 = table.unpack(GetEntityCoords(ped))
-	attObj = CreateObject(GetHashKey(modele3), x, y, z+5.2, true, true, true)
-	AttachEntityToEntity(attObj, prop, 0, 0.0, 0.0, -1.5, 0.0, 0.0, 0.0, false, false, true, false, 20, false)
+	local attKord = vector3(133.76933288574, -379.18542480469, 42.25696182251)
+	attObj = CreateObject(GetHashKey(modele3), attKord.x, attKord.y, attKord.z, false, false, false)
+	--AttachEntityToEntity(attObj, prop, 0, 0.0, 0.0, -1.5, 0.0, 0.0, 0.0, false, false, true, false, 20, false)
 	SetEntityVisible(PlayerPedId(), false, 0)
 	FreezeEntityPosition(PlayerPedId(), true)
 	AttachEntityToEntity(PlayerPedId(), kurac, 0, -2.0, -2.0, 1.7, 0.0, 0.0, 200.0, false, false, true, false, 2, false)
+	SetFollowPedCamViewMode(4)
 	Citizen.CreateThread(function()
 		while rope ~= nil do
-			if IsControlPressed(0, 10) then 
+			DisableAllControlActions(0)
+			EnableControlAction(0, 1, true) -- Enable looking horizontally
+			EnableControlAction(0, 2, true) -- Enable looking vertically
+			if IsDisabledControlPressed(0, 10) then 
 				if (len-0.1) > 2.2 then
 					len = len-0.1
 					StopRopeUnwindingFront(rope)
@@ -1989,7 +1994,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 					if HasSoundFinished(soundID2) then
 						PlaySoundFromEntity(soundID2, "Move_U_D", kurac, "CRANE_SOUNDS", 0, 0)
 						Citizen.CreateThread(function()
-							while IsControlPressed(0, 10) do
+							while IsDisabledControlPressed(0, 10) do
 								--cekam
 								Wait(10)
 							end
@@ -1998,7 +2003,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 					end
 				end
 			end
-			if IsControlPressed(0, 11) then 
+			if IsDisabledControlPressed(0, 11) then 
 				len = len+0.1
 				x,y,z = table.unpack(GetEntityCoords(prop))
 				StopRopeUnwindingFront(rope)
@@ -2009,7 +2014,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 				if HasSoundFinished(soundID2) then
 					PlaySoundFromEntity(soundID2, "Move_U_D", kurac, "CRANE_SOUNDS", 0, 0)
 					Citizen.CreateThread(function()
-						while IsControlPressed(0, 11) do
+						while IsDisabledControlPressed(0, 11) do
 							--cekam
 							Wait(10)
 						end
@@ -2018,7 +2023,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 				end
 				Wait(5)
 			end
-			if IsControlPressed(0, 21) then 
+			if IsDisabledControlPressed(0, 21) then 
 				if (koric-0.1) > -59.60 then
 					koric = koric-0.1
 					local kor = GetOffsetFromEntityInWorldCoords(kurac, 0.0, koric, 0.0)
@@ -2039,7 +2044,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 					if HasSoundFinished(soundID3) then
 						PlaySoundFromEntity(soundID3, "Move_Base", kurac, "CRANE_SOUNDS", 0, 0)
 						Citizen.CreateThread(function()
-							while IsControlPressed(0, 21) do
+							while IsDisabledControlPressed(0, 21) do
 								--cekam
 								Wait(10)
 							end
@@ -2052,7 +2057,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 					RopeForceLength(rope, len)
 				end
 			end
-			if IsControlPressed(0, 36) then 
+			if IsDisabledControlPressed(0, 36) then 
 				if (koric+0.1) < -2.8 then
 					koric = koric+0.1
 					local kor = GetOffsetFromEntityInWorldCoords(kurac, 0.0, koric, 0.0)
@@ -2073,7 +2078,7 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 					if HasSoundFinished(soundID3) then
 						PlaySoundFromEntity(soundID3, "Move_Base", kurac, "CRANE_SOUNDS", 0, 0)
 						Citizen.CreateThread(function()
-							while IsControlPressed(0, 36) do
+							while IsDisabledControlPressed(0, 36) do
 								--cekam
 								Wait(10)
 							end
@@ -2086,14 +2091,14 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 					RopeForceLength(rope, len)
 				end
 			end
-			if IsControlPressed(0, 46) then --E
+			if IsDisabledControlPressed(0, 46) then --E
 				head = GetEntityHeading(kurac)
 				SetEntityHeading(kurac, head-0.1)
 				x2,y2,z2 = table.unpack(GetEntityCoords(kurac))
 				if HasSoundFinished(soundID) then
 					PlaySoundFromEntity(soundID, "Move_L_R", kurac, "CRANE_SOUNDS", 0, 0)
 					Citizen.CreateThread(function()
-						while IsControlPressed(0, 46) do
+						while IsDisabledControlPressed(0, 46) do
 							--cekam
 							Wait(10)
 						end
@@ -2101,14 +2106,14 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 					end)
 				end
 			end
-			if IsControlPressed(0, 52) then --Q
+			if IsDisabledControlPressed(0, 52) then --Q
 				head = GetEntityHeading(kurac)
 				SetEntityHeading(kurac, head+0.1)
 				x2,y2,z2 = table.unpack(GetEntityCoords(kurac))
 				if HasSoundFinished(soundID) then
 					PlaySoundFromEntity(soundID, "Move_L_R", kurac, "CRANE_SOUNDS", 0, 0)
 					Citizen.CreateThread(function()
-						while IsControlPressed(0, 52) do
+						while IsDisabledControlPressed(0, 52) do
 							--cekam
 							Wait(10)
 						end
@@ -2118,6 +2123,54 @@ RegisterCommand("testrope", function(source, args, rawCommandString)
 			end
 			Citizen.Wait(0)
 		end
+	end)
+	Citizen.CreateThread(function()
+		ESX.ShowNotification("Zakacite oznaceni materijal na zemlji.")
+		local ostKoord = vector3(82.227653503418, -350.54452514648, 66.197128295898)
+		while #(GetEntityCoords(prop)-attKord) > 4.0 do
+			DrawMarker(1, attKord.x, attKord.y, attKord.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+			Wait(1)
+		end
+		AttachEntityToEntity(attObj, prop, 0, 0.0, 0.0, -1.5, 0.0, 0.0, 0.0, false, false, true, false, 20, false)
+		ESX.ShowNotification("Otkacite materijal na oznaceno mjesto na zgradi.")
+		while #(GetEntityCoords(attObj)-ostKoord) > 4.0 do
+			DrawMarker(1, ostKoord.x, ostKoord.y, ostKoord.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+			Wait(1)
+		end
+		DetachEntity(attObj, true, true)
+		local modele3 = "prop_pipes_01a"
+		ESX.Streaming.RequestModel(modele3)
+		local attKord = vector3(133.76933288574, -379.18542480469, 42.25696182251)
+		attObj2 = CreateObject(GetHashKey(modele3), attKord.x, attKord.y, attKord.z, false, false, false)
+		ESX.ShowNotification("Zakacite oznaceni materijal na zemlji.")
+		ostKoord = vector3(65.93253326416, -343.82238769531, 66.197219848633)
+		while #(GetEntityCoords(prop)-attKord) > 4.0 do
+			DrawMarker(1, attKord.x, attKord.y, attKord.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+			Wait(1)
+		end
+		AttachEntityToEntity(attObj2, prop, 0, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0, false, false, true, false, 20, false)
+		ESX.ShowNotification("Otkacite materijal na oznaceno mjesto na zgradi.")
+		while #(GetEntityCoords(attObj2)-ostKoord) > 4.0 do
+			DrawMarker(1, ostKoord.x, ostKoord.y, ostKoord.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 204, 204, 0, 100, false, true, 2, false, false, false, false)
+			Wait(1)
+		end
+		DetachEntity(attObj2, true, true)
+		ESX.ShowNotification("Uspjesno zavrsen posao.")
+		DetachEntity(PlayerPedId(), true, true)
+		SetEntityCoords(PlayerPedId(), 123.66793823242, -353.75646972656, 42.596115112305)
+		RopeUnloadTextures()
+		DeleteRope(rope)
+		DeleteObject(kurac)
+		DeleteObject(prop)
+		DeleteObject(attObj)
+		DeleteObject(attObj2)
+		RemoveModelHide(128.0898, -347.8978, 97.47646, 50.0, GetHashKey("prop_towercrane_02d"), false)
+		SetEntityVisible(PlayerPedId(), true, 0)
+		FreezeEntityPosition(PlayerPedId(), false)
+		StopSound(soundID)
+		ReleaseSoundId(soundID)
+		SetFollowPedCamViewMode(1)
+		rope = nil
 	end)
 end, false)
 
