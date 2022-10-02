@@ -58,3 +58,14 @@ Config.VehicleLimit = {
     [20] = 300000, --Commercial
     [21] = 0, --Trains
 }
+
+Config.Controls = {
+	["direction"] = {
+	  codes = {35, 34, 33, 32},
+	  text = "Smjer",
+	},
+	["height"] = {
+	  codes = {21, 36},
+	  text = "Visina",
+	}
+}
