@@ -1393,17 +1393,17 @@ RegisterNetEvent('mafije:IsplatiSve')
 AddEventHandler('mafije:IsplatiSve', function(maf)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	xPlayer.addMoney(25000)
-	xPlayer.showNotification("Dobili ste 25000$ od dostave kokaina!")
+	xPlayer.addMoney(4000)
+	xPlayer.showNotification("Dobili ste 4000$ od dostave kokaina!")
 	if maf ~= nil then
 		local societyAccount = nil
 		local soc = "society_"..maf
 		TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 			societyAccount = account
 		end)
-		societyAccount.addMoney(160000)
+		societyAccount.addMoney(25000)
 		societyAccount.save()
-		xPlayer.showNotification("Vasa mafija je dobila 160000$ od prodaje 300kg kokaina!")
+		xPlayer.showNotification("Vasa mafija je dobila 25000$ od prodaje 300kg kokaina!")
 	end
 end)
 
@@ -1412,30 +1412,30 @@ AddEventHandler('mafije:IsplatiSve2', function(maf, vr)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	if vr == 1 then
-		xPlayer.addMoney(25000)
-		xPlayer.showNotification("Dobili ste 25000$ od dostave heroina!")
+		xPlayer.addMoney(4000)
+		xPlayer.showNotification("Dobili ste 4000$ od dostave heroina!")
 		if maf ~= nil then
 			local societyAccount = nil
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 				societyAccount = account
 			end)
-			societyAccount.addMoney(160000)
+			societyAccount.addMoney(25000)
 			societyAccount.save()
-			xPlayer.showNotification("Vasa mafija je dobila 160000$ od prodaje 300kg heroina!")
+			xPlayer.showNotification("Vasa mafija je dobila 25000$ od prodaje 300kg heroina!")
 		end
 	elseif vr == 2 then
-		xPlayer.addMoney(55000)
-		xPlayer.showNotification("Dobili ste 55000$ od dostave heroina!")
+		xPlayer.addMoney(4750)
+		xPlayer.showNotification("Dobili ste 4750$ od dostave heroina!")
 		if maf ~= nil then
 			local societyAccount = nil
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 				societyAccount = account
 			end)
-			societyAccount.addMoney(200000)
+			societyAccount.addMoney(35000)
 			societyAccount.save()
-			xPlayer.showNotification("Vasa mafija je dobila 200000$ od prodaje 300kg heroina!")
+			xPlayer.showNotification("Vasa mafija je dobila 35000$ od prodaje 300kg heroina!")
 		end
 	end
 end)
@@ -1511,10 +1511,10 @@ AddEventHandler('mafije:kupiAvion', function(maf)
 		if Mafije[i].Ime == maf then
 			if Mafije[i].Avion == 0 then
 				TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
-					if account.money >= 500000 then
-						account.removeMoney(500000)
+					if account.money >= 100000 then
+						account.removeMoney(100000)
 						account.save()
-						xPlayer.showNotification("Kupili ste avion za $500000!")
+						xPlayer.showNotification("Kupili ste avion za $100000!")
 						Mafije[i].Avion = 1
 						MySQL.Async.execute('UPDATE mafije SET Avion = 1 WHERE Ime = @maf',{
 							['@maf'] = maf
@@ -1680,8 +1680,8 @@ ESX.RegisterServerCallback('mafije:KupiSkladiste', function(source, cb, maf)
 	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 		societyAccount = account
 	end)
-	if societyAccount.money >= 500000 then
-		societyAccount.removeMoney(500000)
+	if societyAccount.money >= 100000 then
+		societyAccount.removeMoney(100000)
 		societyAccount.save()
 		for i=1, #Mafije, 1 do
 			if Mafije[i].Ime == maf then
@@ -1713,8 +1713,8 @@ ESX.RegisterServerCallback('mafije:KupiSkladiste2', function(source, cb, maf)
 	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 		societyAccount = account
 	end)
-	if societyAccount.money >= 500000 then
-		societyAccount.removeMoney(500000)
+	if societyAccount.money >= 100000 then
+		societyAccount.removeMoney(100000)
 		societyAccount.save()
 		for i=1, #Mafije, 1 do
 			if Mafije[i].Ime == maf then
@@ -2094,15 +2094,15 @@ AddEventHandler('mafije:PlatiDostavu', function(id, maf)
 	local soc = "society_"..maf
 	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
 		if id == 1 then
-			account.addMoney(6000)
+			account.addMoney(700)
 			account.save()
-			sourceXPlayer.addMoney(3000)
+			sourceXPlayer.addMoney(350)
 			ESX.SavePlayer(sourceXPlayer, function() 
 			end)
 		elseif id == 2 then
-			account.addMoney(7500)
+			account.addMoney(1500)
 			account.save()
-			sourceXPlayer.addMoney(3750)
+			sourceXPlayer.addMoney(750)
 			ESX.SavePlayer(sourceXPlayer, function() 
 			end)
 		end
@@ -2841,8 +2841,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 	if stvar == "laptop" then
 		local xItem = xPlayer.getInventoryItem('net_cracker')
 		if (xItem.count + 1) <= xItem.limit then
-			if xPlayer.getMoney() >= 25000 then
-			  xPlayer.removeMoney(25000)
+			if xPlayer.getMoney() >= 2500 then
+			  xPlayer.removeMoney(2500)
 			  xPlayer.addInventoryItem('net_cracker', 1)
 			  local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item net_cracker x 1"
 			  TriggerEvent("SpremiLog", por)
@@ -2856,8 +2856,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 	elseif stvar == "termit" then
 		local xItem = xPlayer.getInventoryItem('thermite')
 		if (xItem.count + 1) <= xItem.limit then
-			if xPlayer.getMoney() >= 5000 then
-			  xPlayer.removeMoney(5000)
+			if xPlayer.getMoney() >= 1000 then
+			  xPlayer.removeMoney(1000)
 			  xPlayer.addInventoryItem('thermite', 1)
 			  local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item thermite x 1"
 			  TriggerEvent("SpremiLog", por)
@@ -2873,8 +2873,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 		if (xItem.count + 1) <= xItem.limit then
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				if account.money >= 10000 then
-					account.removeMoney(10000)
+				if account.money >= 5000 then
+					account.removeMoney(5000)
 					xPlayer.addInventoryItem('ktijelo', 1)
 					cb(true)
 				else
@@ -2889,8 +2889,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 		if (xItem.count + 1) <= xItem.limit then
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				if account.money >= 15000 then
-					account.removeMoney(15000)
+				if account.money >= 6000 then
+					account.removeMoney(6000)
 					xPlayer.addInventoryItem('ctijelo', 1)
 					cb(true)
 				else
@@ -2905,8 +2905,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 		if (xItem.count + 1) <= xItem.limit then
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				if account.money >= 20000 then
-					account.removeMoney(20000)
+				if account.money >= 7000 then
+					account.removeMoney(7000)
 					xPlayer.addInventoryItem('stijelo', 1)
 					cb(true)
 				else
@@ -2921,8 +2921,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 		if (xItem.count + 1) <= xItem.limit then
 			local soc = "society_"..maf
 			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				if account.money >= 7000 then
-					account.removeMoney(7000)
+				if account.money >= 4500 then
+					account.removeMoney(4500)
 					xPlayer.addInventoryItem('smtijelo', 1)
 					cb(true)
 				else

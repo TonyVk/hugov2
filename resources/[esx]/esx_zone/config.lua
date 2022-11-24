@@ -1,5 +1,5 @@
 Config                            = {}
 Config.DinamicneMafije     	  	  = true
-Config.CijenaLista                = 15
-Config.CijenaGljive               = 16
-Config.CijenaMarihuane            = 10
+Config.CijenaLista                = 5
+Config.CijenaGljive               = 11
+Config.CijenaMarihuane            = 8

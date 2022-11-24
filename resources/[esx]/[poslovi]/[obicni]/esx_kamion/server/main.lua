@@ -8,8 +8,8 @@ AddEventHandler('kamiooon:platituljanu', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.posao.name == "kamion" then
-		xPlayer.addMoney(1450)
-		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(1450*0.30))
+		xPlayer.addMoney(230)
+		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(230*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija!")
 	    TriggerEvent("AntiCheat:Citer", _source)
@@ -21,8 +21,8 @@ AddEventHandler('kamiooon:platituljanu2', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.posao.name == "kamion" then
-		xPlayer.addMoney(2000)
-		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(2000*0.30))
+		xPlayer.addMoney(250)
+		TriggerEvent("biznis:StaviUSef", "kamion", math.ceil(250*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija!")
 	    TriggerEvent("AntiCheat:Citer", _source)

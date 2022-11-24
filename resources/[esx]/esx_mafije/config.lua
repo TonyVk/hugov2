@@ -9,8 +9,8 @@ Config.Locale                     = 'hr'
 Config.Blipovi					  = true
 Config.Price 					  = 1500
 Config.RepairMultiplier 		  = 1
-Config.Tijelo 					  = "ndrangheta"
-Config.Automafija 				  = "automafija"
+Config.Tijelo 					  = ""
+Config.Automafija 				  = ""
 Config.Impound 					  = vector3(-2611.5349121094, 1685.0986328125, 140.86622619629)
 Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 1.0 }
 Config.Markeri = {

@@ -6,7 +6,7 @@ AddEventHandler('kosac:EoPlace', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
     if xPlayer.posao.name == 'kosac' then
-		xPlayer.addMoney(14)
+		xPlayer.addMoney(5)
 		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(14*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
@@ -19,7 +19,7 @@ AddEventHandler('kosac:EoPlace2', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.posao.name == 'kosac' then
-		xPlayer.addMoney(7)
+		xPlayer.addMoney(3)
 		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(7*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")

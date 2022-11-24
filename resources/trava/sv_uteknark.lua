@@ -13,7 +13,7 @@ end)
 RegisterServerEvent('droge:prodajih')
 AddEventHandler('droge:prodajih', function(itemName, amount, torba)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local price = 200
+	local price = 20
     price = math.ceil(price * amount)
 	local xItem = xPlayer.getInventoryItem(itemName)
     if xPlayer.getMoney() < price then
