@@ -723,13 +723,14 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	if mjenjac == 1 then
 		if modelPrice and xPlayer.getMoney() >= (modelPrice+5000) then
 			xPlayer.removeMoney(modelPrice+5000)
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac, servis) VALUES (@owner, @plate, @vehicle, @model, @mj, @serv)', {
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac, servis, naziv) VALUES (@owner, @plate, @vehicle, @model, @mj, @serv, @naziv)', {
 				['@owner']   = xPlayer.getID(),
 				['@plate']   = plate,
 				['@vehicle'] = json.encode(vd),
 				['@model'] = GetHashKey(model),
 				['@mj'] = mjenjac,
-				['@serv'] = math.random(5000, 30000)
+				['@serv'] = math.random(5000, 30000),
+				['@naziv'] = modelName
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
 				TriggerEvent("DiscordBot:Vozila", GetPlayerName(_source).." je kupio "..modelName.."(automatik)["..plate.."] u salonu za $"..modelPrice+5000)
@@ -741,13 +742,14 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	elseif mjenjac == 2 then
 		if modelPrice and xPlayer.getMoney() >= modelPrice then
 			xPlayer.removeMoney(modelPrice)
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac, servis) VALUES (@owner, @plate, @vehicle, @model, @mj, @serv)', {
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac, servis, naziv) VALUES (@owner, @plate, @vehicle, @model, @mj, @serv, @naziv)', {
 				['@owner']   = xPlayer.getID(),
 				['@plate']   = plate,
 				['@vehicle'] = json.encode(vd),
 				['@model'] = GetHashKey(model),
 				['@mj'] = mjenjac,
-				['@serv'] = math.random(5000, 30000)
+				['@serv'] = math.random(5000, 30000),
+				['@naziv'] = modelName
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
 				TriggerEvent("DiscordBot:Vozila", GetPlayerName(_source).." je kupio "..modelName.."(rucni)["..plate.."] u salonu za $"..modelPrice)
@@ -760,13 +762,14 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 	elseif mjenjac == 3 then
 		if modelPrice and xPlayer.getMoney() >= modelPrice then
 			xPlayer.removeMoney(modelPrice)
-			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac, brod) VALUES (@owner, @plate, @vehicle, @model, @mj, @br)', {
+			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, plate, vehicle, model, mjenjac, brod, naziv) VALUES (@owner, @plate, @vehicle, @model, @mj, @br, @naziv)', {
 				['@owner']   = xPlayer.getID(),
 				['@plate']   = plate,
 				['@vehicle'] = json.encode(vd),
 				['@model'] = GetHashKey(model),
 				['@mj'] = 1,
-				['@br'] = 1
+				['@br'] = 1,
+				['@naziv'] = modelName
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
 				TriggerEvent("DiscordBot:Vozila", GetPlayerName(_source).." je kupio "..modelName.."(brod)["..plate.."] u salonu za $"..modelPrice)
