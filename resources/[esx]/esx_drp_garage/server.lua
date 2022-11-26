@@ -103,10 +103,12 @@ RegisterNetEvent('garaza:ObrisiVozilo')
 AddEventHandler('garaza:ObrisiVozilo', function(nid)
 	local src = source
 	for i=1, #Vozila, 1 do
-		if Vozila[i].source == src then
-			local veh = NetworkGetEntityFromNetworkId(Vozila[i].id)
-			DeleteEntity(veh)
-			table.remove(Vozila, i)
+		if Vozila[i] then
+			if Vozila[i].source == src then
+				local veh = NetworkGetEntityFromNetworkId(Vozila[i].id)
+				DeleteEntity(veh)
+				table.remove(Vozila, i)
+			end
 		end
 	end
 end)
