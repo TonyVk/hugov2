@@ -1489,11 +1489,11 @@ AddEventHandler('esx_firme:hasEnteredMarker', function(zone, id, tip, cpid, trgi
 	CurrentTrgID = trgid
 end)
 
-AddEventHandler('esx_firme:hasExitedMarker', function(zone)
+AddEventHandler('esx_firme:hasExitedMarker', function(zone, ime)
 	CurrentAction = nil
 	CurrentTip = nil
 	ESX.UI.Menu.CloseAll()
-	if not HasPaid then
+	if not HasPaid and ime == "frizerski_menu" and ime == "odjeca_menu" then
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 			TriggerEvent('skinchanger:loadSkin', skin) 
 		end)
@@ -2415,7 +2415,7 @@ Citizen.CreateThread(function()
 		end
 		if not isInMarker and HasAlreadyEnteredMarker then
 			HasAlreadyEnteredMarker = false
-			TriggerEvent('esx_firme:hasExitedMarker', LastZone)
+			TriggerEvent('esx_firme:hasExitedMarker', LastZone, currentZone)
 		end
 		
 		if nasosta == 0 then
