@@ -698,16 +698,19 @@ function UpdateMods2(nar, data)
 				else
 					props['neonEnabled'] = { true, true, true, true }
 				end
+				FreezeEntityPosition(vehicle, false)
 				ESX.Game.SetVehicleProperties(vehicle, props)
 				props = {}
 			elseif data.modType == 'tyreSmokeColor' then
 				props['modSmokeEnabled'] = true
 				ESX.Game.SetVehicleProperties(vehicle, props)
+				FreezeEntityPosition(vehicle, false)
 				props = {}
 			elseif data.modType == 'stage' then
 				TriggerServerEvent("stage:PromjeniStage", data.modNum, globalplate)
 				Wait(500)
 				TriggerEvent('stage:Provjera', -1)
+				FreezeEntityPosition(vehicle, false)
 			elseif data.modType == 'mjenjac' then
 				local ped = PlayerPedId()
 				TaskLeaveVehicle(ped, vehicle, 16)
@@ -836,6 +839,7 @@ function UpdateMods2(nar, data)
 					TriggerEvent("EoTiIzSalona", 2)
 				end
 				TriggerServerEvent("meh:PromjeniMjenjac", data.modNum, globalplate)
+				FreezeEntityPosition(vehicle, false)
 			elseif data.modType == 'swap' then
 				if prop_ent ~= nil then
 					DeleteObject(prop_ent)
@@ -1023,6 +1027,7 @@ function UpdateMods2(nar, data)
 				--TriggerEvent('stage:Provjera', -1)
 			elseif data.modType == 'zracni' then
 				TriggerServerEvent("ovjes:PromjeniOvjes", data.modNum, globalplate)
+				FreezeEntityPosition(vehicle, false)
 			elseif data.modType == 'popravak' then
 				if data.modNum == 1 then
 					local ped = PlayerPedId()
@@ -1145,6 +1150,7 @@ function UpdateMods2(nar, data)
 					DeleteEntity(vehjack)
 					SetEntityCollision(veh, true, true)
 					RemoveAnimDict(dict)
+					FreezeEntityPosition(veh, false)
 				else
 					FreezeEntityPosition(vehicle, true)
 					TaskLeaveVehicle(PlayerPedId(), vehicle, 0)
@@ -1189,6 +1195,7 @@ function UpdateMods2(nar, data)
 			end
 			props[data.modType] = data.modNum
 			ESX.Game.SetVehicleProperties(vehicle, props)
+			SetVehicleUndriveable(vehicle, false)
 			TriggerEvent("esx_lscustom:installMod")
 			lsMenuIsShowed = false
 			TriggerServerEvent("narudzbe:MakniDio", nar, data.modType)
