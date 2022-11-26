@@ -16,13 +16,6 @@ Citizen.CreateThread(function()
 	ESX.PlayerData = ESX.GetPlayerData()
 end)
 
-function DrawSub(msg, time)
-	ClearPrints()
-	BeginTextCommandPrint('STRING')
-	AddTextComponentSubstringPlayerName(msg)
-	EndTextCommandPrint(time, 1)
-end
-
 function ShowLoadingPromt(msg, time, type)
 	Citizen.CreateThread(function()
 		Citizen.Wait(0)
@@ -111,7 +104,7 @@ function StopTaxiJob()
 
 	ClearCurrentMission()
 	OnJob = false
-	DrawSub(_U('mission_complete'), 5000)
+	ESX.ShowNotification(_U('mission_complete'))
 end
 
 function OpenCloakroom()

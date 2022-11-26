@@ -60,7 +60,7 @@ AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 		return
 	end
 	
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 6, function(inventory)
 		local item = inventory.getItem(itemName)
 		local sourceItem = xPlayer.getInventoryItem(itemName)
 
@@ -82,7 +82,7 @@ AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 end)
 
 ESX.RegisterServerCallback('esx_taxijob:getStockItems', function(source, cb)
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 6, function(inventory)
 		cb(inventory.items)
 	end)
 end)
@@ -96,7 +96,7 @@ AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
 		return
 	end
 
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_taxi', function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 6, function(inventory)
 		local item = inventory.getItem(itemName)
 
 		if item.count >= 0 then
