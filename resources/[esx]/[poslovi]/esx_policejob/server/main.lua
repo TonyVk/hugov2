@@ -68,9 +68,9 @@ ESX.RegisterServerCallback('policija:getOnlinePlayers', function(source, cb, job
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 		if xPlayer then
 			if tonumber(xPlayer.getJob().id) ~= tonumber(job) then
-				local ime = xPlayer.getName()
+				local ime = xPlayer.getRPName()
 				if #ime == 0 then
-					ime = "Debil Bez RP imena"
+					ime = xPlayer.getName()
 				end
 				table.insert(players, {
 					value      = xPlayer.source,

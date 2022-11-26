@@ -27,6 +27,9 @@ AddEventHandler('skin:SpremiPodatke', function(data)
 		['@dat'] = data.datum,
 		['@identifier'] = xPlayer.getID()
 	})
+	xPlayer.setFirstname(data.ime)
+	xPlayer.setLastname(data.prezime)
+	xPlayer.setRPName(data.ime.." "..data.prezime)
 end)
 
 RegisterServerEvent('spawn:SetajBucket')

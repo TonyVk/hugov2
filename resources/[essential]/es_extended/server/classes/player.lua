@@ -67,6 +67,18 @@ function CreateExtendedPlayer(player, accounts, inventory, job, posao, loadout, 
 		return self.rpprezime
 	end
 
+	self.setFirstname = function(ime)
+		self.rpime = ime
+	end
+
+	self.setLastname = function(prez)
+		self.rpprezime = prez
+	end
+
+	self.setRPName = function(ime)
+		self.ime = ime
+	end
+
 	self.getFirma = function()
 		return self.firma
 	end
