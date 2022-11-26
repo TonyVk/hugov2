@@ -30,7 +30,7 @@ Config.Zones = {
 	},
 
 	VehicleSpawnPoint = {
-		Pos     = {x = 898.237, y = -151.117, z = 75.559},
+		Pos     = vector3(898.237, -151.117, 75.559),
 		Size    = {x = 1.5, y = 1.5, z = 1.0},
 		Type    = -1, Rotate = false,
 		Heading = 328.66
