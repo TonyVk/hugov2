@@ -68,7 +68,7 @@ window.onload = function () {
 				if (config.showWalletMoney == true) { document.querySelector('#wallet').style.display = 'block'; }
 				if (config.showBankMoney == true) { document.querySelector('#bank').style.display = 'block'; }
 				if (config.showBlackMoney == true) { document.querySelector('#blackMoney').style.display = 'block'; }
-				if (config.showSocietyMoney == true) { document.querySelector('#society').style.display = 'block'; }
+				if (config.showSocietyMoney == true) { document.querySelector('#society').style.display = 'block'; document.querySelector('#noviDiv').style.bottom = '39px'; }
 
 				if (config.showHealth == true) { document.querySelector('#health').style.display = 'block'; }
 				if (config.showArmor == true) { document.querySelector('#armor').style.display = 'block'; }
@@ -85,6 +85,13 @@ window.onload = function () {
 			element: function(data) {
 				if (data.task == 'enable') { document.querySelector('#'+data.value).style.display = 'block'; }
 				else if (data.task == 'disable') { document.querySelector('#'+data.value).style.display = 'none'; }
+				if(data.value == "society"){
+					if(data.task == "enable"){
+						document.querySelector('#noviDiv').style.bottom = '39px';
+					}else{
+						document.querySelector('#noviDiv').style.bottom = '0px';
+					}
+				}
 			},
 			setText: function(data) {
 				var key = document.querySelector('#'+data.id+' span');

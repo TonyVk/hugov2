@@ -67,6 +67,12 @@ ESX.RegisterServerCallback('ovjes:DajStari', function(source, cb, netid)
 	end
 end)
 
+ESX.RegisterServerCallback('soc:DajLovu', function(source, cb, maf)
+	TriggerEvent('esx_addonaccount:getSharedAccount', "society_"..maf, function (account)
+		cb(account)
+	end)
+end)
+
 RegisterServerEvent('trew_hud_ui:syncCarLights')
 AddEventHandler('trew_hud_ui:syncCarLights', function(status)
 	TriggerClientEvent('trew_hud_ui:syncCarLights', -1, source, status)

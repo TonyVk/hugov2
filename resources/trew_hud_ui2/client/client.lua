@@ -58,6 +58,12 @@ Citizen.CreateThread(function()
 	Wait(1000)
 	DisplayHud(false)
 	ESX.PlayerData = ESX.GetPlayerData()
+	if ESX.PlayerData.job.grade_name == 'boss' then
+		ESX.TriggerServerCallback('soc:DajLovu', function(status)
+			SendNUIMessage({ action = 'setMoney', id = 'society', value = status.money })
+		end, ESX.PlayerData.job.name)
+		Config.ui.showSocietyMoney = true
+	end
 	SendNUIMessage({ action = 'ui', config = Config.ui })
 	SendNUIMessage({ action = 'setFont', url = Config.font.url, name = Config.font.name })
 	
@@ -2032,6 +2038,14 @@ function has_value(tab, val)
     return false
 end
 
+RegisterNetEvent('esx_addonaccount:setMoney')
+AddEventHandler('esx_addonaccount:setMoney', function(ime, lova)
+	local soc = "society_"..ESX.PlayerData.job.name
+	if soc == ime then
+		SendNUIMessage({ action = 'setMoney', id = 'society', value = lova })
+	end
+end)
+
 RegisterNetEvent('es:activateMoney')
 AddEventHandler('es:activateMoney', function(e)
 	SendNUIMessage({ action = 'setMoney', id = 'wallet', value = e })
@@ -2110,6 +2124,14 @@ AddEventHandler('esx:setJob', function(job)
 		ime = ESX.PlayerData.job.label .. ': ' .. ESX.PlayerData.job.grade_label
 	end
 	SendNUIMessage({ action = 'setText', id = 'job', value = ime })
+	if ESX.PlayerData.job.grade_name == 'boss' then
+		ESX.TriggerServerCallback('soc:DajLovu', function(status)
+			SendNUIMessage({ action = 'setMoney', id = 'society', value = status.money })
+			SendNUIMessage({ action = 'element', task = 'enable', value = 'society' })
+		end, job.name)
+	else
+		SendNUIMessage({ action = 'element', task = 'disable', value = 'society' })
+	end
 end)
 
 exports('createStatus', function(args)
