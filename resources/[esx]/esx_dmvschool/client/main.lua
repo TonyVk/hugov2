@@ -117,66 +117,69 @@ CurrentZoneType = type
 end
 
 function OpenDMVSchoolMenu()
-	local ownedLicenses = {}
+	ESX.TriggerServerCallback('polaganje:DajLicence', function(lic)
+		Licenses = lic
+		local ownedLicenses = {}
 
-	for i=1, #Licenses, 1 do
-		ownedLicenses[Licenses[i].type] = true
-	end
+		for i=1, #Licenses, 1 do
+			ownedLicenses[Licenses[i].type] = true
+		end
 
-	local elements = {}
+		local elements = {}
 
-	if not ownedLicenses['dmv'] then
-		table.insert(elements, {
-			label = (('%s: <span style="color:green;">%s</span>'):format(_U('theory_test'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['dmv'])))),
-			value = 'theory_test'
-		})
-	end
-
-	if ownedLicenses['dmv'] then
-		if not ownedLicenses['drive'] then
+		if not ownedLicenses['dmv'] then
 			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_car'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive'])))),
-				value = 'drive_test',
-				type = 'drive'
+				label = (('%s: <span style="color:green;">%s</span>'):format(_U('theory_test'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['dmv'])))),
+				value = 'theory_test'
 			})
 		end
 
-		if not ownedLicenses['drive_bike'] then
-			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_bike'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_bike'])))),
-				value = 'drive_test',
-				type = 'drive_bike'
-			})
+		if ownedLicenses['dmv'] then
+			if not ownedLicenses['drive'] then
+				table.insert(elements, {
+					label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_car'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive'])))),
+					value = 'drive_test',
+					type = 'drive'
+				})
+			end
+
+			if not ownedLicenses['drive_bike'] then
+				table.insert(elements, {
+					label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_bike'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_bike'])))),
+					value = 'drive_test',
+					type = 'drive_bike'
+				})
+			end
+
+			if not ownedLicenses['drive_truck'] then
+				table.insert(elements, {
+					label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_truck'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
+					value = 'drive_test',
+					type = 'drive_truck'
+				})
+			end
 		end
 
-		if not ownedLicenses['drive_truck'] then
-			table.insert(elements, {
-				label = (('%s: <span style="color:green;">%s</span>'):format(_U('road_test_truck'), _U('school_item', ESX.Math.GroupDigits(Config.Prices['drive_truck'])))),
-				value = 'drive_test',
-				type = 'drive_truck'
-			})
-		end
-	end
+		ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.CloseAll()
-
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dmvschool_actions', {
-		title    = _U('driving_school'),
-		elements = elements,
-		align    = 'top-left'
-	}, function(data, menu)
-		if data.current.value == 'theory_test' then
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'dmvschool_actions', {
+			title    = _U('driving_school'),
+			elements = elements,
+			align    = 'top-left'
+		}, function(data, menu)
+			if data.current.value == 'theory_test' then
+				menu.close()
+				StartTheoryTest()
+			elseif data.current.value == 'drive_test' then
+				StartDriveTest(data.current.type)
+			end
+		end, function(data, menu)
 			menu.close()
-			StartTheoryTest()
-		elseif data.current.value == 'drive_test' then
-			StartDriveTest(data.current.type)
-		end
-	end, function(data, menu)
-		menu.close()
 
-		CurrentAction     = 'dmvschool_menu'
-		CurrentActionMsg  = _U('press_open_menu')
-		CurrentActionData = {}
+			CurrentAction     = 'dmvschool_menu'
+			CurrentActionMsg  = _U('press_open_menu')
+			CurrentActionData = {}
+		end)
 	end)
 end
 

@@ -453,6 +453,15 @@ RegisterCommand("testpitanje", function(source, args, rawCommandString)
 	TriggerClientEvent("upit:OtvoriPitanje", 2, "prodajoruzje", "Alkotest", "Jel Ficho pijan?")
 end, false)
 
+-- Commands
+TriggerEvent('es:addGroupCommand', 'askin', 'admin', function(source, args, user)
+	if args and args[1] then
+		TriggerClientEvent('esx_skin:openSaveableMenu', args[1])
+	end
+end, function(source, args, user)
+	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
+end, {help = "Otvori skin menu"})
+
 RegisterServerEvent("SpremiLog")
 AddEventHandler("SpremiLog", function(tekst)
  filea = io.open("Logovi.txt", "a")

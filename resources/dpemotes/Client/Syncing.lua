@@ -140,9 +140,10 @@ function MearbysOnCommand(source, args, raw)
 end
 
 function SimpleNotify(message)
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(message)
-    DrawNotification(0,1)
+    -- SetNotificationTextEntry("STRING")
+    -- AddTextComponentString(message)
+    -- DrawNotification(0,1)
+    TriggerEvent("esx:showNotification", message)
 end
 
 function GetClosestPlayer()

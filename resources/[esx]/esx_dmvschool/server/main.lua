@@ -19,6 +19,13 @@ AddEventHandler('esx_dmvschool:addLicense', function(type)
 	end)
 end)
 
+ESX.RegisterServerCallback('polaganje:DajLicence', function(source, cb)
+	TriggerEvent('esx_license:getLicenses', source, function(licenses)
+		cb(licenses)
+		--TriggerClientEvent('esx_dmvschool:loadLicenses', source, licenses)
+	end)
+end)
+
 RegisterNetEvent('polozi:tuljana')
 AddEventHandler('polozi:tuljana', function(price)
 	local _source = source

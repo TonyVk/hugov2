@@ -66,14 +66,20 @@ ESX.RegisterServerCallback('policija:getOnlinePlayers', function(source, cb, job
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		if tonumber(xPlayer.getJob().id) ~= tonumber(job) then
-			table.insert(players, {
-				value      = xPlayer.source,
-				identifier = xPlayer.id,
-				label      = xPlayer.getRPName()
-			})
+		if xPlayer then
+			if tonumber(xPlayer.getJob().id) ~= tonumber(job) then
+				local ime = xPlayer.getName()
+				if #ime == 0 then
+					ime = "Debil Bez RP imena"
+				end
+				table.insert(players, {
+					value      = xPlayer.source,
+					identifier = xPlayer.id,
+					label      = ime
+				})
+			end
 		end
-		Wait(100)
+		--Wait(100)
 	end
 	cb(players)
 end)

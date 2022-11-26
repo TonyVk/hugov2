@@ -1076,7 +1076,7 @@ function Status()
 		elseif Statusi[i].name == "thirst" then
 			zedj = math.floor(Statusi[i].percent)
 			if zedj > 0 then
-				zedj = zedj-2
+				zedj = zedj-1
 			else
 				if not IsEntityDead(ped) then
 					SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)

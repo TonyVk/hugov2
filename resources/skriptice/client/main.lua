@@ -190,18 +190,18 @@ Citizen.CreateThread(function()
 		SetDiscordAppId(693292673058078740)
 
         --Here you will have to put the image name for the "large" icon.
-		SetDiscordRichPresenceAsset('seallogo')
+		SetDiscordRichPresenceAsset('logo')
         
         --(11-11-2018) New Natives:
 		
         --Here you can add hover text for the "large" icon.
-        SetDiscordRichPresenceAssetText('https://discord.gg/')
-		SetDiscordRichPresenceAction(0, "Pridruži se", "fivem://ip")
+        SetDiscordRichPresenceAssetText('https://discord.gg/hugorp')
+		SetDiscordRichPresenceAction(0, "Pridruzi se", "fivem://ip")
 		while ESX == nil do
 			Wait(0)
 		end
 		ESX.TriggerServerCallback('discord:DohvatiIgrace', function(br)
-			local str = "Igraci: "..br.."/120"
+			local str = "Igraci: "..br.."/128"
 			SetRichPresence(str)
 		end)
 
@@ -209,6 +209,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(300000)
 	end
 end)
+
 
 local function isPedDrivingAVehicle()
 	local ped = GetPlayerPed(-1)

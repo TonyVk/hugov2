@@ -69,6 +69,13 @@ Citizen.CreateThread(function()
   ProvjeriPosao()
 end)
 
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(1)
+		DisablePlayerVehicleRewards(PlayerId())	
+	end
+end)
+
 RegisterNetEvent('esx:SjelaPlaca')
 AddEventHandler('esx:SjelaPlaca', function()
 	local porez = 0

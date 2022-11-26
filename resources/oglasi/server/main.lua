@@ -16,7 +16,7 @@ AddEventHandler('oglasi:DodajOglas', function(tekst)
             ['@prez']  = xPlayer.getLastname(),
             ['@tekst']  = tekst
         }, function(insertId)
-            MySQL.Async.fetchAll("select @s:=@s+1 as br, id from yellow_tweets, (SELECT @s:= 0) AS s where novine = 0", {}, function(result)
+            MySQL.Async.fetchAll("select ROW_NUMBER() OVER () as br, id from yellow_tweets where novine = 0", {}, function(result)
                 local broj = 0
                 for i=1, #result, 1 do
                     if result[i] and result[i].id == insertId then
