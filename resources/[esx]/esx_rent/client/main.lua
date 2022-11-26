@@ -10,7 +10,6 @@ local LastZone                  = nil
 local CurrentActionMsg          = ''
 local CurrentActionData         = {}
 local Rentao                    = false
-local RVozilo                   = nil
 local RentID                    = nil
 local RentIDVozilo              = nil
 local Blipovi                   = {}
@@ -552,7 +551,6 @@ function OpenRentMenu(rid)
                                         Rentao = true
                                         ESX.Game.SpawnVehicle(data3.current.value, Rent[id].koord, 0.0, function (vehicle)
                                             TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-                                            RVozilo = vehicle
                                             RentID = rid
                                             RentIDVozilo = data3.current.value
                                             local netid = VehToNet(vehicle)
@@ -699,8 +697,6 @@ RegisterCommand('unrent', function()
     if Rentao then
         Rentao = false
         ESX.ShowNotification("Unrentali ste vozilo.")
-        ESX.Game.DeleteVehicle(RVozilo)
-        RVozilo = nil
         RentID = nil
         RentIDVozilo = nil
         TriggerServerEvent("rent:MakniVozilo")
@@ -716,8 +712,7 @@ function UzmiLovu()
                 SetTimeout(Config.Interval, UzmiLovu)
             else
                 Rentao = false
-                ESX.Game.DeleteVehicle(RVozilo)
-                RVozilo = nil
+                TriggerServerEvent("rent:MakniVozilo")
                 RentID = nil
                 RentIDVozilo = nil
             end

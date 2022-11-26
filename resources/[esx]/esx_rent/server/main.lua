@@ -410,6 +410,8 @@ AddEventHandler('rent:MakniVozilo', function()
     local src = source
     for i=1, #Vozila, 1 do
 		if Vozila[i] ~= nil and Vozila[i].source == src then
+            local ent = NetworkGetEntityFromNetworkId(Vozila[i].netid)
+			DeleteEntity(ent)
             table.remove(Vozila, i)
             break
         end
