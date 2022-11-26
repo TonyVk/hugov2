@@ -284,6 +284,10 @@ ESX.RegisterServerCallback('esx_property:getPlayerDressing', function(source, cb
     end)
 end)
 
+ESX.RegisterServerCallback('kuce:DohvatiKuce', function(source, cb)
+	cb(Config.Houses)
+end)
+
 RegisterNetEvent('kuce:SpawnVozilo')
 AddEventHandler('kuce:SpawnVozilo', function(vehicle, co, he)
 	local _source = source

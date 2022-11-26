@@ -19,6 +19,9 @@ Citizen.CreateThread(function()
 			BrojiVrijeme()
 		end
 	end)
+	ESX.TriggerServerCallback('kuce:DohvatiKuce', function (kuce)
+		Config.Houses = kuce
+	end)
 end)
 
 local objektici = {
@@ -55,53 +58,9 @@ local interijeri = {
     [3] = {x = -682.39172363281, y = 592.84936523438, z = 144.37977600098}
 }
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-    ESX.TriggerServerCallback('pkuca:DohvatiVrijeme', function (vrijeme)
-		Minute = vrijeme
-		if vrijeme > 0 then
-			BrojiVrijeme()
-		end
-	end)
-end)
-
-AddEventHandler('instance:loaded', function()
-	TriggerEvent('instance:registerType', 'pljacka', function(instance)
-		
-	end, function(instance)
-		
-	end)
-end)
-
-RegisterNetEvent('instance:onEnter')
-AddEventHandler('instance:onEnter', function(instance)
-	if instance.type == 'pljacka' then
-		ESX.ShowNotification("Provalili ste u kucu!")
-	end
-end)
-
-RegisterNetEvent('instance:onLeave')
-AddEventHandler('instance:onLeave', function(instance)
-	if instance.type == 'pljacka' then
-		ESX.ShowNotification("Izasli ste iz kuce!")
-		Wait(1000)
-		SetEntityCollision(PlayerPedId(), true, true)
-		SetEntityVisible(PlayerPedId(), true, false)
-	end
-end)
-
-RegisterNetEvent('instance:onCreate')
-AddEventHandler('instance:onCreate', function(instance)
-	if instance.type == 'pljacka' then
-		TriggerEvent('instance:enter', instance)
-	end
-end)
-
-RegisterNetEvent('instance:onPlayerLeft')
-AddEventHandler('instance:onPlayerLeft', function(instance, player)
-	if player == instance.host then
-		TriggerEvent('instance:leave')
-	end
+RegisterNetEvent('loaf_housing:SaljiKucice')
+AddEventHandler('loaf_housing:SaljiKucice', function(kuce)
+	Config.Houses = kuce
 end)
 
 AddEventHandler('pkuca:hasEnteredMarker', function(zone)
@@ -189,7 +148,8 @@ Citizen.CreateThread(function()
 									kuca = math.random(1, 3)
 									ulaz = GetEntityCoords(PlayerPedId())
 									local ime = "Pljacka"..GetPlayerServerId(PlayerId())
-									TriggerEvent('instance:create', 'pljacka', {property = ime, owner = ESX.GetPlayerData().identifier})
+									TriggerServerEvent("firme:PostaviBucket", GetPlayerServerId(PlayerId()))
+									ESX.ShowNotification("Provalili ste u kucu!")
 									SetEntityCoords(PlayerPedId(), interijeri[kuca].x, interijeri[kuca].y, interijeri[kuca].z)
 									izlaz = vector3(interijeri[kuca].x, interijeri[kuca].y, interijeri[kuca].z)
 									brojac = 0
@@ -253,11 +213,9 @@ Citizen.CreateThread(function()
 						end
 					end
 					kuca = nil
-					TriggerEvent('instance:leave')
-					TriggerEvent('instance:close')
+					TriggerServerEvent("firme:PostaviBucket", 0)
 					TriggerServerEvent("pkuca:NekiEvent", false)
-					SetEntityCollision(PlayerPedId(), true, true)
-					SetEntityVisible(PlayerPedId(), true, false)
+					ESX.ShowNotification("Izasli ste iz kuce!")
 					BrojiVrijeme()
 					Wait(300)
 					DoScreenFadeIn(100)
