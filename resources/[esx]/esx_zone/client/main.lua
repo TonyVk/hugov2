@@ -267,7 +267,7 @@ AddEventHandler('zone:DodajPeda', function(ime, koord, head)
 				Zone[i].PedKoord = koord
 				Zone[i].PedHead = head
 				if Zone[i].Ped == nil then
-					local pedmodel = GetHashKey("s_m_y_dealer_01")
+					local pedmodel = GetHashKey("csb_chef")
 					LoadModel(pedmodel)
 					Zone[i].Ped = CreatePed(0, pedmodel, koord - vector3(0.0, 0.0, 1.0), head, false, true)
 					SetModelAsNoLongerNeeded(pedmodel)
