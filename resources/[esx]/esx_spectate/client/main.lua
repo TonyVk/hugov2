@@ -318,6 +318,12 @@ RegisterNUICallback('kick', function(data, cb)
 end)
 
 Citizen.CreateThread(function()
+	while ESX == nil do
+		Wait(1)
+	end
+	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+		perm = br
+	end)
   	while true do
 		Wait(0)
 		if InSpectatorMode then
