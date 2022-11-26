@@ -1737,6 +1737,17 @@ end, false)
 RegisterKeyMapping('+pokazi', 'Pokazi prstom', 'keyboard', 'b')
 
 Citizen.CreateThread(function()
+	while ESX == nil do
+		Wait(1)
+		SendNUIMessage({
+			prikazi = true,
+			id = GetPlayerServerId(PlayerId())
+		})
+		ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
+			perm = br
+		end)
+		prvispawn = true
+	end
 	local waitara = 500
 	while true do
 		Citizen.Wait(waitara)
