@@ -1792,6 +1792,8 @@ Citizen.CreateThread(function()
 						ESX.UI.Menu.CloseAll()
 						GetAction({value = 'main'})
 					end
+				else
+					FreezeEntityPosition(vehicle, false)
 				end
 				if isInLSMarker2 then
 					--if GetPedInVehicleSeat(GetVehiclePedIsIn(playerPed, false), -1) == playerPed then
@@ -1801,6 +1803,8 @@ Citizen.CreateThread(function()
 						OpenIzborMenu()
 						--OtvoriNarudzbu(myCar.plate)
 					--end
+				else
+					FreezeEntityPosition(vehicle, false)
 				end
 			end
 
