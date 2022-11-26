@@ -294,7 +294,7 @@ function getInventoryWeight(inventory)
     return weight
 end
 
-AddEventHandler("playerEnteredScope", function(data)
+--[[AddEventHandler("playerEnteredScope", function(data)
     local playerEntering, player = data["player"], data["for"]
 	local veh = GetVehiclePedIsIn(GetPlayerPed(player))
 	local net = NetworkGetNetworkIdFromEntity(veh)
@@ -304,7 +304,7 @@ AddEventHandler("playerEnteredScope", function(data)
 			break
 		end
 	end
-end)
+end)]]
 
 RegisterServerEvent('gepeke:getOwnedVehicule')
 AddEventHandler('gepeke:getOwnedVehicule', function()

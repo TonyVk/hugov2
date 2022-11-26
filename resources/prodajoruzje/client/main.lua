@@ -1082,7 +1082,7 @@ RegisterCommand("zvukvozila", function(source, args, raw)
 	end
 end)
 
-RegisterNetEvent('vozila:NoviZvuk')
+--[[RegisterNetEvent('vozila:NoviZvuk')
 AddEventHandler('vozila:NoviZvuk', function(id, netid, zvuk)
 	if GetPlayerServerId(PlayerId()) ~= id then
 		Wait(500)
@@ -1092,7 +1092,7 @@ AddEventHandler('vozila:NoviZvuk', function(id, netid, zvuk)
 			ForceVehicleEngineAudio(vehicle, zvuk)
 		end
 	end
-end)
+end)]]
 
 RegisterCommand("prebaci", function()
     Citizen.CreateThread(function()
