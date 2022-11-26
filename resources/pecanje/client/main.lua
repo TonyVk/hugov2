@@ -52,7 +52,7 @@ AddEventHandler('ribar:ProdajRibu', function(data)
 		if br then
 			ESX.ShowNotification("Prodali ste "..kol.."x riba za $"..cij)
 		else
-			ESX.ShowNotification("Nemate listova kokaina za prodati!")
+			ESX.ShowNotification("Nemate ribe za prodati!")
 		end
 	end)
 end)
