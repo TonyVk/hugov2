@@ -118,11 +118,14 @@ end)
 end)]]
 
 function PokazDokument(title, subject, msg, icon, iconType, color)
+	DisplayHud(true)
     SetNotificationTextEntry('STRING')
     SetNotificationBackgroundColor(color)
 	AddTextComponentString(msg)
 	SetNotificationMessage(icon, icon, false, iconType, title, subject)
 	DrawNotification(false, false)
+	Wait(5000)
+	DisplayHud(false)
 end
 
 local plateModel = "prop_fib_badge"
