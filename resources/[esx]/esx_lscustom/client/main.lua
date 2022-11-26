@@ -1244,8 +1244,10 @@ function GetAction(data)
 						TriggerServerEvent('esx_billing:posaljiTuljana', srwID, 'society_mechanic', "Mehanicar | Dijelovi", cijena)
 						TriggerServerEvent("meh:NaruciDijelove", Narudzba, srwID)
 						ESX.ShowNotification("Narucili ste dijelove")
+						FreezeEntityPosition(vehicle, false)
 					else
 						ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
+						FreezeEntityPosition(vehicle, false)
 					end
 					lsMenuIsShowed = false
 					Narudzba = {}
@@ -1270,6 +1272,7 @@ function GetAction(data)
 				ESX.ShowNotification("Odustali ste od narudzbe")
 				Narudzba = {}
 				lsMenuIsShowed = false
+				FreezeEntityPosition(vehicle, false)
 				--UpdateMods(data.current)
 			end)
 		else
