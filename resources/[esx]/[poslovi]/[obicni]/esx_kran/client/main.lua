@@ -191,6 +191,7 @@ AddEventHandler('kran:Vozilo', function(data)
 end)
 
 function ZapocniPosao()
+	TriggerEvent("NeKickaj", true)
 	zadnjaCoord = GetEntityCoords(PlayerPedId())
 	ESX.ShowNotification("Ukoliko zelite zavrsiti ranije upisite /zavrsikran", 5000)
 	Radis = true
@@ -457,6 +458,7 @@ end
 
 function ZavrsiPosao()
 	if Radis then
+		TriggerEvent("NeKickaj", false)
 		Radis = false
 		DetachEntity(attObj2, true, true)
 		SetEntityCoords(attObj2, zadnjaCoord.x, zadnjaCoord.y, zadnjaCoord.z)

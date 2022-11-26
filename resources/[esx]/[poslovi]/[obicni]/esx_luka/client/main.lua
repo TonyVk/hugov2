@@ -193,6 +193,7 @@ AddEventHandler('luka:Vozilo', function(data)
 end)
 
 function ZapocniPosao()
+	TriggerEvent("NeKickaj", true)
 	Radis = true
 	local removeprops = {
 		"prop_dock_crane_01",
@@ -818,6 +819,7 @@ RegisterNUICallback(
 
 function ZavrsiPosao()
 	if Radis then
+		TriggerEvent("NeKickaj", false)
 		Radis = false
 		TriggerEvent("MakniHud", false)
 		local removeprops = {
