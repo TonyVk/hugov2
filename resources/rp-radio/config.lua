@@ -2,7 +2,7 @@ radioConfig = {
     Controls = {
         Activator = { -- Open/Close Radio
             Name = "INPUT_SELECT_CHARACTER_TREVOR", -- Control name
-            Key = 168, -- F7
+            Key = 56, -- F9
         },
         Secondary = {
             Name = "INPUT_SPRINT",
