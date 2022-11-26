@@ -4455,7 +4455,7 @@ function OpenBodySearchMenu(player)
 				imalga = HasPedGotWeapon(PlayerPedId() , itemName, false)
 			end
 			local kord1 = GetEntityCoords(PlayerPedId())
-			local kord2 = GetEntityCoords(player)
+			local kord2 = GetEntityCoords(GetPlayerPed(player))
 			if #(kord1-kord2) <= 3.0 then
 				if torba == 40 or torba == 41 or torba == 44 or torba == 45 then
 					TriggerServerEvent('mafije:zapljeni6', GetPlayerServerId(player), itemType, itemName, amount, true, imalga)
