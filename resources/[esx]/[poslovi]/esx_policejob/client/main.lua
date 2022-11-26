@@ -544,6 +544,10 @@ function OpenCloakroomMenu()
 				playerInService = false
 				ESX.ShowNotification(_U('service_out'))
 				RemoveAllPedWeapons(PlayerId(), false)
+				exports["rp-radio"]:SetRadio(false)
+				exports["rp-radio"]:RemovePlayerAccessToFrequency(1)
+				exports["rp-radio"]:RemovePlayerAccessToFrequency(2)
+				exports["rp-radio"]:RemovePlayerAccessToFrequency(6)
 			end
 
 			if Config.MaxInService ~= -1 then
@@ -633,6 +637,10 @@ function OpenCloakroomMenu()
 			playerInService = true
 			ESX.ShowNotification(_U('service_in'))
 			setUniform(data.current.value, PlayerPedId())
+			exports["rp-radio"]:SetRadio(true)
+			exports["rp-radio"]:GivePlayerAccessToFrequency(1)
+			exports["rp-radio"]:GivePlayerAccessToFrequency(2)
+			exports["rp-radio"]:GivePlayerAccessToFrequency(6)
 		end
 
 		if data.current.value == 'freemode_ped' then
@@ -1534,7 +1542,7 @@ function OpenBodySearchMenu(player)
 		}, function(data, menu)
 			if data.current.value then
 				local kord1 = GetEntityCoords(PlayerPedId())
-				local kord2 = GetEntityCoords(player)
+				local kord2 = GetEntityCoords(GetPlayerPed(player))
 				if #(kord1-kord2) <= 3.0 then
 					TriggerServerEvent('popo:zapljeni9', GetPlayerServerId(player), data.current.itemType, data.current.value, data.current.amount)
 					menu.close()
