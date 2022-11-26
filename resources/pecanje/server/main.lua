@@ -1,6 +1,8 @@
 ESX = nil
 local Pecanje = {}
 
+local Prodaja = {coord = vector3(-510.88455200196, -40.816955566406, 44.579372406006), heading = 86.66}
+
 TriggerEvent("esx:getSharedObject", function(library) 
 	ESX = library 
 end)
@@ -8,6 +10,23 @@ end)
 ESX.RegisterUsableItem(Config.FishingItems["rod"]["name"], function(source)
 	table.insert(Pecanje, {ID = source})
 	TriggerClientEvent("pecanje:StartFish", source)
+end)
+
+ESX.RegisterServerCallback("pecanje:DohvatiKoord", function(source, callback)
+	callback(Prodaja)
+end)
+
+ESX.RegisterServerCallback('ribar:Prodaj', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local xItem = xPlayer.getInventoryItem("fish")
+	if xItem.count > 0 then
+		local cij = xItem.count*Config.Prodaja
+		xPlayer.removeInventoryItem("fish", xItem.count)
+		xPlayer.addMoney(cij)
+		cb(true, xItem.count, cij)
+	else
+		cb(false, nil, nil)
+	end
 end)
 
 AddEventHandler('playerDropped', function()

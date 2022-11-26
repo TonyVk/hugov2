@@ -20,3 +20,5 @@ Config.FishTable = {
     [6] = {["name"] = "bottle",         ["prop"] = "v_ind_cs_bottle",               ["ped"] = false,    ["chance"] = 76,     ["trash"] = true},
 	[7] = {["name"] = "dildo",          ["prop"] = "v_res_d_dildo_f",               ["ped"] = false,    ["chance"] = 100,     ["trash"] = true}
 }
+
+Config.Prodaja = 3
