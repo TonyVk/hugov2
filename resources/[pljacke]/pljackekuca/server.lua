@@ -41,7 +41,7 @@ AddEventHandler('pkuca:ProdajStvari', function()
 	local naso = 0
 	local lanciccount = xPlayer.getInventoryItem('lancic').count
 	if lanciccount > 0 then
-		local cijena = lanciccount*500
+		local cijena = lanciccount*200
 		xPlayer.removeInventoryItem('lancic', lanciccount)
 		xPlayer.addMoney(cijena)
 		TriggerClientEvent('esx:showNotification', xPlayer.source, "Prodali ste "..lanciccount.."x lancic za $"..cijena..".")
@@ -49,7 +49,7 @@ AddEventHandler('pkuca:ProdajStvari', function()
 	end
 	local narukvicacount = xPlayer.getInventoryItem('narukvica').count
 	if narukvicacount > 0 then
-		local cijena2 = narukvicacount*350
+		local cijena2 = narukvicacount*150
 		xPlayer.removeInventoryItem('narukvica', narukvicacount)
 		xPlayer.addMoney(cijena2)
 		TriggerClientEvent('esx:showNotification', xPlayer.source, "Prodali ste "..narukvicacount.."x narukvica za $"..cijena2..".")
@@ -57,7 +57,7 @@ AddEventHandler('pkuca:ProdajStvari', function()
 	end
 	local dijamantcount = xPlayer.getInventoryItem('diamond').count
 	if dijamantcount > 0 then
-		local cijena3 = dijamantcount*500
+		local cijena3 = dijamantcount*200
 		xPlayer.removeInventoryItem('diamond', dijamantcount)
 		xPlayer.addMoney(cijena3)
 		TriggerClientEvent('esx:showNotification', xPlayer.source, "Prodali ste "..dijamantcount.."x dijamant za $"..cijena3..".")
