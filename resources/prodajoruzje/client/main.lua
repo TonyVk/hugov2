@@ -355,16 +355,16 @@ function FastMythticProg(message, time)
 	end)
 end
 
-exports.qtarget:AddTargetModel({-206690185, 1511880420, 682791951}, {
-	options = {
-		{
-			event = "kontenjer:Pretrazi",
-			icon = "fas fa-box-circle-check",
-			label = "Pretrazi kontenjer"
-		}
-	},
-	distance = 1
-})
+-- exports.qtarget:AddTargetModel({-206690185, 1511880420, 682791951}, {
+-- 	options = {
+-- 		{
+-- 			event = "kontenjer:Pretrazi",
+-- 			icon = "fas fa-box-circle-check",
+-- 			label = "Pretrazi kontenjer"
+-- 		}
+-- 	},
+-- 	distance = 1
+-- })
 
 AddEventHandler('kontenjer:Pretrazi', function(data)
 	local koord = GetEntityCoords(data.entity)
