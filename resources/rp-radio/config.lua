@@ -1,7 +1,7 @@
 radioConfig = {
     Controls = {
         Activator = { -- Open/Close Radio
-            Name = "INPUT_SELECT_CHARACTER_TREVOR", -- Control name
+            Name = "INPUT_DROP_WEAPON", -- Control name
             Key = 56, -- F9
         },
         Secondary = {
