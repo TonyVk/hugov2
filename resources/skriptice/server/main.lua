@@ -296,7 +296,7 @@ AddEventHandler('jsfour-idcard:open', function(ID, targetID, type)
 	local _source 	 = ESX.GetPlayerFromId(targetID).source
 	local show       = false
 
-	MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, sex, height FROM users WHERE ID = @identifier', {['@identifier'] = xPlayer.getID()},
+	MySQL.Async.fetchAll('SELECT firstname, lastname, dateofbirth, skin, height FROM users WHERE ID = @identifier', {['@identifier'] = xPlayer.getID()},
 	function (user)
 		if (user[1] ~= nil) then
 			MySQL.Async.fetchAll('SELECT type FROM user_licenses WHERE owner = @identifier', {['@identifier'] = xPlayer.getID()},
@@ -318,6 +318,14 @@ AddEventHandler('jsfour-idcard:open', function(ID, targetID, type)
 				end
 
 				if show then
+					if user[1].skin then
+						local skin = json.decode(user[1].skin)
+						if skin.sex == 0 then
+							user[1].sex = "m"
+						elseif skin.sex == 1 then
+							user[1].sex = "z"
+						end
+					end
 					local array = {
 						user = user,
 						licenses = licenses
