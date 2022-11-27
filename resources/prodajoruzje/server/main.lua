@@ -436,14 +436,6 @@ RegisterCommand('ss3', function(source, args)
 	end)
 end)
 
-RegisterCommand('me', function(source, args)
-    local text = "*" .. TableToString(args) .. " *"
-	local player = source
-	local ped = GetPlayerPed(player)
-	local koord = GetEntityCoords(ped)
-    TriggerClientEvent('3dme:shareDisplay', -1, text, source, koord)
-end)
-
 RegisterNetEvent("prodajoruzje:TestSkinaa")
 AddEventHandler('prodajoruzje:TestSkinaa', function(id)
 	TriggerClientEvent("prodajoruzje:TestSkina", id)

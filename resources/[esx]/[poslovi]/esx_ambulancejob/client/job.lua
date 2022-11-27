@@ -390,23 +390,23 @@ function FastTravel(coords, heading)
 	end)
 end
 
-RegisterCommand("puls", function(source, args, rawCommandString)
-	local closestPlayerPed = PlayerPedId()
-	if IsPedDeadOrDying(closestPlayerPed, 1) then
-		local rand = math.random(1,2)
-		if rand == 1 then
-			local id = GetPlayerServerId(PlayerId())
-			local text = "!ima pulsa!"
-			TriggerEvent('3dme:shareDisplay', text, id)
-		elseif rand == 2 then
-			local id = GetPlayerServerId(PlayerId())
-			local text = "!nema pulsa!"
-			TriggerEvent('3dme:shareDisplay', text, id)
-		end
-	else
-		ESX.ShowNotification("Niste ozlijedjeni/mrtvi")
-	end
-end, false)
+-- RegisterCommand("puls", function(source, args, rawCommandString)
+-- 	local closestPlayerPed = PlayerPedId()
+-- 	if IsPedDeadOrDying(closestPlayerPed, 1) then
+-- 		local rand = math.random(1,2)
+-- 		if rand == 1 then
+-- 			local id = GetPlayerServerId(PlayerId())
+-- 			local text = "!ima pulsa!"
+-- 			TriggerEvent('3dme:shareDisplay', text, id)
+-- 		elseif rand == 2 then
+-- 			local id = GetPlayerServerId(PlayerId())
+-- 			local text = "!nema pulsa!"
+-- 			TriggerEvent('3dme:shareDisplay', text, id)
+-- 		end
+-- 	else
+-- 		ESX.ShowNotification("Niste ozlijedjeni/mrtvi")
+-- 	end
+-- end, false)
 
 -- Fast travels
 Citizen.CreateThread(function()
