@@ -1268,7 +1268,7 @@ AddEventHandler('esx_firme:OduzmiFirmi', function(firma, amount)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	OduzmiFirmi(firma, amount)
 	xPlayer.addMoney(amount)
-        local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio $"..amount
+    local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio $"..amount
 	TriggerEvent("SpremiLog", por)
 end)
 

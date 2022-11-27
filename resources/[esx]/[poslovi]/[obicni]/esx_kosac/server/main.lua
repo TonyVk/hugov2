@@ -7,6 +7,8 @@ AddEventHandler('kosac:EoPlace', function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
     if xPlayer.posao.name == 'kosac' then
 		xPlayer.addMoney(5)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio $5"
+		TriggerEvent("SpremiLog", por)
 		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(14*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
@@ -20,6 +22,8 @@ AddEventHandler('kosac:EoPlace2', function()
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	if xPlayer.posao.name == 'kosac' then
 		xPlayer.addMoney(3)
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio $3"
+		TriggerEvent("SpremiLog", por)
 		TriggerEvent("biznis:StaviUSef", "kosac", math.ceil(7*0.30))
 	else
         TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
