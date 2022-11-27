@@ -1374,7 +1374,7 @@ RegisterNetEvent("prodajoruzje:PlatiPorez")
 AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	local porez = 2500
+	local porez = 500
 	xPlayer.removeAccountMoney('bank', kol*porez)
 	TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(kol*porez)), "Plaćanje poreza")
 	TriggerClientEvent('esx:showNotification', src, "Platili ste porez u iznosu od $"..(kol*porez))
