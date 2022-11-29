@@ -146,25 +146,11 @@ function OtvoriBossMenu()
 		elseif data.current.value == 'place' then
 			ESX.TriggerServerCallback('esx_policejob:dohvatiPlace', function(data2)
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'lista_rankovaplace', {
-					title    = "Odaberite rank",
+					title    = "Iznos placa po rankovima",
 					align    = 'top-left',
 					elements = data2
 				}, function(data2, menu2)
-					local rankid = data2.current.value
-					ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'place_broj', {
-						title = "Unesite novu placu ranka"
-					}, function(data3, menu3)
-						local count = tonumber(data3.value)
-						if count == nil then
-							ESX.ShowNotification(_U('quantity_invalid'))
-						else
-							menu3.close()
-							menu2.close()
-							TriggerServerEvent("policija:PostaviPlacu", rankid, count)
-						end
-					end, function(data3, menu3)
-						menu3.close()
-					end)
+					menu2.close()
 				end, function(data2, menu2)
 					menu2.close()
 				end)
