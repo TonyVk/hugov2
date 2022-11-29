@@ -69,9 +69,9 @@ function ManageHeadLabels()
 	if has_value(staffTable,GetPlayerServerId(PlayerId())) then 
 		staff = true
 	end
-	for _,player in ipairs(GetActivePlayers()) do
-		if NetworkIsPlayerActive(player) --[[and #Igraci > 0]] then
-			local iPed = GetPlayerPed(player)
+	for i = 0, 255 do
+		if NetworkIsPlayerActive(i) and #Igraci > 0 then
+			local iPed = GetPlayerPed(i)
 			local lPed = PlayerPedId()
 			local ime = "kurac"
 			if iPed ~= lPed then
@@ -80,7 +80,7 @@ function ManageHeadLabels()
 					if HasEntityClearLosToEntity(lPed, iPed, 17) or seeTags then
 						if distance < TagDistance and showTags then
 							--ESX.TriggerServerCallback('prodajoruzje:DohvatiRPIme', function(ime)
-								if NetworkIsPlayerTalking(player) then
+								if NetworkIsPlayerTalking(i) then
 									headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
 									SetMpGamerTagAlpha(headDisplayId, 4, 225)							
 									SetMpGamerTagVisibility(headDisplayId, 4, true)
@@ -107,11 +107,11 @@ function ManageHeadLabels()
 									-- 	end
 									-- end
 									if staff then
-										ime = GetPlayerName(player)
+										ime = GetPlayerName(i)
 									end
 									headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "Admin", false )
-									if has_value(staffTable,GetPlayerServerId(player)) then 
-										SetMpGamerTagName(headDisplayId, GetPlayerServerId(player).." | "..ime)
+									if has_value(staffTable,GetPlayerServerId(i)) then 
+										SetMpGamerTagName(headDisplayId, GetPlayerServerId(i).." | "..ime)
 										SetMpGamerTagBigText(headDisplayId, "Admin")
 										SetMpGamerTagVisibility(headDisplayId, 3, true)
 										SetMpGamerTagColour(headDisplayId, 3, 6)
@@ -122,14 +122,14 @@ function ManageHeadLabels()
 							--end, GetPlayerServerId(i))
 						else
 							headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
-							SetMpGamerTagName(headDisplayId,GetPlayerServerId(player).." | "..ime)
+							SetMpGamerTagName(headDisplayId,GetPlayerServerId(i).." | "..ime)
 							SetMpGamerTagVisibility(headDisplayId, 0, false)
 							SetMpGamerTagVisibility(headDisplayId, 3, false)
 							SetMpGamerTagVisibility(headDisplayId, 7, false)
 						end
 					else
 						headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
-						SetMpGamerTagName(headDisplayId,GetPlayerServerId(player).." | "..ime)
+						SetMpGamerTagName(headDisplayId,GetPlayerServerId(i).." | "..ime)
 						SetMpGamerTagVisibility(headDisplayId, 0, false)
 						SetMpGamerTagVisibility(headDisplayId, 3, false)
 						SetMpGamerTagVisibility(headDisplayId, 7, false)
