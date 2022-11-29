@@ -348,22 +348,29 @@
 					}
 				}
 				if (item.zabrani) {
-					var x = document.getElementById("tijelo");
 					if(Zabrani == false)
 					{
-						var x = document.getElementsByClassName("btn");
+						var x = document.getElementsByClassName("bOpcije");
 						var i;
 						for (i = 0; i < x.length; i++) {
 						  x[i].disabled = true;
+						}
+						var y = document.getElementsByClassName("bKat");
+						for (i = 0; i < y.length; i++) {
+						  y[i].disabled = true;
 						}
 						Zabrani = true;
 					}
 					else
 					{
-						var x = document.getElementsByClassName("btn");
+						var x = document.getElementsByClassName("bOpcije");
 						var i;
 						for (i = 0; i < x.length; i++) {
 						  x[i].disabled = false;
+						}
+						var y = document.getElementsByClassName("bKat");
+						for (i = 0; i < y.length; i++) {
+						  y[i].disabled = false;
 						}
 						Zabrani = false;
 					}
