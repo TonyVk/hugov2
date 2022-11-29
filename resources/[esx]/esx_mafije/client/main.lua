@@ -6064,9 +6064,13 @@ function OtvoriBossMenu()
 						if count == nil then
 							ESX.ShowNotification(_U('quantity_invalid'))
 						else
-							menu3.close()
-							menu2.close()
-							TriggerServerEvent("policija:PostaviPlacu", rankid, count)
+							if count <= 5000 then
+								menu3.close()
+								menu2.close()
+								TriggerServerEvent("policija:PostaviPlacu", rankid, count)
+							else
+								ESX.ShowNotification("Placa ne moze biti veca od 5000$")
+							end
 						end
 					end, function(data3, menu3)
 						menu3.close()
