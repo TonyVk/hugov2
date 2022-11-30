@@ -281,24 +281,29 @@ AddEventHandler('mafije:StanjeSkladista', function(maf, dr)
 end)
 
 function PreradiGljive()
+	print("usoe")
 	for i=1, #Skladiste, 1 do
 		if Skladiste[i] ~= nil and Skladiste[i].Gljive >= 100 and Skladiste[i].Heroin+50 <= 1200 then
-			local societyAccount = nil
-			local soc = "society_"..Skladiste[i].Mafija
-			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				societyAccount = account
-			end)
-			if societyAccount.money >= 10000 then
-				societyAccount.removeMoney(10000)
-				societyAccount.save()
-				Skladiste[i].Gljive = Skladiste[i].Gljive-100
-				Skladiste[i].Heroin = Skladiste[i].Heroin+50
-				MySQL.Async.execute('UPDATE mskladiste SET gljive = @list, heroin = @kok WHERE ime = @maf',{
-					['@list'] = Skladiste[i].Gljive,
-					['@kok'] = Skladiste[i].Heroin,
-					['@maf'] = Skladiste[i].Mafija
-				})
-				TriggerClientEvent("mafije:PosaljiObavijest", -1, Skladiste[i].Mafija, "[Skladiste] 100 gljiva vam je uspjesno preradjeno u heroin (10000$)!")
+			for j=1, #Mafije, 1 do
+				if Mafije[j] ~= nil and Mafije[j].Ime == Skladiste[i].Mafija and Mafije[j].Skladiste2 == 1 then
+					local societyAccount = nil
+					local soc = "society_"..Skladiste[i].Mafija
+					TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+						societyAccount = account
+					end)
+					if societyAccount.money >= 10000 then
+						societyAccount.removeMoney(10000)
+						societyAccount.save()
+						Skladiste[i].Gljive = Skladiste[i].Gljive-100
+						Skladiste[i].Heroin = Skladiste[i].Heroin+50
+						MySQL.Async.execute('UPDATE mskladiste SET gljive = @list, heroin = @kok WHERE ime = @maf',{
+							['@list'] = Skladiste[i].Gljive,
+							['@kok'] = Skladiste[i].Heroin,
+							['@maf'] = Skladiste[i].Mafija
+						})
+						TriggerClientEvent("mafije:PosaljiObavijest", -1, Skladiste[i].Mafija, "[Skladiste] 100 gljiva vam je uspjesno preradjeno u heroin (10000$)!")
+					end
+				end
 			end
 		end
 		Wait(100)
@@ -310,24 +315,29 @@ end
 SetTimeout(3600000, PreradiGljive)
 
 function PreradiListove()
+	print("usoe")
 	for i=1, #Skladiste, 1 do
 		if Skladiste[i] ~= nil and Skladiste[i].Listovi >= 100 and Skladiste[i].Kokain+50 <= 1200 then
-			local societyAccount = nil
-			local soc = "society_"..Skladiste[i].Mafija
-			TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-				societyAccount = account
-			end)
-			if societyAccount.money >= 10000 then
-				societyAccount.removeMoney(10000)
-				societyAccount.save()
-				Skladiste[i].Listovi = Skladiste[i].Listovi-100
-				Skladiste[i].Kokain = Skladiste[i].Kokain+50
-				MySQL.Async.execute('UPDATE mskladiste SET listovi = @list, kokain = @kok WHERE ime = @maf',{
-					['@list'] = Skladiste[i].Listovi,
-					['@kok'] = Skladiste[i].Kokain,
-					['@maf'] = Skladiste[i].Mafija
-				})
-				TriggerClientEvent("mafije:PosaljiObavijest", -1, Skladiste[i].Mafija, "[Skladiste] 100 listova vam je uspjesno preradjeno u kokain (10000$)!")
+			for j=1, #Mafije, 1 do
+				if Mafije[j] ~= nil and Mafije[j].Ime == Skladiste[i].Mafija and Mafije[j].Skladiste == 1 then
+					local societyAccount = nil
+					local soc = "society_"..Skladiste[i].Mafija
+					TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+						societyAccount = account
+					end)
+					if societyAccount.money >= 10000 then
+						societyAccount.removeMoney(10000)
+						societyAccount.save()
+						Skladiste[i].Listovi = Skladiste[i].Listovi-100
+						Skladiste[i].Kokain = Skladiste[i].Kokain+50
+						MySQL.Async.execute('UPDATE mskladiste SET listovi = @list, kokain = @kok WHERE ime = @maf',{
+							['@list'] = Skladiste[i].Listovi,
+							['@kok'] = Skladiste[i].Kokain,
+							['@maf'] = Skladiste[i].Mafija
+						})
+						TriggerClientEvent("mafije:PosaljiObavijest", -1, Skladiste[i].Mafija, "[Skladiste] 100 listova vam je uspjesno preradjeno u kokain (10000$)!")
+					end
+				end
 			end
 		end
 		Wait(100)

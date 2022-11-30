@@ -5551,6 +5551,7 @@ end)
 RegisterNetEvent('mafije:UpdateKoord')
 AddEventHandler('mafije:UpdateKoord', function(koor)
 	Koord = koor
+	SpawnCpove()
 end)
 
 RegisterNetEvent('mafije:UpdateSkladista')
