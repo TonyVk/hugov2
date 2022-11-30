@@ -1378,6 +1378,11 @@ AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
 	xPlayer.removeAccountMoney('bank', kol*porez)
 	TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(kol*porez)), "Plaćanje poreza")
 	TriggerClientEvent('esx:showNotification', src, "Platili ste porez u iznosu od $"..(kol*porez))
+	local soc = "society_grad"
+	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
+		account.addMoney(kol*porez)
+		account.save()
+	end)
 end)
 
 -- ESX.RegisterUsableItem("loto", function(source)
