@@ -366,19 +366,19 @@ ESX.RegisterServerCallback('zone:ProdajListove', function(source, cb, maf)
 	local xItem = xPlayer.getInventoryItem("coke")
 	if xItem.count > 0 then
 		local cij = xItem.count*Config.CijenaLista
-		local society = "society_"..maf
-		TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
-			if account.money >= cij then
-				account.removeMoney(cij)
-				account.save()
+		--local society = "society_"..maf
+		--TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
+			--if account.money >= cij then
+				--account.removeMoney(cij)
+				--account.save()
 				xPlayer.removeInventoryItem("coke", xItem.count)
 				xPlayer.addMoney(cij)
-				TriggerEvent("mafije:OstaviListove2", xItem.count, maf)
+				--TriggerEvent("mafije:OstaviListove2", xItem.count, maf)
 				cb(true, xItem.count, cij)
-			else
-				xPlayer.showNotification("Trenutno nemamo dovoljno novca za tvoju kolicinu!")
-			end
-		end)
+			--else
+				--xPlayer.showNotification("Trenutno nemamo dovoljno novca za tvoju kolicinu!")
+			--end
+		--end)
 	else
 		cb(false, nil, nil)
 	end
@@ -389,19 +389,19 @@ ESX.RegisterServerCallback('zone:ProdajGljive', function(source, cb, maf)
 	local xItem = xPlayer.getInventoryItem("gljive")
 	if xItem.count > 0 then
 		local cij = xItem.count*Config.CijenaGljive
-		local society = "society_"..maf
-		TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
-			if account.money >= cij then
-				account.removeMoney(cij)
-				account.save()
+		--local society = "society_"..maf
+		--TriggerEvent('esx_addonaccount:getSharedAccount', society, function(account)
+			--if account.money >= cij then
+				--account.removeMoney(cij)
+				--account.save()
 				xPlayer.removeInventoryItem("gljive", xItem.count)
 				xPlayer.addMoney(cij)
-				TriggerEvent("mafije:OstaviGljive2", xItem.count, maf)
+				--TriggerEvent("mafije:OstaviGljive2", xItem.count, maf)
 				cb(true, xItem.count, cij)
-			else
-				xPlayer.showNotification("Trenutno nemamo dovoljno novca za tvoju kolicinu!")
-			end
-		end)
+			--else
+				--xPlayer.showNotification("Trenutno nemamo dovoljno novca za tvoju kolicinu!")
+			--end
+		--end)
 	else
 		cb(false, nil, nil)
 	end
