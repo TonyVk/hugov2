@@ -281,7 +281,6 @@ AddEventHandler('mafije:StanjeSkladista', function(maf, dr)
 end)
 
 function PreradiGljive()
-	print("usoe")
 	for i=1, #Skladiste, 1 do
 		if Skladiste[i] ~= nil and Skladiste[i].Gljive >= 100 and Skladiste[i].Heroin+50 <= 1200 then
 			for j=1, #Mafije, 1 do
@@ -315,7 +314,6 @@ end
 SetTimeout(3600000, PreradiGljive)
 
 function PreradiListove()
-	print("usoe")
 	for i=1, #Skladiste, 1 do
 		if Skladiste[i] ~= nil and Skladiste[i].Listovi >= 100 and Skladiste[i].Kokain+50 <= 1200 then
 			for j=1, #Mafije, 1 do

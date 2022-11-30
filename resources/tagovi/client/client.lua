@@ -14,6 +14,9 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+	ESX.TriggerServerCallback('tagovi:DajStaff', function(br)
+		staffTable = br
+	end)
 end)
 
 RegisterCommand("seeTags", function(source, args, rawCommand)
@@ -65,74 +68,35 @@ AddEventHandler('tagovi:Igraci', function(igr)
 end)
 
 function ManageHeadLabels()
-	local staff = false
-	if has_value(staffTable,GetPlayerServerId(PlayerId())) then 
-		staff = true
-	end
-	for i = 0, 255 do
-		if NetworkIsPlayerActive(i) and #Igraci > 0 then
-			local iPed = GetPlayerPed(i)
+	for _,player in ipairs(GetActivePlayers()) do
+		if NetworkIsPlayerActive(player) then
+			local iPed = GetPlayerPed(player)
 			local lPed = PlayerPedId()
-			local ime = "kurac"
 			if iPed ~= lPed then
 				if DoesEntityExist(iPed) then
 					distance = math.ceil(GetDistanceBetweenCoords(GetEntityCoords(lPed), GetEntityCoords(iPed)))
 					if HasEntityClearLosToEntity(lPed, iPed, 17) or seeTags then
 						if distance < TagDistance and showTags then
-							--ESX.TriggerServerCallback('prodajoruzje:DohvatiRPIme', function(ime)
-								if NetworkIsPlayerTalking(i) then
-									headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
-									SetMpGamerTagAlpha(headDisplayId, 4, 225)							
-									SetMpGamerTagVisibility(headDisplayId, 4, true)
-								else
-									-- local vlasnikid
-									-- for a = 1, #Igraci do
-									-- 	if Igraci[a] ~= nil then
-									-- 		if Igraci[a].id == GetPlayerServerId(PlayerId()) then
-									-- 			vlasnikid = Igraci[a].uID
-									-- 			break
-									-- 		end
-									-- 	end
-									-- end
-									-- for a = 1, #Igraci do
-									-- 	if Igraci[a] ~= nil then
-									-- 		if Igraci[a].id == GetPlayerServerId(i) then
-									-- 			ime = Igraci[a].name
-									-- 			for g = 1, #Igraci[a].prijatelji do
-									-- 				if (Igraci[a].prijatelji[g].PrijateljID == vlasnikid and Igraci[a].prijatelji[g].VlasnikID == Igraci[a].uID) or (Igraci[a].prijatelji[g].PrijateljID == Igraci[a].uID and Igraci[a].prijatelji[g].VlasnikID == vlasnikid) then
-									-- 					ime = Igraci[a].name2
-									-- 				end
-									-- 			end
-									-- 		end
-									-- 	end
-									-- end
-									if staff then
-										ime = GetPlayerName(i)
-									end
+							if NetworkIsPlayerTalking(player) then
+								headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
+								SetMpGamerTagAlpha(headDisplayId, 4, 225)							
+								SetMpGamerTagVisibility(headDisplayId, 4, true)
+							else
+								if has_value(staffTable,GetPlayerServerId(player)) then 
 									headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "Admin", false )
-									if has_value(staffTable,GetPlayerServerId(i)) then 
-										SetMpGamerTagName(headDisplayId, GetPlayerServerId(i).." | "..ime)
-										SetMpGamerTagBigText(headDisplayId, "Admin")
-										SetMpGamerTagVisibility(headDisplayId, 3, true)
-										SetMpGamerTagColour(headDisplayId, 3, 6)
-									end
-									SetMpGamerTagVisibility(headDisplayId, 4, false)
-									SetMpGamerTagVisibility(headDisplayId, 0, true)
+									SetMpGamerTagBigText(headDisplayId, "Admin")
+									SetMpGamerTagVisibility(headDisplayId, 3, true)
+									SetMpGamerTagColour(headDisplayId, 3, 6)
+								else
+									SetMpGamerTagVisibility(headDisplayId, 3, false)
 								end
-							--end, GetPlayerServerId(i))
+								SetMpGamerTagVisibility(headDisplayId, 4, false)
+							end
 						else
-							headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
-							SetMpGamerTagName(headDisplayId,GetPlayerServerId(i).." | "..ime)
-							SetMpGamerTagVisibility(headDisplayId, 0, false)
 							SetMpGamerTagVisibility(headDisplayId, 3, false)
-							SetMpGamerTagVisibility(headDisplayId, 7, false)
 						end
 					else
-						headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
-						SetMpGamerTagName(headDisplayId,GetPlayerServerId(i).." | "..ime)
-						SetMpGamerTagVisibility(headDisplayId, 0, false)
 						SetMpGamerTagVisibility(headDisplayId, 3, false)
-						SetMpGamerTagVisibility(headDisplayId, 7, false)
 					end
 				end
 			end

@@ -67,6 +67,10 @@ AddEventHandler('tagovi:hideTag', function(br)
 	TriggerClientEvent("sendStaff", -1, staffTable)
 end)
 
+ESX.RegisterServerCallback('tagovi:DajStaff', function(source, cb)
+	cb(staffTable)
+end)
+
 function has_value (tab, val)
     for i, v in ipairs (tab) do
         if (v == val) then
