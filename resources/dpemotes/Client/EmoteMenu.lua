@@ -299,3 +299,10 @@ RegisterNetEvent("dp:RecieveMenu") -- For opening the emote menu from another re
 AddEventHandler("dp:RecieveMenu", function()
     OpenEmoteMenu() 
 end)
+
+RegisterNetEvent("dp:zatvoriMenu")
+AddEventHandler("dp:zatvoriMenu", function()
+  print("picka ti materna")
+  Otvoren = false
+  mainMenu:Visible(false)
+end)

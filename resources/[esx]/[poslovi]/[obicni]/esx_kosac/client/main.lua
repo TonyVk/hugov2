@@ -194,6 +194,7 @@ AddEventHandler('kosac:Vozilo', function(data)
 		TriggerEvent("dpemotes:Radim", true)
 		SpawnObjekte()
 	elseif data.broj == 2 then
+		TriggerEvent("dp:zatvoriMenu")
 		SetPlayerInvincible(PlayerId(), true)
 		ESX.ShowNotification("Ukoliko zelite zavrsiti posao upisite /zavrsikosenje")
 		SetEntityCoords(PlayerPedId(), -1348.0754394531, 128.62022399902, 55.238655090332, false, false, false, true)
