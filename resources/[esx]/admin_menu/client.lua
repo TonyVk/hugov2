@@ -52,7 +52,7 @@ function ManageHeadLabels()
 									SetMpGamerTagBigText(headDisplayId, "Admin")
 									SetMpGamerTagVisibility(headDisplayId, 3, true)
 									SetMpGamerTagAlpha(headDisplayId, 4, 225)							
-									etMpGamerTagVisibility(headDisplayId, 4, true)
+									SetMpGamerTagVisibility(headDisplayId, 4, true)
 									SetMpGamerTagColour(headDisplayId, 3, 6)
 								else
 									SetMpGamerTagVisibility(headDisplayId, 3, false)
