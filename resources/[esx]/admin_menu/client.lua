@@ -7,12 +7,94 @@ local noclipSpeed = 2.0
 local noclip = false
 local nevidljivost = false
 local duznost = false
+local staffTable = { 0 }
+local TagDistance = 25
+local viewname = false
+
 ESX = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
+	end
+	ESX.TriggerServerCallback('tagovi:DajStaff', function(br)
+		staffTable = br
+	end)
+end)
+
+--Tagovi
+RegisterNetEvent('sendStaff')
+AddEventHandler('sendStaff', function(_staffTable)
+	staffTable = _staffTable
+end)
+
+function ManageHeadLabels()
+	for _,player in ipairs(GetActivePlayers()) do
+		if NetworkIsPlayerActive(player) then
+			local iPed = GetPlayerPed(player)
+			local lPed = PlayerPedId()
+			if iPed ~= lPed then
+				if DoesEntityExist(iPed) then
+					distance = math.ceil(GetDistanceBetweenCoords(GetEntityCoords(lPed), GetEntityCoords(iPed)))
+					if HasEntityClearLosToEntity(lPed, iPed, 17) then
+						if distance < TagDistance then
+							local imeIgr = ""
+							if viewname then
+								local ida = GetPlayerServerId(player)
+								imeIgr = GetPlayerName(player).." ("..ida..")"
+							end
+							headDisplayId = N_0xbfefe3321a3f5015(iPed, imeIgr, false, false, "", false)
+							if NetworkIsPlayerTalking(player) then
+								if has_value(staffTable,GetPlayerServerId(player)) then 
+									SetMpGamerTagBigText(headDisplayId, "Admin")
+									SetMpGamerTagVisibility(headDisplayId, 3, true)
+									SetMpGamerTagAlpha(headDisplayId, 4, 225)							
+									etMpGamerTagVisibility(headDisplayId, 4, true)
+									SetMpGamerTagColour(headDisplayId, 3, 6)
+								else
+									SetMpGamerTagVisibility(headDisplayId, 3, false)
+									SetMpGamerTagAlpha(headDisplayId, 4, 225)							
+									SetMpGamerTagVisibility(headDisplayId, 4, true)
+								end
+							else
+								if has_value(staffTable,GetPlayerServerId(player)) then 
+									SetMpGamerTagBigText(headDisplayId, "Admin")
+									SetMpGamerTagVisibility(headDisplayId, 3, true)
+									SetMpGamerTagColour(headDisplayId, 3, 6)
+								else
+									SetMpGamerTagVisibility(headDisplayId, 3, false)
+								end
+								SetMpGamerTagVisibility(headDisplayId, 4, false)
+							end
+						else
+							SetMpGamerTagVisibility(headDisplayId, 3, false)
+							SetMpGamerTagVisibility(headDisplayId, 4, false)
+						end
+					else
+						SetMpGamerTagVisibility(headDisplayId, 3, false)
+						SetMpGamerTagVisibility(headDisplayId, 4, false)
+					end
+				end
+			end
+		end
+	end
+end
+
+function has_value (tab, val)
+    for i, v in ipairs (tab) do
+        if (v == val) then
+            return true
+        end
+    end
+    return false
+end
+
+
+Citizen.CreateThread(function()
+	while true do
+		ManageHeadLabels()
+		Citizen.Wait(500)
 	end
 end)
 
@@ -30,6 +112,20 @@ end)
 -- 		end
 -- 	end
 -- end)
+
+RegisterCommand('viewname', function(source, args, rawCommand)
+    if duznost then
+		if not viewname then
+			viewname = true
+			ESX.ShowNotification("Upalili ste viewname!")
+		else
+			viewname = false
+			ESX.ShowNotification("Ugasili ste viewname!")
+		end
+	else
+		ESX.ShowNotification("Niste na admin duznosti!")
+	end
+end, false)
 
 RegisterCommand('kick', function(source, args, rawCommand)
     if duznost then
@@ -492,7 +588,7 @@ AddEventHandler('es_admin:viewname', function(t)
 			if  NetworkIsPlayerActive( id ) and GetPlayerPed( id ) ~= GetPlayerPed( -1 ) then
 				ped = GetPlayerPed( id )
 				blip = GetBlipFromEntity( ped )
-					ida = GetPlayerServerId(id)
+				ida = GetPlayerServerId(id)
 
 				-- HEAD DISPLAY STUFF --
 

@@ -1,11 +1,5 @@
-local id = 0
-local ShowTag = false
-local showTags = true
-local seeTags = false
-local isDriver = false
 local staffTable = { 0 }
 local TagDistance = 25
-local Igraci = {}
 
 ESX                             = nil
 
@@ -19,52 +13,9 @@ Citizen.CreateThread(function()
 	end)
 end)
 
-RegisterCommand("seeTags", function(source, args, rawCommand)
-	ESX.TriggerServerCallback('esx-races:DohvatiPermisiju', function(br)
-		if br == 1 then
-			TriggerEvent("seeTags")
-		else
-			TriggerEvent('chat:addMessage', {color = { 0, 125, 255},multiline = false,args = {"[Greska]", "Nemate permisiju za ovu komandu!"}})
-		end
-	end)
-end)
-
-RegisterCommand("tagRange", function(source, args, rawCommand)
-	TagDistance = tonumber(args[1])
-	TriggerEvent('chat:addMessage', {color = { 0, 125, 255},multiline = false,args = {"[JD_PlayerID]", "Player tag distance set to: ^*^2"..TagDistance.."^0"}})
-end)
-
 RegisterNetEvent('sendStaff')
 AddEventHandler('sendStaff', function(_staffTable)
 	staffTable = _staffTable
-end)
-
-
-RegisterNetEvent('showTags')
-AddEventHandler('showTags', function()
-	if showTags then
-		showTags = false
-		TriggerEvent('chat:addMessage', {color = { 0, 125, 255},multiline = false,args = {"[JD_PlayerID]", "Player tags ^*^1Disabled^0"}})
-	else
-		showTags =  true
-		TriggerEvent('chat:addMessage', {color = { 0, 125, 255},multiline = false,args = {"[JD_PlayerID]", "Player tags ^*^2Enabled^0"}})
-	end
-end)
-
-RegisterNetEvent('seeTags')
-AddEventHandler('seeTags', function()
-	if seeTags then
-		seeTags = false
-		TriggerEvent('chat:addMessage', {color = { 0, 125, 255},multiline = false,args = {"[JD_PlayerID]", "Player tags trough walls ^*^1Disabled^0"}})
-	else
-		seeTags =  true
-		TriggerEvent('chat:addMessage', {color = { 0, 125, 255},multiline = false,args = {"[JD_PlayerID]", "Player tags trough walls ^*^2Enabled^0"}})
-	end
-end)
-
-RegisterNetEvent('tagovi:Igraci')
-AddEventHandler('tagovi:Igraci', function(igr)
-	Igraci = igr
 end)
 
 function ManageHeadLabels()
@@ -75,8 +26,8 @@ function ManageHeadLabels()
 			if iPed ~= lPed then
 				if DoesEntityExist(iPed) then
 					distance = math.ceil(GetDistanceBetweenCoords(GetEntityCoords(lPed), GetEntityCoords(iPed)))
-					if HasEntityClearLosToEntity(lPed, iPed, 17) or seeTags then
-						if distance < TagDistance and showTags then
+					if HasEntityClearLosToEntity(lPed, iPed, 17) then
+						if distance < TagDistance then
 							if NetworkIsPlayerTalking(player) then
 								headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false )
 								SetMpGamerTagAlpha(headDisplayId, 4, 225)							

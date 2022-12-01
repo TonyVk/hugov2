@@ -101,7 +101,3 @@ AddEventHandler('playerDropped', function (reason)
     end
     removebyKey(staffTable, source)
 end)
-
-RegisterCommand("showTags", function(source, args, rawCommand)
-    TriggerClientEvent("showTags", source)
-end)
