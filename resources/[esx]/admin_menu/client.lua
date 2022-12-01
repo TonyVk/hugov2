@@ -37,14 +37,16 @@ function ManageHeadLabels()
 			if iPed ~= lPed then
 				if DoesEntityExist(iPed) then
 					distance = math.ceil(GetDistanceBetweenCoords(GetEntityCoords(lPed), GetEntityCoords(iPed)))
-					if HasEntityClearLosToEntity(lPed, iPed, 17) then
+					if HasEntityClearLosToEntity(lPed, iPed, 4294967295) then
 						if distance < TagDistance then
 							local imeIgr = ""
 							if viewname then
 								local ida = GetPlayerServerId(player)
 								imeIgr = GetPlayerName(player).." ("..ida..")"
 							end
-							headDisplayId = N_0xbfefe3321a3f5015(iPed, imeIgr, false, false, "", false)
+							local headDisplayId = N_0xbfefe3321a3f5015(iPed, imeIgr, false, false, "", false)
+							SetMpGamerTagName(headDisplayId, imeIgr)
+							SetMpGamerTagVisibility(headDisplayId, 0, true)
 							if NetworkIsPlayerTalking(player) then
 								if has_value(staffTable,GetPlayerServerId(player)) then 
 									SetMpGamerTagBigText(headDisplayId, "Admin")
@@ -68,10 +70,14 @@ function ManageHeadLabels()
 								SetMpGamerTagVisibility(headDisplayId, 4, false)
 							end
 						else
+							headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false)
+							SetMpGamerTagVisibility(headDisplayId, 0, false)
 							SetMpGamerTagVisibility(headDisplayId, 3, false)
 							SetMpGamerTagVisibility(headDisplayId, 4, false)
 						end
 					else
+						headDisplayId = N_0xbfefe3321a3f5015(iPed, "", false, false, "", false)
+						SetMpGamerTagVisibility(headDisplayId, 0, false)
 						SetMpGamerTagVisibility(headDisplayId, 3, false)
 						SetMpGamerTagVisibility(headDisplayId, 4, false)
 					end
