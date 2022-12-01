@@ -37,7 +37,7 @@ function ManageHeadLabels()
 			if iPed ~= lPed then
 				if DoesEntityExist(iPed) then
 					distance = math.ceil(GetDistanceBetweenCoords(GetEntityCoords(lPed), GetEntityCoords(iPed)))
-					if HasEntityClearLosToEntity(lPed, iPed, 4294967295) then
+					if HasEntityClearLosToEntity(lPed, iPed, 4294967295) and IsEntityVisible(iPed) then
 						if distance < TagDistance then
 							local imeIgr = ""
 							if viewname then
