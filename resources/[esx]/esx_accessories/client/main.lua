@@ -6,13 +6,34 @@ local CurrentActionMsg			= ''
 local CurrentActionData			= {}
 local isDead					= false
 local NemaStruje 				= false
+local Cpovi 					= {}
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+	SpawnCpove()
 end)
+
+function SpawnCpove()
+	if #Cpovi > 0 then
+		for i=1, #Cpovi, 1 do
+		  	if Cpovi[i] ~= nil then
+			  	if Cpovi[i].Spawnan then
+					DeleteCheckpoint(Cpovi[i].ID)
+					Cpovi[i].Spawnan = false
+			  	end
+		  	end
+		end
+	end
+	Cpovi = {}
+	for k,v in pairs(Config.Zones) do
+		for i = 1, #v.Pos, 1 do
+			table.insert(Cpovi, {ID = check, Koord = v.Pos[i], Spawnan = false, r = Config.Color.r, g = Config.Color.g, b = Config.Color.b})
+		end
+	end
+end
 
 RegisterNetEvent('elektricar:NemaStruje')
 AddEventHandler('elektricar:NemaStruje', function(br)
@@ -95,6 +116,11 @@ function OpenShopMenu(accessory)
 						TriggerServerEvent('esx_accessories:pay')
 						TriggerEvent('skinchanger:getSkin', function(skin)
 							TriggerServerEvent('esx_accessories:save', skin, accessory)
+							TriggerEvent('skinchanger:getSkin', function(skin)
+								skin['mask_1'] = 0
+								skin['mask_2'] = 0
+								TriggerServerEvent('esx_skin:save', skin)
+							end)
 						end)
 					else
 						TriggerEvent('esx_skin:getLastSkin', function(skin)
@@ -147,6 +173,7 @@ AddEventHandler('esx:onPlayerDeath', function()
 end)
 
 AddEventHandler('esx_accessories:hasEnteredMarker', function(zone)
+	print("aaaa")
 	CurrentAction     = 'shop_menu'
 	CurrentActionMsg  = _U('press_access')
 	CurrentActionData = { accessory = zone }
@@ -178,43 +205,44 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Display markers
-Citizen.CreateThread(function()
-	local waitara = 500
-	while true do
-		Citizen.Wait(waitara)
-		local nasosta = 0
-		local coords = GetEntityCoords(PlayerPedId())
-		for k,v in pairs(Config.Zones) do
-			for i = 1, #v.Pos, 1 do
-				if(Config.Type ~= -1 and #(coords-v.Pos[i]) < Config.DrawDistance) then
-					waitara = 0
-					nasosta = 1
-					DrawMarker(Config.Type, v.Pos[i], 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.Size.x, Config.Size.y, Config.Size.z, Config.Color.r, Config.Color.g, Config.Color.b, 100, false, true, 2, false, false, false, false)
-				end
-			end
-		end
-		if nasosta == 0 then
-			waitara = 500
-		end
-	end
-end)
-
-
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(200)
+		Citizen.Wait(500)
 
 		local coords      = GetEntityCoords(PlayerPedId())
 		local isInMarker  = false
 		local currentZone = nil
-		for k,v in pairs(Config.Zones) do
-			for i = 1, #v.Pos, 1 do
-				if #(coords-v.Pos[i]) < Config.Size.x then
-					isInMarker  = true
-					currentZone = k
-					TriggerEvent("dpc:EquipLast")
+
+		if #Cpovi > 0 then
+			for i=1, #Cpovi, 1 do
+			  if Cpovi[i] ~= nil then
+				if #(coords-Cpovi[i].Koord) > 100 then
+				  if Cpovi[i].Spawnan then
+					DeleteCheckpoint(Cpovi[i].ID)
+					Cpovi[i].Spawnan = false
+				  end
+				else
+				  if Cpovi[i].Spawnan == false then
+					local kord = Cpovi[i].Koord
+					local range = 2.0
+					local check = CreateCheckpoint(47, kord.x, kord.y, kord.z, 0, 0, 0, range, Cpovi[i].r, Cpovi[i].g, Cpovi[i].b, 100)
+					SetCheckpointCylinderHeight(check, range, range, range)
+					Cpovi[i].ID = check
+					Cpovi[i].Spawnan = true
+				  end
 				end
+			  end
+			end
+			for i=1, #Cpovi, 1 do
+			  if Cpovi[i] ~= nil and Cpovi[i].Spawnan then
+				if #(coords-Cpovi[i].Koord) < 1.5 then
+					isInMarker  = true
+					currentZone = "shop_menu"
+					LastZone    = "shop_menu"
+					TriggerEvent("dpc:EquipLast")
+					break
+				end
+			  end
 			end
 		end
 
@@ -232,6 +260,13 @@ Citizen.CreateThread(function()
 	end
 end)
 
+RegisterCommand('+maska', function()
+	if IsInputDisabled(0) and not isDead then
+		OpenAccessoryMenu()
+	end
+end, false)
+RegisterKeyMapping('+maska', 'Otvori maska menu', 'keyboard', 'k')
+
 -- Key controls
 Citizen.CreateThread(function()
 	while true do
@@ -240,24 +275,17 @@ Citizen.CreateThread(function()
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-			if IsControlJustReleased(0, 38) and CurrentActionData.accessory then
+			if IsControlJustReleased(0, 38) then
 				if not NemaStruje then
-					OpenShopMenu(CurrentActionData.accessory)
+					OpenShopMenu("mask")
 					CurrentAction = nil
 				else
 					CurrentAction = nil
 					ESX.ShowNotification("Trenutno nismo u mogucnosti prodati robu zato sto nemamo struje!")
 				end
 			end
-		elseif CurrentAction == nil and not Config.EnableControls then
+		else
 			Citizen.Wait(500)
 		end
-
-		if Config.EnableControls then
-			if IsControlJustReleased(0, 311) and IsInputDisabled(0) and not isDead then
-				OpenAccessoryMenu()
-			end
-		end
-
 	end
 end)
