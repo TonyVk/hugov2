@@ -44,6 +44,12 @@ local Spawnovi = {
 	{x = -921.25415039063, y = -1372.5773925781, z = 0.292709171772, h = 19.627565383911}
 }
 
+local kamerica = nil
+local kamerica2 = nil
+local kampoz = vector3(-869.2455, -3223.565, 14.59404)
+local afto = vector3(-860.79876708984, -3223.0251464844, 13.408048629761)
+local aftohead = 58.331726074219
+
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -959,177 +965,271 @@ RegisterNUICallback(
 		})
 		TriggerEvent("MakniHud", false)
 		local playerPed = PlayerPedId()
+		local elem = {
+			{label = "Kupi vozilo", value = 'kupi'}
+		}
+		if not Brod then
+			table.insert(elem, {label = "Testiraj vozilo", value = 'test'})
+		end
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_izaberiga', {
 			title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price)),
 			align = 'bottom-right',
-			elements = {
-				{label = "Kupi vozilo", value = 'kupi'}
-			}
+			elements = elem
 		}, function(data2, menu2)
-			if not Brod then
-				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mjenjac', {
-					title    = "Izbor mjenjaca",
-					align    = 'bottom-right',
-					elements = {
-						{label = "Rucni",  value = 'rucni'},
-						{label = "Automatik ($5000)", value = 'auto'}
-					}
-				}, function (data69, menu69)
-					if data69.current.value == 'rucni' then
-						local mjenjac = 2
-						ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-							title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price)),
-							align = 'bottom-right',
-							elements = {
-								{label = _U('no'),  value = 'no'},
-								{label = _U('yes'), value = 'yes'}
-						}}, function(data4, menu4)
-							if data4.current.value == 'yes' then
-								local newPlate = GeneratePlate()
-								ESX.TriggerServerCallback('autosalon:sealion', function(success)
+			if data2.current.value == "kupi" then
+				if not Brod then
+					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mjenjac', {
+						title    = "Izbor mjenjaca",
+						align    = 'bottom-right',
+						elements = {
+							{label = "Rucni",  value = 'rucni'},
+							{label = "Automatik ($5000)", value = 'auto'}
+						}
+					}, function (data69, menu69)
+						if data69.current.value == 'rucni' then
+							local mjenjac = 2
+							ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
+								title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price)),
+								align = 'bottom-right',
+								elements = {
+									{label = _U('no'),  value = 'no'},
+									{label = _U('yes'), value = 'yes'}
+							}}, function(data4, menu4)
+								if data4.current.value == 'yes' then
+									local newPlate = GeneratePlate()
+									ESX.TriggerServerCallback('autosalon:sealion', function(success)
+										if success then
+											IsInShopMenu = false
+											menu4.close()
+											menu69.close()
+											menu2.close()
+											local prope = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
+											DeleteDisplayVehicleInsideShop()
+											local playerPed = PlayerPedId()
+
+
+											FreezeEntityPosition(playerPed, false)
+											SetEntityVisible(playerPed, true)
+											SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
+											TriggerServerEvent("garaza:ObrisiVozilo")
+											ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
+												TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+												local vehicleProps = prope
+												vehicleProps.plate = newPlate
+												ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+												SetVehicleNumberPlateText(vehicle, newPlate)
+												local nid = VehToNet(vehicle)
+												TriggerServerEvent("garaza:SpremiVozilo", nid)
+											end)
+										else
+											ESX.ShowNotification(_U('not_enough_money'))
+										end
+									end, vehicleData.model, newPlate, mjenjac, ESX.Game.GetVehicleProperties(currentDisplayVehicle))
+								else
+									menu4.close()
+								end
+							end, function(data4, menu4)
+								menu4.close()
+							end)
+						elseif data69.current.value == 'auto' then
+							local mjenjac = 1
+							ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
+								title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price+5000)),
+								align = 'bottom-right',
+								elements = {
+									{label = _U('no'),  value = 'no'},
+									{label = _U('yes'), value = 'yes'}
+							}}, function(data4, menu4)
+								if data4.current.value == 'yes' then
+									local generatedPlate = GeneratePlate()
+
+									ESX.TriggerServerCallback('autosalon:sealion', function(success)
+										if success then
+											IsInShopMenu = false
+											menu4.close()
+											menu69.close()
+											menu2.close()
+											local prope = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
+											DeleteDisplayVehicleInsideShop()
+											local playerPed = PlayerPedId()
+
+
+											FreezeEntityPosition(playerPed, false)
+											SetEntityVisible(playerPed, true)
+											SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
+											TriggerServerEvent("garaza:ObrisiVozilo")
+											ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
+												TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+												local vehicleProps = prope
+												vehicleProps.plate = generatedPlate
+												ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
+												SetVehicleNumberPlateText(vehicle, generatedPlate)
+												local nid = VehToNet(vehicle)
+												TriggerServerEvent("garaza:SpremiVozilo", nid)
+											end)
+										else
+											ESX.ShowNotification(_U('not_enough_money'))
+										end
+									end, vehicleData.model, generatedPlate, mjenjac, ESX.Game.GetVehicleProperties(currentDisplayVehicle))
+								else
+									menu4.close()
+								end
+							end, function(data4, menu4)
+								menu4.close()
+							end)
+						end
+					end, function (data69, menu69)
+						menu69.close()
+					end)
+				else
+					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
+								title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price+5000)),
+								align = 'bottom-right',
+								elements = {
+									{label = _U('no'),  value = 'no'},
+									{label = _U('yes'), value = 'yes'}
+					}}, function(data4, menu4)
+						if data4.current.value == 'yes' then
+							if Config.EnablePlayerManagement then
+								ESX.TriggerServerCallback('esx_vehicleshop:buyCarDealerVehicle', function(success)
 									if success then
 										IsInShopMenu = false
-										menu4.close()
-										menu69.close()
-										menu2.close()
-										local prope = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
 										DeleteDisplayVehicleInsideShop()
-										local playerPed = PlayerPedId()
 
 
 										FreezeEntityPosition(playerPed, false)
 										SetEntityVisible(playerPed, true)
-										SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
-										TriggerServerEvent("garaza:ObrisiVozilo")
-										ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
-											TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-											local vehicleProps = prope
-											vehicleProps.plate = newPlate
-											ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-											SetVehicleNumberPlateText(vehicle, newPlate)
-											local nid = VehToNet(vehicle)
-											TriggerServerEvent("garaza:SpremiVozilo", nid)
-										end)
+										SetEntityCoords(playerPed, Config.Zones.ShopEntering2.Pos)
+
+										menu4.close()
+										menu2.close()
+										ESX.ShowNotification(_U('vehicle_purchased'))
 									else
-										ESX.ShowNotification(_U('not_enough_money'))
+										ESX.ShowNotification(_U('broke_company'))
 									end
-								end, vehicleData.model, newPlate, mjenjac, ESX.Game.GetVehicleProperties(currentDisplayVehicle))
+								end, vehicleData.model)
 							else
-								menu4.close()
-							end
-						end, function(data4, menu4)
-							menu4.close()
-						end)
-					elseif data69.current.value == 'auto' then
-						local mjenjac = 1
-						ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-							title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price+5000)),
-							align = 'bottom-right',
-							elements = {
-								{label = _U('no'),  value = 'no'},
-								{label = _U('yes'), value = 'yes'}
-						}}, function(data4, menu4)
-							if data4.current.value == 'yes' then
 								local generatedPlate = GeneratePlate()
 
 								ESX.TriggerServerCallback('autosalon:sealion', function(success)
 									if success then
 										IsInShopMenu = false
 										menu4.close()
-										menu69.close()
 										menu2.close()
-										local prope = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
+										local propi = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
+												
 										DeleteDisplayVehicleInsideShop()
-										local playerPed = PlayerPedId()
-
-
-										FreezeEntityPosition(playerPed, false)
-										SetEntityVisible(playerPed, true)
-										SetEntityCoords(playerPed, Config.Zones.ShopEntering.Pos)
+												
 										TriggerServerEvent("garaza:ObrisiVozilo")
-										ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside.Pos, Config.Zones.ShopOutside.Heading, function (vehicle)
+										ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, function (vehicle)
 											TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-											local vehicleProps = prope
+											local vehicleProps = propi
 											vehicleProps.plate = generatedPlate
 											ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
 											SetVehicleNumberPlateText(vehicle, generatedPlate)
 											local nid = VehToNet(vehicle)
 											TriggerServerEvent("garaza:SpremiVozilo", nid)
 										end)
+										--TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, generatedPlate, 3)
 									else
 										ESX.ShowNotification(_U('not_enough_money'))
 									end
-								end, vehicleData.model, generatedPlate, mjenjac, ESX.Game.GetVehicleProperties(currentDisplayVehicle))
-							else
-								menu4.close()
+								end, vehicleData.model, generatedPlate, 3, ESX.Game.GetVehicleProperties(currentDisplayVehicle))
 							end
-						end, function(data4, menu4)
-							menu4.close()
-						end)
-					end
-				end, function (data69, menu69)
-					menu69.close()
-				end)
-			else
-				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop_confirm', {
-							title = _U('buy_vehicle_shop', vehicleData.name, ESX.Math.GroupDigits(vehicleData.price+5000)),
-							align = 'bottom-right',
-							elements = {
-								{label = _U('no'),  value = 'no'},
-								{label = _U('yes'), value = 'yes'}
-				}}, function(data4, menu4)
-					if data4.current.value == 'yes' then
-						if Config.EnablePlayerManagement then
-							ESX.TriggerServerCallback('esx_vehicleshop:buyCarDealerVehicle', function(success)
-								if success then
-									IsInShopMenu = false
-									DeleteDisplayVehicleInsideShop()
-
-
-									FreezeEntityPosition(playerPed, false)
-									SetEntityVisible(playerPed, true)
-									SetEntityCoords(playerPed, Config.Zones.ShopEntering2.Pos)
-
-									menu4.close()
-									menu2.close()
-									ESX.ShowNotification(_U('vehicle_purchased'))
-								else
-									ESX.ShowNotification(_U('broke_company'))
-								end
-							end, vehicleData.model)
 						else
-							local generatedPlate = GeneratePlate()
-
-							ESX.TriggerServerCallback('autosalon:sealion', function(success)
-								if success then
-									IsInShopMenu = false
-									menu4.close()
-									menu2.close()
-									local propi = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
-											
-									DeleteDisplayVehicleInsideShop()
-											
-									TriggerServerEvent("garaza:ObrisiVozilo")
-									ESX.Game.SpawnVehicle(vehicleData.model, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, function (vehicle)
-										TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-										local vehicleProps = propi
-										vehicleProps.plate = generatedPlate
-										ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
-										SetVehicleNumberPlateText(vehicle, generatedPlate)
-										local nid = VehToNet(vehicle)
-										TriggerServerEvent("garaza:SpremiVozilo", nid)
-									end)
-									--TriggerServerEvent("salon:SpawnVozilo", propi, Config.Zones.ShopOutside2.Pos, Config.Zones.ShopOutside2.Heading, generatedPlate, 3)
-								else
-									ESX.ShowNotification(_U('not_enough_money'))
-								end
-							end, vehicleData.model, generatedPlate, 3, ESX.Game.GetVehicleProperties(currentDisplayVehicle))
+							menu4.close()
 						end
-					else
+					end, function(data4, menu4)
 						menu4.close()
+					end)
+				end
+			elseif data2.current.value == "test" then
+				menu2.close()
+				IsInShopMenu = false
+				DoScreenFadeOut(2000)
+				while not IsScreenFadedOut() do
+					Wait(1)
+				end
+				TriggerServerEvent("firme:PostaviBucket", GetPlayerServerId(PlayerId()))
+				FreezeEntityPosition(PlayerPedId(), false)
+				SetEntityVisible(PlayerPedId(), true)
+				local prope = ESX.Game.GetVehicleProperties(currentDisplayVehicle)
+				local model = vehicleData.model
+				DeleteDisplayVehicleInsideShop()
+				if not HasModelLoaded(model) then
+					RequestModel(model)
+					while not HasModelLoaded(model) do
+						Wait(1)
 					end
-				end, function(data4, menu4)
-					menu4.close()
+				end
+				ESX.Game.SpawnLocalVehicle(model, afto, aftohead, function(veh)
+					ESX.Game.SetVehicleProperties(veh, prope)
+					SetModelAsNoLongerNeeded(model)
+					TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+					local blokiraj = true
+					Citizen.CreateThread(function()
+						while blokiraj do
+							DisableAllControlActions(0)
+							Wait(1)
+						end
+					end)
+					SetVehicleHandbrake(veh, true)
+					SetVehicleEngineOn(veh, false, true, true)
+					kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", kampoz, 0, 0, 0, 50.0, true, 2)
+					PointCamAtEntity(kamerica, veh, 0.0, 0.0, 0.0, true)
+					RenderScriptCams(true, false, 0, 1, 0)
+					DoScreenFadeIn(1000)
+					local retval = GetEntityBoneIndexByName(veh, "exhaust")
+					local retval2 = GetWorldPositionOfEntityBone(veh, retval)
+					local modele = "prop_cs_dildo_01"
+					ESX.Streaming.RequestModel(modele)
+					local prop = CreateObject(GetHashKey(modele), retval2, false, false, false)
+					SetEntityHeading(prop, GetEntityHeading(veh))
+					local retval3 = GetOffsetFromEntityInWorldCoords(prop, 0.0, -1.0, 0.0)
+					DeleteEntity(prop)
+					Wait(10000)
+					kamerica2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", retval3, 0, 0, 0, 50.0, true, 2)
+					PointCamAtEntity(kamerica2, veh, 0.0, 0.0, 0.0, true)
+					DestroyCam(kamerica, false)
+					Wait(200)
+					SetVehicleEngineOn(veh, true, false, false)
+					while IsVehicleEngineStarting(veh) do
+						Wait(1)
+					end
+					Citizen.SetTimeout(2000, function()
+						blokiraj = false
+						local br = 0
+						while br < 100 do
+							SetControlNormal(0, 71, 1.0)
+							br = br+1
+							Wait(1)
+						end
+						Wait(500)
+						br = 0
+						while br < 100 do
+							SetControlNormal(0, 71, 1.0)
+							br = br+1
+							Wait(1)
+						end
+						Citizen.SetTimeout(2000, function()
+							RenderScriptCams(false, false, 0, 1, 0)
+							DestroyCam(kamerica, false)
+							DestroyCam(kamerica2, false)
+							SetVehicleHandbrake(veh, false)
+							ESX.ShowNotification("Imate 2 minute da istestirate vozilo!")
+							Citizen.SetTimeout(120000, function()
+								ESX.ShowNotification("Vas test je zavrsio!")
+								DoScreenFadeOut(2000)
+								while not IsScreenFadedOut() do
+									Wait(1)
+								end
+								ESX.Game.DeleteVehicle(veh)
+								TriggerServerEvent("firme:PostaviBucket", 0)
+								SetEntityCoords(PlayerPedId(), Config.Zones.ShopEntering.Pos)
+								DoScreenFadeIn(2000)
+							end)
+						end)
+					end)
 				end)
 			end
 		end, function (data2, menu2)

@@ -381,9 +381,6 @@ AddEventHandler('kontenjer:Pretrazi', function(data)
 	end, koord)
 end)
 
-RegisterCommand("testpistolj", function(source, args, raw)
-	GiveWeaponToPed(PlayerPedId(), GetHashKey("WEAPON_PISTOL"), 250, false, true)
-end)
 
 RegisterCommand("auredi", function(source, args, raw)
 	local elements = {}
