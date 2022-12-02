@@ -465,6 +465,7 @@ AddEventHandler('loaf_housing:buyHouse', function(id, ka)
             MySQL.Async.fetchScalar("SELECT houseid FROM bought_houses WHERE houseid=@houseid", {['@houseid'] = id}, function(result)
                 local newHouse = ('{"owns":false,"furniture":[],"houseId":%s}'):format(id)
                 if not result then
+                    Config.Houses[ka]['price'] = tonumber(Config.Houses[ka]['price'])
                     if xPlayer.getAccount('bank').money >= Config.Houses[ka]['price'] then
                         xPlayer.removeAccountMoney('bank', Config.Houses[ka]['price'])
                         TriggerEvent("banka:Povijest", xPlayer.source, (-1*tonumber(Config.Houses[ka]['price'])), "Kupovina kuće")
