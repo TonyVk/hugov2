@@ -1750,7 +1750,7 @@ Citizen.CreateThread(function()
 			-- 	end
 			-- --end
 
-			if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
+			--if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
 				for k,v in pairs(Config.Narudzbe) do
 					if #(coords-v.Pos) < v.Size.x and lsMenuIsShowed == false then
 						naso = 1
@@ -1763,7 +1763,7 @@ Citizen.CreateThread(function()
 						isInLSMarker2  = false
 					end
 				end
-			end
+			--end
 
 			if IsControlJustReleased(0, Keys['E']) and not lsMenuIsShowed then
 				if isInLSMarker then
@@ -1825,8 +1825,14 @@ end)
 
 function OpenIzborMenu()
 	local elems = {}
-	table.insert(elems, {label = "Narucivanje dijelova", value = "narucivanje"})
-	table.insert(elems, {label = "Ugradnja dijelova", value = "ugradnja"})
+	if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
+		table.insert(elems, {label = "Narucivanje dijelova", value = "narucivanje"})
+	else
+		table.insert(elems, {label = "Pregled dijelova", value = "narucivanje"})
+	end
+	if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
+		table.insert(elems, {label = "Ugradnja dijelova", value = "ugradnja"})
+	end
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), "menu_izbnar",
 	{
 		title    = "Izaberite opciju",
@@ -1867,10 +1873,14 @@ function OpenIzborMenu()
 			local playerPed = PlayerPedId()
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
 			if GetPedInVehicleSeat(GetVehiclePedIsIn(playerPed, false), -1) == playerPed then
-				lsMenuIsShowed = true
-				myCar = ESX.Game.GetVehicleProperties(vehicle)
-				ESX.UI.Menu.CloseAll()
-				OtvoriNarudzbu(myCar.plate)
+				if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
+					lsMenuIsShowed = true
+					myCar = ESX.Game.GetVehicleProperties(vehicle)
+					ESX.UI.Menu.CloseAll()
+					OtvoriNarudzbu(myCar.plate)
+				else
+					ESX.ShowNotification("Niste mehanicar")
+				end
 			else
 				ESX.ShowNotification("Morate biti vozac!")
 			end
