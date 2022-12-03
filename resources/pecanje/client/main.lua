@@ -11,6 +11,7 @@ Citizen.CreateThread(function()
 	end
 	ESX.TriggerServerCallback("pecanje:DohvatiKoord", function(kord)
 		SpawnPeda(kord)
+		SpawnBlip(kord)
 	end)
 end)
 
@@ -44,6 +45,20 @@ function SpawnPeda(kord)
 		distance = 2.5
 	})
 	SetModelAsNoLongerNeeded(pedmodel)
+end
+
+function SpawnBlip(kord)
+	local blip = AddBlipForCoord(kord.coord)
+	SetBlipSprite(blip, 780)
+	SetBlipDisplay(blip, 4)
+	SetBlipScale(blip, 0.7)
+	SetBlipCategory(blip, 3)
+	SetBlipColour(blip, 5)
+	SetBlipAsShortRange(blip, true)
+
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString("Prodaja ribe")
+	EndTextCommandSetBlipName(blip)
 end
 
 RegisterNetEvent("ribar:ProdajRibu")
