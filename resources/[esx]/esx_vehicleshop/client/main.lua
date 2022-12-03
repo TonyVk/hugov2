@@ -49,6 +49,8 @@ local kamerica2 = nil
 local kampoz = vector3(-869.2455, -3223.565, 14.59404)
 local afto = vector3(-860.79876708984, -3223.0251464844, 13.408048629761)
 local aftohead = 58.331726074219
+local SekundeTest = 0
+local localVozilo = nil
 
 ESX = nil
 
@@ -1163,6 +1165,7 @@ RegisterNUICallback(
 					end
 				end
 				ESX.Game.SpawnLocalVehicle(model, afto, aftohead, function(veh)
+					localVozilo = veh
 					ESX.Game.SetVehicleProperties(veh, prope)
 					SetModelAsNoLongerNeeded(model)
 					TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
@@ -1180,12 +1183,22 @@ RegisterNUICallback(
 					RenderScriptCams(true, false, 0, 1, 0)
 					DoScreenFadeIn(1000)
 					local retval = GetEntityBoneIndexByName(veh, "exhaust")
+					local promjena = false
+					if retval == -1 then
+						retval = GetEntityBoneIndexByName(veh, "wheel_lr")
+						promjena = true
+					end
 					local retval2 = GetWorldPositionOfEntityBone(veh, retval)
 					local modele = "prop_cs_dildo_01"
 					ESX.Streaming.RequestModel(modele)
 					local prop = CreateObject(GetHashKey(modele), retval2, false, false, false)
 					SetEntityHeading(prop, GetEntityHeading(veh))
-					local retval3 = GetOffsetFromEntityInWorldCoords(prop, 0.0, -1.0, 0.0)
+					local retval3
+					if not promjena then
+						retval3 = GetOffsetFromEntityInWorldCoords(prop, 0.0, -1.0, 0.0)
+					else
+						retval3 = GetOffsetFromEntityInWorldCoords(prop, 1.0, -4.0, 0.0)
+					end
 					DeleteEntity(prop)
 					Wait(10000)
 					kamerica2 = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", retval3, 0, 0, 0, 50.0, true, 2)
@@ -1217,17 +1230,9 @@ RegisterNUICallback(
 							DestroyCam(kamerica2, false)
 							SetVehicleHandbrake(veh, false)
 							ESX.ShowNotification("Imate 2 minute da istestirate vozilo!")
-							Citizen.SetTimeout(120000, function()
-								ESX.ShowNotification("Vas test je zavrsio!")
-								DoScreenFadeOut(2000)
-								while not IsScreenFadedOut() do
-									Wait(1)
-								end
-								ESX.Game.DeleteVehicle(veh)
-								TriggerServerEvent("firme:PostaviBucket", 0)
-								SetEntityCoords(PlayerPedId(), Config.Zones.ShopEntering.Pos)
-								DoScreenFadeIn(2000)
-							end)
+							ESX.ShowNotification("Da prekinete testnu voznju upisite /zavrsitest")
+							SekundeTest = 120
+							Citizen.SetTimeout(1000, SkiniSec)
 						end)
 					end)
 				end)
@@ -1268,6 +1273,30 @@ RegisterNUICallback(
 		end)
     end
 )
+
+function SkiniSec()
+	if SekundeTest <= 0 then
+		ESX.ShowNotification("Vas test je zavrsio!")
+		DoScreenFadeOut(2000)
+		while not IsScreenFadedOut() do
+			Wait(1)
+		end
+		ESX.Game.DeleteVehicle(localVozilo)
+		localVozilo = nil
+		TriggerServerEvent("firme:PostaviBucket", 0)
+		SetEntityCoords(PlayerPedId(), Config.Zones.ShopEntering.Pos)
+		DoScreenFadeIn(2000)
+	else
+		SekundeTest = SekundeTest-1
+		if SekundeTest == 60 then
+			ESX.ShowNotification("Preostala vam je još 1 minuta testa!")
+		end
+		if SekundeTest == 10 then
+			ESX.ShowNotification("Preostalo vam je još 10 sekundi testa!")
+		end
+		Citizen.SetTimeout(1000, SkiniSec)
+	end
+end
 
 RegisterNUICallback(
     "lijevo",
@@ -2414,23 +2443,10 @@ AddEventHandler('onResourceStop', function(resource)
 end)
 
 RegisterCommand("zavrsitest", function(source, args, rawCommandString)
-	if UTestu == 1 then
-		if VoziloID ~= nil and DoesEntityExist(VoziloID) then
-			local heal = GetVehicleEngineHealth(VoziloID)
-			local ukupno = math.ceil((1000-heal)*10)
-			TriggerServerEvent("salon:PlatiStetu", ukupno)
-			ESX.ShowNotification("Platili ste stetu na vozilu "..ukupno.."$.")
-			ESX.Game.DeleteVehicle(VoziloID)
-		end
-		Vrijeme = 0
-		UTestu = 0
-		ESX.ShowNotification("Vasa testna voznja je zavrsila!")
-		VoziloID = nil
-		if not Brod then
-			SetEntityCoords(PlayerPedId(), Config.Zones.ShopEntering.Pos.x, Config.Zones.ShopEntering.Pos.y, Config.Zones.ShopEntering.Pos.z)
-		else
-			SetEntityCoords(PlayerPedId(), Config.Zones.ShopEntering2.Pos.x, Config.Zones.ShopEntering2.Pos.y, Config.Zones.ShopEntering2.Pos.z)
-		end
+	if SekundeTest > 0 then
+		SekundeTest = 0
+	else
+		ESX.ShowNotification("Niste u testu!")
 	end
 end, false)
 
