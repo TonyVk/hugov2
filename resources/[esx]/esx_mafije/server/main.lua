@@ -2960,9 +2960,13 @@ ESX.RegisterServerCallback('mafije:piku5', function(source, cb, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local soc = "society_"..xPlayer.getJob().name
 	TriggerEvent('esx_addonaccount:getSharedAccount', soc, function(account)
-		if account.money >= amount then
-			account.removeMoney(amount)
-			cb(true)
+		if account and account.money and amount then
+			if account.money >= amount then
+				account.removeMoney(amount)
+				cb(true)
+			else
+				cb(false)
+			end
 		else
 			cb(false)
 		end
