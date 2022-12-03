@@ -527,7 +527,7 @@ AddEventHandler('kuce:VratiVozilo', function(nid, vehicle, co)
 	end
 end)
 
-RegisterCommand("zavrsikosenje", function(source, args, rawCommandString)
+RegisterCommand("kzavrsi", function(source, args, rawCommandString)
 	if Kosim == true then
 		Kosim = false
 		if prop_ent ~= nil then
@@ -803,7 +803,7 @@ Citizen.CreateThread(function()
                                                 SendNUIMessage({
                                                     start = true
                                                 })
-                                                ESX.ShowNotification("Da prestanete kositi upisite /zavrsikosenje")
+                                                ESX.ShowNotification("Da prestanete kositi upisite /kzavrsi")
                                                 PokreniProvjeru()
                                             else
                                                 ESX.ShowNotification("Trava nije izrasla ili vec kosite!")
