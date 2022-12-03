@@ -1176,6 +1176,15 @@ RegisterNUICallback(
 							Wait(1)
 						end
 					end)
+					local gDragCoef = GetVehicleHandlingFloat(veh, 'CHandlingData', 'fInitialDragCoeff')
+					local gFlatVel = GetVehicleHandlingFloat(veh, 'CHandlingData', 'fInitialDriveMaxFlatVel')
+					local drag = 8
+					local speed = 0.4
+					local br = gDragCoef+drag
+					local br2 = gFlatVel-(gFlatVel*speed)
+					SetVehicleHandlingFloat(veh, 'CHandlingData', 'fInitialDragCoeff', br) --stage 0 -10.0
+					SetVehicleHandlingFloat(veh, 'CHandlingData', 'fInitialDriveMaxFlatVel', br2)
+					ModifyVehicleTopSpeed(veh, 16.11)
 					SetVehicleHandbrake(veh, true)
 					SetVehicleEngineOn(veh, false, true, true)
 					kamerica = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", kampoz, 0, 0, 0, 50.0, true, 2)
