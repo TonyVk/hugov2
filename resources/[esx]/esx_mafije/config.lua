@@ -11,7 +11,7 @@ Config.Price 					  = 1500
 Config.RepairMultiplier 		  = 1
 Config.Tijelo 					  = ""
 Config.Automafija 				  = "automafija"
-Config.Impound 					  = vector3(-2611.5349121094, 1685.0986328125, 140.86622619629)
+Config.Impound 					  = vector3(-441.6417541504, -1696.0352783204, 17.945041656494)
 Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 1.0 }
 Config.Markeri = {
 	{x = -39.806713104248, y = -1745.1953125, z = 28.601583480835}, --dostavapica1

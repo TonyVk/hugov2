@@ -2600,7 +2600,7 @@ ESX.RegisterServerCallback('mafije:getVehicleInfos', function(source, cb, plate)
         if foundIdentifier ~= nil then
 
           MySQL.Async.fetchAll(
-            'SELECT * FROM users WHERE identifier = @identifier',
+            'SELECT * FROM users WHERE ID = @identifier',
             {
               ['@identifier'] = foundIdentifier
             },
@@ -2654,7 +2654,7 @@ ESX.RegisterServerCallback('mafije:getVehicleInfos', function(source, cb, plate)
         if foundIdentifier ~= nil then
 
           MySQL.Async.fetchAll(
-            'SELECT * FROM users WHERE identifier = @identifier',
+            'SELECT * FROM users WHERE ID = @identifier',
             {
               ['@identifier'] = foundIdentifier
             },

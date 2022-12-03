@@ -48,17 +48,17 @@ Config.Garages = {
 
 		},
 		MunicipalPoundPoint = {
-			Pos = vector3(482.896, -1316.557, 28.301),
+			Pos = vector3(-464.25, -1708.79, 17.72),
 			Color = {r=25,g=25,b=112},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1
 		},
 		SpawnMunicipalPoundPoint = {
-			Pos = vector3(490.942, -1313.067, 27.964),
+			Pos = vector3(-458.742, -1698.56, 17.97),
 			Color = {r=0,g=255,b=0},
 			Size  = {x = 3.0, y = 3.0, z = 1.0},
 			Marker = 1,
-			Heading=299.42
+			Heading=233.32
 		},
 	},
 	

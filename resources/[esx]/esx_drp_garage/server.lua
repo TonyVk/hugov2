@@ -171,7 +171,7 @@ end)
 function GetRPName(ident, data)
 	local Identifier = ident
 
-	MySQL.Async.fetchAll("SELECT firstname, lastname FROM users WHERE identifier = @identifier", { ["@identifier"] = Identifier }, function(result)
+	MySQL.Async.fetchAll("SELECT firstname, lastname FROM users WHERE ID = @identifier", { ["@identifier"] = Identifier }, function(result)
 
 		data(result[1].firstname, result[1].lastname)
 
