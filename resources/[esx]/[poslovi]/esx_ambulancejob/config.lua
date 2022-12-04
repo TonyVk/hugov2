@@ -28,6 +28,11 @@ Config.EarlyRespawnFineAmount     = 5000
 
 Config.RespawnPoint = { coords = vector3(341.0, -1397.3, 32.5), heading = 48.5 }
 
+Config.Lijecenje = {
+	Koord = vector3(311.20971679688, -599.43786621094, 42.29178237915),
+	Heading = 67.83
+}
+
 Config.Hospitals = {
 
 	CentralLosSantos = {

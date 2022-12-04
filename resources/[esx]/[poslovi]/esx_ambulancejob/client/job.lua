@@ -5,6 +5,19 @@ local spawnedVehicles, isInShopMenu = {}, false
 local Tablice
 local BVozilo = nil
 local UpaljenaSirena = false
+local LijecenjePED = nil
+
+Citizen.CreateThread(function()
+	while ESX == nil do
+		Citizen.Wait(0)
+	end
+
+	while ESX.GetPlayerData().job == nil do
+		Citizen.Wait(100)
+	end
+
+	SpawnNPC()
+end)
 
 function OpenAmbulanceActionsMenu()
 	local elements = {
@@ -34,6 +47,76 @@ function OpenAmbulanceActionsMenu()
 		CurrentActionData = {}
 	end)
 end
+
+LoadModel = function(model)
+	RequestModel(model)
+
+	while not HasModelLoaded(model) do
+		Wait(10)
+	end
+end
+
+function SpawnNPC()
+    local pedmodel = GetHashKey("s_m_m_doctor_01")
+	LoadModel(pedmodel)
+	LijecenjePED = CreatePed(0, pedmodel, Config.Lijecenje.Koord, Config.Lijecenje.Heading, false, true)
+	SetEntityInvincible(LijecenjePED, true)
+	SetBlockingOfNonTemporaryEvents(LijecenjePED, true)
+	SetPedDiesWhenInjured(LijecenjePED, false)
+	SetPedFleeAttributes(LijecenjePED, 2)
+	FreezeEntityPosition(LijecenjePED, true)
+	SetPedCanPlayAmbientAnims(LijecenjePED, false)
+	SetPedCanRagdollFromPlayerImpact(LijecenjePED, false)
+	exports.qtarget:AddEntityZone("lijecenje_ped", LijecenjePED, 
+	{
+		name = "lijecenje_ped",
+		debugPoly = false,
+		useZ = true
+	}, {
+		options = {
+			{
+				event = "bolnica:Lijeci",
+				icon = "far fa-user",
+				label = "Lijecite osobu do vas ($2200)",
+				izbor = 1
+			},
+			{
+				event = "bolnica:Lijeci",
+				icon = "far fa-user",
+				label = "Lijecite sebe ($2200)",
+				izbor = 2
+			}
+		},
+		distance = 2.5
+	})
+	SetModelAsNoLongerNeeded(pedmodel)
+end
+
+RegisterNetEvent('bolnica:Lijeci')
+AddEventHandler('bolnica:Lijeci', function(data)
+	if data.izbor == 1 then
+		local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+		if closestPlayer == -1 or closestDistance > 1.5 then
+			ESX.ShowNotification(_U('no_players'))
+		else
+			ClearPedTasks(PlayerPedId())
+			local closestPlayerPed = GetPlayerPed(closestPlayer)
+			TriggerServerEvent('ambu:ozivi2', GetPlayerServerId(closestPlayer))
+			TriggerServerEvent('esx_billing:posaljiTuljana', GetPlayerServerId(closestPlayer), 'society_ambulance', "Bolnicar", 2200)
+		end
+	elseif data.izbor == 2 then
+		local health = GetEntityHealth(PlayerPedId())
+		if health > 0 then
+			ESX.ShowNotification(_U('heal_inprogress'))
+			FreezeEntityPosition(PlayerPedId(), true)
+			Wait(10000)
+			TriggerServerEvent('esx_billing:posaljiTuljana', GetPlayerServerId(PlayerId()), 'society_ambulance', "Bolnicar", 2200)
+			TriggerEvent('esx_ambulancejob:heal', 'big', true)
+			FreezeEntityPosition(PlayerPedId(), false)
+			ESX.ShowNotification("Izljeceni ste!")
+		end
+	end
+end)
 
 function OtvoriListuZaposlenih()
 	ESX.TriggerServerCallback('esx_policejob:dohvatiZaposlene', function(datae)
