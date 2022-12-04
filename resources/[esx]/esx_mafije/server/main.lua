@@ -2849,8 +2849,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 	if stvar == "laptop" then
 		local xItem = xPlayer.getInventoryItem('net_cracker')
 		if (xItem.count + 1) <= xItem.limit then
-			if xPlayer.getMoney() >= 2500 then
-			  xPlayer.removeMoney(2500)
+			if xPlayer.getMoney() >= 25000 then
+			  xPlayer.removeMoney(25000)
 			  xPlayer.addInventoryItem('net_cracker', 1)
 			  local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item net_cracker x 1"
 			  TriggerEvent("SpremiLog", por)
@@ -2864,8 +2864,8 @@ ESX.RegisterServerCallback('kupistvari', function(source, cb, stvar, maf)
 	elseif stvar == "termit" then
 		local xItem = xPlayer.getInventoryItem('thermite')
 		if (xItem.count + 1) <= xItem.limit then
-			if xPlayer.getMoney() >= 1000 then
-			  xPlayer.removeMoney(1000)
+			if xPlayer.getMoney() >= 5000 then
+			  xPlayer.removeMoney(5000)
 			  xPlayer.addInventoryItem('thermite', 1)
 			  local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(source).."("..xPlayer.identifier..") je dobio item thermite x 1"
 			  TriggerEvent("SpremiLog", por)
