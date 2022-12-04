@@ -3128,6 +3128,9 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 			end
 		end
 	end)
+	if GetVehicleClass(currentVehicle) == 18 then
+		SetVehicleEnginePowerMultiplier(currentVehicle, 70.0)                
+	end
 end)
 
 RegisterNetEvent('baseevents:leftVehicle')
