@@ -85,8 +85,12 @@ AddEventHandler("Heroin:get", function(torba)
 						local randa = math.random(1,3)
 						if xPlayer.getInventoryItem('gljive').count+randa > 30*2 then
 							xPlayer.addInventoryItem("gljive", 1)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item gljive x 1"
+							TriggerEvent("SpremiLog", por)
 						else
 							xPlayer.addInventoryItem("gljive", randa)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item gljive x 1"
+							TriggerEvent("SpremiLog", por)
 						end
 					else
 						TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
@@ -96,8 +100,12 @@ AddEventHandler("Heroin:get", function(torba)
 						local randa = math.random(1,3)
 						if xPlayer.getInventoryItem('gljive').count+randa > 30 then
 							xPlayer.addInventoryItem("gljive", 1)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item gljive x 1"
+							TriggerEvent("SpremiLog", por)
 						else
 							xPlayer.addInventoryItem("gljive", randa)
+							local por = "["..os.date("%X").."] ("..GetCurrentResourceName()..") Igrac "..GetPlayerName(_source).."("..xPlayer.identifier..") je dobio item gljive x 1"
+							TriggerEvent("SpremiLog", por)
 						end
 					else
 						TriggerClientEvent('esx:showNotification', source, '~r~Ne mozete nositi vise gljiva')
