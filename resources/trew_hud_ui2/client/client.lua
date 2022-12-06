@@ -1386,7 +1386,7 @@ end)
 RegisterNetEvent('kvar:PopraviKvar')
 AddEventHandler('kvar:PopraviKvar', function(tabl)
 	TriggerEvent("iens:Dozvoljeno", true)
-	TriggerServerEvent("kvar:PopraviKvar", tabl, math.random(Kvar, Kvar+25000))
+	TriggerServerEvent("kvar:PopraviKvar", tabl, math.random(Kvar, Kvar+2000))
 end)
 
 local SapucoKvar = false

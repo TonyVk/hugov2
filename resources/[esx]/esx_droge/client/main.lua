@@ -114,7 +114,7 @@ function OpenDrugShop(i)
 	table.insert(elements, {
         label = ('%s - <span style="color:green;">%s</span>'):format("Sjeme", 200),
         name = "seed",
-        price = 200,
+        price = 20,
 
         -- menu properties
         type = 'slider',

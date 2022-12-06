@@ -729,7 +729,7 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 				['@vehicle'] = json.encode(vd),
 				['@model'] = GetHashKey(model),
 				['@mj'] = mjenjac,
-				['@serv'] = math.random(5000, 30000),
+				['@serv'] = math.random(500, 2000),
 				['@naziv'] = modelName
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))
@@ -748,7 +748,7 @@ ESX.RegisterServerCallback('autosalon:sealion', function(source, cb, model, plat
 				['@vehicle'] = json.encode(vd),
 				['@model'] = GetHashKey(model),
 				['@mj'] = mjenjac,
-				['@serv'] = math.random(5000, 30000),
+				['@serv'] = math.random(500, 2000),
 				['@naziv'] = modelName
 			}, function(rowsChanged)
 				TriggerClientEvent('esx:showNotification', _source, _U('vehicle_belongs', plate))

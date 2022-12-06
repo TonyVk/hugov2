@@ -2355,14 +2355,14 @@ end, false)
 function OpenSPitajMenu()
 	if PlayerData.job.grade_name == "boss" then
 		local elements = {
-			{label = "Da (500000$)", value = 'da'},
+			{label = "Da (100000$)", value = 'da'},
 			{label = "Ne", value = 'ne'}
 		}
 
 		ESX.UI.Menu.Open(
 		  'default', GetCurrentResourceName(), 'kskl',
 		  {
-			title    = "Zelite li kupiti skladiste za $500000?",
+			title    = "Zelite li kupiti skladiste za $100000?",
 			align    = 'top-left',
 			elements = elements,
 		  },
@@ -2371,7 +2371,7 @@ function OpenSPitajMenu()
 				menu.close()
 				ESX.TriggerServerCallback('mafije:KupiSkladiste', function(mozel)
 					if mozel then
-						ESX.ShowNotification("Kupili ste skladiste za $500000!")
+						ESX.ShowNotification("Kupili ste skladiste za $100000!")
 						CurrentAction     = 'menu_ulazk'
 						CurrentActionMsg  = "Pritisnite E da udjete u labos"
 						CurrentActionData = {}
@@ -2407,14 +2407,14 @@ end
 function OpenS2PitajMenu()
 	if PlayerData.job.grade_name == "boss" then
 		local elements = {
-			{label = "Da (500000$)", value = 'da'},
+			{label = "Da (100000$)", value = 'da'},
 			{label = "Ne", value = 'ne'}
 		}
 
 		ESX.UI.Menu.Open(
 		  'default', GetCurrentResourceName(), 'kskl2',
 		  {
-			title    = "Zelite li kupiti skladiste za $500000?",
+			title    = "Zelite li kupiti skladiste za $100000?",
 			align    = 'top-left',
 			elements = elements,
 		  },
@@ -2423,7 +2423,7 @@ function OpenS2PitajMenu()
 				menu.close()
 				ESX.TriggerServerCallback('mafije:KupiSkladiste2', function(mozel)
 					if mozel then
-						ESX.ShowNotification("Kupili ste skladiste za $500000!")
+						ESX.ShowNotification("Kupili ste skladiste za $100000!")
 						CurrentAction     = 'menu_ulazh'
 						CurrentActionMsg  = "Pritisnite E da udjete u labos"
 						CurrentActionData = {}
@@ -2472,7 +2472,7 @@ function OpenNewMenu()
 	end
 	table.insert(elements, {label = 'Oruzarnica',  value = 'buy_oruzje'})
 	if PlayerData.job.grade_name == 'boss' or PlayerData.job.grade_name == 'vlasnik' then
-		table.insert(elements, {label = 'Kupi avion ($500000)',  value = 'buy_avion'})
+		table.insert(elements, {label = 'Kupi avion ($100000)',  value = 'buy_avion'})
 	end
 
 
