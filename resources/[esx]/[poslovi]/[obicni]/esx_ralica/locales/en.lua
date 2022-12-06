@@ -1,7 +1,7 @@
 Locales['en'] = {
 	['cloakroom']				= 'Ormar',
-	['job_wear']				= 'radna odjeca',
-	['citizen_wear']			= 'civilna odjeca',
+	['radna_odjeca']			= 'radna odjeca',
+	['civilna_odjeca']			= 'civilna odjeca',
 	['vehiclespawner']			= 'Izbor vozila', 
 	['already_have_van']		= 'we have allready provided a van!', 
 	['delivery']				= 'press ~INPUT_PICKUP~ to deliver.',

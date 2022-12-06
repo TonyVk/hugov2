@@ -3,40 +3,104 @@ Config.DrawDistance = 100.0
 Config.MaxDelivery	= 10
 Config.TruckPrice	= 0
 Config.Locale       = 'en'
+Config.Posao		= "ralica"
 
 Config.Trucks = {
 	"biff"
 }
 
-Config.Cloakroom = {
-			CloakRoom = {
-					Pos   = vector3(-139.41595458984, -2518.4438476563, 5.0957126617432),
-					Size  = {x = 3.0, y = 3.0, z = 1.0},
-					Color = {r = 204, g = 204, b = 0},
-					Type  = 1,
-					Id = 1
-				}
+Config.Oprema = {
+	Koord = vector3(-139.16435241699, -2518.6760253906, 6.095712184906),
+	Heading = 55.88
+}
+
+Config.SpawnVozilaPed = {
+	Koord = vector3(-143.94401550293, -2523.7958984375, 6.0694770812988),
+	Heading = 54.13
+}
+
+Config.Uniforms = {
+	EUP = true,
+	uniforma = { 
+		male = {
+			['tshirt_1'] = 59,  ['tshirt_2'] = 0,
+			['torso_1'] = 89,   ['torso_2'] = 1,
+			['decals_1'] = 0,   ['decals_2'] = 0,
+			['arms'] = 31,
+			['pants_1'] = 36,   ['pants_2'] = 0,
+			['shoes'] = 35,
+			['helmet_1'] = 5,  ['helmet_2'] = 0,
+			['glasses_1'] = 19,  ['glasses_2'] = 0
+		},
+		female = {
+			['tshirt_1'] = 36,  ['tshirt_2'] = 0,
+			['torso_1'] = 0,   ['torso_2'] = 11,
+			['decals_1'] = 0,   ['decals_2'] = 0,
+			['arms'] = 68,
+			['pants_1'] = 30,   ['pants_2'] = 2,
+			['shoes'] = 26,
+			['helmet_1'] = 19,  ['helmet_2'] = 0,
+			['glasses_1'] = 15,  ['glasses_2'] = 0
+		}
+	},
+	EUPuniforma = { 
+		male = {
+			ped = 'mp_m_freemode_01',
+			props = {
+				{ 0, 61, 2 },
+				{ 1, 16, 10 },
+				{ 2, 0, 0 },
+				{ 6, 0, 0 },
+			},
+			components = {
+				{ 1, 1, 1 },
+				{ 11, 3, 6 },
+				{ 3, 64, 1 },
+				{ 10, 1, 1 },
+				{ 8, 91, 1 },
+				{ 4, 50, 4 },
+				{ 6, 52, 4 },
+				{ 7, 1, 1 },
+				{ 9, 4, 3 },
+				{ 5, 49, 1 },
+			}
+		},
+		female = {
+			ped = 'mp_f_freemode_01',
+			props = {
+				{ 0, 61, 1 },
+				{ 1, 0, 0 },
+				{ 2, 0, 0 },
+				{ 6, 0, 0 },
+			},
+			components = {
+				{ 1, 1, 1 },
+				{ 11, 118, 1 },
+				{ 3, 82, 1 },
+				{ 10, 1, 1 },
+				{ 8, 55, 1 },
+				{ 4, 5, 2 },
+				{ 6, 27, 1 },
+				{ 7, 1, 1 },
+				{ 9, 6, 3 },
+				{ 5, 49, 1 },
+			}
+		}
+	}
 }
 
 Config.Zones = {
-	VehicleSpawner = {
-				Pos   = vector3(-145.3345489502, -2522.91796875, 5.002552986145),
-				Size  = {x = 3.0, y = 3.0, z = 1.0},
-				Color = {r = 204, g = 204, b = 0},
-				Type  = 1
-	},
-
 	VehicleSpawnPoint = {
-				Pos   = vector3(-151.92576599121, -2517.5556640625, 5.0544710159302),
-				Size  = {x = 3.0, y = 3.0, z = 1.0},
-				Type  = -1
+		Pos   = vector3(-151.92576599121, -2517.5556640625, 5.0544710159302),
+		Size  = {x = 3.0, y = 3.0, z = 1.0},
+		Type  = -1
 	},
 	
 	VehicleDeletePoint = {
-				Pos   = vector3(-154.05709838867, -2504.0222167969, 5.0563578605652),
-				Size  = {x = 3.0, y = 3.0, z = 1.0},
-				Color = {r = 255, g = 0, b = 0},
-				Type  = 1
+		Pos   = vector3(-154.05709838867, -2504.0222167969, 5.0563578605652),
+		Size  = {x = 3.0, y = 3.0, z = 1.0},
+		Color = {r = 255, g = 0, b = 0},
+		Type  = 1
 	}
 }
 

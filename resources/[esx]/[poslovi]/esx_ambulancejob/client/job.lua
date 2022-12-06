@@ -805,6 +805,7 @@ function setUniform(job, playerPed)
 						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
 					end
 				end
+				SetModelAsNoLongerNeeded(outfit.ped)
 			end
 			
 		else
@@ -842,6 +843,7 @@ function setUniform(job, playerPed)
 						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
 					end
 				end
+				SetModelAsNoLongerNeeded(outfit.ped)
 			end
 
 

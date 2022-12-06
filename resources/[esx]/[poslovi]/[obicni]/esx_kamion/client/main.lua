@@ -83,6 +83,7 @@ function SpawnNpcove()
 		FreezeEntityPosition(DuznostPed, true)
 		SetPedCanPlayAmbientAnims(DuznostPed, false)
 		SetPedCanRagdollFromPlayerImpact(DuznostPed, false)
+		SetModelAsNoLongerNeeded(pedmodel)
 
 		exports.qtarget:AddEntityZone("kamion", DuznostPed, 
 		{
@@ -335,6 +336,7 @@ function setUniform(playerPed)
 						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
 					end
 				end
+				SetModelAsNoLongerNeeded(outfit.ped)
 			end
 			
 		else
@@ -372,6 +374,7 @@ function setUniform(playerPed)
 						SetPedPropIndex(ped, comp[1], comp[2] - 1, comp[3] - 1, true)
 					end
 				end
+				SetModelAsNoLongerNeeded(outfit.ped)
 			end
 
 

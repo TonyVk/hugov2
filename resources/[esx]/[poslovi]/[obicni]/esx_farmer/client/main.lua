@@ -78,6 +78,7 @@ function SpawnNpcove()
 		FreezeEntityPosition(DuznostPed, true)
 		SetPedCanPlayAmbientAnims(DuznostPed, false)
 		SetPedCanRagdollFromPlayerImpact(DuznostPed, false)
+		SetModelAsNoLongerNeeded(pedmodel)
 
 		VoziloPed = CreatePed(0, pedmodel, Config.SpawnVozilaPed.Koord - vector3(0.0, 0.0, 1.0), Config.SpawnVozilaPed.Heading, false, true)
 		SetEntityInvincible(VoziloPed, true)
