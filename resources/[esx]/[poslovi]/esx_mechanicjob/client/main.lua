@@ -870,7 +870,7 @@ function OpenMobileMechanicActionsMenu()
 							end
 
 						else
-							ESX.ShowNotification(_U('not_right_place'))
+							ESX.ShowNotification("Niste ostavili vozilo na pravom mjestu")
 						end
 					end
 
