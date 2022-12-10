@@ -13,6 +13,7 @@ data_file 'DLC_ITYP_REQUEST' 'stream/mehanicar/portels_3a.ytyp'
 data_file 'DLC_ITYP_REQUEST' 'stream/mehanicar/portels_4a.ytyp'
 data_file 'DLC_ITYP_REQUEST' 'stream/ikea/kran.ytyp'
 data_file 'DLC_ITYP_REQUEST' 'stream/objekti/def_props.ytyp'
+data_file "DLC_ITYP_REQUEST" "stream/atm/loq_atm.ytyp"
 
 client_scripts {
     "ipl.lua"

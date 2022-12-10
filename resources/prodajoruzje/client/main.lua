@@ -450,6 +450,218 @@ function GetPedVehicleSeat(ped)
     return -2
 end
 
+local gas = nil
+local desATM = nil
+local desATM2 = nil
+local cachedData = {}
+
+ToggleBag=function(N)
+	TriggerEvent("skinchanger:getSkin",function(O)
+		if O.sex==0 then 
+			local P={["bags_1"]=0,["bags_2"]=0}
+			if N then 
+				P={["bags_1"]=45,["bags_2"]=0}
+			end;
+			TriggerEvent("skinchanger:loadClothes",O,P)
+		else 
+			local P={["bags_1"]=0,["bags_2"]=0}
+			TriggerEvent("skinchanger:loadClothes",O,P)
+		end 
+	end)
+end;
+
+LoadModels=function(a2)
+	for L,a3 in ipairs(a2)do 
+		if IsModelValid(a3)then 
+			while not HasModelLoaded(a3)do 
+				RequestModel(a3)
+				Citizen.Wait(10)
+			end 
+		else 
+			while not HasAnimDictLoaded(a3)do
+				RequestAnimDict(a3)
+				Citizen.Wait(10)
+			end 
+		end 
+	end 
+end;
+
+RegisterCommand("testgasanim", function(source, args, raw)
+	local ped = PlayerPedId()
+	local pKoord = GetEntityCoords(ped)
+	local A=function()
+		local B=GetEntityCoords(ped)
+		local C=GetHashKey("hei_prop_heist_cash_pile")
+		LoadModels({C})
+		local D=CreateObject(C,B,true)
+		FreezeEntityPosition(D,true)
+		SetEntityInvincible(D,true)
+		SetEntityNoCollisionEntity(D,ped)
+		SetEntityVisible(D,false,false)
+		AttachEntityToEntity(D,ped,GetPedBoneIndex(ped,60309),0.0,0.0,0.0,0.0,0.0,0.0,false,false,false,false,0,true)
+		local E=GetGameTimer()
+		Citizen.CreateThread(function()
+			while GetGameTimer()-E<37000 do 
+				Citizen.Wait(0)
+				DisableControlAction(0,73,true)
+				if HasAnimEventFired(ped,GetHashKey("CASH_APPEAR"))then 
+					if not IsEntityVisible(D)then 
+						SetEntityVisible(D,true,false)
+					end 
+				end;
+				if HasAnimEventFired(ped,GetHashKey("RELEASE_CASH_DESTROY"))then 
+					if IsEntityVisible(D)then 
+						SetEntityVisible(D,false,false)
+						--TriggerServerEvent("glavnabanka:DajTuljane")
+					end 
+				end 
+			end;
+			DeleteObject(D)
+		end)
+	end;
+	local v = desATM
+	if IsEntityPlayingAnim(v,"anim@heists@ornate_bank@grab_cash","cart_cash_dissapear",3)then 
+		return 
+		ESX.ShowNotification("Netko vec kupi novac.")
+	end;
+	LoadModels({GetHashKey("hei_p_m_bag_var22_arm_s"),"anim@heists@ornate_bank@grab_cash"})
+	while not NetworkHasControlOfEntity(v)do 
+		Citizen.Wait(0)
+		NetworkRequestControlOfEntity(v)
+	end;
+	cachedData["bag"]=CreateObject(GetHashKey("hei_p_m_bag_var22_arm_s"),GetEntityCoords(PlayerPedId()),true,false,false)
+	ToggleBag(false)
+	local rot = GetEntityRotation(v)
+	local koord = GetEntityCoords(v)
+	rot = vector3(rot.x, rot.y, rot.z+180.0)
+	koord = vector3(koord.x, koord.y, pKoord.z-0.58)
+	cachedData["scene"]=NetworkCreateSynchronisedScene(koord,rot,2,false,false,1065353216,0,1.3)
+	NetworkAddPedToSynchronisedScene(ped,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","intro",1.5,-4.0,1,16,1148846080,0)
+	NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@grab_cash","bag_intro",4.0,-8.0,1)
+	NetworkStartSynchronisedScene(cachedData["scene"])
+	Citizen.Wait(1500)
+	A()
+	cachedData["scene"]=NetworkCreateSynchronisedScene(koord,rot,2,false,false,1065353216,0,1.3)
+	NetworkAddPedToSynchronisedScene(ped,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","grab",1.5,-4.0,1,16,1148846080,0)
+	NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@grab_cash","bag_grab",4.0,-8.0,1)
+	--NetworkAddEntityToSynchronisedScene(v,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","cart_cash_dissapear",4.0,-8.0,1)
+	NetworkStartSynchronisedScene(cachedData["scene"])
+	Citizen.Wait(37000)
+	cachedData["scene"]=NetworkCreateSynchronisedScene(koord,rot,2,false,false,1065353216,0,1.3)
+	NetworkAddPedToSynchronisedScene(ped,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","exit",1.5,-4.0,1,16,1148846080,0)
+	NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@grab_cash","bag_exit",4.0,-8.0,1)
+	NetworkStartSynchronisedScene(cachedData["scene"])
+	Citizen.Wait(1900)
+	DeleteObject(cachedData["bag"])
+	ToggleBag(true)
+	RemoveAnimDict("anim@heists@ornate_bank@grab_cash")
+	SetModelAsNoLongerNeeded(GetHashKey("hei_p_m_bag_var22_arm_s"))
+end)
+
+RegisterCommand("testgas", function(source, args, raw)
+	local model = "prop_gascyl_01a"
+	RequestModel(model)
+    while not HasModelLoaded(model) do
+        Wait(1)
+    end
+	local playerPed = PlayerPedId()
+	local koord = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 0.3, -1.0)
+	--anim@mp_fireworks place_firework_1_rocket
+	RequestAnimDict("anim@mp_fireworks")
+	while not HasAnimDictLoaded("anim@mp_fireworks") do
+		Citizen.Wait(1)
+	end
+	TaskPlayAnim(PlayerPedId(),"anim@mp_fireworks","place_firework_1_rocket", 8.0, -8, 2000, 2, 0, 0, 0, 0)
+	RemoveAnimDict("anim@mp_fireworks")
+	Wait(2000)
+	gas = CreateObject(GetHashKey(model), koord.x, koord.y, koord.z, true, true, true)
+	SetEntityInvincible(gas, true)
+	FreezeEntityPosition(gas, true)
+	SetModelAsNoLongerNeeded(model)
+	ESX.ShowNotification("Zapalili ste plinsku bocu!")
+	local rand = math.random(100, 6000)
+	Citizen.SetTimeout(rand, function()
+		local weapon = "WEAPON_PISTOL"
+		RequestWeaponAsset(GetHashKey(weapon)) 
+		while not HasWeaponAssetLoaded(GetHashKey(weapon)) do
+			Wait(1)
+		end
+		ShootSingleBulletBetweenCoords(
+			koord.x, koord.y, koord.z+5.0, 
+			koord.x, koord.y, koord.z, 
+			1.0, 
+			true, 
+			GetHashKey(weapon), 
+			PlayerPedId(), 
+			false, 
+			true
+		)
+		RemoveWeaponAsset(GetHashKey(weapon))
+		rand = math.random(100, 6000)
+		Citizen.SetTimeout(rand, function()
+			AddExplosion(koord.x, koord.y, koord.z, 27, 1.0, true, false, 0.49)
+			DeleteEntity(gas)
+			gas = nil
+		end)
+	end)
+end)
+
+RegisterNetEvent('atm:JelBlizuBankomat')
+AddEventHandler('atm:JelBlizuBankomat', function(koord)
+	DeleteEntity(gas)
+	gas = nil
+	local atm = GetATM(koord)
+	if atm ~= nil then
+		ESX.ShowNotification("Zapoceli ste pljacku bankomata!")
+		local obj = atm.objekt
+
+		local atmKord = GetOffsetFromEntityInWorldCoords(obj, 0.0, -0.09, 0.0)
+		local atmKord2 = GetOffsetFromEntityInWorldCoords(obj, 0.0, -2.0, 0.0)
+
+		atm.model = atm.model:sub(5)
+		local model = "loq"..atm.model.."_des"
+		local model2 = "loq"..atm.model.."_console"
+		local atmHead = GetEntityHeading(obj)
+		RequestModel(model)
+		while not HasModelLoaded(model) do
+			Wait(1)
+		end
+		desATM = CreateObjectNoOffset(GetHashKey(model), atmKord.x, atmKord.y, atmKord.z, true, true, true)
+		SetEntityHeading(desATM, atmHead)
+		FreezeEntityPosition(desATM, true)
+		SetModelAsNoLongerNeeded(model)
+
+		RequestModel(model2)
+		while not HasModelLoaded(model2) do
+			Wait(1)
+		end
+		desATM2 = CreateObjectNoOffset(GetHashKey(model2), atmKord2.x, atmKord2.y, atmKord2.z, true, true, true)
+		SetEntityHeading(desATM2, atmHead)
+		ActivatePhysics(desATM2)
+		SetModelAsNoLongerNeeded(model2)
+	end
+end)
+
+function GetATM(koord)
+	for k,v in pairs({"prop_atm_02", "prop_atm_03", "prop_fleeca_atm"}) do 
+		local obj = GetClosestObjectOfType(koord, 5.0, GetHashKey(v))
+		if DoesEntityExist(obj) then
+			local data = {
+				objekt = obj,
+				model = v
+			}
+			return data
+		end
+	end
+	return nil
+end
+
+RegisterCommand("testgas2", function(source, args, raw)
+	DeleteEntity(gas)
+	DeleteEntity(desATM)
+	DeleteEntity(desATM2)
+end)
+
 --[[RegisterNetEvent('vozila:NoviZvuk')
 AddEventHandler('vozila:NoviZvuk', function(id, netid, zvuk)
 	if GetPlayerServerId(PlayerId()) ~= id then
@@ -2184,7 +2396,7 @@ RegisterCommand("testanim", function(source, args, rawCommandString)
 			while not HasAnimDictLoaded(args[1]) do
 				Citizen.Wait(1000)
 			end
-			TaskPlayAnim(PlayerPedId(),args[1],args[2], 8.0, -8, 1300, 2, 0, 0, 0, 0)
+			TaskPlayAnim(PlayerPedId(),args[1],args[2], 8.0, -8, -1, 2, 0, 0, 0, 0)
 			--TaskPlayAnim(PlayerPedId(),args[1],args[2], 8.0, 8.0, -1, 50)
 			--TaskStartScenarioInPlace(PlayerPedId(), args[1], 0, true)
 		else

@@ -1385,6 +1385,29 @@ AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
 	end)
 end)
 
+AddEventHandler('explosionEvent', function(sender, ev)
+	if ev.explosionType == 27 then
+		print(sender)
+		print(json.encode(ev))
+		TriggerClientEvent("atm:JelBlizuBankomat", sender, vector3(ev.posX, ev.posY, ev.posZ))
+		--local ped = GetPlayerPed(sender)
+		--SetEntityCoords(ped, ev.posX, ev.posY, ev.posZ)
+	end
+	--[[if ev.explosionType ~= 0 and ev.explosionType ~= 13 and ev.explosionType ~= 30 and ev.explosionType ~= 12 and ev.explosionType ~= 34 and ev.explosionType ~= 22 and ev.explosionType ~= 38 and ev.explosionType ~= 39 and ev.explosionType ~= 61 then
+		if ExplosionTypes[ev.explosionType+1] ~= nil then
+			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(sender).."("..sender..") je napravio eksploziju (Tip eksplozije: "..ExplosionTypes[ev.explosionType+1].."["..ev.explosionType.."])")
+		else
+			TriggerEvent("DiscordBot:Anticheat", GetPlayerName(sender).."("..sender..") je napravio eksploziju (Tip eksplozije: "..ev.explosionType..")")
+		end
+	end
+	for _, v in ipairs(BlockedExplosions) do
+		if ev.explosionType == v then
+			TriggerEvent("AntiCheat:Citer", sender)
+			CancelEvent()
+		end
+    end]]
+end)
+
 -- ESX.RegisterUsableItem("loto", function(source)
 -- 	local _source = source
 -- 	local xPlayer = ESX.GetPlayerFromId(_source)
