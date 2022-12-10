@@ -534,7 +534,7 @@ RegisterCommand("testgasanim", function(source, args, raw)
 	local rot = GetEntityRotation(v)
 	local koord = GetEntityCoords(v)
 	rot = vector3(rot.x, rot.y, rot.z+180.0)
-	koord = vector3(koord.x, koord.y, pKoord.z-0.58)
+	koord = vector3(koord.x, koord.y, pKoord.z-0.55)
 	cachedData["scene"]=NetworkCreateSynchronisedScene(koord,rot,2,false,false,1065353216,0,1.3)
 	NetworkAddPedToSynchronisedScene(ped,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","intro",1.5,-4.0,1,16,1148846080,0)
 	NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@grab_cash","bag_intro",4.0,-8.0,1)
@@ -553,6 +553,7 @@ RegisterCommand("testgasanim", function(source, args, raw)
 	NetworkStartSynchronisedScene(cachedData["scene"])
 	Citizen.Wait(1900)
 	DeleteObject(cachedData["bag"])
+	DeleteObject(desATM2)
 	ToggleBag(true)
 	RemoveAnimDict("anim@heists@ornate_bank@grab_cash")
 	SetModelAsNoLongerNeeded(GetHashKey("hei_p_m_bag_var22_arm_s"))
@@ -587,7 +588,7 @@ RegisterCommand("testgas", function(source, args, raw)
 			Wait(1)
 		end
 		ShootSingleBulletBetweenCoords(
-			koord.x, koord.y, koord.z+5.0, 
+			koord.x, koord.y, koord.z+1.0, 
 			koord.x, koord.y, koord.z, 
 			1.0, 
 			true, 
@@ -616,7 +617,7 @@ AddEventHandler('atm:JelBlizuBankomat', function(koord)
 		local obj = atm.objekt
 
 		local atmKord = GetOffsetFromEntityInWorldCoords(obj, 0.0, -0.09, 0.0)
-		local atmKord2 = GetOffsetFromEntityInWorldCoords(obj, 0.0, -2.0, 0.0)
+		local atmKord2 = GetOffsetFromEntityInWorldCoords(obj, 0.0, -3.0, 0.0)
 
 		atm.model = atm.model:sub(5)
 		local model = "loq"..atm.model.."_des"
