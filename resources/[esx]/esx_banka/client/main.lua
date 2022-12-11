@@ -365,10 +365,10 @@ AddEventHandler('atm:Opljackaj', function(data)
   local ent = data.entity
 	local atm = GetDesATM(ent)
 	if atm ~= nil then
-    ESX.TriggerServerCallback('atm:MorelPljacka', function(br)
-      if br then
-        local players, nearbyPlayer = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 6.0)
-        if #players <= 1 then
+    local players, nearbyPlayer = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 6.0)
+    if #players <= 1 then
+      ESX.TriggerServerCallback('atm:MorelPljacka', function(br)
+        if br then
           local ped = PlayerPedId()
           local pKoord = GetEntityCoords(ped)
           local Pljackaj = function()
@@ -439,19 +439,13 @@ AddEventHandler('atm:Opljackaj', function(data)
           SetModelAsNoLongerNeeded(GetHashKey("hei_p_m_bag_var22_arm_s"))
           TriggerServerEvent("atm:MakniPljackas")
         else
-          ESX.ShowNotification("Drugi igrac vam je previse blizu!")
+          ESX.ShowNotification("Ovaj bankomat je opljackan vec!")
         end
-      else
-        ESX.ShowNotification("Ovaj bankomat je opljackan vec!")
-      end
-    end, atm.netID)
+      end, atm.netID)
+    else
+      ESX.ShowNotification("Drugi igrac vam je previse blizu!")
+    end
 	end
-end)
-
-RegisterCommand("testgas2", function(source, args, raw)
-	DeleteEntity(gas)
-	DeleteEntity(desATM)
-	DeleteEntity(desATM2)
 end)
 -------------------
 
