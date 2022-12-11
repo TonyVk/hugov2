@@ -2,6 +2,8 @@
 
 Config = {}
 
+Config.Policija = 2 --Min 2 policajca na srw za pljacku
+
 Config.Zonas = {
     ["banks"] = {
         {name="Banka", id=108, x=150.266, y=-1040.203, z=29.374},

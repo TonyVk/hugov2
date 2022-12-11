@@ -53,11 +53,11 @@ function UcitajPumpe()
 				vecta2 = vector3(data3.x, data3.y, data3.z)
 			end
 			if result[i].vlasnik == nil then
-				table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = nil, Sef = result[i].sef, VlasnikIme = "Nema", Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet})
+				table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = nil, Sef = result[i].sef, VlasnikIme = "Nema", Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet, BCijena = result[i].bcijena})
 			else
 				GetRPName(tonumber(result[i].vlasnik), function(Firstname, Lastname)
 					local im = Firstname.." "..Lastname
-					table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = tonumber(result[i].vlasnik), Sef = result[i].sef, VlasnikIme = im, Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet})
+					table.insert(Pumpe, {Ime = result[i].ime, Vlasnik = tonumber(result[i].vlasnik), Sef = result[i].sef, VlasnikIme = im, Koord = vecta, Cijena = result[i].cijena, GCijena = result[i].gcijena, KCijena = result[i].kcijena, Gorivo = result[i].gorivo, Narudzba = tonumber(result[i].narudzba), Dostava = vecta2, Kapacitet = result[i].kapacitet, BCijena = result[i].bcijena})
 				end)
 			end
         end
@@ -67,6 +67,45 @@ end
 
 ESX.RegisterServerCallback('pumpe:DohvatiPumpe', function(source, cb)
 	cb(Pumpe)
+end)
+
+ESX.RegisterServerCallback('pumpe:KupiPlin', function(source, cb, ime)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local xItem = xPlayer.getInventoryItem("pboca")
+	if xItem.count == 0 then
+		local cij = 50
+		for i=1, #Pumpe, 1 do
+			if Pumpe[i] ~= nil then
+				if Pumpe[i].Ime == ime then
+					cij = Pumpe[i].BCijena
+					break
+				end
+			end
+		end
+		if xPlayer.getMoney() >= cij then
+			xPlayer.removeMoney(cij)
+			xPlayer.addInventoryItem("pboca", 1)
+			for i=1, #Pumpe, 1 do
+				if Pumpe[i] ~= nil then
+					if Pumpe[i].Ime == ime then
+						Pumpe[i].Sef = Pumpe[i].Sef+cij
+						MySQL.Async.execute('UPDATE pumpe SET sef = @se WHERE ime = @im', {
+							['@se'] = Pumpe[i].Sef,
+							['@im'] = ime
+						})
+						break
+					end
+				end
+			end
+			cb(true)
+		else
+			xPlayer.showNotification("Nemate dovoljno novca kod sebe!")
+			cb(false)
+		end
+	else
+		xPlayer.showNotification("Vec imate bocu s plinom!")
+		cb(false)
+	end
 end)
 
 function GetRPName(ident, data)
@@ -271,7 +310,7 @@ AddEventHandler('pumpe:PostaviCijenu', function(br, ime, cifra)
 	if br == 1 then
 		for i=1, #Pumpe, 1 do
 			if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
-				if cifra >= 1.5 then
+				if cifra >= 1.1 then
 					Pumpe[i].GCijena = cifra
 					MySQL.Async.execute('UPDATE pumpe SET gcijena = @se WHERE ime = @im', {
 						['@se'] = Pumpe[i].GCijena,
@@ -281,14 +320,14 @@ AddEventHandler('pumpe:PostaviCijenu', function(br, ime, cifra)
 					TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
 					break
 				else
-					xPlayer.showNotification("Cijena ne moze biti manja od 1.5$!")
+					xPlayer.showNotification("Cijena ne moze biti manja od 1.1$!")
 				end
 			end
 		end
 	elseif br == 2 then
 		for i=1, #Pumpe, 1 do
 			if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
-				if cifra >= 250 then
+				if cifra >= 26 then
 					Pumpe[i].KCijena = cifra
 					MySQL.Async.execute('UPDATE pumpe SET kcijena = @se WHERE ime = @im', {
 						['@se'] = Pumpe[i].KCijena,
@@ -298,7 +337,24 @@ AddEventHandler('pumpe:PostaviCijenu', function(br, ime, cifra)
 					TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
 					break
 				else
-					xPlayer.showNotification("Cijena ne moze biti manja od 250$!")
+					xPlayer.showNotification("Cijena ne moze biti manja od 26$!")
+				end
+			end
+		end
+	elseif br == 3 then
+		for i=1, #Pumpe, 1 do
+			if Pumpe[i] ~= nil and Pumpe[i].Ime == ime then
+				if cifra >= 50 then
+					Pumpe[i].BCijena = cifra
+					MySQL.Async.execute('UPDATE pumpe SET bcijena = @se WHERE ime = @im', {
+						['@se'] = Pumpe[i].BCijena,
+						['@im'] = ime
+					})
+					TriggerClientEvent('esx:showNotification', src, "Postavili ste cijenu boce plina na $"..cifra.."!")
+					TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
+					break
+				else
+					xPlayer.showNotification("Cijena ne moze biti manja od 50$!")
 				end
 			end
 		end
@@ -407,7 +463,7 @@ end)
 RegisterServerEvent('pumpe:DodajPumpu')
 AddEventHandler('pumpe:DodajPumpu', function(coords, cijena)
 	local str = "Pumpa "..#Pumpe+1
-	table.insert(Pumpe, {Ime = str, Koord = coords, Vlasnik = nil, Cijena = cijena, Sef = 0, VlasnikIme = "Nema", GCijena = 1.5, KCijena = 250, Gorivo = 500, Narudzba = 0, Dostava = nil, Kapacitet = false})
+	table.insert(Pumpe, {Ime = str, Koord = coords, Vlasnik = nil, Cijena = cijena, Sef = 0, VlasnikIme = "Nema", GCijena = 1.5, KCijena = 26, Gorivo = 500, Narudzba = 0, Dostava = nil, Kapacitet = false, BCijena = 50})
 	MySQL.Async.execute('INSERT INTO pumpe (ime, koord, vlasnik, cijena, sef, gcijena, kcijena) VALUES (@ime, @koord, @vl, @cij, @sef, @gcij, @kcij)',{
 		['@ime'] = str,
 		['@koord'] = json.encode(coords),
@@ -415,7 +471,7 @@ AddEventHandler('pumpe:DodajPumpu', function(coords, cijena)
 		['@cij'] = cijena,
 		['@sef'] = 0,
 		['@gcij'] = 1.5,
-		['@kcij'] = 250
+		['@kcij'] = 26
 	})
 	TriggerClientEvent("pumpe:SaljiPumpe", -1, Pumpe)
 end)

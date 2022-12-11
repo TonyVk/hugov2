@@ -461,6 +461,7 @@ function OpenPumpaMenu(ime)
 			end
 			table.insert(elements, {label = "Promjeni cijenu goriva", value = 'gcij'})
 			table.insert(elements, {label = "Promjeni cijenu kanistera", value = 'kcij'})
+			table.insert(elements, {label = "Promjeni cijenu boce plina", value = 'bcij'})
 			if not Kapacitet then
 				table.insert(elements, {label = "Povecaj kapacitet pumpe", value = 'kkap'})
 			end
@@ -581,6 +582,29 @@ function OpenPumpaMenu(ime)
 			else
 				menu3.close()
 				TriggerServerEvent("pumpe:PostaviCijenu", 2, ime, count)
+			end
+			end,
+			function(data3, menu3)
+				menu3.close()
+			end
+		)
+      end
+
+	  if data.current.value == 'bcij' then
+		ESX.UI.Menu.Open(
+			'dialog', GetCurrentResourceName(), 'pumpa_daj_lovu55',
+			{
+				title = "Unesite koju cijenu boce plina zelite (npr. 57)"
+			},
+			function(data3, menu3)
+
+			local count = tonumber(data3.value)
+
+			if count == nil then
+				ESX.ShowNotification("Kriva vrijednost!")
+			else
+				menu3.close()
+				TriggerServerEvent("pumpe:PostaviCijenu", 3, ime, count)
 			end
 			end,
 			function(data3, menu3)
@@ -1091,75 +1115,11 @@ Citizen.CreateThread(function()
 						end
 					end
 				elseif isNearPump then
+					if IsControlJustReleased(0, 38) then
+						OtvoriIzborMenu(isNearPump)
+					end
 					local stringCoords = GetEntityCoords(isNearPump)
-					local cijena = 250
-					local gorivo = 0
-					local ImalVlasnika = false
-					for i=1, #Pumpe, 1 do
-						if Pumpe[i] ~= nil then
-							if Pumpe[i].Ime == BlizuPumpe then
-								cijena = Pumpe[i].KCijena
-								gorivo = Pumpe[i].Gorivo
-								if Pumpe[i].Vlasnik ~= nil then
-									ImalVlasnika = true
-								end
-								break
-							end
-						end
-					end
-					if currentCash >= cijena then
-						if not HasPedGotWeapon(ped, 883325847) then
-							DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, "Pritisnite ~g~E ~w~da kupite kanister goriva za ~g~$" .. cijena)
-
-							if IsControlJustReleased(0, 38) then
-								if not NemaStruje then
-									if gorivo >= 50 then
-										GiveWeaponToPed(ped, 883325847, 4500, false, true)
-										
-										TriggerServerEvent('gorivo:foka', cijena, BlizuPumpe, 50, ImalVlasnika)
-
-										currentCash = ESX.GetPlayerData().money
-									else
-										ESX.ShowNotification("Nema dovoljno goriva!")
-									end
-								else
-									ESX.ShowNotification("Nismo u mogucnosti vam prodati gorivo posto nemamo struje!")
-								end
-							end
-						else
-							if Config.UseESX then
-								local refillCost = Round(Config.RefillCost * (1 - GetAmmoInPedWeapon(ped, 883325847) / 4500))
-								local Racunica = math.ceil((1-GetAmmoInPedWeapon(ped, 883325847) / 4500)*100)
-								if refillCost > 0 and Racunica <= gorivo then
-									if currentCash >= refillCost then
-										DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.RefillJerryCan .. refillCost)
-
-										if IsControlJustReleased(0, 38) then
-											if not NemaStruje then
-												TriggerServerEvent('gorivo:foka', refillCost, BlizuPumpe, Racunica, ImalVlasnika)
-
-												SetPedAmmo(ped, 883325847, 4500)
-											else
-												ESX.ShowNotification("Nismo u mogucnosti vam prodati gorivo posto nemamo struje!")
-											end
-										end
-									else
-										DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.NotEnoughCashJerryCan)
-									end
-								else
-									DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.JerryCanFull)
-								end
-							else
-								DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.RefillJerryCan)
-
-								if IsControlJustReleased(0, 38) then
-									SetPedAmmo(ped, 883325847, 4500)
-								end
-							end
-						end
-					else
-						DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, Config.Strings.NotEnoughCash)
-					end
+					DrawText3Ds(stringCoords.x, stringCoords.y, stringCoords.z + 1.2, "Pritisnite ~g~E ~w~da otvorite menu")
 				else
 					Citizen.Wait(250)
 				end
@@ -1169,6 +1129,71 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
+function OtvoriIzborMenu(pumpa)
+	local stringCoords = GetEntityCoords(pumpa)
+	local cijena = 26
+	local cijena2 = 50
+	local gorivo = 0
+	local ImalVlasnika = false
+	for i=1, #Pumpe, 1 do
+		if Pumpe[i] ~= nil then
+			if Pumpe[i].Ime == BlizuPumpe then
+				cijena = Pumpe[i].KCijena
+				cijena2 = Pumpe[i].BCijena
+				gorivo = Pumpe[i].Gorivo
+				if Pumpe[i].Vlasnik ~= nil then
+					ImalVlasnika = true
+				end
+				break
+			end
+		end
+	end
+
+	ESX.UI.Menu.CloseAll()
+	local elements = {
+		{label = "Kupi kanister $"..cijena, value = "kanister"},
+		{label = "Kupi bocu plina $"..cijena2, value = "plin"}
+	}
+
+	ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'izbpump',
+		{
+			title    = "Izaberite opciju",
+			align    = 'top-left',
+			elements = elements,
+		},
+		function(data, menu)
+			if data.current.value == "kanister" then
+				local ped = PlayerPedId()
+				if not NemaStruje then
+					if gorivo >= 50 then
+						GiveWeaponToPed(ped, 883325847, 4500, false, true)
+						
+						TriggerServerEvent('gorivo:foka', cijena, BlizuPumpe, 50, ImalVlasnika)
+
+						currentCash = ESX.GetPlayerData().money
+					else
+						ESX.ShowNotification("Nema dovoljno goriva!")
+					end
+				else
+					ESX.ShowNotification("Nismo u mogucnosti vam prodati gorivo posto nemamo struje!")
+				end
+				menu.close()
+			elseif data.current.value == "plin" then
+				ESX.TriggerServerCallback('pumpe:KupiPlin', function(br)
+					if br then
+						ESX.ShowNotification("Kupili ste bocu s plinom!")
+					end
+					menu.close()
+				end, BlizuPumpe)
+			end
+		end,
+		function(data, menu)
+			menu.close()
+		end
+	)
+end
 
 function CreateBlip(coords)
 	local blip = AddBlipForCoord(coords)

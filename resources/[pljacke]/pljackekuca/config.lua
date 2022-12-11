@@ -3,5 +3,6 @@
 Config = {
     Houses = { 
         
-    }
+    },
+    Policija = 2 --Min 2 policajca
 }

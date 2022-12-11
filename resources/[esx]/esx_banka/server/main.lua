@@ -2,6 +2,7 @@ ESX = nil
 local Bankomati = {}
 local Ucitao = false
 local Pljacke = {}
+local Pljackas = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -88,17 +89,48 @@ end)
 
 function ProvjeriPljacke()
 	for k,v in pairs(Pljacke) do
-		if (v.Vrijeme)+120000 <= GetGameTimer() then
+		if (v.Vrijeme+3600000) <= GetGameTimer() then
 			local objID = NetworkGetEntityFromNetworkId(v.nID)
 			DeleteEntity(objID)
 			Pljacke[k] = nil
 		end
 	end
-	print(json.encode(Pljacke))
 	SetTimeout(60000, ProvjeriPljacke)
 end
 
 SetTimeout(60000, ProvjeriPljacke)
+
+ESX.RegisterUsableItem('pboca', function(source)
+	Pljackas[source] = true
+	TriggerClientEvent("atm:ZapocniPljacku", source)
+end)
+
+RegisterNetEvent('atm:ObrisiBocu')
+AddEventHandler('atm:ObrisiBocu', function()
+    local xPlayer = ESX.GetPlayerFromId(source)
+    xPlayer.removeInventoryItem('pboca', 1)
+end)
+
+RegisterNetEvent('atm:DajLovu')
+AddEventHandler('atm:DajLovu', function()
+	local src = source
+	if Pljackas[src] and Pljackas[src] ~= nil then
+		local xPlayer = ESX.GetPlayerFromId(src)
+		local novcanice = {20, 50, 100, 200}
+		local rand = math.random(1, #novcanice)
+		xPlayer.addMoney(novcanice[rand])
+		local por = "["..os.date("%X").."] ("..GetCurrentResourceName().." - pljacka bankomata) Igrac "..GetPlayerName(src).."("..xPlayer.identifier..") je dobio $"..novcanice[rand]
+		TriggerEvent("SpremiLog", por)
+	else
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(src).."["..src.."] je pokusao pozvati event za novac od pljacke bankomata, a nije zapoceo pljacku!")
+	    TriggerEvent("AntiCheat:Citer", src)
+	end
+end)
+
+RegisterNetEvent('atm:MakniPljackas')
+AddEventHandler('atm:MakniPljackas', function()
+    Pljackas[source] = nil
+end)
 -----------
 
 RegisterNetEvent('atm:SpremiObjekt')
