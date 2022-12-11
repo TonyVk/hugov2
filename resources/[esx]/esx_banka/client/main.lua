@@ -369,6 +369,8 @@ AddEventHandler('atm:Opljackaj', function(data)
     if #players <= 1 then
       ESX.TriggerServerCallback('atm:MorelPljacka', function(br)
         if br then
+          TriggerEvent("dp:zatvoriMenu")
+          TriggerEvent("dpemotes:Radim", true)
           local ped = PlayerPedId()
           local pKoord = GetEntityCoords(ped)
           local Pljackaj = function()
@@ -438,6 +440,7 @@ AddEventHandler('atm:Opljackaj', function(data)
           RemoveAnimDict("anim@heists@ornate_bank@grab_cash")
           SetModelAsNoLongerNeeded(GetHashKey("hei_p_m_bag_var22_arm_s"))
           TriggerServerEvent("atm:MakniPljackas")
+          TriggerEvent("dpemotes:Radim", false)
         else
           ESX.ShowNotification("Ovaj bankomat je opljackan vec!")
         end
