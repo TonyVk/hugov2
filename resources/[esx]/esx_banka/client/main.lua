@@ -289,9 +289,6 @@ AddEventHandler('atm:JelBlizuBankomat', function(koord)
 		SetEntityHeading(desATM, atmHead)
 		FreezeEntityPosition(desATM, true)
 		SetModelAsNoLongerNeeded(model)
-    local netObj = ObjToNet(desATM)
-    local netKoord = GetEntityCoords(desATM)
-    TriggerServerEvent("atm:SpremiPljacku", netObj, netKoord)
 
 		RequestModel(model2)
 		while not HasModelLoaded(model2) do
@@ -301,6 +298,10 @@ AddEventHandler('atm:JelBlizuBankomat', function(koord)
 		SetEntityHeading(desATM2, atmHead)
 		ActivatePhysics(desATM2)
 		SetModelAsNoLongerNeeded(model2)
+    local netObj = ObjToNet(desATM)
+    local netObj2 = ObjToNet(desATM2)
+    local netKoord = GetEntityCoords(desATM)
+    TriggerServerEvent("atm:SpremiPljacku", netObj, netKoord, netObj2)
 	end
 end)
 

@@ -71,10 +71,9 @@ AddEventHandler('explosionEvent', function(sender, ev)
 end)
 
 RegisterNetEvent('atm:SpremiPljacku')
-AddEventHandler('atm:SpremiPljacku', function(netID, koord)
+AddEventHandler('atm:SpremiPljacku', function(netID, koord, netID2)
 	local atm = "atm_"..netID
-	Pljacke[atm] = {Koord = koord, Vrijeme = GetGameTimer(), Opljackan = false, nID = netID}
-	print(json.encode(Pljacke))
+	Pljacke[atm] = {Koord = koord, Vrijeme = GetGameTimer(), Opljackan = false, nID = netID, nID2 = netID2}
 end)
 
 ESX.RegisterServerCallback('atm:MorelPljacka', function(source, cb, nID)
@@ -91,7 +90,11 @@ function ProvjeriPljacke()
 	for k,v in pairs(Pljacke) do
 		if (v.Vrijeme+3600000) <= GetGameTimer() then
 			local objID = NetworkGetEntityFromNetworkId(v.nID)
+			local objID2 = NetworkGetEntityFromNetworkId(v.nID2)
 			DeleteEntity(objID)
+			if DoesEntityExist(objID2) then
+				DeleteEntity(objID2)
+			end
 			Pljacke[k] = nil
 		end
 	end
