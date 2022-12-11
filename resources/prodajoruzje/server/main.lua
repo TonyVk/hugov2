@@ -1385,13 +1385,6 @@ AddEventHandler('prodajoruzje:PlatiPorez', function(kol)
 	end)
 end)
 
---ATM pljacka
-AddEventHandler('explosionEvent', function(sender, ev)
-	if ev.explosionType == 27 then
-		TriggerClientEvent("atm:JelBlizuBankomat", sender, vector3(ev.posX, ev.posY, ev.posZ))
-	end
-end)
-
 -- ESX.RegisterUsableItem("loto", function(source)
 -- 	local _source = source
 -- 	local xPlayer = ESX.GetPlayerFromId(_source)

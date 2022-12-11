@@ -1,6 +1,7 @@
 ESX = nil
 local Bankomati = {}
 local Ucitao = false
+local Pljacke = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -60,6 +61,45 @@ AddEventHandler('atm:DodajBankomat', function(coord)
 		end)
     end
 end)
+
+--ATM pljacka
+AddEventHandler('explosionEvent', function(sender, ev)
+	if ev.explosionType == 27 then
+		TriggerClientEvent("atm:JelBlizuBankomat", sender, vector3(ev.posX, ev.posY, ev.posZ))
+	end
+end)
+
+RegisterNetEvent('atm:SpremiPljacku')
+AddEventHandler('atm:SpremiPljacku', function(netID, koord)
+	local atm = "atm_"..netID
+	Pljacke[atm] = {Koord = koord, Vrijeme = GetGameTimer(), Opljackan = false, nID = netID}
+	print(json.encode(Pljacke))
+end)
+
+ESX.RegisterServerCallback('atm:MorelPljacka', function(source, cb, nID)
+	local atm = "atm_"..nID
+	if Pljacke[atm] and Pljacke[atm].Opljackan == false then
+		Pljacke[atm].Opljackan = true
+		cb(true)
+	else
+		cb(false)
+	end
+end)
+
+function ProvjeriPljacke()
+	for k,v in pairs(Pljacke) do
+		if (v.Vrijeme)+120000 <= GetGameTimer() then
+			local objID = NetworkGetEntityFromNetworkId(v.nID)
+			DeleteEntity(objID)
+			Pljacke[k] = nil
+		end
+	end
+	print(json.encode(Pljacke))
+	SetTimeout(60000, ProvjeriPljacke)
+end
+
+SetTimeout(60000, ProvjeriPljacke)
+-----------
 
 RegisterNetEvent('atm:SpremiObjekt')
 AddEventHandler('atm:SpremiObjekt', function(id, kord, head, model)

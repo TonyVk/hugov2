@@ -129,6 +129,305 @@ function SpawnBlipove()
 	end
 end
 
+for i=1, #Config.ATM, 1 do
+  exports.qtarget:AddTargetModel({GetHashKey(Config.ATM[i])}, {
+    options = {
+      {
+        event = "bankomat:OtvoriMenu",
+        icon = "fas fa-box-circle-check",
+        label = "Otvori menu"
+      }
+    },
+    distance = 2
+  })
+end
+
+--Pljacka bankomata
+local gas = nil
+local desATM = nil
+local desATM2 = nil
+local cachedData = {}
+local stariSkin = nil
+
+ToggleBag=function(N)
+	TriggerEvent("skinchanger:getSkin",function(O)
+		if O.sex==0 then 
+			local P={["bags_1"]=0,["bags_2"]=0}
+			if N then 
+				P={["bags_1"]=45,["bags_2"]=0}
+			end;
+			TriggerEvent("skinchanger:loadClothes",O,P)
+		else 
+			local P={["bags_1"]=0,["bags_2"]=0}
+			TriggerEvent("skinchanger:loadClothes",O,P)
+		end 
+	end)
+end;
+
+LoadModels=function(a2)
+	for L,a3 in ipairs(a2)do 
+		if IsModelValid(a3)then 
+			while not HasModelLoaded(a3)do 
+				RequestModel(a3)
+				Citizen.Wait(10)
+			end 
+		else 
+			while not HasAnimDictLoaded(a3)do
+				RequestAnimDict(a3)
+				Citizen.Wait(10)
+			end 
+		end 
+	end 
+end;
+
+RegisterCommand("testgas", function(source, args, raw)
+  local atm = GetATM(GetEntityCoords(PlayerPedId()))
+	if atm ~= nil then
+    local atm2 = GetDesATM(PlayerPedId())
+    if atm2 == nil then
+      local players, nearbyPlayer = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 6.0)
+      print(#players)
+      if #players <= 1 then
+        local model = "prop_gascyl_01a"
+        RequestModel(model)
+          while not HasModelLoaded(model) do
+              Wait(1)
+          end
+        local playerPed = PlayerPedId()
+        local koord = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 0.3, -1.0)
+        --anim@mp_fireworks place_firework_1_rocket
+        RequestAnimDict("anim@mp_fireworks")
+        while not HasAnimDictLoaded("anim@mp_fireworks") do
+          Citizen.Wait(1)
+        end
+        TaskPlayAnim(PlayerPedId(),"anim@mp_fireworks","place_firework_1_rocket", 8.0, -8, 2000, 2, 0, 0, 0, 0)
+        RemoveAnimDict("anim@mp_fireworks")
+        Wait(2000)
+        gas = CreateObject(GetHashKey(model), koord.x, koord.y, koord.z, true, true, true)
+        SetEntityInvincible(gas, true)
+        FreezeEntityPosition(gas, true)
+        SetModelAsNoLongerNeeded(model)
+        ESX.ShowNotification("Zapalili ste plinsku bocu!")
+        local rand = math.random(100, 6000)
+        Citizen.SetTimeout(rand, function()
+          local weapon = "WEAPON_PISTOL"
+          RequestWeaponAsset(GetHashKey(weapon)) 
+          while not HasWeaponAssetLoaded(GetHashKey(weapon)) do
+            Wait(1)
+          end
+          ShootSingleBulletBetweenCoords(
+            koord.x, koord.y, koord.z+1.0, 
+            koord.x, koord.y, koord.z, 
+            1.0, 
+            true, 
+            GetHashKey(weapon), 
+            false, 
+            false, 
+            true
+          )
+          RemoveWeaponAsset(GetHashKey(weapon))
+          rand = math.random(100, 6000)
+          Citizen.SetTimeout(rand, function()
+            AddExplosion(koord.x, koord.y, koord.z, 27, 1.0, true, false, 0.49)
+            DeleteEntity(gas)
+            gas = nil
+          end)
+        end)
+      else
+        ESX.ShowNotification("Drugi igrac vam je previse blizu!")
+      end
+    else
+      ESX.ShowNotification("Bankomat je vec raznesen!")
+    end
+  else
+    ESX.ShowNotification("Niste blizu bankomata!")
+  end
+end)
+
+RegisterNetEvent('atm:JelBlizuBankomat')
+AddEventHandler('atm:JelBlizuBankomat', function(koord)
+	DeleteEntity(gas)
+	gas = nil
+	local atm = GetATM(koord)
+	if atm ~= nil then
+		ESX.ShowNotification("Zapoceli ste pljacku bankomata!")
+		local obj = atm.objekt
+
+		local atmKord = GetOffsetFromEntityInWorldCoords(obj, 0.0, -0.09, 0.0)
+		local atmKord2 = GetOffsetFromEntityInWorldCoords(obj, 0.0, -3.0, 0.0)
+
+		atm.model = atm.model:sub(5)
+		local model = "loq"..atm.model.."_des"
+		local model2 = "loq"..atm.model.."_console"
+		local atmHead = GetEntityHeading(obj)
+		RequestModel(model)
+		while not HasModelLoaded(model) do
+			Wait(1)
+		end
+		desATM = CreateObjectNoOffset(GetHashKey(model), atmKord.x, atmKord.y, atmKord.z, true, true, true)
+		SetEntityHeading(desATM, atmHead)
+		FreezeEntityPosition(desATM, true)
+		SetModelAsNoLongerNeeded(model)
+    local netObj = ObjToNet(desATM)
+    local netKoord = GetEntityCoords(desATM)
+    TriggerServerEvent("atm:SpremiPljacku", netObj, netKoord)
+
+		RequestModel(model2)
+		while not HasModelLoaded(model2) do
+			Wait(1)
+		end
+		desATM2 = CreateObjectNoOffset(GetHashKey(model2), atmKord2.x, atmKord2.y, atmKord2.z, true, true, true)
+		SetEntityHeading(desATM2, atmHead)
+		--ActivatePhysics(desATM2)
+		SetModelAsNoLongerNeeded(model2)
+	end
+end)
+
+function GetATM(koord)
+	for k,v in pairs({"prop_atm_02", "prop_atm_03", "prop_fleeca_atm"}) do 
+		local obj = GetClosestObjectOfType(koord, 2.0, GetHashKey(v))
+		if DoesEntityExist(obj) then
+			local data = {
+				objekt = obj,
+				model = v
+			}
+			return data
+		end
+	end
+	return nil
+end
+
+function GetDesATM(ent)
+	for k,v in pairs({"loq_atm_02_des", "loq_atm_03_des", "loq_fleeca_atm_des"}) do 
+		local obj = GetClosestObjectOfType(GetEntityCoords(ent), 2.0, GetHashKey(v))
+		if DoesEntityExist(obj) then
+			local koord = GetEntityCoords(obj)
+			local data = {
+				objekt = obj,
+				netID = ObjToNet(obj),
+				koord = koord
+			}
+			return data
+		end
+	end
+	return nil
+end
+
+exports.qtarget:AddTargetModel({"loq_atm_02_des", "loq_atm_03_des", "loq_fleeca_atm_des"}, {
+	options = {
+	{
+		event = "atm:Opljackaj",
+		icon = "fas fa-box-circle-check",
+		label = "Opljackaj bankomat"
+	}
+	},
+	distance = 5
+})
+
+RegisterNetEvent('atm:Opljackaj')
+AddEventHandler('atm:Opljackaj', function(data)
+  local ent = data.entity
+	local atm = GetDesATM(ent)
+	if atm ~= nil then
+    ESX.TriggerServerCallback('atm:MorelPljacka', function(br)
+      if br then
+        local players, nearbyPlayer = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 6.0)
+        if #players <= 1 then
+          local ped = PlayerPedId()
+          local pKoord = GetEntityCoords(ped)
+          local Pljackaj = function()
+            local pKoord = GetEntityCoords(ped)
+            local model = GetHashKey("hei_prop_heist_cash_pile")
+            LoadModels({model})
+            local kesObj = CreateObject(model, pKoord, true)
+            FreezeEntityPosition(kesObj,true)
+            SetEntityInvincible(kesObj,true)
+            SetEntityNoCollisionEntity(kesObj,ped)
+            SetEntityVisible(kesObj,false,false)
+            AttachEntityToEntity(kesObj,ped,GetPedBoneIndex(ped,60309),0.0,0.0,0.0,0.0,0.0,0.0,false,false,false,false,0,true)
+            local gTime = GetGameTimer()
+            Citizen.CreateThread(function()
+              while GetGameTimer()-gTime<37000 do 
+                Citizen.Wait(0)
+                DisableControlAction(0,73,true)
+                if HasAnimEventFired(ped,GetHashKey("CASH_APPEAR"))then 
+                  if not IsEntityVisible(kesObj)then 
+                    SetEntityVisible(kesObj,true,false)
+                  end 
+                end;
+                if HasAnimEventFired(ped,GetHashKey("RELEASE_CASH_DESTROY"))then 
+                  if IsEntityVisible(kesObj)then 
+                    SetEntityVisible(kesObj,false,false)
+                    --TriggerServerEvent("glavnabanka:DajTuljane")
+                  end 
+                end 
+              end;
+              DeleteObject(kesObj)
+            end)
+          end;
+          LoadModels({GetHashKey("hei_p_m_bag_var22_arm_s"),"anim@heists@ornate_bank@grab_cash"})
+          while not NetworkHasControlOfEntity(desATM)do 
+            Citizen.Wait(0)
+            NetworkRequestControlOfEntity(desATM)
+          end;
+          cachedData["bag"] = CreateObject(GetHashKey("hei_p_m_bag_var22_arm_s"),GetEntityCoords(PlayerPedId()),true,false,false)
+          ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+            stariSkin = skin
+          end)
+          ToggleBag(false)
+          local rot = GetEntityRotation(desATM)
+          local koord = GetEntityCoords(desATM)
+          rot = vector3(rot.x, rot.y, rot.z+180.0)
+          koord = vector3(koord.x, koord.y, pKoord.z-0.55)
+          cachedData["scene"] = NetworkCreateSynchronisedScene(koord,rot,2,false,false,1065353216,0,1.3)
+          NetworkAddPedToSynchronisedScene(ped,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","intro",1.5,-4.0,1,16,1148846080,0)
+          NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@grab_cash","bag_intro",4.0,-8.0,1)
+          NetworkStartSynchronisedScene(cachedData["scene"])
+          Citizen.Wait(1500)
+          Pljackaj()
+          cachedData["scene"] = NetworkCreateSynchronisedScene(koord,rot,2,false,false,1065353216,0,1.3)
+          NetworkAddPedToSynchronisedScene(ped,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","grab",1.5,-4.0,1,16,1148846080,0)
+          NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@grab_cash","bag_grab",4.0,-8.0,1)
+          NetworkStartSynchronisedScene(cachedData["scene"])
+          Citizen.Wait(37000)
+          cachedData["scene"] = NetworkCreateSynchronisedScene(koord,rot,2,false,false,1065353216,0,1.3)
+          NetworkAddPedToSynchronisedScene(ped,cachedData["scene"],"anim@heists@ornate_bank@grab_cash","exit",1.5,-4.0,1,16,1148846080,0)
+          NetworkAddEntityToSynchronisedScene(cachedData["bag"],cachedData["scene"],"anim@heists@ornate_bank@grab_cash","bag_exit",4.0,-8.0,1)
+          NetworkStartSynchronisedScene(cachedData["scene"])
+          Citizen.Wait(1900)
+          DeleteObject(cachedData["bag"])
+          DeleteObject(desATM2)
+          --ToggleBag(true)
+          TriggerEvent('skinchanger:loadSkin', stariSkin)
+          RemoveAnimDict("anim@heists@ornate_bank@grab_cash")
+          SetModelAsNoLongerNeeded(GetHashKey("hei_p_m_bag_var22_arm_s"))
+        else
+          ESX.ShowNotification("Drugi igrac vam je previse blizu!")
+        end
+      else
+        ESX.ShowNotification("Ovaj bankomat je opljackan vec!")
+      end
+    end, atm.netID)
+	end
+end)
+
+RegisterCommand("testgas2", function(source, args, raw)
+	DeleteEntity(gas)
+	DeleteEntity(desATM)
+	DeleteEntity(desATM2)
+end)
+-------------------
+
+RegisterNetEvent('bankomat:OtvoriMenu')
+AddEventHandler('bankomat:OtvoriMenu', function(atm)
+  local atm = GetDesATM(PlayerPedId())
+  if atm == nil then
+    ExecuteCommand("+banka")
+  else
+    ESX.ShowNotification("Bankomat je raznesen!")
+  end
+end)
+
 RegisterNetEvent('atm:VratiBankomate')
 AddEventHandler('atm:VratiBankomate', function(atm)
 	Bankomati = atm
@@ -140,7 +439,7 @@ RegisterCommand("urediatm", function(source, args, raw)
   if perm == 1 then
       local elements = {}
       
-  table.insert(elements, {label = "Dodaj ATM", value = "novi"})
+      table.insert(elements, {label = "Dodaj ATM", value = "novi"})
       for i=1, #Bankomati, 1 do
           if Bankomati[i] ~= nil then
               table.insert(elements, {label = "Bankomat "..Bankomati[i].ID, value = Bankomati[i].ID})
@@ -172,7 +471,7 @@ RegisterCommand("urediatm", function(source, args, raw)
           end
         end
         elements = {}
-        table.insert(elements, {label = "Postavi koordinate teksta", value = "koord"})
+        --table.insert(elements, {label = "Postavi koordinate teksta", value = "koord"})
         table.insert(elements, {label = "Postavi objekt bankomata", value = "bobj"})
         table.insert(elements, {label = "Uredi objekt bankomata", value = "ubobj"})
         table.insert(elements, {label = "Obrisi objekt bankomata", value = "obobj"})
@@ -592,7 +891,7 @@ Citizen.CreateThread(function()
         DrawMarker(2,search.x, search.y, search.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 255, 255, 0, 100, false, true, 2, false, false, false, false)
       end
     end
-    for i=1, #Bankomati, 1 do
+    --[[for i=1, #Bankomati, 1 do
       if Bankomati[i] ~= nil then
         if Bankomati[i].Koord and #(GetEntityCoords(PlayerPedId())-Bankomati[i].Koord) < 2 then
           waitara = 1
@@ -602,7 +901,7 @@ Citizen.CreateThread(function()
           break
         end
       end
-    end
+    end]]
     if not naso then
       waitara = 1000
     end
