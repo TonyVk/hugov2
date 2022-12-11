@@ -80,6 +80,7 @@ ESX.RegisterServerCallback('atm:MorelPljacka', function(source, cb, nID)
 	local atm = "atm_"..nID
 	if Pljacke[atm] and Pljacke[atm].Opljackan == false then
 		Pljacke[atm].Opljackan = true
+		Pljackas[source] = true
 		cb(true)
 	else
 		cb(false)
@@ -104,7 +105,6 @@ end
 SetTimeout(60000, ProvjeriPljacke)
 
 ESX.RegisterUsableItem('pboca', function(source)
-	Pljackas[source] = true
 	TriggerClientEvent("atm:ZapocniPljacku", source)
 end)
 
