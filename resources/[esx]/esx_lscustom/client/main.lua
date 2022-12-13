@@ -14,7 +14,6 @@ ESX =					nil
 local Vehicles =		{}
 local PlayerData		= {}
 local lsMenuIsShowed	= false
-local isInLSMarker		= false
 local isInLSMarker2		= false
 local myCar				= {}
 local Narudzba 			= {}
@@ -440,7 +439,6 @@ end
 function UpdateMods(data)
 	if data ~= nil then
 		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-
 		if data.modType ~= nil then
 			local props = {}
 			
@@ -458,6 +456,19 @@ function UpdateMods(data)
 				props = {}
 			elseif data.modType == 'tyreSmokeColor' then
 				props['modSmokeEnabled'] = true
+				ESX.Game.SetVehicleProperties(vehicle, props)
+				props = {}
+			elseif data.modType == 'dodaci' then
+				TriggerEvent('esx_lscustom:cancelInstallMod')
+				local extras = {}
+				local broj = false
+				if data.odradi then
+					broj = false
+				else
+					broj = true
+				end
+				extras[tostring(data.modNum)] = broj
+				props['extras'] = extras
 				ESX.Game.SetVehicleProperties(vehicle, props)
 				props = {}
 			end
@@ -1191,7 +1202,26 @@ function UpdateMods2(nar, data)
 				SetVehicleUndriveable(vehicle, false)
 				TriggerEvent("kvar:PopraviKvar", globalplate)
 			elseif data.modType == "dodaci" then
-				SetVehicleExtra(vehicle, data.modNum, data.odradi)
+				print(json.encode(data))
+				local broj = 0
+				if data.odradi then
+					broj = 1
+				else
+					broj = 0
+				end
+				SetVehicleExtra(vehicle, tonumber(data.modNum), broj)
+				local extras = {}
+				for i = 1, 14 do
+					if DoesExtraExist(vehicle, i) then
+						if IsVehicleExtraTurnedOn(vehicle, i) then
+							extras[tostring(i)] = true
+						else
+							extras[tostring(i)] = false
+						end
+					end
+				end
+				print(json.encode(extras))
+				props['extras'] = extras
 			end
 			props[data.modType] = data.modNum
 			ESX.Game.SetVehicleProperties(vehicle, props)
@@ -1201,6 +1231,7 @@ function UpdateMods2(nar, data)
 			TriggerServerEvent("narudzbe:MakniDio", nar, data.modType)
 		end
 	end
+	FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId(), false), false)
 end
 
 function GetAction(data)
@@ -1766,35 +1797,6 @@ Citizen.CreateThread(function()
 			--end
 
 			if IsControlJustReleased(0, Keys['E']) and not lsMenuIsShowed then
-				if isInLSMarker then
-					if GetPedInVehicleSeat(vehicle, 0) == playerPed then
-						if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
-							if not IsVehicleSeatFree(vehicle, -1) then
-								lsMenuIsShowed = true
-
-								FreezeEntityPosition(vehicle, true)
-
-								myCar = ESX.Game.GetVehicleProperties(vehicle)
-								Narudzba = {}
-								ESX.UI.Menu.CloseAll()
-								GetAction({value = 'main'})
-							else
-								ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
-							end
-						end
-					elseif GetPedInVehicleSeat(vehicle, -1) == playerPed then
-						lsMenuIsShowed = true
-
-						FreezeEntityPosition(vehicle, true)
-
-						myCar = ESX.Game.GetVehicleProperties(vehicle)
-						Narudzba = {}
-						ESX.UI.Menu.CloseAll()
-						GetAction({value = 'main'})
-					end
-				else
-					FreezeEntityPosition(vehicle, false)
-				end
 				if isInLSMarker2 then
 					--if GetPedInVehicleSeat(GetVehiclePedIsIn(playerPed, false), -1) == playerPed then
 						lsMenuIsShowed = true
@@ -1808,11 +1810,11 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if isInLSMarker and not hasAlreadyEnteredMarker then
+			if isInLSMarker2 and not hasAlreadyEnteredMarker then
 				hasAlreadyEnteredMarker = true
 			end
 
-			if not isInLSMarker and hasAlreadyEnteredMarker then
+			if not isInLSMarker2 and hasAlreadyEnteredMarker then
 				hasAlreadyEnteredMarker = false
 			end
 
@@ -1824,6 +1826,7 @@ Citizen.CreateThread(function()
 end)
 
 function OpenIzborMenu()
+	FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId()), true)
 	local elems = {}
 	if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
 		table.insert(elems, {label = "Narucivanje dijelova", value = "narucivanje"})
@@ -1840,7 +1843,7 @@ function OpenIzborMenu()
 		elements = elems
 	}, function(data, menu)
 		if data.current.value == "narucivanje" then
-			isInLSMarker  = true
+			--isInLSMarker  = true
 			local playerPed = PlayerPedId()
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
 			if GetPedInVehicleSeat(vehicle, 0) == playerPed then
@@ -1869,7 +1872,7 @@ function OpenIzborMenu()
 				GetAction({value = 'main'})
 			end
 		elseif data.current.value == "ugradnja" then
-			isInLSMarker2 = true
+			--isInLSMarker2 = true
 			local playerPed = PlayerPedId()
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
 			if GetPedInVehicleSeat(GetVehiclePedIsIn(playerPed, false), -1) == playerPed then
@@ -1887,11 +1890,13 @@ function OpenIzborMenu()
 		end
 	end, function(data, menu)
 		menu.close()
+		FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId()), false)
 		lsMenuIsShowed = false
 	end)
 end
 
 function OtvoriNarudzbu(tablica)
+	FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId()), true)
 	ESX.TriggerServerCallback('meh:DohvatiNarudzbu',function(nar)
 		if nar ~= 0 then
 			local elems = {}
@@ -1911,7 +1916,7 @@ function OtvoriNarudzbu(tablica)
 					menu.close()
 					local elems2 = {}
 					for i=1, #dijelovi, 1 do
-						table.insert(elems2, {label = dijelovi[i].label, modType = dijelovi[i].modType, modNum = dijelovi[i].modNum, wheelType = dijelovi[i].wheelType})
+						table.insert(elems2, {label = dijelovi[i].label, modType = dijelovi[i].modType, modNum = dijelovi[i].modNum, wheelType = dijelovi[i].wheelType, odradi = dijelovi[i].odradi})
 					end
 					ESX.UI.Menu.Open('default', GetCurrentResourceName(), "menu_nar3",
 					{
@@ -1925,15 +1930,18 @@ function OtvoriNarudzbu(tablica)
 						--TriggerServerEvent("narudzbe:MakniDio", nar, data2.current.modType)
 					end, function(data2, menu2)
 						menu2.close()
+						FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId()), false)
 						lsMenuIsShowed = false
 					end)
 				else
 					lsMenuIsShowed = false
+					FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId()), false)
 					menu.close()
 				end
 			end, function(data, menu)
 				menu.close()
 				lsMenuIsShowed = false
+				FreezeEntityPosition(GetVehiclePedIsIn(PlayerPedId()), false)
 			end)
 		else
 			lsMenuIsShowed = false
