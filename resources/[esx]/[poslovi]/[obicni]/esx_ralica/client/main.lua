@@ -320,6 +320,7 @@ AddEventHandler('ralica:OstaviDuznost', function()
 end)
 
 function PokreniPosao()
+	TriggerServerEvent("ralica:ZapoceoPosao", true)
 	for i=1, #Config.Objekti, 1 do
 		ESX.Game.SpawnLocalObject('prop_snow_bush_02_a', {
 			x = Config.Objekti[i].x,
@@ -439,6 +440,7 @@ function PokreniPosao()
 							end
 							Spawno = false
 							Radis = false
+							TriggerServerEvent("ralica:ZapoceoPosao", false)
 							Broj = 0
 							Odradio = 1
 							ESX.ShowNotification("Uspjesno zavrsen posao, vratite kamion do firme!")
@@ -485,6 +487,7 @@ AddEventHandler('esx_ralica:hasEnteredMarker', function(zone)
 end)
 
 function ZavrsiPosao()
+	TriggerServerEvent("ralica:ZapoceoPosao", false)
 	for i=1, #Config.Objekti, 1 do
 		if Objekti[i] ~= nil then
 			ESX.Game.DeleteObject(Objekti[i])

@@ -207,8 +207,8 @@ AddEventHandler('farmer:Vozilo', function(data)
 			ESX.Streaming.RequestModel("tractor2")
 			Vozilo = CreateVehicle("tractor2", Config.SpawnVozila.Koordinate[poz].Koord, Config.SpawnVozila.Koordinate[poz].Heading, true, false)
 			randNum = math.random(10000, 99999)
-			SetVehicleNumberPlateText(Vozilo, "REV"..randNum)             
-			tablicaVozila = "REV"..randNum			
+			SetVehicleNumberPlateText(Vozilo, "HUG"..randNum)             
+			tablicaVozila = "HUG"..randNum			
 			TaskWarpPedIntoVehicle(GetPlayerPed(-1), Vozilo, -1)
 			SetModelAsNoLongerNeeded("tractor2")
 			ESX.Streaming.RequestModel("raketrailer")
@@ -216,11 +216,13 @@ AddEventHandler('farmer:Vozilo', function(data)
 			SetModelAsNoLongerNeeded("raketrailer")
 			AttachVehicleToTrailer(Vozilo, Vozilo2, 1.1)
 			Radis = true
+			TriggerServerEvent("farmer:ZapoceoPosao", true)
 			SpawnObjekte()
 		else
 			ESX.ShowNotification("Trenutno nema dostupnih traktora.")
 		end
 	elseif data.broj == 2 then
+		TriggerServerEvent("farmer:ZapoceoPosao", true)
 		DoScreenFadeOut(1000)
 		while not IsScreenFadedOut() do
 			Wait(100)
@@ -694,6 +696,7 @@ function ZavrsiPosao()
 	Vozilo = nil
 	Vozilo2 = nil
 	Radis = false
+	TriggerServerEvent("farmer:ZapoceoPosao", false)
 end
 
 RegisterNetEvent('esx:playerLoaded')

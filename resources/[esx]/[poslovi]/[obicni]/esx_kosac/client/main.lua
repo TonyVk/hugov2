@@ -191,6 +191,7 @@ AddEventHandler('kosac:Vozilo', function(data)
 		tablicaVozila = "WAL"..platenum			
 		TaskWarpPedIntoVehicle(GetPlayerPed(-1), Vozilo, -1)
 		Radis = true
+		TriggerServerEvent("kosac:ZapoceoPosao", true)
 		TriggerEvent("dpemotes:Radim", true)
 		SpawnObjekte()
 	elseif data.broj == 2 then
@@ -212,6 +213,7 @@ AddEventHandler('kosac:Vozilo', function(data)
 		SetModelAsNoLongerNeeded(modele)
 		TriggerEvent("dpemotes:Radim", true)
 		Radis = true
+		TriggerServerEvent("kosac:ZapoceoPosao", true)
 		SpawnObjekte2()
 	end
 end)
@@ -473,6 +475,7 @@ function SpawnObjekte2()
 								Kosilica = nil
 								ClearPedSecondaryTask(PlayerPedId())
 								ESX.ShowNotification("Uspjesno zavrsen posao!")
+								TriggerServerEvent("kosac:ZapoceoPosao", false)
 							end
 						end
 					end
@@ -535,6 +538,7 @@ function SpawnObjekte()
 										--local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 										--ESX.Game.DeleteVehicle(vehicle)
 										ESX.ShowNotification("Uspjesno zavrsen posao!")
+										TriggerServerEvent("kosac:ZapoceoPosao", false)
 									end
 								end
 							end
@@ -597,6 +601,7 @@ end)
 
 function ZavrsiPosao()
 	Radis = false
+	TriggerServerEvent("kosac:ZapoceoPosao", false)
 	SetPlayerInvincible(PlayerId(), false)
 	if Kosilica == nil then
 		for i=1, #Objekti, 1 do

@@ -167,6 +167,7 @@ AddEventHandler('kamion:Vozilo', function(data)
 				ESX.ShowNotification("Utovarite kontenjer na prikolicu!")
 				StartajPosao(i)
 				Radis = true
+				TriggerServerEvent("kamion:ZapoceoPosao", true)
 				break
 			end
 		end
@@ -209,6 +210,7 @@ AddEventHandler('kamion:Vozilo', function(data)
 					AttachVehicleToTrailer(Vozilo, prikolica, 5)
 					StartajPosao2()
 					Radis = true
+					TriggerServerEvent("kamion:ZapoceoPosao", true)
 					break
 				end
 			end
@@ -668,6 +670,7 @@ end)
 
 function ZavrsiPosao()
 	Radis = false
+	TriggerServerEvent("kamion:ZapoceoPosao", false)
 	if Blipara ~= nil then
 		RemoveBlip(Blipara)
 	end

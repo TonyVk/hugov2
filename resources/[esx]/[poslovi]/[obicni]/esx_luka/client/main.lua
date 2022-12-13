@@ -197,6 +197,7 @@ function ZapocniPosao()
 	if not Radis then
 		TriggerEvent("NeKickaj", true)
 		Radis = true
+		TriggerServerEvent("luka:ZapoceoPosao", true)
 		local removeprops = {
 			"prop_dock_crane_01",
 			"prop_crane_01_truck1",
@@ -826,6 +827,7 @@ function ZavrsiPosao()
 	if Radis then
 		TriggerEvent("NeKickaj", false)
 		Radis = false
+		TriggerServerEvent("luka:ZapoceoPosao", false)
 		TriggerEvent("MakniHud", false)
 		local removeprops = {
 			"prop_dock_crane_01",

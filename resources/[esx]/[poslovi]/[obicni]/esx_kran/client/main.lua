@@ -197,6 +197,7 @@ function ZapocniPosao()
 		zadnjaCoord = GetEntityCoords(PlayerPedId())
 		ESX.ShowNotification("Ukoliko zelite zavrsiti ranije upisite /zavrsikran", 5000)
 		Radis = true
+		TriggerServerEvent("kran:ZapoceoPosao", true)
 		soundID = GetSoundId()
 		soundID2 = GetSoundId()
 		soundID3 = GetSoundId()
@@ -463,6 +464,7 @@ function ZavrsiPosao()
 	if Radis then
 		TriggerEvent("NeKickaj", false)
 		Radis = false
+		TriggerServerEvent("kran:ZapoceoPosao", false)
 		DetachEntity(attObj2, true, true)
 		SetEntityCoords(attObj2, zadnjaCoord.x, zadnjaCoord.y, zadnjaCoord.z)
 		ESX.ShowNotification("Uspjesno zavrsen posao.")
