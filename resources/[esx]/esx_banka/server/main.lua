@@ -25,6 +25,26 @@ MySQL.ready(function()
 	UcitajBankomate()
 end)
 
+RegisterNetEvent('atm:SpremiVrijeme')
+AddEventHandler('atm:SpremiVrijeme', function(minute)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	MySQL.Async.execute('UPDATE users SET atmpljacka = @count WHERE ID = @ident', {
+		['@count'] = tonumber(minute),
+		['@ident'] = xPlayer.getID()
+	})
+end)
+
+ESX.RegisterServerCallback('atm:DohvatiVrijeme', function (source, cb)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	MySQL.Async.fetchScalar('SELECT atmpljacka FROM users WHERE ID = @identifier', {
+		['@identifier'] = xPlayer.getID()
+	}, function(result)
+        cb(result)
+    end)
+end)
+
 function UcitajBankomate()
 	Bankomati = {}
 	MySQL.Async.fetchAll(

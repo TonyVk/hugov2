@@ -9,6 +9,7 @@ local perm 						= 0
 local Bankomati = {}
 local Blipovi = {}
 local Objekti = {}
+local Minute = 0
 Scaleforms    = mLibs:Scaleforms()
 
 --
@@ -29,7 +30,23 @@ Citizen.CreateThread(function()
 		SpawnBlipove()
     SpawnBankomate()
 	end)
+  ESX.TriggerServerCallback('atm:DohvatiVrijeme', function (vrijeme)
+		Minute = vrijeme
+		if vrijeme > 0 then
+			BrojiVrijeme()
+		end
+	end)
 end)
+
+function BrojiVrijeme()
+	Citizen.CreateThread(function()
+		while Minute > 0 do
+			Wait(60000)
+			Minute = Minute-1
+			TriggerServerEvent("atm:SpremiVrijeme", Minute)
+		end
+	end)
+end
 
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
@@ -191,69 +208,82 @@ AddEventHandler('atm:ZapocniPljacku', function()
     local atm2 = GetDesATM(PlayerPedId())
     if atm2 == nil then
       local players, nearbyPlayer = ESX.Game.GetPlayersInArea(GetEntityCoords(PlayerPedId()), 6.0)
-      print(#players)
       if #players <= 1 then
-        ESX.TriggerServerCallback('esx_vangelico_robbery:conteggio', function(CopsConnected)
-          if CopsConnected >= Config.Policija then
-            TriggerServerEvent("atm:ObrisiBocu")
-            TriggerEvent("esx_invh:closeinv")
-            local alarm = math.random(1,10)
-            if alarm == 1 or alarm == 3 or alarm == 5 or alarm == 7 or alarm == 9 then
-              local pKoord = GetEntityCoords(PlayerPedId())
-              local PlayerCoords = { x = pKoord.x, y = pKoord.y, z = pKoord.z }
-              TriggerServerEvent('esx_addons_gcphone:startCall', 'police', "Pljacka bankomata", PlayerCoords, {
-                PlayerCoords = { x = pKoord.x, y = pKoord.y, z = pKoord.z },
-              })
-            end
-            local model = "prop_gascyl_01a"
-            RequestModel(model)
-            while not HasModelLoaded(model) do
-                Wait(1)
-            end
-            local playerPed = PlayerPedId()
-            local koord = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 0.3, -1.0)
-            --anim@mp_fireworks place_firework_1_rocket
-            RequestAnimDict("anim@mp_fireworks")
-            while not HasAnimDictLoaded("anim@mp_fireworks") do
-              Citizen.Wait(1)
-            end
-            TaskPlayAnim(PlayerPedId(),"anim@mp_fireworks","place_firework_1_rocket", 8.0, -8, 2000, 2, 0, 0, 0, 0)
-            RemoveAnimDict("anim@mp_fireworks")
-            Wait(2000)
-            gas = CreateObject(GetHashKey(model), koord.x, koord.y, koord.z, true, true, true)
-            SetEntityInvincible(gas, true)
-            FreezeEntityPosition(gas, true)
-            SetModelAsNoLongerNeeded(model)
-            ESX.ShowNotification("Zapalili ste plinsku bocu!")
-            local rand = math.random(100, 6000)
-            Citizen.SetTimeout(rand, function()
-              local weapon = "WEAPON_PISTOL"
-              RequestWeaponAsset(GetHashKey(weapon)) 
-              while not HasWeaponAssetLoaded(GetHashKey(weapon)) do
-                Wait(1)
+        if Minute <= 0 then
+          ESX.TriggerServerCallback('esx_vangelico_robbery:conteggio', function(CopsConnected)
+            if CopsConnected >= Config.Policija then
+              TriggerServerEvent("atm:ObrisiBocu")
+              TriggerEvent("esx_invh:closeinv")
+              Minute = 30
+              TriggerServerEvent("atm:SpremiVrijeme", 30)
+              BrojiVrijeme()
+              local alarm = math.random(1,10)
+              if alarm == 1 or alarm == 3 or alarm == 5 or alarm == 7 or alarm == 9 then
+                local pKoord = GetEntityCoords(PlayerPedId())
+                local PlayerCoords = { x = pKoord.x, y = pKoord.y, z = pKoord.z }
+                TriggerServerEvent('esx_addons_gcphone:startCall', 'police', "Pljacka bankomata", PlayerCoords, {
+                  PlayerCoords = { x = pKoord.x, y = pKoord.y, z = pKoord.z },
+                })
               end
-              ShootSingleBulletBetweenCoords(
-                koord.x, koord.y, koord.z+1.0, 
-                koord.x, koord.y, koord.z, 
-                1.0, 
-                true, 
-                GetHashKey(weapon), 
-                false, 
-                false, 
-                true
-              )
-              RemoveWeaponAsset(GetHashKey(weapon))
-              rand = math.random(100, 6000)
+              local model = "prop_gascyl_01a"
+              RequestModel(model)
+              while not HasModelLoaded(model) do
+                  Wait(1)
+              end
+              local playerPed = PlayerPedId()
+              local koord = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 0.3, -1.0)
+              --anim@mp_fireworks place_firework_1_rocket
+              RequestAnimDict("anim@mp_fireworks")
+              while not HasAnimDictLoaded("anim@mp_fireworks") do
+                Citizen.Wait(1)
+              end
+              TaskPlayAnim(PlayerPedId(),"anim@mp_fireworks","place_firework_1_rocket", 8.0, -8, 2000, 2, 0, 0, 0, 0)
+              RemoveAnimDict("anim@mp_fireworks")
+              Wait(2000)
+              gas = CreateObject(GetHashKey(model), koord.x, koord.y, koord.z, true, true, true)
+              SetEntityInvincible(gas, true)
+              FreezeEntityPosition(gas, true)
+              SetModelAsNoLongerNeeded(model)
+              ESX.ShowNotification("Zapalili ste plinsku bocu!")
+              local rand = math.random(100, 6000)
               Citizen.SetTimeout(rand, function()
-                AddExplosion(koord.x, koord.y, koord.z, 27, 1.0, true, false, 0.49)
-                DeleteEntity(gas)
-                gas = nil
+                local weapon = "WEAPON_PISTOL"
+                RequestWeaponAsset(GetHashKey(weapon)) 
+                while not HasWeaponAssetLoaded(GetHashKey(weapon)) do
+                  Wait(1)
+                end
+                ShootSingleBulletBetweenCoords(
+                  koord.x, koord.y, koord.z+1.0, 
+                  koord.x, koord.y, koord.z, 
+                  1.0, 
+                  true, 
+                  GetHashKey(weapon), 
+                  false, 
+                  false, 
+                  true
+                )
+                RemoveWeaponAsset(GetHashKey(weapon))
+                rand = math.random(100, 6000)
+                Citizen.SetTimeout(rand, function()
+                  AddExplosion(koord.x, koord.y, koord.z, 27, 1.0, true, false, 0.49)
+                  DeleteEntity(gas)
+                  gas = nil
+                end)
               end)
-            end)
-          else
-            ESX.ShowNotification("Potrebno je barem "..Config.Policija.." policajca!")
+            else
+              ESX.ShowNotification("Potrebno je barem "..Config.Policija.." policajca!")
+            end
+          end)
+        else
+          local tekst = " minuta"
+          if Minute == 1 then
+            tekst = " minutu"
           end
-        end)
+          if Minute >= 2 and Minute <= 4 then
+            tekst = " minute"
+          end
+          ESX.ShowNotification("Ne mozete pljackati jos "..Minute..tekst)
+        end
       else
         ESX.ShowNotification("Drugi igrac vam je previse blizu!")
       end
