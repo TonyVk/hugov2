@@ -45,8 +45,8 @@ ESX.StartPayCheck = function()
 											TriggerEvent("banka:Povijest", xPlayer.source, tonumber(salary), "Plaća za prošli mjesec")
 											TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
 										end
-										--[[MySQL.Async.fetchAll('SELECT * FROM billing WHERE identifier = @identifier', {
-											['@identifier'] = xPlayer.identifier
+										MySQL.Async.fetchAll('SELECT * FROM billing WHERE identifier = @identifier', {
+											['@identifier'] = xPlayer.getID()
 										}, function(result)
 											if result[1] ~= nil then
 												for i=1, #result, 1 do
@@ -57,13 +57,10 @@ ESX.StartPayCheck = function()
 													local target     = result[i].target
 													local label      = result[i].label
 													local amount     = result[i].amount
-													local xTarget = ESX.GetPlayerFromIdentifier(sender)
+													local xTarget = ESX.GetPlayerFromDbId(sender)
 													if targetType == 'player' then
-
 														if xTarget ~= nil then
-
 															if xPlayer.getMoney() >= amount then
-
 																MySQL.Async.execute('DELETE from billing WHERE id = @id', {
 																	['@id'] = id
 																}, function(rowsChanged)
@@ -72,9 +69,7 @@ ESX.StartPayCheck = function()
 																	TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice', ESX.Math.GroupDigits(amount)))
 																	TriggerClientEvent('esx:showNotification', xTarget.source, _U('received_payment', ESX.Math.GroupDigits(amount)))
 																end)
-
 															elseif xPlayer.getBank() >= amount then
-
 																MySQL.Async.execute('DELETE from billing WHERE id = @id', {
 																	['@id'] = id
 																}, function(rowsChanged)
@@ -83,24 +78,15 @@ ESX.StartPayCheck = function()
 																	TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_invoice', ESX.Math.GroupDigits(amount)))
 																	TriggerClientEvent('esx:showNotification', xTarget.source, _U('received_payment', ESX.Math.GroupDigits(amount)))
 																end)
-
 															else
 																TriggerClientEvent('esx:showNotification', xPlayer.source, _U('no_money'))
 															end
-														ESX.SavePlayer(xPlayer, function() 
-														end)
-														ESX.SavePlayer(xTarget, function() 
-														end)
 														else
 															TriggerClientEvent('esx:showNotification', xPlayer.source, _U('player_not_online'))
 														end
-
 													else
-
 														TriggerEvent('esx_addonaccount:getSharedAccount', target, function(account)
-
 															if xPlayer.getMoney() >= amount then
-
 																MySQL.Async.execute('DELETE from billing WHERE id = @id', {
 																	['@id'] = id
 																}, function(rowsChanged)
@@ -112,9 +98,7 @@ ESX.StartPayCheck = function()
 																		TriggerClientEvent('esx:showNotification', xTarget.source, _U('received_payment', ESX.Math.GroupDigits(amount)))
 																	end
 																end)
-
 															elseif xPlayer.getBank() >= amount then
-
 																MySQL.Async.execute('DELETE from billing WHERE id = @id', {
 																	['@id'] = id
 																}, function(rowsChanged)
@@ -126,7 +110,6 @@ ESX.StartPayCheck = function()
 																		TriggerClientEvent('esx:showNotification', xTarget.source, _U('received_payment', ESX.Math.GroupDigits(amount)))
 																	end
 																end)
-
 															else
 																TriggerClientEvent('esx:showNotification', xPlayer.source, _U('no_money'))
 															end
@@ -134,7 +117,7 @@ ESX.StartPayCheck = function()
 													end
 												end
 											end
-										end)]]
+										end)
 										break
 									end
 								end
