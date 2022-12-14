@@ -3,6 +3,7 @@ local Bankomati = {}
 local Ucitao = false
 local Pljacke = {}
 local Pljackas = {}
+local Pozivi = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -345,6 +346,12 @@ end)
 RegisterServerEvent('banka::server:withdrawvb')
 AddEventHandler('banka::server:withdrawvb', function(amount, inMenu)
 	local _src = source
+	if Pozivi[tostring(_src)] then
+		if GetGameTimer()-Pozivi[tostring(_src)] <= 100 then
+			return
+		end
+	end
+	Pozivi[tostring(_src)] = GetGameTimer()
 	local _char = ESX.GetPlayerFromId(_src)
 	local _base = 0
 	amount = tonumber(amount)

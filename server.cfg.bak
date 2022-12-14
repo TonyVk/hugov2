@@ -4,7 +4,7 @@ endpoint_add_udp "0.0.0.0:30120"
 
 set mysql_connection_string "server=localhost;uid=root;database=essentialmode"
 set es_enableCustomData 1
-set mysql_debug "File"
+#set mysql_debug "File"
 
 #set sv_enforcegamebuild 2545
 sv_enforcegamebuild 2699
@@ -193,6 +193,8 @@ start esx_kosac
 start esx_farmer
 start esx_kamion
 start esx_luka
+start esx_kran
+start esx_ralica
 
 #EUP
 start NativeUI
@@ -204,7 +206,7 @@ start mumble-voip
 start rp-radio
 start esx_zone
 start esx_zemljista
-start tagovi
+#start tagovi
 start upit
 start carsounds
 start vozila
@@ -217,6 +219,8 @@ start pecanje
 
 # Server player slot limit (must be between 1 and 32, unless using OneSync)
 sv_maxclients 8
+
+sv_pureLevel 2
 
 # License key for your server (https://keymaster.fivem.net)
 sv_licenseKey 9quib8epkaogkbdoh083rhv8ifosd0o3
