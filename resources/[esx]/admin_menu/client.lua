@@ -128,6 +128,7 @@ RegisterCommand('viewname', function(source, args, rawCommand)
 			viewname = false
 			ESX.ShowNotification("Ugasili ste viewname!")
 		end
+		TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), "/viewname")
 	else
 		ESX.ShowNotification("Niste na admin duznosti!")
 	end
@@ -146,6 +147,8 @@ RegisterCommand('kick', function(source, args, rawCommand)
 					reason = "Kickan: " .. table.concat(reason, " ")
 				end
 				TriggerServerEvent("amenu:Kick", player, reason)
+				local komando = "/kick "..table.concat(args, " ")
+				TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 			else
 				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
 			end
@@ -177,6 +180,8 @@ RegisterCommand('freeze', function(source, args, rawCommand)
 			if tonumber(args[1]) then
 				local player = tonumber(args[1])
 				TriggerServerEvent("amenu:Freeze", player)
+				local komando = "/freeze "..table.concat(args, " ")
+				TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 			else
 				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
 			end
@@ -194,6 +199,8 @@ RegisterCommand('bring', function(source, args, rawCommand)
 			if tonumber(args[1]) then
 				local player = tonumber(args[1])
 				TriggerServerEvent("amenu:Bring", player)
+				local komando = "/bring "..table.concat(args, " ")
+				TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 			else
 				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
 			end
@@ -211,6 +218,8 @@ RegisterCommand('slap', function(source, args, rawCommand)
 			if tonumber(args[1]) then
 				local player = tonumber(args[1])
 				TriggerServerEvent("amenu:Slap", player)
+				local komando = "/slap "..table.concat(args, " ")
+				TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 			else
 				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
 			end
@@ -228,6 +237,8 @@ RegisterCommand('goto', function(source, args, rawCommand)
 			if tonumber(args[1]) then
 				local player = tonumber(args[1])
 				TriggerServerEvent("amenu:Goto", player)
+				local komando = "/goto "..table.concat(args, " ")
+				TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 			else
 				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
 			end
@@ -245,6 +256,8 @@ RegisterCommand('slay', function(source, args, rawCommand)
 			if tonumber(args[1]) then
 				local player = tonumber(args[1])
 				TriggerServerEvent("amenu:Slay", player)
+				local komando = "/slay "..table.concat(args, " ")
+				TriggerServerEvent("DiscordBot:RegCmd", GetPlayerServerId(PlayerId()), komando)
 			else
 				TriggerEvent('chat:addMessage', { args = {"^1SYSTEM", "Krivi ID igraca"}})
 			end
