@@ -504,54 +504,62 @@ AddEventHandler('esx:createMissingPickups', function(missingPickups)
 	end
 end)
 
+local spremajLoadout = true
+
+RegisterNetEvent('esx:spremajLoadout')
+AddEventHandler('esx:spremajLoadout', function(br)
+	spremajLoadout = br
+end)
+
 -- Save loadout
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(5000)
+		if spremajLoadout then
+			local playerPed      = PlayerPedId()
+			local loadout        = {}
+			local loadoutChanged = false
 
-		local playerPed      = PlayerPedId()
-		local loadout        = {}
-		local loadoutChanged = false
+			for i=1, #Config.Weapons do
+				local weaponName = Config.Weapons[i].name
+				local weaponHash = GetHashKey(weaponName)
+				local weaponComponents = {}
 
-		for i=1, #Config.Weapons do
-			local weaponName = Config.Weapons[i].name
-			local weaponHash = GetHashKey(weaponName)
-			local weaponComponents = {}
+				if HasPedGotWeapon(playerPed, weaponHash, false) and weaponName ~= 'WEAPON_UNARMED' then
+					local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+					local components = Config.Weapons[i].components
 
-			if HasPedGotWeapon(playerPed, weaponHash, false) and weaponName ~= 'WEAPON_UNARMED' then
-				local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-				local components = Config.Weapons[i].components
-
-				for j=1, #components do
-					if HasPedGotWeaponComponent(playerPed, weaponHash, components[j].hash) then
-						table.insert(weaponComponents, components[j].name)
+					for j=1, #components do
+						if HasPedGotWeaponComponent(playerPed, weaponHash, components[j].hash) then
+							table.insert(weaponComponents, components[j].name)
+						end
 					end
+
+					if not lastLoadout[weaponName] or lastLoadout[weaponName] ~= ammo then
+						loadoutChanged = true
+					end
+
+					lastLoadout[weaponName] = ammo
+
+					table.insert(loadout, {
+						name = weaponName,
+						ammo = ammo,
+						label = Config.Weapons[i].label,
+						components = weaponComponents
+					})
+				else
+					if lastLoadout[weaponName] then
+						loadoutChanged = true
+					end
+
+					lastLoadout[weaponName] = nil
 				end
-
-				if not lastLoadout[weaponName] or lastLoadout[weaponName] ~= ammo then
-					loadoutChanged = true
-				end
-
-				lastLoadout[weaponName] = ammo
-
-				table.insert(loadout, {
-					name = weaponName,
-					ammo = ammo,
-					label = Config.Weapons[i].label,
-					components = weaponComponents
-				})
-			else
-				if lastLoadout[weaponName] then
-					loadoutChanged = true
-				end
-
-				lastLoadout[weaponName] = nil
 			end
-		end
 
-		if loadoutChanged and isLoadoutLoaded then
-			ESX.PlayerData.loadout = loadout
-			TriggerServerEvent('esx:updateLoadout', loadout)
+			if loadoutChanged and isLoadoutLoaded then
+				ESX.PlayerData.loadout = loadout
+				TriggerServerEvent('esx:updateLoadout', loadout)
+			end
 		end
 	end
 end)

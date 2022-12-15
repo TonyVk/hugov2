@@ -31,17 +31,28 @@
 end)]]
 
 RegisterNetEvent('baseevents:onPlayerDied')
-AddEventHandler('baseevents:onPlayerDied', function(ktype, koord)
-	local playerPed = PlayerPedId()
-    local deathCause = GetPedCauseOfDeath(playerPed)
-	PlayerKilled(deathCause)
-end)
-
-RegisterNetEvent('baseevents:onPlayerKilled')
-AddEventHandler('baseevents:onPlayerKilled', function(kid, ostalo)
-	local playerPed = PlayerPedId()
-    local deathCause = GetPedCauseOfDeath(playerPed)
-	PlayerKilledByPlayer(kid, GetPlayerFromServerId(kid), deathCause)
+AddEventHandler('baseevents:onPlayerDied', function(ped, attacker, weaponHash, isMeleeDamage)
+	if PlayerPedId() == ped then
+		if ped == attacker then
+			local playerPed = PlayerPedId()
+			local deathCause = GetPedCauseOfDeath(playerPed)
+			PlayerKilled(deathCause)
+		else
+			if attacker ~= nil then
+				if IsPedAPlayer(attacker) then
+					local playerPed = PlayerPedId()
+					local deathCause = GetPedCauseOfDeath(playerPed)
+					local pid = NetworkGetPlayerIndexFromPed(attacker)
+					local id = GetPlayerServerId(pid)
+					PlayerKilledByPlayer(id, pid, deathCause)
+				else
+					local playerPed = PlayerPedId()
+					local deathCause = GetPedCauseOfDeath(playerPed)
+					PlayerKilled(deathCause)
+				end
+			end
+		end
+	end
 end)
 
 function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
