@@ -28,7 +28,7 @@ AddEventHandler('luka:EoPlace', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac luckog radnika, a nije zaposlen kao lucki radnik!")
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac luckog radnika, a nije zaposlen kao lucki radnik! ("..xPlayer.posao.name..")")
 	    TriggerEvent("AntiCheat:Citer", _source)
     end
 end)

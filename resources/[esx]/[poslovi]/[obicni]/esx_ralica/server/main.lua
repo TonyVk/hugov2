@@ -26,7 +26,7 @@ AddEventHandler('esx_ralica:platiTuljanu', function()
 	    	TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac cistaca snijega, a nije zaposlen kao cistac snijega!")
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac cistaca snijega, a nije zaposlen kao cistac snijega! ("..xPlayer.posao.name..")")
 	    TriggerEvent("AntiCheat:Citer", _source)
     end
 end)

@@ -19,7 +19,7 @@ AddEventHandler('kamiooon:platituljanu', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija!")
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija! ("..xPlayer.posao.name..")")
 	    TriggerEvent("AntiCheat:Citer", _source)
 	end
 end)
@@ -39,7 +39,7 @@ AddEventHandler('kamiooon:platituljanu2', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija!")
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kamiondzije, a nije zaposlen kao kamiondzija! ("..xPlayer.posao.name..")")
 	    TriggerEvent("AntiCheat:Citer", _source)
 	end
 end)

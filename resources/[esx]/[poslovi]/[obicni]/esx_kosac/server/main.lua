@@ -28,7 +28,7 @@ AddEventHandler('kosac:EoPlace', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac! ("..xPlayer.posao.name..")")
 	    TriggerEvent("AntiCheat:Citer", _source)
     end
 end)
@@ -48,7 +48,7 @@ AddEventHandler('kosac:EoPlace2', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac!")
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kosaca, a nije zaposlen kao kosac! ("..xPlayer.posao.name..")")
 	    TriggerEvent("AntiCheat:Citer", _source)
     end
 end)

@@ -28,7 +28,7 @@ AddEventHandler('kran:EoPlace', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kraniste, a nije zaposlen kao kranista!")
+        TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."[".._source.."] je pokusao pozvati event za novac kraniste, a nije zaposlen kao kranista! ("..xPlayer.posao.name..")")
 	    TriggerEvent("AntiCheat:Citer", _source)
     end
 end)

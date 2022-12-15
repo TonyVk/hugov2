@@ -18,7 +18,7 @@ AddEventHandler('farmer:EoPlace', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."(".._source..") je pokusao dobiti novac od farmera, a nije farmer!")
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."(".._source..") je pokusao dobiti novac od farmera, a nije farmer! ("..xPlayer.posao.name..")")
 		TriggerEvent("AntiCheat:Citer", _source)
     end
 end)
@@ -38,7 +38,7 @@ AddEventHandler('farmer:EoPlace2', function()
 			TriggerEvent("AntiCheat:Citer", _source)
 		end
 	else
-		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."(".._source..") je pokusao dobiti novac od farmera, a nije farmer!")
+		TriggerEvent("DiscordBot:Anticheat", GetPlayerName(_source).."(".._source..") je pokusao dobiti novac od farmera, a nije farmer! ("..xPlayer.posao.name..")")
 		TriggerEvent("AntiCheat:Citer", _source)
     end
 end)
