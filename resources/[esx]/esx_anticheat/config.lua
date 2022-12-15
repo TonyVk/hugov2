@@ -15,10 +15,10 @@ Config.permission        = "admin" --Permission needed to use ban commands (mod-
 
 
 --WEBHOOK
-Config.Discord				= 'https://discord.gg/rAWxYmp'
+Config.Discord				= 'https://discord.gg/hugorp'
 Config.EnableDiscordLink = true -- only turn this on if you want link the log to a discord
-Config.webhookban        = "https://discordapp.com/api/webhooks/732692937661612096/hZRMBeXAklXaWd-JA1RFIFAjElexAEgrLH6D3qeHj8j3S2DU2FXiMWup1ZdELkexb-0G"
-Config.webhookunban      = "https://discordapp.com/api/webhooks/732693153617805332/_kiHU6kR64WuPvQ5hh5xKB3pskCnwjMtzaea3hRlLcnLUfZNGpHTsSyV4zd65c51Frfw"
+Config.webhookban        = "https://discord.com/api/webhooks/1052737379389145219/-yPvZx-TF8SMKlU0ADFjgb1IHqIqoD1rRqYm7Mlmxci9vTqZy6tDCPj9lG5exP4zOssK"
+Config.webhookunban      = "https://discord.com/api/webhooks/1052737540026814465/8Ty5H9ZBiZrNKUnw1FLTWzRxumO2UZvcJjURZRfyREFUkfoBSuUV1BOCRZKUyyZRCVuD"
 Config.green             = 56108
 Config.grey              = 8421504
 Config.red               = 16711680
