@@ -1494,7 +1494,7 @@ function OpenBodySearchMenu(player)
 
 		if data.novac > 0 then
 			table.insert(elements, {
-				label    = "Novac",
+				label    = "Novac $"..data.novac,
 				value    = 'money',
 				itemType = 'item_account',
 				amount   = data.novac
