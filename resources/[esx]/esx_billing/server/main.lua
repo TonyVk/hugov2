@@ -26,6 +26,7 @@ AddEventHandler('esx_billing:posaljiTuljana', function(playerId, sharedAccountNa
 					['@amount']      = amount
 				}, function(rowsChanged)
 					TriggerClientEvent('esx:showNotification', xTarget.source, _U('received_invoice'))
+					TriggerEvent("DiscordBot:Racuni", "Igrac "..GetPlayerName(_source).." je dao račun u iznosu od $"..amount.." igracu "..GetPlayerName(playerId))
 				end)
 			end
 
@@ -43,6 +44,7 @@ AddEventHandler('esx_billing:posaljiTuljana', function(playerId, sharedAccountNa
 						['@amount']      = amount
 					}, function(rowsChanged)
 						TriggerClientEvent('esx:showNotification', xTarget.source, _U('received_invoice'))
+						TriggerEvent("DiscordBot:Racuni", "Igrac "..GetPlayerName(_source).." je dao račun u iznosu od $"..amount.." igracu "..GetPlayerName(playerId))
 					end)
 				else
 					MySQL.Async.execute('INSERT INTO billing (identifier, sender, target_type, target, label, amount) VALUES (@identifier, @sender, @target_type, @target, @label, @amount)',

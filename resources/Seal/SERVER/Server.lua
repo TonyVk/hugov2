@@ -92,6 +92,16 @@ else
 	end)
 end
 
+if DiscordWebhookRacuni == 'WEBHOOK_LINK_HERE' then
+	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "SefKuce" webhook\n\n')
+else
+	PerformHttpRequest(DiscordWebhookRacuni, function(Error, Content, Head)
+		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
+			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "SefKuce" webhook non-existing!\n\n')
+		end
+	end)
+end
+
 if DiscordWebhookInventory == 'WEBHOOK_LINK_HERE' then
 	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Inventory" webhook\n\n')
 else
@@ -308,6 +318,19 @@ AddEventHandler('DiscordBot:SefKuce', function(Message)
 	if date.min < 10 then date.min = '0' .. tostring(date.min) end
 	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
 	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookSefKuce, SystemName, Message .. ' `' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`', SystemAvatar, false)
+end)
+
+-- Racuni Log
+RegisterNetEvent('DiscordBot:Racuni')
+AddEventHandler('DiscordBot:Racuni', function(Message)
+	local date = os.date('*t')
+	
+	if date.day < 10 then date.day = '0' .. tostring(date.day) end
+	if date.month < 10 then date.month = '0' .. tostring(date.month) end
+	if date.hour < 10 then date.hour = '0' .. tostring(date.hour) end
+	if date.min < 10 then date.min = '0' .. tostring(date.min) end
+	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
+	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookRacuni, SystemName, Message .. ' `' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`', SystemAvatar, false)
 end)
 
 -- Vozila Log

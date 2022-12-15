@@ -13,6 +13,7 @@ DiscordWebhookGranica = 'https://discord.com/api/webhooks/801580952601231431/vEW
 DiscordWebhookProdaja = 'https://discord.com/api/webhooks/1045812610781675550/UZrhll8y1clAmAdoHVDcsjRkXPosnaMzOKcsPbQJmyssd7z8N-s1fvb1xeQq3xq2bGiN'
 DiscordWebhookDuty = 'https://discord.com/api/webhooks/1045759788836982834/kJf2UkLlA91pNWixgA0IM-nhLOEVvmVe07qmyw368cHNeEHuIttBhKQ4GelIo91-Rza8'
 DiscordWebhookSefKuce = 'https://discord.com/api/webhooks/1045759611887681606/mFxIV_oVCsqSy9SY2idMWGaSKnSMm25xrMg_KT48UdHO9AIvEIEke0bW5WtiaL5QYM0k'
+DiscordWebhookRacuni = 'https://discord.com/api/webhooks/1052901175923580978/ou-jvT5p0af3d3BU3aHKeeFgev5uwOdQLyBJWp87QVZu7s2Aut1fUh-W_VwWFmHfJf_U'
 
 SystemAvatar = 'https://purepng.com/public/uploads/large/purepng.com-sealanimalssealsea-lion-981524671319vlofh.png'
 
