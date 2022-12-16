@@ -410,8 +410,13 @@ AddEventHandler('war:Zavrsi', function(br)
         ESX.ShowNotification("Izbaceni ste iz wara!")
     end
     if IsEntityDead(PlayerPedId()) then
+        print("aa")
+        SetPlayerInvincible(ped, false)
+        ClearPedBloodDamage(ped)
+        SetEntityInvincible(PlayerPedId(), false)
         SetEntityCoordsNoOffset(PlayerPedId(), StareKoord, false, false, false, true)
 		NetworkResurrectLocalPlayer(StareKoord, 0.0, true, false)
+        DoScreenFadeIn(1)
     end
     RemoveAllPedWeapons(PlayerPedId())
     TriggerEvent("esx:spremajLoadout", true)
