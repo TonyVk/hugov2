@@ -153,7 +153,7 @@ end)
 
 ESX.RegisterServerCallback('rentbroda:ImalPara', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if xPlayer.getMoney() >= 700 then
+	if xPlayer.getMoney() >= 7000 then
 		cb(true)
 	else
 		cb(false)
@@ -163,7 +163,7 @@ end)
 RegisterNetEvent("rentbroda:SviSuTuljani")
 AddEventHandler('rentbroda:SviSuTuljani', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
-	xPlayer.removeMoney(700)
+	xPlayer.removeMoney(7000)
 end)
 
 ESX.RegisterUsableItem('contract', function(source)

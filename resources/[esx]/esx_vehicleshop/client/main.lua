@@ -3084,10 +3084,10 @@ Citizen.CreateThread(function()
 					OpenBossActionsMenu()
 				elseif CurrentAction == 'bRent' then
 					local elements = {}
-					table.insert(elements, {label = "Dinghy(700$)", value = 'dinghy'})
-					table.insert(elements, {label = 'Jetmax(700$)',  value = 'jetmax'})
-					table.insert(elements, {label = 'Speeder(700$)',  value = 'speeder'})
-					table.insert(elements, {label = 'Tropic(700$)',  value = 'tropic'})
+					table.insert(elements, {label = "Dinghy(7000$)", value = 'dinghy'})
+					table.insert(elements, {label = 'Jetmax(7000$)',  value = 'jetmax'})
+					table.insert(elements, {label = 'Speeder(7000$)',  value = 'speeder'})
+					table.insert(elements, {label = 'Tropic(7000$)',  value = 'tropic'})
 
 					ESX.UI.Menu.Open(
 					  'default', GetCurrentResourceName(), 'rentb',
