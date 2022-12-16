@@ -410,7 +410,6 @@ AddEventHandler('war:Zavrsi', function(br)
         ESX.ShowNotification("Izbaceni ste iz wara!")
     end
     if IsEntityDead(PlayerPedId()) then
-        print("aa")
         SetPlayerInvincible(ped, false)
         ClearPedBloodDamage(ped)
         SetEntityInvincible(PlayerPedId(), false)
