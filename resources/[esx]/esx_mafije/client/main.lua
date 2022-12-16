@@ -76,6 +76,7 @@ local IstovarioTo = 0
 local OstavioTo = 1
 local Vozis = 0
 local blipcic = nil
+local Zabranio = false
 
 local dostave = 
 {
@@ -5929,7 +5930,7 @@ end
 -- end)
 
 RegisterCommand('+akcijemafije', function()
-    if PlayerData.job ~= nil and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'mafia_actions') and (GetGameTimer() - GUI.Time) > 150 then
+    if PlayerData.job ~= nil and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'mafia_actions') and (GetGameTimer() - GUI.Time) > 150 and not Zabranio then
 		for i=1, #Mafije, 1 do
 			if Mafije[i] ~= nil and Mafije[i].Ime == PlayerData.job.name then
 				OpenMafiaActionsMenu()
@@ -6821,5 +6822,10 @@ end)
 RegisterNetEvent('NB:openMenuMafia')
 AddEventHandler('NB:openMenuMafia', function()
 	OpenMafiaActionsMenu()
+end)
+
+RegisterNetEvent('mafije:ZabraniF6')
+AddEventHandler('mafije:ZabraniF6', function(br)
+	Zabranio = br
 end)
 			

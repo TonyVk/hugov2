@@ -30,6 +30,7 @@ local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode
 local UpaljenaSirena = false
 local UVozilu = false
+local Zabranio = false
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -2718,7 +2719,7 @@ Citizen.CreateThread(function()
 end)
 
 RegisterCommand('+akcijepd', function()
-    if PlayerData.job and PlayerData.job.name == 'police' and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') then
+    if PlayerData.job and PlayerData.job.name == 'police' and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'police_actions') and not Zabranio then
 		if playerInService then
 			OpenPoliceActionsMenu()
 		else
@@ -3181,4 +3182,9 @@ CreateThread(function()
 			ESX.ShowNotification(Strings["not_police"])
 		end
 	end)
+end)
+
+RegisterNetEvent('mafije:ZabraniF6')
+AddEventHandler('mafije:ZabraniF6', function(br)
+	Zabranio = br
 end)

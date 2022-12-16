@@ -14,6 +14,7 @@ local Mere 						= false
 local Osvajam 					= 0
 local Zauzima					= false
 local Boje 						= {}
+local Zabrani 					= false
 
 ESX                             = nil
 GUI.Time                        = 0
@@ -329,6 +330,56 @@ AddEventHandler('zone:ObrisiPeda', function(ime)
 					Zone[i].Ped = nil
 				end
 				break
+			end
+		end
+	end
+end)
+
+RegisterNetEvent("zone:ObrisiNPCove")
+AddEventHandler('zone:ObrisiNPCove', function(br)
+	Zabrani = br
+	if br then
+		for i=1, #Zone, 1 do
+			if Zone[i] ~= nil then
+				if Zone[i].Ped ~= nil then
+					DeleteEntity(Zone[i].Ped)
+					exports.qtarget:RemoveZone(Zone[i].Ime.."_ped")
+					Zone[i].Ped = nil
+				end
+			end
+		end
+		for i=1, #Zone, 1 do
+			if Zone[i] ~= nil then
+				if Zone[i].ID ~= nil then
+					RemoveBlip(Zone[i].ID)
+					Zone[i].ID = nil
+				end
+			end
+		end
+	else
+		SpawnNpcove()
+		local naso = false
+		for i=1, #Mafije, 1 do
+			if PlayerData.job.name == Mafije[i].Ime then
+				naso = true
+				break
+			end
+		end
+		if naso then
+			Mere = true
+			for i=1, #Zone, 1 do
+				if Zone[i] ~= nil then
+					if Zone[i].ID == nil then
+						local a = tonumber(Zone[i].Velicina)+0.0
+						local VBlip = AddBlipForArea(Zone[i].Koord.x, Zone[i].Koord.y, Zone[i].Koord.z, a, a)
+						SetBlipRotation(VBlip, Zone[i].Rotacija)
+						SetBlipColour (VBlip, Zone[i].Boja)
+						SetBlipAlpha(VBlip, 115)
+						SetBlipAsShortRange(VBlip, true)
+						SetBlipDisplay(VBlip, 3)
+						Zone[i].ID = VBlip
+					end
+				end
 			end
 		end
 	end
@@ -838,7 +889,7 @@ Citizen.CreateThread(function()
   while true do
     Citizen.Wait(waitara)
 	local naso = 0
-	if PlayerData.job ~= nil and Mere then
+	if PlayerData.job ~= nil and Mere and not Zabrani then
 		if CurrentAction ~= nil then
 		  waitara = 0
 		  naso = 1

@@ -1,5 +1,6 @@
 local HasAlreadyEnteredMarker, OnJob, IsNearCustomer, CustomerIsEnteringVehicle, CustomerEnteredVehicle, IsDead, CurrentActionData = false, false, false, false, false, false, {}
 local CurrentCustomer, CurrentCustomerBlip, DestinationBlip, targetCoords, LastZone, CurrentAction, CurrentActionMsg
+local Zabranio = false
 
 ESX = nil
 
@@ -859,7 +860,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if IsControlJustReleased(0, 167) and IsInputDisabled(0) and not IsDead and Config.EnablePlayerManagement then
+			if IsControlJustReleased(0, 167) and IsInputDisabled(0) and not IsDead and Config.EnablePlayerManagement and not Zabranio then
 				OpenMobileTaxiActionsMenu()
 			end
 		else
@@ -874,4 +875,9 @@ end)
 
 AddEventHandler('playerSpawned', function(spawn)
 	IsDead = false
+end)
+
+RegisterNetEvent('mafije:ZabraniF6')
+AddEventHandler('mafije:ZabraniF6', function(br)
+	Zabranio = br
 end)

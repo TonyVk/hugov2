@@ -4,6 +4,7 @@ local CurrentlyTowedVehicle, Blips, NPCOnJob, NPCTargetTowable, NPCTargetTowable
 local NPCHasSpawnedTowable, NPCLastCancel, NPCHasBeenNextToTowable, NPCTargetDeleterZone = false, GetGameTimer() - 5 * 60000, false, false
 local isDead, isBusy = false, false
 local PostavioEUP = false
+local Zabranio = false
 
 local Cijena = {}
 
@@ -1307,7 +1308,7 @@ Citizen.CreateThread(function()
 end)
 
 RegisterCommand('+akcijemeh', function()
-    if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'mobile_mechanic_actions') then
+    if ESX.PlayerData.job and ESX.PlayerData.job.name == 'mechanic' and not isDead and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'mobile_mechanic_actions') and not Zabranio then
 		OpenMobileMechanicActionsMenu()
 	end
 end, false)
@@ -1389,4 +1390,9 @@ end)
 
 AddEventHandler('playerSpawned', function(spawn)
 	isDead = false
+end)
+
+RegisterNetEvent('mafije:ZabraniF6')
+AddEventHandler('mafije:ZabraniF6', function(br)
+	Zabranio = br
 end)

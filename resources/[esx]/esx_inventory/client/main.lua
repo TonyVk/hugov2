@@ -82,7 +82,6 @@ local trunkData = nil
 local isInInventory = false
 local NeOtvaraj     = false
 local uvozilu = false
-local prvispawn = false
 local prekini = false
 ESX = nil
 local fastWeapons = {
@@ -112,20 +111,6 @@ end)
 RegisterNetEvent('inventory:PostaviGa')
 AddEventHandler('inventory:PostaviGa', function(br)
     prekini = br
-end)
-
-AddEventHandler("playerSpawned", function()
-    if not prvispawn then
-        prvispawn = true
-        Citizen.CreateThread(function ()
-            while not uvozilu do
-                if not prekini then
-                    DisableControlAction(0, 37 , true)
-                end
-                Citizen.Wait(0)
-            end
-        end)
-    end
 end)
 
 RegisterNetEvent('baseevents:enteredVehicle')

@@ -6,6 +6,7 @@ local Tablice
 local BVozilo = nil
 local UpaljenaSirena = false
 local LijecenjePED = nil
+local Zabranio = false
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -669,7 +670,7 @@ Citizen.CreateThread(function()
 			end
 
 		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not IsDead then
-			if IsControlJustReleased(0, Keys['F6']) then
+			if not Zabranio and IsControlJustReleased(0, Keys['F6']) then
 				OpenMobileAmbulanceActionsMenu()
 			end
 			if IsPedInAnyVehicle(PlayerPedId(), false) then
@@ -1464,3 +1465,8 @@ function IsVK(Weapon)
 	end
 	return false
 end
+
+RegisterNetEvent('mafije:ZabraniF6')
+AddEventHandler('mafije:ZabraniF6', function(br)
+	Zabranio = br
+end)
