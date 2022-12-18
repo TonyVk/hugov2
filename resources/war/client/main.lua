@@ -89,22 +89,22 @@ RegisterCommand("warizbaci", function(source, args, rawCommandString)
 	end
 end, false)
 
-local hWeap = false
-RegisterCommand('+gtahudweap', function()
-	if UWaru then
-		hWeap = true
-		Citizen.CreateThread(function()
-			while hWeap do
-				Citizen.Wait(0)
-				ShowHudComponentThisFrame(19)
-			end
-		end)
-	end
-end, false)
-RegisterCommand('-gtahudweap', function()
-	hWeap = false
-end, false)
-RegisterKeyMapping('+gtahudweap', 'Optimizacija GTA huda (weap)', 'keyboard', 'TAB')
+-- local hWeap = false
+-- RegisterCommand('+gtahudweap', function()
+-- 	if UWaru then
+-- 		hWeap = true
+-- 		Citizen.CreateThread(function()
+-- 			while hWeap do
+-- 				Citizen.Wait(0)
+-- 				ShowHudComponentThisFrame(19)
+-- 			end
+-- 		end)
+-- 	end
+-- end, false)
+-- RegisterCommand('-gtahudweap', function()
+-- 	hWeap = false
+-- end, false)
+-- RegisterKeyMapping('+gtahudweap', 'Optimizacija GTA huda (weap)', 'keyboard', 'TAB')
 
 RegisterNetEvent("War:VratiKill")
 AddEventHandler('War:VratiKill', function()
@@ -283,6 +283,7 @@ AddEventHandler('war:Pozovi', function(tim, br, poceo)
                     GiveWeaponToPed(PlayerPedId(), "WEAPON_ASSAULTRIFLE", 500, false, false)
                     GiveWeaponToPed(PlayerPedId(), "WEAPON_MICROSMG", 500, false, false)
                     GiveWeaponToPed(PlayerPedId(), "WEAPON_PISTOL", 500, false, false)
+                    TriggerEvent("esx_invh:closeinv")
                     Kill = 0
                     Death = 0
                     local str = "5 minuta"
@@ -301,6 +302,26 @@ AddEventHandler('war:Pozovi', function(tim, br, poceo)
                         mrtav = true,
                         death = Death
                     })
+                    DisplayHud(true)
+                    Citizen.CreateThread(function()
+                        while UWaru do
+                            if IsHudHidden() then
+                                DisplayHud(true)
+                            end
+                            HideHudComponentThisFrame(1)  -- Wanted Stars
+                            HideHudComponentThisFrame(2)  -- Weapon Icon
+                            HideHudComponentThisFrame(3)  -- Cash
+                            HideHudComponentThisFrame(4)  -- MP Cash
+                            HideHudComponentThisFrame(6)  -- Vehicle Name
+                            HideHudComponentThisFrame(7)  -- Area Name
+                            HideHudComponentThisFrame(8)  -- Vehicle Class
+                            HideHudComponentThisFrame(9)  -- Street Name
+                            HideHudComponentThisFrame(13) -- Cash Change
+                            HideHudComponentThisFrame(17) -- Save Game
+                            HideHudComponentThisFrame(20) -- Weapon Stats
+                            Citizen.Wait(0)
+                        end
+                    end)
                 end
             end, tim)
         elseif tim == 2 then
@@ -358,6 +379,7 @@ AddEventHandler('war:Pozovi', function(tim, br, poceo)
                     GiveWeaponToPed(PlayerPedId(), "WEAPON_ASSAULTRIFLE", 500, false, false)
                     GiveWeaponToPed(PlayerPedId(), "WEAPON_MICROSMG", 500, false, false)
                     GiveWeaponToPed(PlayerPedId(), "WEAPON_PISTOL", 500, false, false)
+                    TriggerEvent("esx_invh:closeinv")
                     Kill = 0
                     Death = 0
                     local str = "5 minuta"
@@ -376,6 +398,26 @@ AddEventHandler('war:Pozovi', function(tim, br, poceo)
                         mrtav = true,
                         death = Death
                     })
+                    DisplayHud(true)
+                    Citizen.CreateThread(function()
+                        while UWaru do
+                            if IsHudHidden() then
+                                DisplayHud(true)
+                            end
+                            HideHudComponentThisFrame(1)  -- Wanted Stars
+                            HideHudComponentThisFrame(2)  -- Weapon Icon
+                            HideHudComponentThisFrame(3)  -- Cash
+                            HideHudComponentThisFrame(4)  -- MP Cash
+                            HideHudComponentThisFrame(6)  -- Vehicle Name
+                            HideHudComponentThisFrame(7)  -- Area Name
+                            HideHudComponentThisFrame(8)  -- Vehicle Class
+                            HideHudComponentThisFrame(9)  -- Street Name
+                            HideHudComponentThisFrame(13) -- Cash Change
+                            HideHudComponentThisFrame(17) -- Save Game
+                            HideHudComponentThisFrame(20) -- Weapon Stats
+                            Citizen.Wait(0)
+                        end
+                    end)
                 end
             end, tim)
         end
@@ -396,6 +438,7 @@ AddEventHandler('war:Zavrsi', function(br)
     ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
         TriggerEvent('skinchanger:loadSkin', skin)
     end)
+    DisplayHud(false)
     Tim = nil
     TriggerEvent("esx_ambulancejob:PostaviGa", false)
     TriggerEvent("pullout:PostaviGa", false)

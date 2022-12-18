@@ -123,7 +123,9 @@ AddEventHandler('baseevents:leftVehicle', function(currentVehicle, currentSeat, 
     uvozilu = false
     Citizen.CreateThread(function ()
         while not uvozilu do
-            DisableControlAction(0, 37 , true)
+            if not prekini then
+                DisableControlAction(0, 37 , true)
+            end
             Citizen.Wait(0)
         end
     end)
