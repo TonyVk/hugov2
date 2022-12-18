@@ -604,8 +604,8 @@ function CreateExtendedPlayer(player, accounts, inventory, job, posao, loadout, 
 		return nil
 	end
 	
-	self.showNotification = function(msg)
-		TriggerClientEvent('esx:showNotification', self.source, msg)
+	self.showNotification = function(msg, ms)
+		TriggerClientEvent('esx:showNotification', self.source, msg, ms)
 	end
 
 	self.showHelpNotification = function(msg)

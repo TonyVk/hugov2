@@ -1473,8 +1473,8 @@ AddEventHandler('esx:serverCallback', function(requestId, ...)
 end)
 
 RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg)
-	ESX.ShowNotification(msg)
+AddEventHandler('esx:showNotification', function(msg, ms)
+	ESX.ShowNotification(msg, ms)
 end)
 
 RegisterNetEvent('esx:showPBar')

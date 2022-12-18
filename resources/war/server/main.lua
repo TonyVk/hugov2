@@ -101,8 +101,7 @@ AddEventHandler('War:PosaljiUpit', function(id, broj)
                         yPlayer.showNotification("Pozvani ste u war("..broj.."vs"..broj..") od strane "..GetPlayerName(xPlayer.source).." ("..xPlayer.job.label..")", 15000)
                         yPlayer.showNotification("Upisite komandu /warprihvati za prihvacanje wara", 15000)
                         yPlayer.showNotification("Upisite komandu /warodbij za odbijanje wara", 15000)
-                        Citizen.SetTimeout(15000, function()
-                            print("proslo")
+                        Citizen.SetTimeout(30000, function()
                             WarPozivatelj = nil
                             WarPozvan = nil
                             WarBroj = 5
@@ -125,8 +124,8 @@ AddEventHandler('War:PosaljiUpit', function(id, broj)
 end)
 
 RegisterCommand("warprihvati", function(source, args, rawCommandString)
+    local xPlayer = ESX.GetPlayerFromId(source)
     if WarPozvan == source then
-        local xPlayer = ESX.GetPlayerFromId(source)
         local yPlayer = ESX.GetPlayerFromId(WarPozivatelj)
         if yPlayer then
             if not TrajeWar then
@@ -147,6 +146,9 @@ RegisterCommand("warprihvati", function(source, args, rawCommandString)
                 SetPlayerRoutingBucket(WarPozivatelj, 69)
                 SetPlayerRoutingBucket(WarPozvan, 69)
                 TriggerClientEvent("War:SyncMinute", -1, Minute)
+                WarPozivatelj = nil
+                WarPozvan = nil
+                WarBroj = 5
                 SetTimeout(60000, PratiStart)
             else
                 xPlayer.showNotification("Vec traje jedan war!")
