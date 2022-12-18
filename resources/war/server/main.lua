@@ -15,6 +15,32 @@ local Tim2Score = 0
 local Igraci = {}
 local PoceoWar = false
 
+--Pozivanje u war
+local WarPozivatelj = nil
+local WarBroj = 5
+local WarPozvan = nil
+
+ESX.RegisterServerCallback('War:DohvatiLidere', function(source, cb)
+    if not TrajeWar then
+        local orgPlayer = ESX.GetPlayerFromId(source)
+        local xPlayers = ESX.GetPlayers()
+        local lideri = {}
+        if #xPlayers > 0 then
+            for i=1, #xPlayers, 1 do
+                local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+                if xPlayer ~= -1 and xPlayer ~= nil then
+                    if xPlayer.job.grade_name == "boss" and orgPlayer.job.name ~= xPlayer.job.name then
+                        table.insert(lideri, {label = xPlayer.job.label.." ("..GetPlayerName(xPlayer.source)..")", value = xPlayer.source})
+                    end
+                end
+            end
+        end
+        cb(lideri, false)
+    else
+        cb(false, Minute)
+    end
+end)
+
 ESX.RegisterServerCallback('War:PokreniWar', function(source, cb, id, id2, br, vr)
     local srcPlayer = ESX.GetPlayerFromId(source)
 	local xPlayer = ESX.GetPlayerFromId(id)
@@ -59,6 +85,99 @@ ESX.RegisterServerCallback('War:PokreniWar', function(source, cb, id, id2, br, v
         cb(false)
     end
 end)
+
+RegisterNetEvent('War:PosaljiUpit')
+AddEventHandler('War:PosaljiUpit', function(id, broj)
+    local xPlayer = ESX.GetPlayerFromId(source) --pozivatelj
+    local yPlayer = ESX.GetPlayerFromId(id) --koga zove
+	if not TrajeWar then
+        if yPlayer then
+            if WarPozivatelj == nil then
+                if xPlayer.job.grade_name == "boss" then
+                    if yPlayer.job.grade_name == "boss" then
+                        WarPozivatelj = xPlayer.source
+                        WarPozvan = yPlayer.source
+                        WarBroj = broj
+                        yPlayer.showNotification("Pozvani ste u war("..broj.."vs"..broj..") od strane "..GetPlayerName(xPlayer.source).." ("..xPlayer.job.label..")", 15000)
+                        yPlayer.showNotification("Upisite komandu /warprihvati za prihvacanje wara", 15000)
+                        yPlayer.showNotification("Upisite komandu /warodbij za odbijanje wara", 15000)
+                        Citizen.SetTimeout(15000, function()
+                            print("proslo")
+                            WarPozivatelj = nil
+                            WarPozvan = nil
+                            WarBroj = 5
+                        end)
+                    else
+                        xPlayer.showNotification("Igrac nije lider!")
+                    end
+                else
+                    xPlayer.showNotification("Niste lider!")
+                end
+            else
+                xPlayer.showNotification("Vec se ceka jedan poziv.")
+            end
+        else
+            xPlayer.showNotification("Igrac nije online!")
+        end
+    else
+        xPlayer.showNotification("War je vec pokrenut!")
+    end
+end)
+
+RegisterCommand("warprihvati", function(source, args, rawCommandString)
+    if WarPozvan == source then
+        local xPlayer = ESX.GetPlayerFromId(source)
+        local yPlayer = ESX.GetPlayerFromId(WarPozivatelj)
+        if yPlayer then
+            if not TrajeWar then
+                TrajeWar = true
+                PoceoWar = false
+                Minute = 5
+                MaxBr = WarBroj
+                CekajMinute = 1
+                Igraci = {}
+                Tim1Score = 0
+                Tim2Score = 0
+                SpawnTim1 = 0
+                SpawnTim2 = 0
+                IgrTim1 = 0
+                IgrTim2 = 0
+                TriggerClientEvent("war:Pozovi", WarPozivatelj, 1, PoceoWar)
+                TriggerClientEvent("war:Pozovi", WarPozvan, 2, PoceoWar)
+                SetPlayerRoutingBucket(WarPozivatelj, 69)
+                SetPlayerRoutingBucket(WarPozvan, 69)
+                TriggerClientEvent("War:SyncMinute", -1, Minute)
+                SetTimeout(60000, PratiStart)
+            else
+                xPlayer.showNotification("Vec traje jedan war!")
+                WarPozivatelj = nil
+                WarPozvan = nil
+                WarBroj = 5
+            end
+        else
+            xPlayer.showNotification("Igrac nije online!")
+            WarPozivatelj = nil
+            WarPozvan = nil
+            WarBroj = 5
+        end
+    else
+        xPlayer.showNotification("Niste pozvani u war!")
+    end
+end, false)
+
+RegisterCommand("warodbij", function(source, args, rawCommandString)
+    if WarPozvan == source then
+        local xPlayer = ESX.GetPlayerFromId(source)
+        local yPlayer = ESX.GetPlayerFromId(WarPozivatelj)
+        xPlayer.showNotification("Odbili ste war!")
+        yPlayer.showNotification("Lider "..GetPlayerName(yPlayer.source).." ("..yPlayer.job.label..") je odbio war!")
+        WarPozivatelj = nil
+        WarPozvan = nil
+        WarBroj = 5
+    else
+        xPlayer.showNotification("Niste pozvani u war!")
+    end
+end, false)
 
 RegisterNetEvent('War:PozoviIgraca')
 AddEventHandler('War:PozoviIgraca', function(id)

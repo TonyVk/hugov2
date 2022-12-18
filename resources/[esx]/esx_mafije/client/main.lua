@@ -6028,7 +6028,8 @@ function OtvoriBossMenu()
 		elements = {
 			{label = "Zaposlenici", value = 'zaposlenici'},
 			{label = "Place", value = 'place'},
-			{label = "Sef", value = 'sef'}
+			{label = "Sef", value = 'sef'},
+			{label = "War", value = 'war'}
 	}}, function(data, menu)
 		if data.current.value == 'zaposlenici' then
 			local elements = {
@@ -6108,6 +6109,45 @@ function OtvoriBossMenu()
 				end
 			end, function(data2, menu2)
 				menu2.close()
+			end)
+		elseif data.current.value == 'war' then
+			ESX.TriggerServerCallback('War:DohvatiLidere', function(lideri, min)
+				if data ~= false then
+					if #data > 0 then
+						ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'war_boss', {
+							title    = 'Izaberite protiv koga hocete igrati',
+							align    = 'top-left',
+							elements = lideri
+						}, function(data2, menu2)
+							menu2.close()
+							ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'war_boss2', {
+								title = "Izaberite koliko na koliko cete igrati. Upisite 5 ako hocete 5v5. Od 1 do 5 je dozvoljeno."
+							}, function(data3, menu3)
+								local amount = tonumber(data3.value)
+								if amount == nil or amount < 1 or amount > 5 then
+									ESX.ShowNotification("Krivi iznos")
+								else
+									menu3.close()
+									TriggerServerEvent("War:PosaljiUpit", data2.current.value, amount)
+								end
+							end, function(data3, menu3)
+								menu3.close()
+							end)
+						end, function(data2, menu2)
+							menu2.close()
+						end)
+					else
+						ESX.ShowNotification("Nema online lidera!")
+					end
+				else
+					local str = min.." minuta."
+					if min == 1 then
+						str = min.." minutu."
+					elseif min >= 2 and min <= 4 then
+						str = min.." minute."
+					end
+					ESX.ShowNotification("Vec traje jedan war! Zavrsit ce za "..str)
+				end
 			end)
 		end
 	end, function(data, menu)
