@@ -19,6 +19,7 @@ local PoceoWar = false
 local WarPozivatelj = nil
 local WarBroj = 5
 local WarPozvan = nil
+local WarPoziv = 0
 
 ESX.RegisterServerCallback('War:DohvatiLidere', function(source, cb)
     if not TrajeWar then
@@ -66,6 +67,10 @@ ESX.RegisterServerCallback('War:PokreniWar', function(source, cb, id, id2, br, v
                     SetPlayerRoutingBucket(id, 69)
                     SetPlayerRoutingBucket(id2, 69)
                     TriggerClientEvent("War:SyncMinute", -1, Minute)
+                    if MaxBr > 1 then
+                        xPlayer.showNotification("Da pozovete svoje clanove u war pisite /warpozovi", 10000)
+                        xPlayer2.showNotification("Da pozovete svoje clanove u war pisite /warpozovi", 10000)
+                    end
                     SetTimeout(60000, PratiStart)
                     cb(true)
                 else
@@ -98,13 +103,17 @@ AddEventHandler('War:PosaljiUpit', function(id, broj)
                         WarPozivatelj = xPlayer.source
                         WarPozvan = yPlayer.source
                         WarBroj = broj
+                        WarPoziv = WarPoziv+1
                         yPlayer.showNotification("Pozvani ste u war("..broj.."vs"..broj..") od strane "..GetPlayerName(xPlayer.source).." ("..xPlayer.job.label..")", 15000)
                         yPlayer.showNotification("Upisite komandu /warprihvati za prihvacanje wara", 15000)
                         yPlayer.showNotification("Upisite komandu /warodbij za odbijanje wara", 15000)
+                        local wp = WarPoziv
                         Citizen.SetTimeout(30000, function()
-                            WarPozivatelj = nil
-                            WarPozvan = nil
-                            WarBroj = 5
+                            if wp == WarPoziv then
+                                WarPozivatelj = nil
+                                WarPozvan = nil
+                                WarBroj = 5
+                            end
                         end)
                     else
                         xPlayer.showNotification("Igrac nije lider!")
@@ -146,6 +155,10 @@ RegisterCommand("warprihvati", function(source, args, rawCommandString)
                 SetPlayerRoutingBucket(WarPozivatelj, 69)
                 SetPlayerRoutingBucket(WarPozvan, 69)
                 TriggerClientEvent("War:SyncMinute", -1, Minute)
+                if MaxBr > 1 then
+                    xPlayer.showNotification("Da pozovete svoje clanove u war pisite /warpozovi", 10000)
+                    yPlayer.showNotification("Da pozovete svoje clanove u war pisite /warpozovi", 10000)
+                end
                 WarPozivatelj = nil
                 WarPozvan = nil
                 WarBroj = 5
@@ -168,8 +181,8 @@ RegisterCommand("warprihvati", function(source, args, rawCommandString)
 end, false)
 
 RegisterCommand("warodbij", function(source, args, rawCommandString)
+    local xPlayer = ESX.GetPlayerFromId(source)
     if WarPozvan == source then
-        local xPlayer = ESX.GetPlayerFromId(source)
         local yPlayer = ESX.GetPlayerFromId(WarPozivatelj)
         xPlayer.showNotification("Odbili ste war!")
         yPlayer.showNotification("Lider "..GetPlayerName(yPlayer.source).." ("..yPlayer.job.label..") je odbio war!")
