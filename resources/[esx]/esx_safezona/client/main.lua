@@ -83,13 +83,15 @@ function SpawnZone()
                     end
                 end)
             else
-                TriggerEvent("pNotify:SendNotification",{
-                    text = "<b style='color:#1E90FF'>Napustili ste safe zonu</b>",
-                    type = "error",
-                    timeout = (3000),
-                    layout = "bottomcenter",
-                    queue = "global"
-                })
+                if UZoni then
+                    TriggerEvent("pNotify:SendNotification",{
+                        text = "<b style='color:#1E90FF'>Napustili ste safe zonu</b>",
+                        type = "error",
+                        timeout = (3000),
+                        layout = "bottomcenter",
+                        queue = "global"
+                    })
+                end
                 UZoni = false
                 DisablePlayerFiring(PlayerPedId(),false)
                 SetPlayerCanDoDriveBy(PlayerId(), true)

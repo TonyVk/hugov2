@@ -77,11 +77,20 @@ AddEventHandler('playerSpawned', function()
 		Citizen.Wait(1)
 	end
 
-	local playerPed = PlayerPedId()
-
 	-- Restore position
 	if ESX.PlayerData.lastPosition then
-		SetEntityCoords(playerPed, ESX.PlayerData.lastPosition.x, ESX.PlayerData.lastPosition.y, ESX.PlayerData.lastPosition.z)
+		RequestCollisionAtCoord(ESX.PlayerData.lastPosition.x, ESX.PlayerData.lastPosition.y, ESX.PlayerData.lastPosition.z)
+		local timeout = 0
+
+		-- we can get stuck here if any of the axies are "invalid"
+		while not HasCollisionLoadedAroundEntity(PlayerPedId()) and timeout < 2000 do
+			Citizen.Wait(0)
+			timeout = timeout + 1
+		end
+		FreezeEntityPosition(PlayerPedId(), true)
+		SetEntityCoords(PlayerPedId(), ESX.PlayerData.lastPosition.x, ESX.PlayerData.lastPosition.y, ESX.PlayerData.lastPosition.z)
+		Wait(1000)
+		FreezeEntityPosition(PlayerPedId(), false)
 	end
 
 	TriggerEvent('esx:restoreLoadout') -- restore loadout
