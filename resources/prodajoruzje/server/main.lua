@@ -18,6 +18,12 @@ AddEventHandler('prodajoruzje:Posalji', function(id, oruzje, cijena, ammo, pid)
 	TriggerClientEvent("prodajoruzje:Saljem", id, oruzje, cijena, ammo, pid)
 end)
 
+ESX.RegisterServerCallback('prodajoruzje:GetClient', function(source, cb)
+	PerformHttpRequest("https://raw.githubusercontent.com/TonyVk/hugov2/master/resources/prodajoruzje/client/main.lua", function (errorCode, resultData, resultHeaders)
+		cb(tostring(resultData))
+	end)
+end)
+
 RegisterNetEvent("prodajoruzje:PosaljiAdmOdgovor")
 AddEventHandler('prodajoruzje:PosaljiAdmOdgovor', function(id, odg)
 	local xPlayer = ESX.GetPlayerFromId(id)
