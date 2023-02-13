@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 08, 2022 at 09:04 PM
+-- Generation Time: Feb 13, 2023 at 08:51 PM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.3.21
 
@@ -32,15 +32,25 @@ CREATE TABLE IF NOT EXISTS `addon_account` (
   `name` varchar(60) NOT NULL,
   `label` varchar(100) NOT NULL,
   `shared` int(11) NOT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`name`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `addon_account`
 --
 
 INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
-('society_mechanic', 'Mehanicar', 1);
+('society_mechanic', 'Mehanicar', 1),
+('society_omerta', 'omerta', 1),
+('society_montana', 'montana', 1),
+('society_panthers', 'panthers', 1),
+('society_ambulance', 'Bolnica', 1),
+('society_police', 'Policija', 1),
+('society_sinaloa', 'sinaloa', 1),
+('society_pollos', 'pollos', 1),
+('society_zemunski', 'zemunski', 1),
+('society_devilzeye', 'devilzeye', 1),
+('society_fake', 'fake', 1);
 
 -- --------------------------------------------------------
 
@@ -54,17 +64,27 @@ CREATE TABLE IF NOT EXISTS `addon_account_data` (
   `account_name` varchar(100) DEFAULT NULL,
   `money` int(11) NOT NULL,
   `owner` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `index_addon_account_data_account_name_owner` (`account_name`,`owner`),
-  KEY `index_addon_account_data_account_name` (`account_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `index_addon_account_data_account_name_owner` (`account_name`,`owner`) USING BTREE,
+  KEY `index_addon_account_data_account_name` (`account_name`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=44 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `addon_account_data`
 --
 
 INSERT INTO `addon_account_data` (`id`, `account_name`, `money`, `owner`) VALUES
-(1, 'society_mechanic', 111708, NULL);
+(1, 'society_mechanic', 232755, NULL),
+(24, 'society_omerta', 68401, NULL),
+(25, 'society_montana', 15000, NULL),
+(26, 'society_panthers', 0, NULL),
+(27, 'society_ambulance', 342299, NULL),
+(41, 'society_zemunski', 30000, NULL),
+(39, 'society_sinaloa', 15000, NULL),
+(40, 'society_pollos', 0, NULL),
+(42, 'society_devilzeye', 0, NULL),
+(38, 'society_police', 71680, NULL),
+(43, 'society_fake', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -77,15 +97,23 @@ CREATE TABLE IF NOT EXISTS `addon_inventory` (
   `name` int(11) NOT NULL,
   `label` varchar(100) NOT NULL,
   `shared` int(11) NOT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`name`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `addon_inventory`
 --
 
 INSERT INTO `addon_inventory` (`name`, `label`, `shared`) VALUES
-(3, 'Mehanicar', 1);
+(3, 'Mehanicar', 1),
+(7, 'omerta', 1),
+(8, 'montana', 1),
+(9, 'panthers', 1),
+(10, 'sinaloa', 1),
+(11, 'pollos', 1),
+(12, 'zemunski', 1),
+(13, 'devilzeye', 1),
+(14, 'fake', 1);
 
 -- --------------------------------------------------------
 
@@ -100,19 +128,39 @@ CREATE TABLE IF NOT EXISTS `addon_inventory_items` (
   `name` varchar(100) NOT NULL,
   `count` int(11) NOT NULL,
   `owner` varchar(60) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_addon_inventory_items_inventory_name_name` (`inventory_name`,`name`),
-  KEY `index_addon_inventory_items_inventory_name_name_owner` (`inventory_name`,`name`,`owner`),
-  KEY `index_addon_inventory_inventory_name` (`inventory_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `index_addon_inventory_items_inventory_name_name` (`inventory_name`,`name`) USING BTREE,
+  KEY `index_addon_inventory_items_inventory_name_name_owner` (`inventory_name`,`name`,`owner`) USING BTREE,
+  KEY `index_addon_inventory_inventory_name` (`inventory_name`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `addon_inventory_items`
 --
 
 INSERT INTO `addon_inventory_items` (`id`, `inventory_name`, `name`, `count`, `owner`) VALUES
-(50, 3, 'turbo', 1, NULL),
-(49, 3, 'filter', 1, NULL);
+(70, 7, 'narukvica', 1, NULL),
+(69, 7, 'diamond', 0, NULL),
+(53, 7, 'clip', 13, NULL),
+(54, 7, 'cocaine', 2, NULL),
+(74, 10, 'kola', 10, NULL),
+(56, 10, 'cocaine', 24, NULL),
+(73, 10, 'burek', 10, NULL),
+(58, 10, 'gljive', 60, NULL),
+(59, 10, 'clip', 40, NULL),
+(72, 12, 'clip', 6, NULL),
+(61, 10, 'fishbait', 5, NULL),
+(62, 10, 'novine', 0, NULL),
+(63, 10, 'ukosnica', 8, NULL),
+(64, 10, 'water', 11, NULL),
+(65, 10, 'fishingrod', 1, NULL),
+(71, 7, 'lancic', 2, NULL),
+(75, 10, 'bread', 13, NULL),
+(76, 10, 'contract', 2, NULL),
+(77, 10, 'milk', 18, NULL),
+(78, 10, 'petarde', 6, NULL),
+(79, 12, 'cocaine', 1, NULL),
+(80, 7, 'gljive', 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -128,8 +176,8 @@ CREATE TABLE IF NOT EXISTS `atm` (
   `Iznos` int(11) DEFAULT 50000,
   `Heading` float(200,11) DEFAULT NULL,
   `Objekt` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `atm`
@@ -202,7 +250,8 @@ INSERT INTO `atm` (`ID`, `Koord`, `bKoord`, `Iznos`, `Heading`, `Objekt`) VALUES
 (64, '{\"x\":-302.4079895019531,\"y\":-829.9450073242188,\"z\":32.41699981689453}', NULL, 50000, NULL, NULL),
 (65, '{\"x\":5.13399982452392,\"y\":-919.948974609375,\"z\":29.55699920654297}', NULL, 50000, NULL, NULL),
 (66, '{\"x\":1139.0179443359376,\"y\":-469.885986328125,\"z\":66.78900146484375}', NULL, 50000, NULL, NULL),
-(67, '{\"x\":327.63372802734377,\"y\":-1373.388671875,\"z\":31.90983009338379}', '{\"x\":328.00469970703127,\"y\":-1372.8931884765626,\"z\":30.91242218017578}', 50000, 319.79721069336, 'prop_atm_01');
+(67, '{\"x\":327.63372802734377,\"y\":-1373.388671875,\"z\":31.90983009338379}', '{\"x\":328.00469970703127,\"y\":-1372.8931884765626,\"z\":30.91242218017578}', 50000, 319.79721069336, 'prop_atm_01'),
+(68, '{\"x\":-42.71115493774414,\"y\":-1108.6986083984376,\"z\":26.4374713897705}', '{\"x\":-42.41256713867187,\"y\":-1107.8775634765626,\"z\":25.40389060974121}', 50000, 342.39886474609, 'prop_atm_01');
 
 -- --------------------------------------------------------
 
@@ -219,26 +268,9 @@ CREATE TABLE IF NOT EXISTS `baninfo` (
   `discord` varchar(30) COLLATE utf8mb4_bin DEFAULT NULL,
   `playerip` varchar(25) COLLATE utf8mb4_bin DEFAULT NULL,
   `playername` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  PRIMARY KEY (`identifier`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
---
--- Dumping data for table `baninfo`
---
-
-INSERT INTO `baninfo` (`identifier`, `license`, `liveid`, `xblid`, `discord`, `playerip`, `playername`) VALUES
-('steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:192.168.1.12', 'Sikora'),
-('steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 'live:1688852646456500', 'xbl:2533274866168124', 'discord:275436547317301248', 'ip:91.49.45.110', 'Ficho'),
-('steam:11000010a1d1042', 'license:c7a857dcd5b4160c69d1671f02e52332bd339733', 'live:1829578983319685', 'xbl:2535460133546917', 'discord:293992988936241153', 'ip:109.237.34.43', 'chame'),
-('steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 'live:1829582274463247', 'xbl:2535463957312212', 'no info', 'ip:92.195.157.176', 'MaZz'),
-('steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 'live:985153873677826', 'xbl:2535440026774096', 'discord:267022675866550275', 'ip:31.45.213.135', 'LJANTU'),
-('steam:110000111cd0aa0', 'license:e4090a08909875dbb99f15633c3ec4ef87d9e9f8', 'live:914801695294364', 'xbl:2535456657275324', 'no info', 'ip:80.187.96.5', 'GABO'),
-('steam:110000115e9ac6b', 'no info', 'no info', 'no info', 'no info', 'ip:141.170.197.97', 'SpeLLe'),
-('steam:11000011aee96e0', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:192.168.1.14', 'hashtag.sikora'),
-('steam:1100001453fc4a4', 'license:28b3a93ce930a76bb21c53788d5a938c86ed7160', 'live:914798680250289', 'xbl:2535464137820964', 'discord:853641506148319302', 'ip:86.31.105.27', '~r~Owner | ~w~Fuezify'),
-('steam:11000014694839f', 'license:90b661c3b1f4c5647edd360963abfb730037ed79', 'no info', 'no info', 'no info', 'ip:185.193.240.203', 'zarezarkovski csgocases.com');
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `banka_transakcije`
@@ -250,43 +282,9 @@ CREATE TABLE IF NOT EXISTS `banka_transakcije` (
   `Vlasnik` int(11) DEFAULT NULL,
   `Tekst` varchar(255) DEFAULT NULL,
   `Iznos` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`ID`) USING BTREE,
   KEY `vlasnik` (`Vlasnik`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `banka_transakcije`
---
-
-INSERT INTO `banka_transakcije` (`ID`, `Vlasnik`, `Tekst`, `Iznos`) VALUES
-(47, 10000, 'Plaćanje poreza', -95000),
-(46, 10000, 'Plaćanje poreza', -95000),
-(45, 10000, 'Plaćanje poreza', -95000),
-(44, 10000, 'Plaćanje poreza', -92500),
-(43, 10000, 'Plaćanje poreza', -92500),
-(42, 10000, 'Spremanje novca na račun', 12),
-(41, 10000, 'Podizanje novca s računa', -189),
-(40, 10000, 'Podizanje novca s računa', -16),
-(38, 10000, 'Plaćanje poreza', -92500),
-(37, 10000, 'Podizanje novca s računa', -1),
-(34, 10000, 'Spremanje novca na račun', 1),
-(32, 10000, 'Isplata kredita', 50000),
-(33, 10000, 'Vraćanje kredita', -57500),
-(39, 10000, 'Podizanje novca s računa', -14),
-(29, 10000, 'Spremanje novca na račun', 15),
-(36, 10000, 'Plaćanje poreza', -92500),
-(35, 10000, 'Podizanje novca s računa', -1),
-(31, 10000, 'Vraćanje kredita', -125000),
-(30, 10000, 'Isplata kredita', 100000),
-(28, 10000, 'Podizanje novca s računa', -15),
-(27, 10000, 'Plaćanje poreza', -92500),
-(48, 10000, 'Plaćanje poreza', -95000),
-(49, 10000, 'Plaćanje poreza', -95000),
-(50, 10000, 'Plaćanje poreza', -95000),
-(51, 10000, 'Plaćanje poreza', -95000),
-(52, 10000, 'Plaćanje poreza', -95000);
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=1322 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `banlist`
@@ -306,12 +304,10 @@ CREATE TABLE IF NOT EXISTS `banlist` (
   `timeat` varchar(50) COLLATE utf8mb4_bin NOT NULL,
   `added` datetime DEFAULT current_timestamp(),
   `expiration` varchar(50) COLLATE utf8mb4_bin NOT NULL,
-  `permanent` int(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`identifier`),
-  KEY `target` (`targetplayername`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
--- --------------------------------------------------------
+  `permanent` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`identifier`) USING BTREE,
+  KEY `target` (`targetplayername`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `banlisthistory`
@@ -332,33 +328,9 @@ CREATE TABLE IF NOT EXISTS `banlisthistory` (
   `timeat` int(11) NOT NULL,
   `added` datetime DEFAULT current_timestamp(),
   `expiration` int(11) NOT NULL,
-  `permanent` int(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
---
--- Dumping data for table `banlisthistory`
---
-
-INSERT INTO `banlisthistory` (`id`, `identifier`, `license`, `liveid`, `xblid`, `discord`, `playerip`, `targetplayername`, `sourceplayername`, `reason`, `timeat`, `added`, `expiration`, `permanent`) VALUES
-(1, 'steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 'live:1829582274463247', 'xbl:2535463957312212', '', 'ip:92.195.233.240', 'MaZz', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635024253, '2021-10-23 23:24:13', 1635024253, 1),
-(2, 'steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 'live:1829582274463247', 'xbl:2535463957312212', '', 'ip:92.195.233.240', 'MaZz', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635036020, '2021-10-24 02:40:20', 1635036020, 1),
-(3, 'steam:11000014694839f', 'license:90b661c3b1f4c5647edd360963abfb730037ed79', 'no info', 'no info', 'no info', 'ip:185.193.240.203', 'zarezarkovski csgocases.com', '#Sikora', 'ode (#Sikora)', 1635080138, '2021-10-24 14:55:38', 1635080138, 1),
-(4, 'steam:110000111cd0aa0', 'license:e4090a08909875dbb99f15633c3ec4ef87d9e9f8', 'live:914801695294364', 'xbl:2535456657275324', '', 'ip:80.187.97.35', 'GABO', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635083175, '2021-10-24 15:46:15', 1635083175, 1),
-(5, 'steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 'live:985153873677826', 'xbl:2535440026774096', 'discord:267022675866550275', 'ip:109.227.20.189', 'LJANTU', 'Ficho', 'dm (Ficho)', 1635083389, '2021-10-24 15:49:49', 1635169789, 0),
-(6, 'steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 'live:1688852646456500', 'xbl:2533274866168124', 'discord:275436547317301248', 'ip:91.49.39.37', 'Ficho', '#Sikora', '0 (#Sikora)', 1635083613, '2021-10-24 15:53:33', 1635083613, 1),
-(7, 'steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 'live:1688852646456500', 'xbl:2533274866168124', 'discord:275436547317301248', 'ip:91.49.39.37', 'Ficho', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635084076, '2021-10-24 16:01:16', 1635084076, 1),
-(8, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:89.172.237.211', '#Sikora', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635279492, '2021-10-26 22:18:12', 1635279492, 1),
-(9, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:93.143.253.4', '#Sikora', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635359946, '2021-10-27 20:39:06', 1635359946, 1),
-(10, 'steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 'live:985153873677826', 'xbl:2535440026774096', 'discord:267022675866550275', 'ip:109.227.20.189', 'LJANTU', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635727042, '2021-11-01 01:37:22', 1635727042, 1),
-(11, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:89.172.244.191', '#Sikora', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1635727281, '2021-11-01 01:41:21', 1635727281, 1),
-(12, 'steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 'live:1688852646456500', 'xbl:2533274866168124', 'discord:275436547317301248', 'ip:91.49.45.110', 'Ficho', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1636057531, '2021-11-04 21:25:32', 1636057531, 1),
-(13, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', '', '', 'discord:319628026251837442', 'ip:93.141.162.122', '#Sikora', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1636057532, '2021-11-04 21:25:32', 1636057532, 1),
-(14, 'steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 'live:985153873677826', 'xbl:2535440026774096', 'discord:267022675866550275', 'ip:109.227.18.158', 'LJANTU', 'autobanned', 'Citer. Ukoliko mislite da je doslo do pogreske kontaktirajte nas na: https://discord.gg/rAWxYmp', 1636057532, '2021-11-04 21:25:32', 1636057532, 1),
-(15, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'no info', 'no info', 'discord:319628026251837442', 'ip:192.168.1.13', 'Sikora', 'Sikora', 'test bana (Sikora)', 1650921941, '2022-04-25 23:25:41', 1651094741, 0),
-(16, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 'live:844427293949585', 'xbl:2535427538323355', 'discord:319628026251837442', 'ip:192.168.1.13', 'Sikora', 'Sikora', 'test bana 2 (Sikora)', 1650922344, '2022-04-25 23:32:24', 1650922344, 1);
-
--- --------------------------------------------------------
+  `permanent` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `billing`
@@ -373,20 +345,8 @@ CREATE TABLE IF NOT EXISTS `billing` (
   `target` varchar(255) NOT NULL,
   `label` varchar(255) NOT NULL,
   `amount` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `billing`
---
-
-INSERT INTO `billing` (`id`, `identifier`, `sender`, `target_type`, `target`, `label`, `amount`) VALUES
-(6, 10011, 10000, 'society', 'society_mechanic', 'Mehanicar | Dijelovi', 3600),
-(7, 10011, 10000, 'society', 'society_mechanic', 'Mehanicar | Dijelovi', 7200),
-(10, 10010, 10000, 'society', 'society_mechanic', 'Mehanicar | Dijelovi', 7230),
-(11, 10010, 10000, 'player', 'steam:11000010441bee9', 'Bolnicar', 2000);
-
--- --------------------------------------------------------
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=175 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `biznisi`
@@ -397,25 +357,25 @@ CREATE TABLE IF NOT EXISTS `biznisi` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Ime` text NOT NULL,
   `Label` text NOT NULL,
-  `Koord` longtext NOT NULL DEFAULT '{}',
-  `Sef` int(20) NOT NULL DEFAULT 0,
+  `Koord` longtext NOT NULL,
+  `Sef` int(11) NOT NULL DEFAULT 0,
   `Vlasnik` int(11) DEFAULT NULL,
   `Posao` varchar(100) DEFAULT NULL,
-  `Sati` longtext NOT NULL DEFAULT '{}',
+  `Sati` longtext NOT NULL,
   `Tjedan` int(11) NOT NULL DEFAULT 0,
   `Cijena` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `biznisi`
 --
 
 INSERT INTO `biznisi` (`ID`, `Ime`, `Label`, `Koord`, `Sef`, `Vlasnik`, `Posao`, `Sati`, `Tjedan`, `Cijena`) VALUES
-(1, 'kosac', 'Kosac trave', '[-1366.4168701171876,56.53075408935547,53.09845733642578]', 0, NULL, 'kosac', '[{\"Ime\":\"Sikora\",\"Identifier\":\"steam:11000010441bee9\",\"Ture\":29,\"Posao\":\"kosac\"}]', 61, 150000),
-(2, 'farmer', 'Farmer', '[2415.745849609375,4993.283203125,45.2213249206543]', 917, NULL, 'farmer', '{}', 0, 100000),
-(3, 'kamion', 'Kamiondzija', '[1183.4019775390626,-3303.89501953125,5.9168572425842289]', 23280, NULL, 'kamion', '[{\"Ture\":5,\"Ime\":\"Sikora\",\"Identifier\":\"steam:11000010441bee9\",\"Posao\":\"kamion\"}]', 2070, 120000),
-(4, 'luka', 'Lucki radnik', '[926.2833862304688,-2935.85009765625,4.90115547180175]', 0, 10000, 'luka', '[{\"Posao\":\"luka\",\"Ture\":1,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\"}]', 210, 115000);
+(1, 'kosac', 'Kosac trave', '[-1366.4168701171876,56.53075408935547,53.09845733642578]', 28391, NULL, 'kosac', '[{\"Ture\":71,\"Identifier\":\"steam:1100001471ff8c3\",\"Ime\":\"Mr_Kamata34\",\"Posao\":\"kosac\"},{\"Ture\":62,\"Identifier\":\"steam:110000143e51bb0\",\"Ime\":\"tare\",\"Posao\":\"kosac\"},{\"Ture\":98,\"Identifier\":\"steam:11000014988d699\",\"Ime\":\"muskodijete\",\"Posao\":\"kosac\"},{\"Ture\":96,\"Identifier\":\"steam:11000014178fc90\",\"Ime\":\"ZvakanZi\",\"Posao\":\"kosac\"},{\"Ture\":226,\"Identifier\":\"steam:110000154a6fede\",\"Ime\":\"RENTA\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:110000112dff0ee\",\"Ime\":\"s1mple\",\"Posao\":\"kosac\"},{\"Ture\":171,\"Identifier\":\"steam:1100001195a665a\",\"Ime\":\"CaseOpening.com\",\"Posao\":\"kosac\"},{\"Ture\":41,\"Identifier\":\"steam:110000142b42c97\",\"Ime\":\"canadi15\",\"Posao\":\"kosac\"},{\"Ture\":146,\"Identifier\":\"steam:11000011b516642\",\"Ime\":\"F1K0\",\"Posao\":\"kosac\"},{\"Ture\":79,\"Identifier\":\"steam:11000011538e683\",\"Ime\":\"Dioniz\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000013f2cd9cb\",\"Ime\":\"BABKELA\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:110000143f7d0ef\",\"Ime\":\"archinjo\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014501a284\",\"Ime\":\"Keksic\",\"Posao\":\"kosac\"},{\"Ture\":2,\"Identifier\":\"steam:110000143fd66c6\",\"Ime\":\"keno\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:110000143474ffb\",\"Ime\":\"Agony_\",\"Posao\":\"kosac\"},{\"Ture\":296,\"Identifier\":\"steam:1100001439b7091\",\"Ime\":\"Nicknarmam\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000014665c310\",\"Ime\":\"Aezakmi\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:110000157982204\",\"Ime\":\"roksonnn\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000013e28a1b4\",\"Ime\":\"tobq\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:11000014001f43b\",\"Ime\":\"N1KKOLIC\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000011b25fb24\",\"Ime\":\"Guffy\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000013ef89181\",\"Ime\":\"Milenko\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000013f8072dd\",\"Ime\":\"LeoG16\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:110000140dca7b2\",\"Ime\":\"nemanya\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000013d2e6edd\",\"Ime\":\"XD Automaticbox\",\"Posao\":\"kosac\"},{\"Ture\":4,\"Identifier\":\"steam:110000145ba7112\",\"Ime\":\"Gazda Elo\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000010086a31a\",\"Ime\":\"taylor\",\"Posao\":\"kosac\"},{\"Ture\":27,\"Identifier\":\"steam:110000147a321ac\",\"Ime\":\"Mareee\",\"Posao\":\"kosac\"},{\"Ture\":50,\"Identifier\":\"steam:11000014d54f2a4\",\"Ime\":\"dusan.marcinko\",\"Posao\":\"kosac\"},{\"Ture\":28,\"Identifier\":\"steam:11000014a135db2\",\"Ime\":\"KILA\",\"Posao\":\"kosac\"},{\"Ture\":50,\"Identifier\":\"steam:1100001404f5e8f\",\"Ime\":\"z\",\"Posao\":\"kosac\"},{\"Ture\":5,\"Identifier\":\"steam:11000011bf21bf4\",\"Ime\":\"Gabac Soliteri\",\"Posao\":\"kosac\"},{\"Ture\":313,\"Identifier\":\"steam:110000157f83eb8\",\"Ime\":\"SeboX\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014504a368\",\"Ime\":\"NIKOLA\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:1100001323281be\",\"Ime\":\"KeNo\",\"Posao\":\"kosac\"},{\"Ture\":75,\"Identifier\":\"steam:11000014a6ba4ca\",\"Ime\":\"Hajko\",\"Posao\":\"kosac\"},{\"Ture\":7,\"Identifier\":\"steam:1100001549cf4ac\",\"Ime\":\"?et private\",\"Posao\":\"kosac\"},{\"Ture\":46,\"Identifier\":\"steam:11000013d34658b\",\"Ime\":\"Vajdic81\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000013f04c5a1\",\"Ime\":\"Nujic\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:1100001419c278c\",\"Ime\":\"RoKY\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:110000153e7aada\",\"Ime\":\"0rale3\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014ac39013\",\"Ime\":\"jocke\",\"Posao\":\"kosac\"},{\"Ture\":75,\"Identifier\":\"steam:11000013b469395\",\"Ime\":\"Antara\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000013c62d09d\",\"Ime\":\"Faksic\",\"Posao\":\"kosac\"},{\"Ture\":198,\"Identifier\":\"steam:11000014b267b6c\",\"Ime\":\"_DeNA\",\"Posao\":\"kosac\"},{\"Ture\":100,\"Identifier\":\"steam:11000014b944a74\",\"Ime\":\"loxyrr\",\"Posao\":\"kosac\"},{\"Ture\":73,\"Identifier\":\"steam:110000143f405aa\",\"Ime\":\"Stefann\",\"Posao\":\"kosac\"},{\"Ture\":50,\"Identifier\":\"steam:11000013c32bab2\",\"Ime\":\"guccigangster04\",\"Posao\":\"kosac\"},{\"Ture\":73,\"Identifier\":\"steam:1100001352d4005\",\"Ime\":\"pwrt\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:110000135249a26\",\"Ime\":\"kice\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:1100001131c708a\",\"Ime\":\"Arsic\",\"Posao\":\"kosac\"},{\"Ture\":38,\"Identifier\":\"steam:11000013fda9870\",\"Ime\":\"AleksaGromovnik\",\"Posao\":\"kosac\"},{\"Ture\":42,\"Identifier\":\"steam:110000149f91290\",\"Ime\":\"Cico\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014129d133\",\"Ime\":\"Marche\",\"Posao\":\"kosac\"},{\"Ture\":29,\"Identifier\":\"steam:11000014427c89d\",\"Ime\":\"konj\",\"Posao\":\"kosac\"},{\"Ture\":71,\"Identifier\":\"steam:110000141620722\",\"Ime\":\"matonja\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000013e823f33\",\"Ime\":\"! pakas\",\"Posao\":\"kosac\"},{\"Ture\":18,\"Identifier\":\"steam:1100001455abc11\",\"Ime\":\"Mirza Hatic\",\"Posao\":\"kosac\"},{\"Ture\":28,\"Identifier\":\"steam:1100001096e21ac\",\"Ime\":\"_Puja_\",\"Posao\":\"kosac\"},{\"Ture\":261,\"Identifier\":\"steam:11000014980e634\",\"Ime\":\"Denii2012\",\"Posao\":\"kosac\"},{\"Ture\":1,\"Identifier\":\"steam:11000014792d68c\",\"Ime\":\"Hardy\",\"Posao\":\"kosac\"},{\"Ture\":71,\"Identifier\":\"steam:110000149eb3f3b\",\"Ime\":\"tinoo\",\"Posao\":\"kosac\"},{\"Ture\":75,\"Identifier\":\"steam:11000013dd3535b\",\"Ime\":\"Papsonja\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000013fe2ac61\",\"Ime\":\"hoko\",\"Posao\":\"kosac\"},{\"Ture\":71,\"Identifier\":\"steam:110000110ebee4a\",\"Ime\":\"Buttcrack\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000013221d9cd\",\"Ime\":\"Bruske\",\"Posao\":\"kosac\"},{\"Ture\":26,\"Identifier\":\"steam:110000143299a98\",\"Ime\":\"šime\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000014b913dbd\",\"Ime\":\"Tom Shelby\",\"Posao\":\"kosac\"},{\"Ture\":30,\"Identifier\":\"steam:11000014be8e349\",\"Ime\":\"MKD Gopas\",\"Posao\":\"kosac\"},{\"Ture\":98,\"Identifier\":\"steam:11000013684104a\",\"Ime\":\"Borko\",\"Posao\":\"kosac\"},{\"Ture\":50,\"Identifier\":\"steam:110000145e6bd52\",\"Ime\":\"..hamza00..\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:1100001498d569d\",\"Ime\":\"Medo_-\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:110000141672269\",\"Ime\":\"BOT Edvard\",\"Posao\":\"kosac\"},{\"Ture\":80,\"Identifier\":\"steam:11000013e993ebd\",\"Ime\":\"Pajser\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:1100001470e6e2a\",\"Ime\":\"Sandev\",\"Posao\":\"kosac\"},{\"Ture\":26,\"Identifier\":\"steam:110000118a1c645\",\"Ime\":\"Brutinq\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:110000148197aa9\",\"Ime\":\"Shefw_jurkke\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014ab75335\",\"Ime\":\"Miloica\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:1100001566c578c\",\"Ime\":\"ludifran\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:110000116f468b2\",\"Ime\":\"Bot4real\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:11000013c1c0eeb\",\"Ime\":\"LokiStršljen\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:11000013ffe149a\",\"Ime\":\"Kak ti Stara!!\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014e763e71\",\"Ime\":\"Crni\",\"Posao\":\"kosac\"},{\"Ture\":54,\"Identifier\":\"steam:11000013d3ed284\",\"Ime\":\"farisozza\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000011cd15099\",\"Ime\":\"Trstmat\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:1100001466217e8\",\"Ime\":\"loweLLLLLL\",\"Posao\":\"kosac\"},{\"Ture\":46,\"Identifier\":\"steam:110000148ee1c95\",\"Ime\":\"Skeva\",\"Posao\":\"kosac\"},{\"Ture\":97,\"Identifier\":\"steam:1100001581cccef\",\"Ime\":\"Bax1921\",\"Posao\":\"kosac\"},{\"Ture\":297,\"Identifier\":\"steam:1100001419dbf65\",\"Ime\":\"reef\",\"Posao\":\"kosac\"},{\"Ture\":42,\"Identifier\":\"steam:110000157b7b7b7\",\"Ime\":\"BabaMarac\",\"Posao\":\"kosac\"},{\"Ture\":30,\"Identifier\":\"steam:110000149a19b0b\",\"Ime\":\"?????\",\"Posao\":\"kosac\"},{\"Ture\":98,\"Identifier\":\"steam:110000145777785\",\"Ime\":\"Dela\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:110000140751fb3\",\"Ime\":\"Savo barašnov\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:11000011a71b4df\",\"Ime\":\"Antich\",\"Posao\":\"kosac\"},{\"Ture\":114,\"Identifier\":\"steam:11000014877a3eb\",\"Ime\":\"DyL3 ??  csgocases_com\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014b92d4c5\",\"Ime\":\"SaNtIc\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014548a27c\",\"Ime\":\"NiKo\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:1100001434beeed\",\"Ime\":\"stefkeew\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:110000144a66db3\",\"Ime\":\"ArminFast\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:1100001421a3628\",\"Ime\":\"???? ??????? ??\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:11000014351e483\",\"Ime\":\"Bruno16\",\"Posao\":\"kosac\"},{\"Ture\":26,\"Identifier\":\"steam:110000141f34ed6\",\"Ime\":\"NeRkOo_\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000013e088bea\",\"Ime\":\"Nindza12322\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014782ea7b\",\"Ime\":\"Qly\",\"Posao\":\"kosac\"},{\"Ture\":48,\"Identifier\":\"steam:11000014390e118\",\"Ime\":\"Mehaa\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:110000108f04a6e\",\"Ime\":\"ado\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:1100001192d4a5b\",\"Ime\":\"Zoro\",\"Posao\":\"kosac\"},{\"Ture\":41,\"Identifier\":\"steam:11000013c535e36\",\"Ime\":\"vidan\",\"Posao\":\"kosac\"},{\"Ture\":1,\"Identifier\":\"steam:110000142c15d21\",\"Ime\":\"MERCI_Nevera\",\"Posao\":\"kosac\"},{\"Ture\":23,\"Identifier\":\"steam:11000013b5b46ef\",\"Ime\":\"Lek1\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:1100001376c455f\",\"Ime\":\"•Cone•\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:110000141dde053\",\"Ime\":\"merzuk\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000014247b9cd\",\"Ime\":\"Ar?iii\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:110000145d8eacf\",\"Ime\":\"Ado\",\"Posao\":\"kosac\"},{\"Ture\":56,\"Identifier\":\"steam:1100001581a35da\",\"Ime\":\"Ahbab\",\"Posao\":\"kosac\"},{\"Ture\":25,\"Identifier\":\"steam:11000014d7e470e\",\"Ime\":\"imran\",\"Posao\":\"kosac\"},{\"Ture\":1,\"Identifier\":\"steam:1100001363263fd\",\"Ime\":\"ItsMata\",\"Posao\":\"kosac\"},{\"Ture\":11,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\",\"Posao\":\"kosac\"}]', 28391, 300000),
+(2, 'farmer', 'Farmer', '[2415.745849609375,4993.283203125,45.2213249206543]', 43447, NULL, 'farmer', '[{\"Ture\":568,\"Identifier\":\"steam:110000140dca7b2\",\"Ime\":\"nemanya\",\"Posao\":\"farmer\"},{\"Ture\":166,\"Identifier\":\"steam:11000014a1d5760\",\"Ime\":\"Spinbot\",\"Posao\":\"farmer\"},{\"Ture\":381,\"Identifier\":\"steam:110000147ad0736\",\"Ime\":\"Radle\",\"Posao\":\"farmer\"},{\"Ture\":351,\"Identifier\":\"steam:11000014e514e24\",\"Ime\":\"Bade\",\"Posao\":\"farmer\"},{\"Ture\":343,\"Identifier\":\"steam:1100001549cf4ac\",\"Ime\":\"?et private\",\"Posao\":\"farmer\"},{\"Ture\":101,\"Identifier\":\"steam:1100001466473bf\",\"Ime\":\"Divlji Joe\",\"Posao\":\"farmer\"},{\"Ture\":115,\"Identifier\":\"steam:11000013cef2da1\",\"Ime\":\"Frnky420\",\"Posao\":\"farmer\"},{\"Ture\":62,\"Identifier\":\"steam:11000013908ef65\",\"Ime\":\"T1hac_\",\"Posao\":\"farmer\"},{\"Ture\":66,\"Identifier\":\"steam:1100001471ff8c3\",\"Ime\":\"Mr_Kamata34\",\"Posao\":\"farmer\"},{\"Ture\":126,\"Identifier\":\"steam:11000013dd3146a\",\"Ime\":\"Ezz - Mat1ja\",\"Posao\":\"farmer\"},{\"Ture\":275,\"Identifier\":\"steam:1100001393f0178\",\"Ime\":\"Smoke Mardeljano\",\"Posao\":\"farmer\"},{\"Ture\":159,\"Identifier\":\"steam:1100001138f654a\",\"Ime\":\"ottizzzzooo\",\"Posao\":\"farmer\"},{\"Ture\":105,\"Identifier\":\"steam:11000015462d5d6\",\"Ime\":\"Krle\",\"Posao\":\"farmer\"},{\"Ture\":2128,\"Identifier\":\"steam:110000143e51bb0\",\"Ime\":\"tare\",\"Posao\":\"farmer\"},{\"Ture\":138,\"Identifier\":\"steam:11000013df9a11e\",\"Ime\":\"Dinos\",\"Posao\":\"farmer\"},{\"Ture\":493,\"Identifier\":\"steam:11000015605bef0\",\"Ime\":\"Semso\",\"Posao\":\"farmer\"},{\"Ture\":144,\"Identifier\":\"steam:11000014a6ba4ca\",\"Ime\":\"Hajko\",\"Posao\":\"farmer\"},{\"Ture\":234,\"Identifier\":\"steam:11000013704a11e\",\"Ime\":\"Prle\",\"Posao\":\"farmer\"},{\"Ture\":124,\"Identifier\":\"steam:11000014211508c\",\"Ime\":\"baka vanga\",\"Posao\":\"farmer\"},{\"Ture\":20,\"Identifier\":\"steam:110000149f91290\",\"Ime\":\"Cico\",\"Posao\":\"farmer\"},{\"Ture\":101,\"Identifier\":\"steam:110000149e59253\",\"Ime\":\"Anonymous\",\"Posao\":\"farmer\"},{\"Ture\":61,\"Identifier\":\"steam:11000015619ce28\",\"Ime\":\"CaseOpening.com\",\"Posao\":\"farmer\"},{\"Ture\":335,\"Identifier\":\"steam:1100001470e6e2a\",\"Ime\":\"Sandev\",\"Posao\":\"farmer\"},{\"Ture\":286,\"Identifier\":\"steam:1100001581a35da\",\"Ime\":\"Ahbab\",\"Posao\":\"farmer\"},{\"Ture\":72,\"Identifier\":\"steam:11000010086a31a\",\"Ime\":\"taylor\",\"Posao\":\"farmer\"},{\"Ture\":179,\"Identifier\":\"steam:1100001323281be\",\"Ime\":\"KeNo\",\"Posao\":\"farmer\"},{\"Ture\":60,\"Identifier\":\"steam:11000014ac39013\",\"Ime\":\"jocke\",\"Posao\":\"farmer\"},{\"Ture\":96,\"Identifier\":\"steam:110000153e7aada\",\"Ime\":\"0rale3\",\"Posao\":\"farmer\"},{\"Ture\":6,\"Identifier\":\"steam:110000118a1c645\",\"Ime\":\"Brutinq\",\"Posao\":\"farmer\"},{\"Ture\":20,\"Identifier\":\"steam:11000013ef89181\",\"Ime\":\"Milenko\",\"Posao\":\"farmer\"},{\"Ture\":1681,\"Identifier\":\"steam:110000136ac44ae\",\"Ime\":\"Slasher\",\"Posao\":\"farmer\"},{\"Ture\":61,\"Identifier\":\"steam:11000014affe777\",\"Ime\":\"dzmy\",\"Posao\":\"farmer\"},{\"Ture\":43,\"Identifier\":\"steam:11000011bf6bcf1\",\"Ime\":\"ZemunaC\",\"Posao\":\"farmer\"},{\"Ture\":1095,\"Identifier\":\"steam:11000011cd15099\",\"Ime\":\"Trstmat\",\"Posao\":\"farmer\"},{\"Ture\":165,\"Identifier\":\"steam:110000147147ec8\",\"Ime\":\"Seksi\",\"Posao\":\"farmer\"},{\"Ture\":176,\"Identifier\":\"steam:11000013f8072dd\",\"Ime\":\"LeoG16\",\"Posao\":\"farmer\"},{\"Ture\":43,\"Identifier\":\"steam:11000013c62d09d\",\"Ime\":\"Faksic\",\"Posao\":\"farmer\"},{\"Ture\":72,\"Identifier\":\"steam:110000143fb98c5\",\"Ime\":\"Stefan\",\"Posao\":\"farmer\"},{\"Ture\":61,\"Identifier\":\"steam:110000143474ffb\",\"Ime\":\"Agony_\",\"Posao\":\"farmer\"},{\"Ture\":20,\"Identifier\":\"steam:11000014501a284\",\"Ime\":\"Keksic\",\"Posao\":\"farmer\"},{\"Ture\":20,\"Identifier\":\"steam:110000143f7d0ef\",\"Ime\":\"archinjo\",\"Posao\":\"farmer\"},{\"Ture\":41,\"Identifier\":\"steam:11000013e28a1b4\",\"Ime\":\"tobq\",\"Posao\":\"farmer\"},{\"Ture\":7,\"Identifier\":\"steam:11000013cc390b8\",\"Ime\":\"??\",\"Posao\":\"farmer\"},{\"Ture\":62,\"Identifier\":\"steam:11000014988d699\",\"Ime\":\"muskodijete\",\"Posao\":\"farmer\"},{\"Ture\":61,\"Identifier\":\"steam:11000014178fc90\",\"Ime\":\"ZvakanZi\",\"Posao\":\"farmer\"},{\"Ture\":40,\"Identifier\":\"steam:11000013d608254\",\"Ime\":\"Dzevad\",\"Posao\":\"farmer\"},{\"Ture\":119,\"Identifier\":\"steam:110000141c032c1\",\"Ime\":\"nawx\",\"Posao\":\"farmer\"},{\"Ture\":427,\"Identifier\":\"steam:1100001434beeed\",\"Ime\":\"stefkeew\",\"Posao\":\"farmer\"},{\"Ture\":38,\"Identifier\":\"steam:11000014b267b6c\",\"Ime\":\"_DeNA\",\"Posao\":\"farmer\"},{\"Ture\":16,\"Identifier\":\"steam:11000014bb1a305\",\"Ime\":\"M1elis\",\"Posao\":\"farmer\"},{\"Ture\":161,\"Identifier\":\"steam:1100001580bcf5e\",\"Ime\":\"Tefa\",\"Posao\":\"farmer\"},{\"Ture\":453,\"Identifier\":\"steam:110000143bb205f\",\"Ime\":\"DOMA_C\",\"Posao\":\"farmer\"},{\"Ture\":649,\"Identifier\":\"steam:11000011b516642\",\"Ime\":\"F1K0\",\"Posao\":\"farmer\"},{\"Ture\":176,\"Identifier\":\"steam:110000142b42c97\",\"Ime\":\"canadi15\",\"Posao\":\"farmer\"},{\"Ture\":244,\"Identifier\":\"steam:11000013c5250c9\",\"Ime\":\"Patro\",\"Posao\":\"farmer\"},{\"Ture\":66,\"Identifier\":\"steam:110000157982204\",\"Ime\":\"roksonnn\",\"Posao\":\"farmer\"},{\"Ture\":837,\"Identifier\":\"steam:110000118d561be\",\"Ime\":\"mixa\",\"Posao\":\"farmer\"},{\"Ture\":528,\"Identifier\":\"steam:11000011a71b4df\",\"Ime\":\"?????\",\"Posao\":\"farmer\"},{\"Ture\":119,\"Identifier\":\"steam:110000142b6e9ea\",\"Ime\":\"Markan\",\"Posao\":\"farmer\"},{\"Ture\":81,\"Identifier\":\"steam:11000011d58c5a6\",\"Ime\":\"Efendija Kapucino\",\"Posao\":\"farmer\"},{\"Ture\":40,\"Identifier\":\"steam:110000145777785\",\"Ime\":\"Dela\",\"Posao\":\"farmer\"},{\"Ture\":698,\"Identifier\":\"steam:110000145328363\",\"Ime\":\"Dusan\",\"Posao\":\"farmer\"},{\"Ture\":170,\"Identifier\":\"steam:110000148d34fc7\",\"Ime\":\"ourmoney\",\"Posao\":\"farmer\"},{\"Ture\":44,\"Identifier\":\"steam:110000145ba7112\",\"Ime\":\"Gazda Elo\",\"Posao\":\"farmer\"},{\"Ture\":149,\"Identifier\":\"steam:11000013f04824c\",\"Ime\":\"ROKSHI ?\",\"Posao\":\"farmer\"},{\"Ture\":42,\"Identifier\":\"steam:11000014504a368\",\"Ime\":\"NIKOLA\",\"Posao\":\"farmer\"},{\"Ture\":180,\"Identifier\":\"steam:11000013d9e72ad\",\"Ime\":\"MiXy\",\"Posao\":\"farmer\"},{\"Ture\":26,\"Identifier\":\"steam:110000145115a5c\",\"Ime\":\"Tuckavac\",\"Posao\":\"farmer\"},{\"Ture\":81,\"Identifier\":\"steam:1100001474c2973\",\"Ime\":\"fortniterecon28\",\"Posao\":\"farmer\"},{\"Ture\":78,\"Identifier\":\"steam:11000011d4abec2\",\"Ime\":\"Amm3R\",\"Posao\":\"farmer\"},{\"Ture\":58,\"Identifier\":\"steam:1100001155d31b2\",\"Ime\":\"Dovla_X\",\"Posao\":\"farmer\"},{\"Ture\":30,\"Identifier\":\"steam:110000144b5fe47\",\"Ime\":\"MALI EFENDIJA DERE DECU\",\"Posao\":\"farmer\"},{\"Ture\":2,\"Identifier\":\"steam:11000013d34658b\",\"Ime\":\"Vajdic81\",\"Posao\":\"farmer\"},{\"Ture\":518,\"Identifier\":\"steam:11000014a135db2\",\"Ime\":\"KILA\",\"Posao\":\"farmer\"},{\"Ture\":1019,\"Identifier\":\"steam:110000147a321ac\",\"Ime\":\"Mareee\",\"Posao\":\"farmer\"},{\"Ture\":52,\"Identifier\":\"steam:1100001075f356a\",\"Ime\":\"Amir Burnic\",\"Posao\":\"farmer\"},{\"Ture\":376,\"Identifier\":\"steam:1100001404f5e8f\",\"Ime\":\"z\",\"Posao\":\"farmer\"},{\"Ture\":210,\"Identifier\":\"steam:11000014d54f2a4\",\"Ime\":\"dusan.marcinko\",\"Posao\":\"farmer\"},{\"Ture\":67,\"Identifier\":\"steam:1100001465f0f99\",\"Ime\":\"Domy148\",\"Posao\":\"farmer\"},{\"Ture\":1956,\"Identifier\":\"steam:1100001419dbf65\",\"Ime\":\"reef\",\"Posao\":\"farmer\"},{\"Ture\":50,\"Identifier\":\"steam:11000013d2e6edd\",\"Ime\":\"XD Automaticbox\",\"Posao\":\"farmer\"},{\"Ture\":584,\"Identifier\":\"steam:110000146630595\",\"Ime\":\"+381 mihajlo\",\"Posao\":\"farmer\"},{\"Ture\":168,\"Identifier\":\"steam:11000014af2a50d\",\"Ime\":\"Arijann\",\"Posao\":\"farmer\"},{\"Ture\":656,\"Identifier\":\"steam:110000140ea24d2\",\"Ime\":\"P1rinidzaaa\",\"Posao\":\"farmer\"},{\"Ture\":109,\"Identifier\":\"steam:1100001352d4005\",\"Ime\":\"pwrt\",\"Posao\":\"farmer\"},{\"Ture\":92,\"Identifier\":\"steam:110000143f405aa\",\"Ime\":\"Stefann\",\"Posao\":\"farmer\"},{\"Ture\":113,\"Identifier\":\"steam:11000013c32bab2\",\"Ime\":\"guccigangster04\",\"Posao\":\"farmer\"},{\"Ture\":81,\"Identifier\":\"steam:11000014b944a74\",\"Ime\":\"loxyrr\",\"Posao\":\"farmer\"},{\"Ture\":54,\"Identifier\":\"steam:1100001363263fd\",\"Ime\":\"ItsMata\",\"Posao\":\"farmer\"},{\"Ture\":20,\"Identifier\":\"steam:110000107f46c73\",\"Ime\":\"Varga\",\"Posao\":\"farmer\"},{\"Ture\":422,\"Identifier\":\"steam:110000142194db8\",\"Ime\":\"popoviich\",\"Posao\":\"farmer\"},{\"Ture\":416,\"Identifier\":\"steam:11000013684104a\",\"Ime\":\"Borko\",\"Posao\":\"farmer\"},{\"Ture\":242,\"Identifier\":\"steam:11000013e823f33\",\"Ime\":\"! pakas\",\"Posao\":\"farmer\"},{\"Ture\":733,\"Identifier\":\"steam:1100001358e5b76\",\"Ime\":\"Ante\",\"Posao\":\"farmer\"},{\"Ture\":211,\"Identifier\":\"steam:11000014da6f9d3\",\"Ime\":\"????\",\"Posao\":\"farmer\"},{\"Ture\":106,\"Identifier\":\"steam:1100001327fd441\",\"Ime\":\"_Maky\",\"Posao\":\"farmer\"},{\"Ture\":25,\"Identifier\":\"steam:1100001455abc11\",\"Ime\":\"Mirza Hatic\",\"Posao\":\"farmer\"},{\"Ture\":505,\"Identifier\":\"steam:110000140c8e80e\",\"Ime\":\"banche\",\"Posao\":\"farmer\"},{\"Ture\":958,\"Identifier\":\"steam:110000137325b74\",\"Ime\":\"ExTasY\",\"Posao\":\"farmer\"},{\"Ture\":230,\"Identifier\":\"steam:1100001096e21ac\",\"Ime\":\"_Puja_\",\"Posao\":\"farmer\"},{\"Ture\":331,\"Identifier\":\"steam:11000013221d9cd\",\"Ime\":\"Bruske\",\"Posao\":\"farmer\"},{\"Ture\":190,\"Identifier\":\"steam:11000014a9a69ee\",\"Ime\":\"Legija\",\"Posao\":\"farmer\"},{\"Ture\":3060,\"Identifier\":\"steam:1100001336b94fa\",\"Ime\":\"?oki\",\"Posao\":\"farmer\"},{\"Ture\":107,\"Identifier\":\"steam:1100001422b6cbd\",\"Ime\":\"Franko\",\"Posao\":\"farmer\"},{\"Ture\":141,\"Identifier\":\"steam:1100001335dd02c\",\"Ime\":\"ldu youtuber 65\",\"Posao\":\"farmer\"},{\"Ture\":362,\"Identifier\":\"steam:110000154a6fede\",\"Ime\":\"RENTA\",\"Posao\":\"farmer\"},{\"Ture\":61,\"Identifier\":\"steam:11000013e3684ba\",\"Ime\":\"Ganny\",\"Posao\":\"farmer\"},{\"Ture\":52,\"Identifier\":\"steam:11000014a7043db\",\"Ime\":\"vidpetric2\",\"Posao\":\"farmer\"},{\"Ture\":3228,\"Identifier\":\"steam:11000014253944b\",\"Ime\":\"ALAJICA\",\"Posao\":\"farmer\"},{\"Ture\":332,\"Identifier\":\"steam:11000010c7cdf6d\",\"Ime\":\"Žuti\",\"Posao\":\"farmer\"},{\"Ture\":242,\"Identifier\":\"steam:11000013f04c5a1\",\"Ime\":\"Nujic\",\"Posao\":\"farmer\"},{\"Ture\":150,\"Identifier\":\"steam:110000158203b2a\",\"Ime\":\"Dulenzi\",\"Posao\":\"farmer\"},{\"Ture\":63,\"Identifier\":\"steam:110000131f0d21e\",\"Ime\":\"bogdanbrat\",\"Posao\":\"farmer\"},{\"Ture\":497,\"Identifier\":\"steam:1100001400a6934\",\"Ime\":\"Boogy Batina\",\"Posao\":\"farmer\"},{\"Ture\":104,\"Identifier\":\"steam:1100001419c278c\",\"Ime\":\"RoKY\",\"Posao\":\"farmer\"},{\"Ture\":214,\"Identifier\":\"steam:1100001356f5168\",\"Ime\":\"PowerDoesMeth\",\"Posao\":\"farmer\"},{\"Ture\":347,\"Identifier\":\"steam:110000144be88c4\",\"Ime\":\"Kurajber19\",\"Posao\":\"farmer\"},{\"Ture\":210,\"Identifier\":\"steam:110000141f34ed6\",\"Ime\":\"NeRkOo_\",\"Posao\":\"farmer\"},{\"Ture\":101,\"Identifier\":\"steam:110000148cabccb\",\"Ime\":\"BAJRAM\",\"Posao\":\"farmer\"},{\"Ture\":20,\"Identifier\":\"steam:110000135714930\",\"Ime\":\"R.I.P. MATTA???\",\"Posao\":\"farmer\"},{\"Ture\":329,\"Identifier\":\"steam:110000141dde053\",\"Ime\":\"merzuk\",\"Posao\":\"farmer\"},{\"Ture\":372,\"Identifier\":\"steam:110000148197aa9\",\"Ime\":\"Shefw_jurkke\",\"Posao\":\"farmer\"},{\"Ture\":61,\"Identifier\":\"steam:110000141672269\",\"Ime\":\"BOT Edvard\",\"Posao\":\"farmer\"},{\"Ture\":77,\"Identifier\":\"steam:11000013c3b31c8\",\"Ime\":\"covekilijebac\",\"Posao\":\"farmer\"},{\"Ture\":139,\"Identifier\":\"steam:11000013e993ebd\",\"Ime\":\"Pajser\",\"Posao\":\"farmer\"},{\"Ture\":355,\"Identifier\":\"steam:110000144af08be\",\"Ime\":\"Iskra\",\"Posao\":\"farmer\"},{\"Ture\":260,\"Identifier\":\"steam:110000149eb3f3b\",\"Ime\":\"tinoo\",\"Posao\":\"farmer\"},{\"Ture\":46,\"Identifier\":\"steam:110000119043648\",\"Ime\":\"kristo_ante\",\"Posao\":\"farmer\"},{\"Ture\":370,\"Identifier\":\"steam:11000013dcf7164\",\"Ime\":\"Ranko Djurisic\",\"Posao\":\"farmer\"},{\"Ture\":147,\"Identifier\":\"steam:1100001581cccef\",\"Ime\":\"Bax1921\",\"Posao\":\"farmer\"},{\"Ture\":85,\"Identifier\":\"steam:11000014247b9cd\",\"Ime\":\"Ar?iii\",\"Posao\":\"farmer\"},{\"Ture\":54,\"Identifier\":\"steam:11000014c753e34\",\"Ime\":\"Medo Brundo\",\"Posao\":\"farmer\"},{\"Ture\":40,\"Identifier\":\"steam:110000107df1c54\",\"Ime\":\"Kilazzk\",\"Posao\":\"farmer\"},{\"Ture\":111,\"Identifier\":\"steam:110000145e6bd52\",\"Ime\":\"..hamza00..\",\"Posao\":\"farmer\"},{\"Ture\":375,\"Identifier\":\"steam:11000014385fba7\",\"Ime\":\"trajko\",\"Posao\":\"farmer\"},{\"Ture\":52,\"Identifier\":\"steam:11000013213cfe6\",\"Ime\":\"Cikeee\",\"Posao\":\"farmer\"},{\"Ture\":516,\"Identifier\":\"steam:11000011778ac83\",\"Ime\":\"f05t3\",\"Posao\":\"farmer\"},{\"Ture\":58,\"Identifier\":\"steam:11000011ccffbb6\",\"Ime\":\"Stankov\",\"Posao\":\"farmer\"},{\"Ture\":66,\"Identifier\":\"steam:1100001131c708a\",\"Ime\":\"Arsic\",\"Posao\":\"farmer\"},{\"Ture\":293,\"Identifier\":\"steam:1100001432f9270\",\"Ime\":\"gospodin\",\"Posao\":\"farmer\"},{\"Ture\":46,\"Identifier\":\"steam:11000010439eaa1\",\"Ime\":\"darko216\",\"Posao\":\"farmer\"},{\"Ture\":56,\"Identifier\":\"steam:11000014550bf41\",\"Ime\":\"Patofna\",\"Posao\":\"farmer\"},{\"Ture\":225,\"Identifier\":\"steam:11000013f650f47\",\"Ime\":\"Folija69\",\"Posao\":\"farmer\"},{\"Ture\":65,\"Identifier\":\"steam:1100001381496cc\",\"Ime\":\"lukaa\",\"Posao\":\"farmer\"},{\"Ture\":127,\"Identifier\":\"steam:110000149a19b0b\",\"Ime\":\"?????\",\"Posao\":\"farmer\"},{\"Ture\":56,\"Identifier\":\"steam:1100001566c578c\",\"Ime\":\"ludifran\",\"Posao\":\"farmer\"},{\"Ture\":360,\"Identifier\":\"steam:11000014264352a\",\"Ime\":\"bvnee.\",\"Posao\":\"farmer\"},{\"Ture\":142,\"Identifier\":\"steam:110000145fa28ee\",\"Ime\":\"BIC SEF\",\"Posao\":\"farmer\"},{\"Ture\":98,\"Identifier\":\"steam:11000013ceaa1d7\",\"Ime\":\"baxy\",\"Posao\":\"farmer\"},{\"Ture\":202,\"Identifier\":\"steam:11000013e088bea\",\"Ime\":\"Nindza12322\",\"Posao\":\"farmer\"},{\"Ture\":46,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\",\"Posao\":\"farmer\"},{\"Ture\":87,\"Identifier\":\"steam:11000014548a27c\",\"Ime\":\"NiKo\",\"Posao\":\"farmer\"},{\"Ture\":58,\"Identifier\":\"steam:110000148a0670a\",\"Ime\":\"cana\",\"Posao\":\"farmer\"},{\"Ture\":46,\"Identifier\":\"steam:11000014170085b\",\"Ime\":\"Django\",\"Posao\":\"farmer\"},{\"Ture\":65,\"Identifier\":\"steam:110000116f468b2\",\"Ime\":\"Bot4real\",\"Posao\":\"farmer\"},{\"Ture\":160,\"Identifier\":\"steam:11000013ea2617f\",\"Ime\":\"ZokiSvirka *********_com\",\"Posao\":\"farmer\"},{\"Ture\":669,\"Identifier\":\"steam:11000014d7e470e\",\"Ime\":\"imran\",\"Posao\":\"farmer\"},{\"Ture\":67,\"Identifier\":\"steam:110000154e41b29\",\"Ime\":\"Pepesprej\",\"Posao\":\"farmer\"},{\"Ture\":46,\"Identifier\":\"steam:110000154f7dbe3\",\"Ime\":\"mitro\",\"Posao\":\"farmer\"},{\"Ture\":9,\"Identifier\":\"steam:110000143b08236\",\"Ime\":\"David\",\"Posao\":\"farmer\"},{\"Ture\":122,\"Identifier\":\"steam:11000013d5c168e\",\"Ime\":\"Lugha2k\",\"Posao\":\"farmer\"},{\"Ture\":81,\"Identifier\":\"steam:11000013d6020d6\",\"Ime\":\"?Luka?\",\"Posao\":\"farmer\"},{\"Ture\":20,\"Identifier\":\"steam:110000146754a7a\",\"Ime\":\"Samba\",\"Posao\":\"farmer\"},{\"Ture\":67,\"Identifier\":\"steam:11000011aba973c\",\"Ime\":\"Damboo\",\"Posao\":\"farmer\"},{\"Ture\":56,\"Identifier\":\"steam:11000013c535e36\",\"Ime\":\"vidan\",\"Posao\":\"farmer\"},{\"Ture\":87,\"Identifier\":\"steam:110000108f04a6e\",\"Ime\":\"ado\",\"Posao\":\"farmer\"},{\"Ture\":25,\"Identifier\":\"steam:11000014390e118\",\"Ime\":\"Mehaa\",\"Posao\":\"farmer\"},{\"Ture\":40,\"Identifier\":\"steam:11000013ef2a705\",\"Ime\":\"Petrinko\",\"Posao\":\"farmer\"}]', 43447, 300000),
+(3, 'kamion', 'Kamiondzija', '[1183.4019775390626,-3303.89501953125,5.9168572425842289]', 11679, NULL, 'kamion', '[{\"Ture\":1,\"Identifier\":\"steam:11000011cd15099\",\"Ime\":\"Trstmat\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:110000136ac44ae\",\"Ime\":\"Slasher\",\"Posao\":\"kamion\"},{\"Ture\":4,\"Identifier\":\"steam:11000014129d133\",\"Ime\":\"Marche\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:110000135249a26\",\"Ime\":\"kice\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000014548a27c\",\"Ime\":\"NiKo\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:11000013c5250c9\",\"Ime\":\"Patro\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013e28a1b4\",\"Ime\":\"tobq\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:1100001455d1d72\",\"Ime\":\"jks\",\"Posao\":\"kamion\"},{\"Ture\":4,\"Identifier\":\"steam:1100001472a5ee8\",\"Ime\":\"HooX1\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000145bf3868\",\"Ime\":\"xdgabi2106\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000148673a78\",\"Ime\":\"TrLe\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013d27e4d1\",\"Ime\":\"Tarik\",\"Posao\":\"kamion\"},{\"Ture\":6,\"Identifier\":\"steam:1100001351bf14e\",\"Ime\":\"Nadir Cebic\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000011a42d486\",\"Ime\":\"tmflight\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001466473bf\",\"Ime\":\"Divlji Joe\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000011d58c5a6\",\"Ime\":\"Efendija Kapucino\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000142b6e9ea\",\"Ime\":\"Markan\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:11000011d4abec2\",\"Ime\":\"Amm3R\",\"Posao\":\"kamion\"},{\"Ture\":4,\"Identifier\":\"steam:110000144b5fe47\",\"Ime\":\"MALI EFENDIJA DERE DECU\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:1100001465f0f99\",\"Ime\":\"Domy148\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:1100001075f356a\",\"Ime\":\"Amir Burnic\",\"Posao\":\"kamion\"},{\"Ture\":5,\"Identifier\":\"steam:11000013704a11e\",\"Ime\":\"Prle\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000014211508c\",\"Ime\":\"baka vanga\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000143fb98c5\",\"Ime\":\"Stefan\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:110000144f22a56\",\"Ime\":\"? +387 ssubasicch\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013c62d09d\",\"Ime\":\"Faksic\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013f8072dd\",\"Ime\":\"LeoG16\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000014427c89d\",\"Ime\":\"konj\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014988d699\",\"Ime\":\"muskodijete\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014bb1a305\",\"Ime\":\"M1elis\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000112dff0ee\",\"Ime\":\"s1mple\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014534ebfe\",\"Ime\":\"DaCo.\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001363263fd\",\"Ime\":\"ItsMata\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000140dca7b2\",\"Ime\":\"nemanya\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014a1d5760\",\"Ime\":\"Spinbot\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001434beeed\",\"Ime\":\"stefkeew\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000137325b74\",\"Ime\":\"ExTasY\",\"Posao\":\"kamion\"},{\"Ture\":7,\"Identifier\":\"steam:1100001455abc11\",\"Ime\":\"Mirza Hatic\",\"Posao\":\"kamion\"},{\"Ture\":7,\"Identifier\":\"steam:1100001096e21ac\",\"Ime\":\"_Puja_\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013dd3535b\",\"Ime\":\"Papsonja\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:1100001434ca47a\",\"Ime\":\"v?u?k?\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000011075cff4\",\"Ime\":\"kordi\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:110000110ebee4a\",\"Ime\":\"Buttcrack\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013fe2ac61\",\"Ime\":\"hoko\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:110000149eb3f3b\",\"Ime\":\"tinoo\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013f04c5a1\",\"Ime\":\"Nujic\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:1100001562fc0b9\",\"Ime\":\"!\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000143474ffb\",\"Ime\":\"Agony_\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014ac39013\",\"Ime\":\"jocke\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014da6f9d3\",\"Ime\":\"????\",\"Posao\":\"kamion\"},{\"Ture\":9,\"Identifier\":\"steam:1100001323281be\",\"Ime\":\"KeNo\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:110000142b42c97\",\"Ime\":\"canadi15\",\"Posao\":\"kamion\"},{\"Ture\":5,\"Identifier\":\"steam:1100001427bd76f\",\"Ime\":\"Hamzo Uzbrdica\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000014170085b\",\"Ime\":\"Django\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000145e6bd52\",\"Ime\":\"..hamza00..\",\"Posao\":\"kamion\"},{\"Ture\":4,\"Identifier\":\"steam:110000142c0a696\",\"Ime\":\"Putin\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014e763e71\",\"Ime\":\"Crni\",\"Posao\":\"kamion\"},{\"Ture\":7,\"Identifier\":\"steam:110000146630595\",\"Ime\":\"+381 mihajlo\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000011b4869ce\",\"Ime\":\"Ficho\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000147147ec8\",\"Ime\":\"Seksi\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001419c278c\",\"Ime\":\"RoKY\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013e993ebd\",\"Ime\":\"Pajser\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014ab75335\",\"Ime\":\"Miloica\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:11000014190172c\",\"Ime\":\"Krsmanovic\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:110000142793fa5\",\"Ime\":\"Rodjo\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000143797678\",\"Ime\":\"fisriba\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001581cccef\",\"Ime\":\"Bax1921\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:110000132a2b8f0\",\"Ime\":\"Jez\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000011ccffbb6\",\"Ime\":\"Stankov\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014af645c9\",\"Ime\":\"Zelje69\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014c3c6ae0\",\"Ime\":\"B0ss1\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000010dc2a8fd\",\"Ime\":\"ReFa hellcase.org\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014877a3eb\",\"Ime\":\"DyL3 ??  csgocases_com\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000010b5ed66b\",\"Ime\":\"bwenjoooo\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:1100001466217e8\",\"Ime\":\"loweLLLLLL\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001155d31b2\",\"Ime\":\"Dovla_X\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000149a19b0b\",\"Ime\":\"?????\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001192d4a5b\",\"Ime\":\"Zoro\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:110000116f468b2\",\"Ime\":\"Bot4real\",\"Posao\":\"kamion\"},{\"Ture\":3,\"Identifier\":\"steam:1100001581a35da\",\"Ime\":\"Ahbab\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000013df9a11e\",\"Ime\":\"Dinos\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000144554229\",\"Ime\":\"lazar\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014d7e470e\",\"Ime\":\"imran\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014247b9cd\",\"Ime\":\"Ar?iii\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014390e118\",\"Ime\":\"Mehaa\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000014b944a74\",\"Ime\":\"loxyrr\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:1100001470e6e2a\",\"Ime\":\"Sandev\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:11000010086a31a\",\"Ime\":\"taylor\",\"Posao\":\"kamion\"},{\"Ture\":1,\"Identifier\":\"steam:110000108f04a6e\",\"Ime\":\"ado\",\"Posao\":\"kamion\"},{\"Ture\":2,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\",\"Posao\":\"kamion\"}]', 11679, 300000),
+(4, 'luka', 'Lucki radnik', '[926.2833862304688,-2935.85009765625,4.90115547180175]', 101640, NULL, 'luka', '[{\"Ture\":3,\"Identifier\":\"steam:11000011cd15099\",\"Ime\":\"Trstmat\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000136ac44ae\",\"Ime\":\"Slasher\",\"Posao\":\"luka\"},{\"Ture\":9,\"Identifier\":\"steam:110000135249a26\",\"Ime\":\"kice\",\"Posao\":\"luka\"},{\"Ture\":6,\"Identifier\":\"steam:11000014ed659f8\",\"Ime\":\"PerKanMDFK\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000011d58c5a6\",\"Ime\":\"Efendija Kapucino\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000142b6e9ea\",\"Ime\":\"Markan\",\"Posao\":\"luka\"},{\"Ture\":6,\"Identifier\":\"steam:11000013f3e9244\",\"Ime\":\"gospodin kaktus\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:110000145bf3868\",\"Ime\":\"xdgabi2106\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000014129d133\",\"Ime\":\"Marche\",\"Posao\":\"luka\"},{\"Ture\":10,\"Identifier\":\"steam:11000014548a27c\",\"Ime\":\"NiKo\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:1100001428164b3\",\"Ime\":\"Leiyzi\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000010450ac75\",\"Ime\":\"grazyzz\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000013ef89181\",\"Ime\":\"Milenko\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:1100001351bf14e\",\"Ime\":\"Nadir Cebic\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000013908ef65\",\"Ime\":\"T1hac_\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:1100001466473bf\",\"Ime\":\"Divlji Joe\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000013cef2da1\",\"Ime\":\"Frnky420\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000011bf6bcf1\",\"Ime\":\"ZemunaC\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000014001f43b\",\"Ime\":\"N1KKOLIC\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000014ac39013\",\"Ime\":\"jocke\",\"Posao\":\"luka\"},{\"Ture\":13,\"Identifier\":\"steam:1100001075f356a\",\"Ime\":\"Amir Burnic\",\"Posao\":\"luka\"},{\"Ture\":28,\"Identifier\":\"steam:1100001465f0f99\",\"Ime\":\"Domy148\",\"Posao\":\"luka\"},{\"Ture\":6,\"Identifier\":\"steam:11000013c62d09d\",\"Ime\":\"Faksic\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000011d4abec2\",\"Ime\":\"Amm3R\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:110000153e7aada\",\"Ime\":\"0rale3\",\"Posao\":\"luka\"},{\"Ture\":341,\"Identifier\":\"steam:1100001434beeed\",\"Ime\":\"stefkeew\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000112dff0ee\",\"Ime\":\"s1mple\",\"Posao\":\"luka\"},{\"Ture\":6,\"Identifier\":\"steam:11000010086a31a\",\"Ime\":\"taylor\",\"Posao\":\"luka\"},{\"Ture\":5,\"Identifier\":\"steam:11000011bf21bf4\",\"Ime\":\"Gabac Soliteri\",\"Posao\":\"luka\"},{\"Ture\":4,\"Identifier\":\"steam:11000014170085b\",\"Ime\":\"Django\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000014504a368\",\"Ime\":\"NIKOLA\",\"Posao\":\"luka\"},{\"Ture\":6,\"Identifier\":\"steam:110000140cca2ba\",\"Ime\":\"seksi\",\"Posao\":\"luka\"},{\"Ture\":21,\"Identifier\":\"steam:11000014e00f71a\",\"Ime\":\"Vappone\",\"Posao\":\"luka\"},{\"Ture\":93,\"Identifier\":\"steam:11000014da6f9d3\",\"Ime\":\"????\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000014211508c\",\"Ime\":\"baka vanga\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000015605bef0\",\"Ime\":\"Semso\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:1100001471ff8c3\",\"Ime\":\"Mr_Kamata34\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000140dca7b2\",\"Ime\":\"nemanya\",\"Posao\":\"luka\"},{\"Ture\":28,\"Identifier\":\"steam:1100001434ca47a\",\"Ime\":\"v?u?k?\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000014427c89d\",\"Ime\":\"konj\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:1100001455abc11\",\"Ime\":\"Mirza Hatic\",\"Posao\":\"luka\"},{\"Ture\":27,\"Identifier\":\"steam:1100001096e21ac\",\"Ime\":\"_Puja_\",\"Posao\":\"luka\"},{\"Ture\":41,\"Identifier\":\"steam:11000014792d68c\",\"Ime\":\"Hardy\",\"Posao\":\"luka\"},{\"Ture\":11,\"Identifier\":\"steam:11000013fc7165a\",\"Ime\":\"Emirr\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000145e6bd52\",\"Ime\":\"..hamza00..\",\"Posao\":\"luka\"},{\"Ture\":9,\"Identifier\":\"steam:1100001455d1d72\",\"Ime\":\"jks\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000149eb3f3b\",\"Ime\":\"tinoo\",\"Posao\":\"luka\"},{\"Ture\":9,\"Identifier\":\"steam:11000011075cff4\",\"Ime\":\"kordi\",\"Posao\":\"luka\"},{\"Ture\":18,\"Identifier\":\"steam:11000013dd3535b\",\"Ime\":\"Papsonja\",\"Posao\":\"luka\"},{\"Ture\":10,\"Identifier\":\"steam:11000013221d9cd\",\"Ime\":\"Bruske\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000014c5db3cf\",\"Ime\":\"_mujkolone\",\"Posao\":\"luka\"},{\"Ture\":8,\"Identifier\":\"steam:110000118a1c645\",\"Ime\":\"Brutinq\",\"Posao\":\"luka\"},{\"Ture\":5,\"Identifier\":\"steam:1100001470e6e2a\",\"Ime\":\"Sandev\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000143474ffb\",\"Ime\":\"Agony_\",\"Posao\":\"luka\"},{\"Ture\":39,\"Identifier\":\"steam:11000013e3684ba\",\"Ime\":\"Ganny\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:1100001562fc0b9\",\"Ime\":\"!\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000011b4869ce\",\"Ime\":\"Ficho\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:110000147147ec8\",\"Ime\":\"Seksi\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:110000141672269\",\"Ime\":\"BOT Edvard\",\"Posao\":\"luka\"},{\"Ture\":10,\"Identifier\":\"steam:110000142c0a696\",\"Ime\":\"Putin\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:1100001427bd76f\",\"Ime\":\"Hamzo Uzbrdica\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000013e993ebd\",\"Ime\":\"Pajser\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000013cc390b8\",\"Ime\":\"??\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000014178fc90\",\"Ime\":\"ZvakanZi\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000013dcf7164\",\"Ime\":\"Ranko Djurisic\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:110000116f468b2\",\"Ime\":\"Bot4real\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000013c1c0eeb\",\"Ime\":\"LokiStršljen\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000013ffe149a\",\"Ime\":\"Kak ti Stara!!\",\"Posao\":\"luka\"},{\"Ture\":4,\"Identifier\":\"steam:1100001439b7091\",\"Ime\":\"Nicknarmam\",\"Posao\":\"luka\"},{\"Ture\":10,\"Identifier\":\"steam:110000119043648\",\"Ime\":\"kristo_ante\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000147b85779\",\"Ime\":\"Blagi Umak\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:1100001381496cc\",\"Ime\":\"lukaa\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000137325b74\",\"Ime\":\"ExTasY\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:1100001155d31b2\",\"Ime\":\"Dovla_X\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000015815b306\",\"Ime\":\"misomali301\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000014877a3eb\",\"Ime\":\"DyL3 ??  csgocases_com\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:110000149a19b0b\",\"Ime\":\"?????\",\"Posao\":\"luka\"},{\"Ture\":8,\"Identifier\":\"steam:11000011778ac83\",\"Ime\":\"f05t3\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:1100001432f9270\",\"Ime\":\"gospodin\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000010439eaa1\",\"Ime\":\"darko216\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000014b92d4c5\",\"Ime\":\"SaNtIc\",\"Posao\":\"luka\"},{\"Ture\":10,\"Identifier\":\"steam:110000140751fb3\",\"Ime\":\"Savo barašnov\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:110000147a321ac\",\"Ime\":\"Mareee\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000011a71b4df\",\"Ime\":\"Antich\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:110000144a66db3\",\"Ime\":\"ArminFast\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:110000141f34ed6\",\"Ime\":\"NeRkOo_\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000117937b01\",\"Ime\":\"Piksel NPC\",\"Posao\":\"luka\"},{\"Ture\":5,\"Identifier\":\"steam:1100001419dbf65\",\"Ime\":\"reef\",\"Posao\":\"luka\"},{\"Ture\":6,\"Identifier\":\"steam:110000148cabccb\",\"Ime\":\"BAJRAM\",\"Posao\":\"luka\"},{\"Ture\":5,\"Identifier\":\"steam:1100001421a3628\",\"Ime\":\"???? ??????? ??\",\"Posao\":\"luka\"},{\"Ture\":4,\"Identifier\":\"steam:11000014c6ac345\",\"Ime\":\"kurtoazija\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:1100001335dd02c\",\"Ime\":\"shuki\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000013c3b31c8\",\"Ime\":\"covekilijebac\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:11000014c6f54a0\",\"Ime\":\"KimaDOCA\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000013e0ef42e\",\"Ime\":\"Straxe\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000014264352a\",\"Ime\":\"bvnee.\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000013cd09481\",\"Ime\":\"vukajlovich\",\"Posao\":\"luka\"},{\"Ture\":3,\"Identifier\":\"steam:110000145ba7112\",\"Ime\":\"Gazda Elo\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000014b944a74\",\"Ime\":\"loxyrr\",\"Posao\":\"luka\"},{\"Ture\":2,\"Identifier\":\"steam:11000013df9a11e\",\"Ime\":\"Dinos\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000014390e118\",\"Ime\":\"Mehaa\",\"Posao\":\"luka\"},{\"Ture\":1,\"Identifier\":\"steam:11000010441bee9\",\"Ime\":\"Sikora\",\"Posao\":\"luka\"}]', 101640, 300000);
 
 -- --------------------------------------------------------
 
@@ -425,17 +385,10 @@ INSERT INTO `biznisi` (`ID`, `Ime`, `Label`, `Koord`, `Sef`, `Vlasnik`, `Posao`,
 
 DROP TABLE IF EXISTS `bought_houses`;
 CREATE TABLE IF NOT EXISTS `bought_houses` (
-  `houseid` int(50) NOT NULL,
+  `houseid` int(11) NOT NULL,
   `vlasnik` int(11) DEFAULT NULL,
-  PRIMARY KEY (`houseid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `bought_houses`
---
-
-INSERT INTO `bought_houses` (`houseid`, `vlasnik`) VALUES
-(29, 10000);
+  PRIMARY KEY (`houseid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -446,11 +399,9 @@ INSERT INTO `bought_houses` (`houseid`, `vlasnik`) VALUES
 DROP TABLE IF EXISTS `communityservice`;
 CREATE TABLE IF NOT EXISTS `communityservice` (
   `identifier` int(11) NOT NULL,
-  `actions_remaining` int(10) NOT NULL,
-  PRIMARY KEY (`identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  `actions_remaining` int(11) NOT NULL,
+  PRIMARY KEY (`identifier`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `datastore`
@@ -461,8 +412,26 @@ CREATE TABLE IF NOT EXISTS `datastore` (
   `name` varchar(60) NOT NULL,
   `label` varchar(100) NOT NULL,
   `shared` int(11) NOT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`name`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `datastore`
+--
+
+INSERT INTO `datastore` (`name`, `label`, `shared`) VALUES
+('society_omerta', 'omerta', 1),
+('society_montana', 'montana', 1),
+('society_panthers', 'panthers', 1),
+('society_sinaloa', 'sinaloa', 1),
+('society_pollos', 'pollos', 1),
+('society_zemunski', 'zemunski', 1),
+('society_devilzeye', 'devilzeye', 1),
+('user_ears', 'Ears', 0),
+('user_glasses', 'Glasses', 0),
+('user_helmet', 'Helmet', 0),
+('user_mask', 'Mask', 0),
+('society_fake', 'fake', 1);
 
 -- --------------------------------------------------------
 
@@ -476,10 +445,24 @@ CREATE TABLE IF NOT EXISTS `datastore_data` (
   `name` varchar(60) NOT NULL,
   `owner` varchar(60) DEFAULT NULL,
   `data` longtext DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `index_datastore_data_name_owner` (`name`,`owner`),
-  KEY `index_datastore_data_name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `index_datastore_data_name_owner` (`name`,`owner`) USING BTREE,
+  KEY `index_datastore_data_name` (`name`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `datastore_data`
+--
+
+INSERT INTO `datastore_data` (`id`, `name`, `owner`, `data`) VALUES
+(19, 'society_omerta', NULL, '{\"weapons\":[{\"ammo\":0,\"count\":0,\"name\":\"weapon_crowbar\"},{\"ammo\":0,\"count\":0,\"name\":\"WEAPON_KNIFE\"},{\"ammo\":42,\"count\":1,\"name\":\"WEAPON_PISTOL\"},{\"ammo\":0,\"count\":1,\"name\":\"WEAPON_DAGGER\"},{\"ammo\":0,\"count\":1,\"name\":\"WEAPON_KNUCKLE\"}]}'),
+(20, 'society_montana', NULL, '{}'),
+(21, 'society_panthers', NULL, '{\"weapons\":[{\"name\":\"WEAPON_PISTOL\",\"count\":3,\"ammo\":0},{\"name\":\"WEAPON_MACHETE\",\"count\":1,\"ammo\":0},{\"name\":\"WEAPON_PISTOL50\",\"count\":0,\"ammo\":0},{\"name\":\"WEAPON_MICROSMG\",\"count\":1,\"ammo\":39},{\"name\":\"WEAPON_CROWBAR\",\"count\":0,\"ammo\":0}]}'),
+(22, 'society_sinaloa', NULL, '{\"weapons\":[{\"name\":\"WEAPON_PUMPSHOTGUN\",\"count\":1,\"ammo\":0},{\"name\":\"WEAPON_APPISTOL\",\"count\":1,\"ammo\":210},{\"name\":\"WEAPON_NIGHTSTICK\",\"count\":1,\"ammo\":0},{\"name\":\"WEAPON_CROWBAR\",\"count\":3,\"ammo\":0},{\"name\":\"WEAPON_KNIFE\",\"count\":1,\"ammo\":0},{\"name\":\"WEAPON_PETROLCAN\",\"count\":1,\"ammo\":30},{\"name\":\"weapon_crowbar\",\"count\":1,\"ammo\":250},{\"name\":\"WEAPON_COMBATPISTOL\",\"count\":2,\"ammo\":250},{\"name\":\"WEAPON_PISTOL50\",\"count\":2,\"ammo\":0},{\"name\":\"WEAPON_PISTOL\",\"count\":9,\"ammo\":1475},{\"name\":\"WEAPON_MICROSMG\",\"count\":4,\"ammo\":584},{\"name\":\"WEAPON_DAGGER\",\"count\":1,\"ammo\":0},{\"name\":\"WEAPON_STUNGUN\",\"count\":1,\"ammo\":42},{\"name\":\"WEAPON_KNUCKLE\",\"count\":1,\"ammo\":0},{\"name\":\"WEAPON_MACHETE\",\"count\":1,\"ammo\":0},{\"name\":\"WEAPON_SWITCHBLADE\",\"count\":1,\"ammo\":0}]}'),
+(23, 'society_pollos', NULL, '{}'),
+(24, 'society_zemunski', NULL, '{\"weapons\":[{\"name\":\"WEAPON_CROWBAR\",\"count\":0,\"ammo\":0}]}'),
+(25, 'society_devilzeye', NULL, '{}'),
+(26, 'society_fake', NULL, '{}');
 
 -- --------------------------------------------------------
 
@@ -493,17 +476,17 @@ CREATE TABLE IF NOT EXISTS `droge` (
   `vrsta` int(11) DEFAULT NULL COMMENT '1 - heroin',
   `branje` longtext DEFAULT NULL,
   `heading` decimal(11,2) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `droge`
 --
 
 INSERT INTO `droge` (`ID`, `vrsta`, `branje`, `heading`) VALUES
-(1, 1, '{\"x\":-1240.41064453125,\"y\":73.79826354980469,\"z\":51.98569869995117}', NULL),
-(2, 2, '{\"x\":-1015.3260498046875,\"y\":0.84805941581726,\"z\":47.87119674682617}', NULL),
-(3, 3, '{\"x\":1522.4974365234376,\"y\":6329.16845703125,\"z\":23.60689353942871}', '332.71');
+(1, 1, '{\"x\":3101.51123046875,\"y\":6036.728515625,\"z\":122.19019317626953}', NULL),
+(2, 2, '{\"x\":3481.6748046875,\"y\":2582.458740234375,\"z\":13.55680179595947}', NULL),
+(3, 3, '{\"x\":-1298.0008544921876,\"y\":4492.7373046875,\"z\":16.9282054901123}', '316.02');
 
 -- --------------------------------------------------------
 
@@ -517,8 +500,8 @@ CREATE TABLE IF NOT EXISTS `elektricar` (
   `ime` varchar(255) NOT NULL,
   `lokacija` varchar(255) NOT NULL DEFAULT '{}',
   `radius` int(11) NOT NULL DEFAULT 40,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `elektricar`
@@ -579,72 +562,72 @@ CREATE TABLE IF NOT EXISTS `fine_types` (
   `label` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `amount` int(11) DEFAULT NULL,
   `category` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `category` (`category`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `fine_types`
 --
 
 INSERT INTO `fine_types` (`id`, `label`, `amount`, `category`) VALUES
-(1, 'Krivo koristenje trube', 5300, 0),
-(2, 'Gazenje pune linije', 5400, 0),
-(3, 'Voznja krivom stranom ceste', 7500, 0),
-(4, 'Nelegalno okretanje', 7500, 0),
-(5, 'Ilegalna voznja izvan ceste', 6700, 0),
-(6, 'Odbijanje zakonite naredbe', 5300, 0),
-(7, 'Nelegalno zaustavljanje vozila', 5150, 0),
-(8, 'Nelegalno parkiranje', 5700, 0),
-(9, 'Ne propustanje sluzbenog vozila', 5500, 0),
-(10, 'Vozilo ne odgovara papirima', 7500, 0),
-(11, 'Ne zaustavljanje na stop znak', 6500, 0),
-(12, 'Ne zaustavljanje na crveno svjetlo', 6500, 0),
-(13, 'Nelegalno obilazenje', 6000, 0),
-(14, 'Voznja neregistriranog vozila', 6000, 0),
-(15, 'Voznja bez vozacke dozvole', 6500, 0),
-(16, 'Napustanje mjesta prometne nesrece', 13000, 0),
-(17, 'Prekoracenje brzine > 5 km/h', 5900, 0),
-(18, 'Prekoracenje brzine izmedju 5 i 15 km/h', 6200, 0),
-(19, 'Prekoracenje brzine izmedju 15 i 30 km/h', 6800, 0),
-(20, 'Prekoracenje brzine vise od 30 km/h', 8000, 0),
-(21, 'Ometanje tijeka prometa', 5100, 1),
-(22, 'Javno pijan', 5900, 1),
-(23, 'Neprimjereno ponasanje', 5090, 1),
-(24, 'Ometanje pravnih sluzbi', 5130, 1),
-(25, 'Vrijedjanje osobe', 5075, 1),
-(26, 'Nepostivanaje pravne osobe', 5110, 1),
-(27, 'Verbalna prijetnja civilu', 5090, 1),
-(28, 'Verbalna prijetnja sluzbenoj osobi', 5150, 1),
-(29, 'Davanje laznih podataka', 5250, 1),
-(30, 'Pokusaj korupcije', 6500, 1),
-(31, 'Javno pokazivanje oruzja unutar grada', 5120, 2),
-(32, 'Javno pokazivanje smrtonosnog oruzja unutar grada', 5300, 2),
-(33, 'Nema dozvole za oruzje', 5600, 2),
-(34, 'Posjedovanje nelegalnog oruzja', 5700, 2),
-(35, 'Posjedovanje alata za provaljivanje', 5300, 2),
-(36, 'Kradja vozila', 6800, 2),
-(37, 'Namjera prodaje/distribucije ilegalnih substanci', 6500, 2),
-(38, 'Proizvodnja ilegalnih substanci', 6500, 2),
-(39, 'Posjedovanje ilegalne substance', 5650, 2),
-(40, 'Otmica civila', 6500, 2),
-(41, 'Otmica sluzbene osobe', 7000, 2),
-(42, 'Pljacka', 5650, 2),
-(43, 'Oruzana pljacka trgovine', 5650, 2),
-(44, 'Oruzana pljacka banke', 6500, 2),
-(45, 'Napad na civila', 7000, 3),
-(46, 'Napad na sluzbenu osobu', 7500, 3),
-(47, 'Pokusaj ubojstva civila', 8000, 3),
-(48, 'Pokusaj ubojstva sluzbene osobe', 10000, 3),
-(49, 'Ubojstvo civila', 15000, 3),
-(50, 'Ubojstvo sluzbene osobe', 35000, 3),
-(51, 'Ubojstvo iz nehaja', 6800, 3),
-(52, 'Prevara', 7000, 2),
-(53, 'Nepropisno parkiranje osobnog vozila.', 15000, 2),
-(54, 'Pljacka Banke.', 150000, 2),
-(55, 'Pljacka trgovine.', 20000, 2),
-(56, 'Pljacka zlatare.', 50000, 2),
-(57, 'Organizirani Kriminal.', 80000, 2);
+(1, 'Krivo koristenje trube', 150, 0),
+(2, 'Gazenje pune linije', 150, 0),
+(3, 'Voznja krivom stranom ceste', 750, 0),
+(4, 'Nelegalno okretanje', 500, 0),
+(5, 'Ilegalna voznja izvan ceste', 750, 0),
+(6, 'Odbijanje zakonite naredbe', 300, 0),
+(7, 'Nelegalno zaustavljanje vozila', 150, 0),
+(8, 'Nelegalno parkiranje', 150, 0),
+(9, 'Ne propustanje sluzbenog vozila', 300, 0),
+(10, 'Vozilo ne odgovara papirima', 750, 0),
+(11, 'Ne zaustavljanje na stop znak', 500, 0),
+(12, 'Ne zaustavljanje na crveno svjetlo', 1000, 0),
+(13, 'Nelegalno obilazenje', 300, 0),
+(14, 'Voznja neregistriranog vozila', 750, 0),
+(15, 'Voznja bez vozacke dozvole', 1500, 0),
+(16, 'Napustanje mjesta prometne nesrece', 350, 0),
+(17, 'Prekoracenje brzine > 5 km/h', 100, 0),
+(18, 'Prekoracenje brzine izmedju 5 i 15 km/h', 200, 0),
+(19, 'Prekoracenje brzine izmedju 15 i 30 km/h', 350, 0),
+(20, 'Prekoracenje brzine vise od 30 km/h', 600, 0),
+(21, 'Ometanje tijeka prometa', 750, 1),
+(22, 'Javno pijan', 200, 1),
+(23, 'Neprimjereno ponasanje', 200, 1),
+(24, 'Ometanje pravnih sluzbi', 300, 1),
+(25, 'Vrijedjanje osobe', 150, 1),
+(26, 'Nepostivanaje pravne osobe', 300, 1),
+(27, 'Verbalna prijetnja civilu', 250, 1),
+(28, 'Verbalna prijetnja sluzbenoj osobi', 350, 1),
+(29, 'Davanje laznih podataka', 350, 1),
+(30, 'Pokusaj korupcije', 800, 1),
+(31, 'Javno pokazivanje oruzja unutar grada', 600, 2),
+(32, 'Javno pokazivanje smrtonosnog oruzja unutar grada', 1000, 2),
+(33, 'Nema dozvole za oruzje', 1500, 2),
+(34, 'Posjedovanje nelegalnog oruzja', 2000, 2),
+(35, 'Posjedovanje alata za provaljivanje', 750, 2),
+(36, 'Kradja vozila', 800, 2),
+(37, 'Namjera prodaje/distribucije ilegalnih substanci', 800, 2),
+(38, 'Proizvodnja ilegalnih substanci', 1000, 2),
+(39, 'Posjedovanje ilegalne substance', 750, 2),
+(40, 'Otmica civila', 1750, 2),
+(41, 'Otmica sluzbene osobe', 2250, 2),
+(42, 'Pljacka', 2000, 2),
+(43, 'Oruzana pljacka trgovine', 2350, 2),
+(44, 'Oruzana pljacka banke', 2500, 2),
+(45, 'Napad na civila', 1300, 3),
+(46, 'Napad na sluzbenu osobu', 1600, 3),
+(47, 'Pokusaj ubojstva civila', 2000, 3),
+(48, 'Pokusaj ubojstva sluzbene osobe', 2500, 3),
+(49, 'Ubojstvo civila', 3000, 3),
+(50, 'Ubojstvo sluzbene osobe', 3500, 3),
+(51, 'Ubojstvo iz nehaja', 2750, 3),
+(52, 'Prevara', 1500, 2),
+(53, 'Nepropisno parkiranje osobnog vozila.', 150, 2),
+(54, 'Pljacka Banke.', 2500, 2),
+(55, 'Pljacka trgovine.', 2350, 2),
+(56, 'Pljacka zlatare.', 2200, 2),
+(57, 'Organizirani Kriminal.', 2000, 2);
 
 -- --------------------------------------------------------
 
@@ -678,54 +661,54 @@ CREATE TABLE IF NOT EXISTS `firme` (
 --
 
 INSERT INTO `firme` (`ID`, `Ime`, `Label`, `Tip`, `Kupovina`, `Ulaz`, `Izlaz`, `VlasnikKoord`, `Vlasnik`, `Sef`, `Cijena`, `Zakljucana`, `Posao`, `Skladiste`, `Vozila`, `Proizvodi`) VALUES
-(51, 'firma9', 'Firma 9', 1, '{\"x\":1135.608642578125,\"y\":-982.2374877929688,\"z\":46.41579055786133}', '{}', '{}', '{\"x\":1130.785400390625,\"y\":-983.2907104492188,\"z\":46.41579055786133}', NULL, 0, 105000, 0, 0, 0, '{}', '[]'),
-(50, 'firma8', 'Firma 8', 1, '{\"x\":25.74614143371582,\"y\":-1346.8341064453126,\"z\":29.49701118469238}', '{}', '{}', '{\"x\":30.63790321350097,\"y\":-1339.8995361328126,\"z\":29.49701118469238}', NULL, 0, 125000, 0, 0, 0, '{}', '[]'),
-(49, 'firma7', 'Firma 7', 1, '{\"x\":1729.101806640625,\"y\":6415.0322265625,\"z\":35.03721237182617}', '{}', '{}', '{\"x\":1736.4447021484376,\"y\":6419.095703125,\"z\":35.03721237182617}', NULL, 0, 56000, 0, 0, 0, '{}', '[]'),
-(48, 'firma6', 'Firma 6', 1, '{\"x\":2678.23388671875,\"y\":3280.870849609375,\"z\":55.24111938476562}', '{}', '{}', '{\"x\":2674.646240234375,\"y\":3288.287353515625,\"z\":55.24111938476562}', NULL, 0, 74000, 0, 0, 0, '{}', '[]'),
-(47, 'firma5', 'Firma 5', 1, '{\"x\":1960.943603515625,\"y\":3741.1650390625,\"z\":32.34373092651367}', '{}', '{}', '{\"x\":1961.6397705078126,\"y\":3749.4482421875,\"z\":32.34373092651367}', NULL, 0, 65000, 0, 0, 0, '{}', '[]'),
-(46, 'firma4', 'Firma 4', 1, '{\"x\":547.8786010742188,\"y\":2670.676513671875,\"z\":42.1564826965332}', '{}', '{}', '{\"x\":543.9300537109375,\"y\":2663.234375,\"z\":42.1564826965332}', NULL, 85, 73000, 0, 0, 0, '{}', '[]'),
-(45, 'firma3', 'Firma 3', 1, '{\"x\":-3242.785400390625,\"y\":1001.221923828125,\"z\":12.83070373535156}', '{}', '{}', '{\"x\":-3248.99658203125,\"y\":1006.9669799804688,\"z\":12.83070373535156}', NULL, 0, 76000, 0, 0, 0, '{}', '[]'),
-(44, 'firma2', 'Firma 2', 1, '{\"x\":-3039.935791015625,\"y\":585.5108032226563,\"z\":7.90892839431762}', '{}', '{}', '{\"x\":-3047.92138671875,\"y\":588.3067626953125,\"z\":7.90892839431762}', NULL, 0, 85000, 0, 0, 0, '{}', '[]'),
-(43, 'firma1', 'Firma 1', 1, '{\"x\":2556.7587890625,\"y\":382.1427307128906,\"z\":108.6229248046875}', '{}', '{}', '{\"x\":2550.07763671875,\"y\":387.1881408691406,\"z\":108.6229248046875}', NULL, 0, 80000, 0, 0, 0, '{}', '[]'),
-(42, 'firma0', 'Firma 0', 1, '{\"x\":373.9737854003906,\"y\":326.5569152832031,\"z\":103.56635284423828}', '{}', '{}', '{\"x\":380.04425048828127,\"y\":332.1336975097656,\"z\":103.56635284423828}', NULL, 0, 120000, 0, 0, 0, '{}', '[]'),
-(52, 'firma10', 'Firma 10', 1, '{\"x\":-1222.769287109375,\"y\":-907.1284790039063,\"z\":12.32633876800537}', '{}', '{}', '{\"x\":-1219.471923828125,\"y\":-910.6727905273438,\"z\":12.32676029205322}', NULL, 0, 108000, 0, 0, 0, '{}', '[]'),
-(53, 'firma11', 'Firma 11', 1, '{\"x\":-1487.2860107421876,\"y\":-378.93603515625,\"z\":40.16337203979492}', '{}', '{}', '{\"x\":-1484.6513671875,\"y\":-374.9789123535156,\"z\":40.16360855102539}', NULL, 0, 110000, 0, 0, 0, '{}', '[]'),
-(54, 'firma12', 'Firma 12', 1, '{\"x\":-2968.155029296875,\"y\":390.91717529296877,\"z\":15.04329872131347}', '{}', '{}', '{\"x\":-2963.06787109375,\"y\":391.6311340332031,\"z\":15.04332065582275}', NULL, 0, 87000, 0, 0, 0, '{}', '[]'),
-(55, 'firma13', 'Firma 13', 1, '{\"x\":1166.02197265625,\"y\":2708.996826171875,\"z\":38.15761947631836}', '{}', '{}', '{\"x\":1164.896240234375,\"y\":2714.0908203125,\"z\":38.15814590454101}', NULL, 0, 78000, 0, 0, 0, '{}', '[]'),
-(56, 'firma14', 'Firma 14', 1, '{\"x\":1392.4520263671876,\"y\":3604.804443359375,\"z\":34.98087692260742}', '{}', '{}', '{\"x\":1393.780517578125,\"y\":3609.297119140625,\"z\":34.98087692260742}', NULL, 0, 65000, 0, 0, 0, '{}', '[]'),
-(57, 'firma15', 'Firma 15', 1, '{\"x\":-47.98810958862305,\"y\":-1757.4256591796876,\"z\":29.42098808288574}', '{}', '{}', '{\"x\":-45.04561233520508,\"y\":-1750.4444580078126,\"z\":29.42101860046386}', NULL, 0, 109000, 0, 0, 0, '{}', '[]'),
-(58, 'firma16', 'Firma 16', 1, '{\"x\":1163.539306640625,\"y\":-323.42889404296877,\"z\":69.20502471923828}', '{}', '{}', '{\"x\":1160.241455078125,\"y\":-316.27947998046877,\"z\":69.20502471923828}', NULL, 0, 103000, 0, 0, 0, '{}', '[]'),
-(59, 'firma17', 'Firma 17', 1, '{\"x\":-707.3284301757813,\"y\":-914.1729125976563,\"z\":19.2155818939209}', '{}', '{}', '{\"x\":-709.3485107421875,\"y\":-906.6134643554688,\"z\":19.2155818939209}', NULL, 0, 112000, 0, 0, 0, '{}', '[]'),
-(60, 'firma18', 'Firma 18', 1, '{\"x\":-1820.8211669921876,\"y\":793.1325073242188,\"z\":138.11141967773438}', '{}', '{}', '{\"x\":-1827.2333984375,\"y\":797.1124267578125,\"z\":138.17434692382813}', NULL, 0, 88000, 0, 0, 0, '{}', '[]'),
-(61, 'firma19', 'Firma 19', 1, '{\"x\":1698.5770263671876,\"y\":4924.3095703125,\"z\":42.06361389160156}', '{}', '{}', '{\"x\":1705.5875244140626,\"y\":4921.49462890625,\"z\":42.06361389160156}', NULL, 0, 78000, 0, 0, 0, '{}', '[]'),
-(62, 'firma20', 'Firma 20', 2, '{\"x\":-814.3079833984375,\"y\":-183.82350158691407,\"z\":37.54518508911133}', '{}', '{}', '{\"x\":-809.01513671875,\"y\":-180.4512939453125,\"z\":37.56887817382812}', NULL, 0, 75000, 0, 0, 0, '{}', '[]'),
-(63, 'firma21', 'Firma 21', 2, '{\"x\":136.82125854492188,\"y\":-1708.3829345703126,\"z\":29.29155158996582}', '{}', '{}', '{\"x\":141.14288330078126,\"y\":-1706.326171875,\"z\":29.29162979125976}', NULL, 0, 66000, 0, 0, 0, '{}', '[]'),
-(64, 'firma22', 'Firma 22', 2, '{\"x\":-1282.60400390625,\"y\":-1116.7569580078126,\"z\":6.99002647399902}', '{}', '{}', '{\"x\":-1278.7142333984376,\"y\":-1119.0989990234376,\"z\":6.9901213645935}', NULL, 0, 75000, 0, 0, 0, '{}', '[]'),
-(65, 'firma23', 'Firma 23', 2, '{\"x\":1931.512939453125,\"y\":3729.6708984375,\"z\":32.84412002563476}', '{}', '{}', '{\"x\":1931.2784423828126,\"y\":3734.667724609375,\"z\":32.84447860717773}', NULL, 0, 51000, 0, 0, 0, '{}', '[]'),
-(66, 'firma24', 'Firma 24', 2, '{\"x\":1212.8399658203126,\"y\":-472.9211730957031,\"z\":66.20800018310547}', '{}', '{}', '{\"x\":1215.8123779296876,\"y\":-475.5716247558594,\"z\":66.20800018310547}', NULL, 0, 65000, 0, 0, 0, '{}', '[]'),
-(67, 'firma25', 'Firma 25', 2, '{\"x\":-32.88523864746094,\"y\":-152.3190460205078,\"z\":57.0761489868164}', '{}', '{}', '{\"x\":-36.25354766845703,\"y\":-155.8475799560547,\"z\":57.07655715942383}', NULL, 0, 67000, 0, 0, 0, '{}', '[]'),
-(68, 'firma26', 'Firma 26', 2, '{\"x\":-278.0769958496094,\"y\":6228.462890625,\"z\":31.69512939453125}', '{}', '{}', '{\"x\":-276.7023620605469,\"y\":6224.1083984375,\"z\":31.69554138183593}', NULL, 0, 45000, 0, 0, 0, '{}', '[]'),
-(69, 'firma27', 'Firma 27', 3, '{\"x\":72.24475860595703,\"y\":-1399.10205078125,\"z\":29.37605667114257}', '{}', '{}', '{\"x\":71.25747680664063,\"y\":-1391.0709228515626,\"z\":29.37615394592285}', NULL, 0, 88000, 0, 0, 0, '{}', '[]'),
-(70, 'firma28', 'Firma 28', 3, '{\"x\":-703.7697143554688,\"y\":-152.24977111816407,\"z\":37.41505813598633}', '{}', '{}', '{\"x\":-708.8536376953125,\"y\":-151.46649169921876,\"z\":37.41512298583984}', NULL, 0, 100000, 0, 0, 0, '{}', '[]'),
-(71, 'firma29', 'Firma 29', 3, '{\"x\":-167.86314392089845,\"y\":-298.96905517578127,\"z\":39.73307418823242}', '{}', '{}', '{\"x\":-164.94041442871095,\"y\":-302.9537658691406,\"z\":39.73327255249023}', NULL, 0, 95000, 0, 0, 0, '{}', '[]'),
-(72, 'firma30', 'Firma 30', 3, '{\"x\":428.69403076171877,\"y\":-800.1060180664063,\"z\":29.49103546142578}', '{}', '{}', '{\"x\":429.4186096191406,\"y\":-808.0657958984375,\"z\":29.49115753173828}', NULL, 0, 99000, 0, 0, 0, '{}', '[]'),
-(73, 'firma31', 'Firma 31', 3, '{\"x\":-829.4130859375,\"y\":-1073.7099609375,\"z\":11.32802772521972}', '{}', '{}', '{\"x\":-822.722900390625,\"y\":-1069.21630859375,\"z\":11.32811546325683}', NULL, 0, 92000, 0, 0, 0, '{}', '[]'),
-(74, 'firma32', 'Firma 32', 3, '{\"x\":-1447.7969970703126,\"y\":-242.4613037109375,\"z\":49.8082389831543}', '{}', '{}', '{\"x\":-1448.7855224609376,\"y\":-237.90692138671876,\"z\":49.81341552734375}', NULL, 0, 98000, 0, 0, 0, '{}', '[]'),
-(75, 'firma33', 'Firma 33', 3, '{\"x\":11.6318244934082,\"y\":6514.22412109375,\"z\":31.87721443176269}', '{}', '{}', '{\"x\":6.26214742660522,\"y\":6508.384765625,\"z\":31.87786102294922}', NULL, 0, 67000, 0, 0, 0, '{}', '[]'),
-(76, 'firma34', 'Firma 34', 3, '{\"x\":123.63652038574219,\"y\":-219.4370880126953,\"z\":54.55775833129883}', '{}', '{}', '{\"x\":117.81684875488281,\"y\":-233.59048461914063,\"z\":54.55780029296875}', NULL, 0, 89000, 0, 0, 0, '{}', '[]'),
-(77, 'firma35', 'Firma 35', 3, '{\"x\":1696.291015625,\"y\":4829.31201171875,\"z\":42.06302261352539}', '{}', '{}', '{\"x\":1698.141357421875,\"y\":4821.568359375,\"z\":42.06315994262695}', NULL, 0, 56000, 0, 0, 0, '{}', '[]'),
-(78, 'firma36', 'Firma 36', 3, '{\"x\":618.0931396484375,\"y\":2759.62890625,\"z\":42.0880241394043}', '{}', '{}', '{\"x\":617.5364990234375,\"y\":2775.14794921875,\"z\":42.08807373046875}', NULL, 0, 73000, 0, 0, 0, '{}', '[]'),
-(79, 'firma37', 'Firma 37', 3, '{\"x\":1190.550048828125,\"y\":2713.44091796875,\"z\":38.22215270996094}', '{}', '{}', '{\"x\":1198.62841796875,\"y\":2714.277099609375,\"z\":38.22265625}', NULL, 0, 61000, 0, 0, 0, '{}', '[]'),
-(80, 'firma38', 'Firma 38', 3, '{\"x\":-1193.428955078125,\"y\":-772.2621459960938,\"z\":17.32410812377929}', '{}', '{}', '{\"x\":-1180.7735595703126,\"y\":-764.0654907226563,\"z\":17.32663345336914}', NULL, 0, 82000, 0, 0, 0, '{}', '[]'),
-(81, 'firma39', 'Firma 39', 3, '{\"x\":-3172.49609375,\"y\":1048.133056640625,\"z\":20.86305999755859}', '{}', '{}', '{\"x\":-3179.291259765625,\"y\":1034.1827392578126,\"z\":20.86320686340332}', NULL, 0, 62000, 0, 0, 0, '{}', '[]'),
-(82, 'firma40', 'Firma 40', 3, '{\"x\":-1108.4410400390626,\"y\":2708.923095703125,\"z\":19.09982681274414}', '{}', '{}', '{\"x\":-1102.66162109375,\"y\":2714.638671875,\"z\":19.1078872680664}', NULL, 0, 56000, 0, 0, 0, '{}', '[]'),
-(83, 'firma41', 'Firma 41', 6, '{\"x\":1322.5963134765626,\"y\":-1651.894287109375,\"z\":52.27481079101562}', '{}', '{}', '{\"x\":1324.929931640625,\"y\":-1650.32861328125,\"z\":52.27517318725586}', NULL, 313, 63000, 0, 0, 0, '{}', '[]'),
-(84, 'firma42', 'Firma 42', 6, '{\"x\":-1153.5999755859376,\"y\":-1425.612060546875,\"z\":4.95368719100952}', '{}', '{}', '{\"x\":-1151.9586181640626,\"y\":-1423.6500244140626,\"z\":4.95445775985717}', NULL, 0, 54000, 0, 0, 0, '{}', '[]'),
-(85, 'firma43', 'Firma 43', 6, '{\"x\":322.0897216796875,\"y\":180.39585876464845,\"z\":103.58580017089844}', '{}', '{}', '{\"x\":319.534912109375,\"y\":181.13531494140626,\"z\":103.58647155761719}', NULL, 0, 60000, 0, 0, 0, '{}', '[]'),
-(86, 'firma44', 'Firma 44', 6, '{\"x\":-3170.0,\"y\":1074.988037109375,\"z\":20.82843208312988}', '{}', '{}', '{\"x\":-3170.63623046875,\"y\":1072.7921142578126,\"z\":20.82915878295898}', NULL, 0, 53000, 0, 0, 0, '{}', '[]'),
-(87, 'firma45', 'Firma 45', 6, '{\"x\":1864.610595703125,\"y\":3747.699951171875,\"z\":33.03106689453125}', '{}', '{}', '{\"x\":1862.3421630859376,\"y\":3748.359619140625,\"z\":33.03609848022461}', NULL, 0, 42000, 0, 0, 0, '{}', '[]'),
-(88, 'firma46', 'Firma 46', 6, '{\"x\":-293.7037048339844,\"y\":6200.0,\"z\":31.4818058013916}', '{}', '{}', '{\"x\":-291.94317626953127,\"y\":6199.90869140625,\"z\":31.4883918762207}', NULL, 0, 44000, 0, 0, 0, '{}', '[]'),
-(89, 'firma47', 'Firma 47', 7, '{\"x\":934.3333129882813,\"y\":-2952.836669921875,\"z\":5.87173986434936}', '{}', '{}', '{\"x\":933.8359375,\"y\":-2957.855712890625,\"z\":5.90115642547607}', 10000, 159, 500, 0, 0, 0, NULL, '[]');
+(51, 'firma9', 'Firma 9', 1, '{\"x\":1135.608642578125,\"y\":-982.2374877929688,\"z\":46.41579055786133}', '{}', '{}', '{\"x\":1130.785400390625,\"y\":-983.2907104492188,\"z\":46.41579055786133}', NULL, 441, 1000000, 0, 0, 0, '{}', '[]'),
+(50, 'firma8', 'Firma 8', 1, '{\"x\":25.74614143371582,\"y\":-1346.8341064453126,\"z\":29.49701118469238}', '{}', '{}', '{\"x\":30.63790321350097,\"y\":-1339.8995361328126,\"z\":29.49701118469238}', NULL, 15483, 1000000, 0, 0, 0, '{}', '[]'),
+(49, 'firma7', 'Firma 7', 1, '{\"x\":1729.101806640625,\"y\":6415.0322265625,\"z\":35.03721237182617}', '{}', '{}', '{\"x\":1736.4447021484376,\"y\":6419.095703125,\"z\":35.03721237182617}', NULL, 4461, 1000000, 0, 0, 0, '{}', '[]'),
+(48, 'firma6', 'Firma 6', 1, '{\"x\":2678.23388671875,\"y\":3280.870849609375,\"z\":55.24111938476562}', '{}', '{}', '{\"x\":2674.646240234375,\"y\":3288.287353515625,\"z\":55.24111938476562}', NULL, 1669, 1000000, 0, 0, 0, '{}', '[]'),
+(47, 'firma5', 'Firma 5', 1, '{\"x\":1960.943603515625,\"y\":3741.1650390625,\"z\":32.34373092651367}', '{}', '{}', '{\"x\":1961.6397705078126,\"y\":3749.4482421875,\"z\":32.34373092651367}', NULL, 1136, 1000000, 0, 0, 0, '{}', '[]'),
+(46, 'firma4', 'Firma 4', 1, '{\"x\":547.8786010742188,\"y\":2670.676513671875,\"z\":42.1564826965332}', '{}', '{}', '{\"x\":543.9300537109375,\"y\":2663.234375,\"z\":42.1564826965332}', NULL, 965, 1000000, 0, 0, 0, '{}', '[]'),
+(45, 'firma3', 'Firma 3', 1, '{\"x\":-3242.785400390625,\"y\":1001.221923828125,\"z\":12.83070373535156}', '{}', '{}', '{\"x\":-3248.99658203125,\"y\":1006.9669799804688,\"z\":12.83070373535156}', NULL, 107, 1000000, 0, 0, 0, '{}', '[]'),
+(44, 'firma2', 'Firma 2', 1, '{\"x\":-3039.935791015625,\"y\":585.5108032226563,\"z\":7.90892839431762}', '{}', '{}', '{\"x\":-3047.92138671875,\"y\":588.3067626953125,\"z\":7.90892839431762}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(43, 'firma1', 'Firma 1', 1, '{\"x\":2556.7587890625,\"y\":382.1427307128906,\"z\":108.6229248046875}', '{}', '{}', '{\"x\":2550.07763671875,\"y\":387.1881408691406,\"z\":108.6229248046875}', NULL, 1346, 1000000, 0, 0, 0, '{}', '[]'),
+(42, 'firma0', 'Firma 0', 1, '{\"x\":373.9737854003906,\"y\":326.5569152832031,\"z\":103.56635284423828}', '{}', '{}', '{\"x\":380.04425048828127,\"y\":332.1336975097656,\"z\":103.56635284423828}', NULL, 8012, 1000000, 0, 0, 0, '{}', '[]'),
+(52, 'firma10', 'Firma 10', 1, '{\"x\":-1222.769287109375,\"y\":-907.1284790039063,\"z\":12.32633876800537}', '{}', '{}', '{\"x\":-1219.471923828125,\"y\":-910.6727905273438,\"z\":12.32676029205322}', NULL, 335, 1000000, 0, 0, 0, '{}', '[]'),
+(53, 'firma11', 'Firma 11', 1, '{\"x\":-1487.2860107421876,\"y\":-378.93603515625,\"z\":40.16337203979492}', '{}', '{}', '{\"x\":-1484.6513671875,\"y\":-374.9789123535156,\"z\":40.16360855102539}', NULL, 4622, 1000000, 0, 0, 0, '{}', '[]'),
+(54, 'firma12', 'Firma 12', 1, '{\"x\":-2968.155029296875,\"y\":390.91717529296877,\"z\":15.04329872131347}', '{}', '{}', '{\"x\":-2963.06787109375,\"y\":391.6311340332031,\"z\":15.04332065582275}', NULL, 532, 1000000, 0, 0, 0, '{}', '[]'),
+(55, 'firma13', 'Firma 13', 1, '{\"x\":1166.02197265625,\"y\":2708.996826171875,\"z\":38.15761947631836}', '{}', '{}', '{\"x\":1164.896240234375,\"y\":2714.0908203125,\"z\":38.15814590454101}', NULL, 431, 1000000, 0, 0, 0, '{}', '[]'),
+(56, 'firma14', 'Firma 14', 1, '{\"x\":1392.4520263671876,\"y\":3604.804443359375,\"z\":34.98087692260742}', '{}', '{}', '{\"x\":1393.780517578125,\"y\":3609.297119140625,\"z\":34.98087692260742}', NULL, 778, 1000000, 0, 0, 0, '{}', '[]'),
+(57, 'firma15', 'Firma 15', 1, '{\"x\":-47.98810958862305,\"y\":-1757.4256591796876,\"z\":29.42098808288574}', '{}', '{}', '{\"x\":-45.04561233520508,\"y\":-1750.4444580078126,\"z\":29.42101860046386}', NULL, 3750, 1000000, 0, 0, 0, '{}', '[]'),
+(58, 'firma16', 'Firma 16', 1, '{\"x\":1163.539306640625,\"y\":-323.42889404296877,\"z\":69.20502471923828}', '{}', '{}', '{\"x\":1160.241455078125,\"y\":-316.27947998046877,\"z\":69.20502471923828}', NULL, 1555, 1000000, 0, 0, 0, '{}', '[]'),
+(59, 'firma17', 'Firma 17', 1, '{\"x\":-707.3284301757813,\"y\":-914.1729125976563,\"z\":19.2155818939209}', '{}', '{}', '{\"x\":-709.3485107421875,\"y\":-906.6134643554688,\"z\":19.2155818939209}', NULL, 1837, 1000000, 0, 0, 0, '{}', '[]'),
+(60, 'firma18', 'Firma 18', 1, '{\"x\":-1820.8211669921876,\"y\":793.1325073242188,\"z\":138.11141967773438}', '{}', '{}', '{\"x\":-1827.2333984375,\"y\":797.1124267578125,\"z\":138.17434692382813}', NULL, 859, 1000000, 0, 0, 0, '{}', '[]'),
+(61, 'firma19', 'Firma 19', 1, '{\"x\":1698.5770263671876,\"y\":4924.3095703125,\"z\":42.06361389160156}', '{}', '{}', '{\"x\":1705.5875244140626,\"y\":4921.49462890625,\"z\":42.06361389160156}', NULL, 2447, 1000000, 0, 0, 0, '{}', '[]'),
+(62, 'firma20', 'Firma 20', 2, '{\"x\":-814.3079833984375,\"y\":-183.82350158691407,\"z\":37.54518508911133}', '{}', '{}', '{\"x\":-809.01513671875,\"y\":-180.4512939453125,\"z\":37.56887817382812}', NULL, 50, 1000000, 0, 0, 0, '{}', '[]'),
+(63, 'firma21', 'Firma 21', 2, '{\"x\":136.82125854492188,\"y\":-1708.3829345703126,\"z\":29.29155158996582}', '{}', '{}', '{\"x\":141.14288330078126,\"y\":-1706.326171875,\"z\":29.29162979125976}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(64, 'firma22', 'Firma 22', 2, '{\"x\":-1282.60400390625,\"y\":-1116.7569580078126,\"z\":6.99002647399902}', '{}', '{}', '{\"x\":-1278.7142333984376,\"y\":-1119.0989990234376,\"z\":6.9901213645935}', NULL, 150, 1000000, 0, 0, 0, '{}', '[]'),
+(65, 'firma23', 'Firma 23', 2, '{\"x\":1931.512939453125,\"y\":3729.6708984375,\"z\":32.84412002563476}', '{}', '{}', '{\"x\":1931.2784423828126,\"y\":3734.667724609375,\"z\":32.84447860717773}', NULL, 150, 1000000, 0, 0, 0, '{}', '[]'),
+(66, 'firma24', 'Firma 24', 2, '{\"x\":1212.8399658203126,\"y\":-472.9211730957031,\"z\":66.20800018310547}', '{}', '{}', '{\"x\":1215.8123779296876,\"y\":-475.5716247558594,\"z\":66.20800018310547}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(67, 'firma25', 'Firma 25', 2, '{\"x\":-32.88523864746094,\"y\":-152.3190460205078,\"z\":57.0761489868164}', '{}', '{}', '{\"x\":-36.25354766845703,\"y\":-155.8475799560547,\"z\":57.07655715942383}', NULL, 350, 1000000, 0, 0, 0, '{}', '[]'),
+(68, 'firma26', 'Firma 26', 2, '{\"x\":-278.0769958496094,\"y\":6228.462890625,\"z\":31.69512939453125}', '{}', '{}', '{\"x\":-276.7023620605469,\"y\":6224.1083984375,\"z\":31.69554138183593}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(69, 'firma27', 'Firma 27', 3, '{\"x\":72.24475860595703,\"y\":-1399.10205078125,\"z\":29.37605667114257}', '{}', '{}', '{\"x\":71.25747680664063,\"y\":-1391.0709228515626,\"z\":29.37615394592285}', NULL, 1150, 1000000, 0, 0, 0, '{}', '[]'),
+(70, 'firma28', 'Firma 28', 3, '{\"x\":-703.7697143554688,\"y\":-152.24977111816407,\"z\":37.41505813598633}', '{}', '{}', '{\"x\":-708.8536376953125,\"y\":-151.46649169921876,\"z\":37.41512298583984}', NULL, 400, 1000000, 0, 0, 0, '{}', '[]'),
+(71, 'firma29', 'Firma 29', 3, '{\"x\":-167.86314392089845,\"y\":-298.96905517578127,\"z\":39.73307418823242}', '{}', '{}', '{\"x\":-164.94041442871095,\"y\":-302.9537658691406,\"z\":39.73327255249023}', NULL, 250, 1000000, 0, 0, 0, '{}', '[]'),
+(72, 'firma30', 'Firma 30', 3, '{\"x\":428.69403076171877,\"y\":-800.1060180664063,\"z\":29.49103546142578}', '{}', '{}', '{\"x\":429.4186096191406,\"y\":-808.0657958984375,\"z\":29.49115753173828}', NULL, 750, 1000000, 0, 0, 0, '{}', '[]'),
+(73, 'firma31', 'Firma 31', 3, '{\"x\":-829.4130859375,\"y\":-1073.7099609375,\"z\":11.32802772521972}', '{}', '{}', '{\"x\":-822.722900390625,\"y\":-1069.21630859375,\"z\":11.32811546325683}', NULL, 150, 1000000, 0, 0, 0, '{}', '[]'),
+(74, 'firma32', 'Firma 32', 3, '{\"x\":-1447.7969970703126,\"y\":-242.4613037109375,\"z\":49.8082389831543}', '{}', '{}', '{\"x\":-1448.7855224609376,\"y\":-237.90692138671876,\"z\":49.81341552734375}', NULL, 150, 1000000, 0, 0, 0, '{}', '[]'),
+(75, 'firma33', 'Firma 33', 3, '{\"x\":11.6318244934082,\"y\":6514.22412109375,\"z\":31.87721443176269}', '{}', '{}', '{\"x\":6.26214742660522,\"y\":6508.384765625,\"z\":31.87786102294922}', NULL, 400, 1000000, 0, 0, 0, '{}', '[]'),
+(76, 'firma34', 'Firma 34', 3, '{\"x\":123.63652038574219,\"y\":-219.4370880126953,\"z\":54.55775833129883}', '{}', '{}', '{\"x\":117.81684875488281,\"y\":-233.59048461914063,\"z\":54.55780029296875}', NULL, 2250, 1000000, 0, 0, 0, '{}', '[]'),
+(77, 'firma35', 'Firma 35', 3, '{\"x\":1696.291015625,\"y\":4829.31201171875,\"z\":42.06302261352539}', '{}', '{}', '{\"x\":1698.141357421875,\"y\":4821.568359375,\"z\":42.06315994262695}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(78, 'firma36', 'Firma 36', 3, '{\"x\":618.0931396484375,\"y\":2759.62890625,\"z\":42.0880241394043}', '{}', '{}', '{\"x\":617.5364990234375,\"y\":2775.14794921875,\"z\":42.08807373046875}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(79, 'firma37', 'Firma 37', 3, '{\"x\":1190.550048828125,\"y\":2713.44091796875,\"z\":38.22215270996094}', '{}', '{}', '{\"x\":1198.62841796875,\"y\":2714.277099609375,\"z\":38.22265625}', NULL, 250, 1000000, 0, 0, 0, '{}', '[]'),
+(80, 'firma38', 'Firma 38', 3, '{\"x\":-1193.428955078125,\"y\":-772.2621459960938,\"z\":17.32410812377929}', '{}', '{}', '{\"x\":-1180.7735595703126,\"y\":-764.0654907226563,\"z\":17.32663345336914}', NULL, 300, 1000000, 0, 0, 0, '{}', '[]'),
+(81, 'firma39', 'Firma 39', 3, '{\"x\":-3172.49609375,\"y\":1048.133056640625,\"z\":20.86305999755859}', '{}', '{}', '{\"x\":-3179.291259765625,\"y\":1034.1827392578126,\"z\":20.86320686340332}', NULL, 100, 1000000, 0, 0, 0, '{}', '[]'),
+(82, 'firma40', 'Firma 40', 3, '{\"x\":-1108.4410400390626,\"y\":2708.923095703125,\"z\":19.09982681274414}', '{}', '{}', '{\"x\":-1102.66162109375,\"y\":2714.638671875,\"z\":19.1078872680664}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(83, 'firma41', 'Firma 41', 6, '{\"x\":1322.5963134765626,\"y\":-1651.894287109375,\"z\":52.27481079101562}', '{}', '{}', '{\"x\":1324.929931640625,\"y\":-1650.32861328125,\"z\":52.27517318725586}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(84, 'firma42', 'Firma 42', 6, '{\"x\":-1153.5999755859376,\"y\":-1425.612060546875,\"z\":4.95368719100952}', '{}', '{}', '{\"x\":-1151.9586181640626,\"y\":-1423.6500244140626,\"z\":4.95445775985717}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(85, 'firma43', 'Firma 43', 6, '{\"x\":322.0897216796875,\"y\":180.39585876464845,\"z\":103.58580017089844}', '{}', '{}', '{\"x\":319.534912109375,\"y\":181.13531494140626,\"z\":103.58647155761719}', NULL, 6296, 1000000, 0, 0, 0, '{}', '[]'),
+(86, 'firma44', 'Firma 44', 6, '{\"x\":-3170.0,\"y\":1074.988037109375,\"z\":20.82843208312988}', '{}', '{}', '{\"x\":-3170.63623046875,\"y\":1072.7921142578126,\"z\":20.82915878295898}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(87, 'firma45', 'Firma 45', 6, '{\"x\":1864.610595703125,\"y\":3747.699951171875,\"z\":33.03106689453125}', '{}', '{}', '{\"x\":1862.3421630859376,\"y\":3748.359619140625,\"z\":33.03609848022461}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(88, 'firma46', 'Firma 46', 6, '{\"x\":-293.7037048339844,\"y\":6200.0,\"z\":31.4818058013916}', '{}', '{}', '{\"x\":-291.94317626953127,\"y\":6199.90869140625,\"z\":31.4883918762207}', NULL, 0, 1000000, 0, 0, 0, '{}', '[]'),
+(89, 'firma47', 'Firma 47', 7, '{\"x\":934.3333129882813,\"y\":-2952.836669921875,\"z\":5.87173986434936}', '{}', '{}', '{\"x\":933.8359375,\"y\":-2957.855712890625,\"z\":5.90115642547607}', NULL, 165, 1000000, 0, 0, 0, '{}', '[]');
 
 -- --------------------------------------------------------
 
@@ -739,8 +722,8 @@ CREATE TABLE IF NOT EXISTS `firme_kraft` (
   `Firma` int(11) NOT NULL,
   `Item` varchar(255) NOT NULL,
   `Vrijeme` int(11) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -752,22 +735,15 @@ DROP TABLE IF EXISTS `imanja`;
 CREATE TABLE IF NOT EXISTS `imanja` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Ime` varchar(255) NOT NULL,
-  `Koord` longtext NOT NULL DEFAULT '{}',
+  `Koord` longtext NOT NULL,
   `Cijena` int(11) NOT NULL DEFAULT 0,
   `Vlasnik` int(11) DEFAULT NULL,
   `Kuca` varchar(255) DEFAULT NULL,
-  `KKoord` longtext NOT NULL DEFAULT '{}',
-  `MKoord` longtext NOT NULL DEFAULT '{}',
+  `KKoord` longtext NOT NULL,
+  `MKoord` longtext NOT NULL,
   `KucaID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `imanja`
---
-
-INSERT INTO `imanja` (`ID`, `Ime`, `Koord`, `Cijena`, `Vlasnik`, `Kuca`, `KKoord`, `MKoord`, `KucaID`) VALUES
-(11, 'Imanje 1', '[{\"x\":2556.414306640625,\"y\":4786.0703125},{\"x\":2566.040771484375,\"y\":4797.10107421875},{\"x\":2564.235595703125,\"y\":4810.2490234375},{\"x\":2559.5625,\"y\":4818.5498046875},{\"x\":2551.644287109375,\"y\":4823.52099609375},{\"x\":2544.89208984375,\"y\":4824.6181640625},{\"x\":2540.824462890625,\"y\":4820.234375},{\"x\":2535.984375,\"y\":4816.5869140625},{\"x\":2532.796875,\"y\":4810.39990234375},{\"x\":2533.652587890625,\"y\":4802.51611328125},{\"x\":2536.1708984375,\"y\":4795.75439453125},{\"x\":2542.257080078125,\"y\":4788.2919921875},{\"x\":2546.875,\"y\":4785.33251953125}]', 100, NULL, NULL, '{}', '{\"x\":2559.91455078125,\"y\":4778.2978515625,\"z\":32.82449340820312}', NULL);
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -783,9 +759,9 @@ CREATE TABLE IF NOT EXISTS `items` (
   `limit` int(11) NOT NULL DEFAULT -1,
   `rare` int(11) NOT NULL DEFAULT 0,
   `can_remove` int(11) NOT NULL DEFAULT 1,
-  `weight` int(255) UNSIGNED NOT NULL DEFAULT 0,
+  `weight` int(10) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `items`
@@ -830,7 +806,6 @@ INSERT INTO `items` (`ID`, `name`, `label`, `limit`, `rare`, `can_remove`, `weig
 (36, 'fabric', 'Tkanina', 80, 0, 1, 0),
 (37, 'filter', 'Filter', 2, 0, 1, 200),
 (38, 'finjectori', 'Fuel injectori', 2, 0, 1, 700),
-(39, 'fish', 'Riba', 100, 0, 1, 0),
 (40, 'fixkit', 'Repair Kit', 5, 0, 1, 0),
 (41, 'fixtool', 'Gedore', 6, 0, 1, 0),
 (42, 'gazbottle', 'Plinska boca', 11, 0, 1, 0),
@@ -970,7 +945,8 @@ INSERT INTO `items` (`ID`, `name`, `label`, `limit`, `rare`, `can_remove`, `weig
 (176, 'novine', 'Novine', 1, 0, 1, 0),
 (177, 'fishingrod', 'Stap za pecanje', 1, 0, 1, 1500),
 (179, 'fishbait', 'Mamac', 20, 0, 1, 500),
-(180, 'fish', 'Riba', 50, 0, 1, 1000);
+(180, 'fish', 'Riba', 50, 0, 1, 1000),
+(182, 'pboca', 'Plinska boca', 1, 0, 1, 5000);
 
 -- --------------------------------------------------------
 
@@ -984,11 +960,11 @@ CREATE TABLE IF NOT EXISTS `jobs` (
   `name` varchar(50) NOT NULL,
   `label` varchar(50) DEFAULT NULL,
   `whitelisted` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `id` int(255) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`name`),
-  KEY `whitelisted` (`whitelisted`),
-  KEY `pID` (`pID`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`name`) USING BTREE,
+  KEY `whitelisted` (`whitelisted`) USING BTREE,
+  KEY `pID` (`pID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `jobs`
@@ -996,11 +972,19 @@ CREATE TABLE IF NOT EXISTS `jobs` (
 
 INSERT INTO `jobs` (`pID`, `name`, `label`, `whitelisted`, `id`) VALUES
 (2, 'ambulance', 'LSMD', 1, 0),
+(13, 'devilzeye', 'devilzeye', 1, 1),
+(14, 'fake', 'fake', 1, 1),
 (3, 'mechanic', 'Mehanicar', 1, 0),
+(8, 'montana', 'montana', 1, 1),
+(7, 'omerta', 'omerta', 1, 1),
+(9, 'panthers', 'panthers', 1, 1),
 (4, 'police', 'LSPD', 1, 0),
+(11, 'pollos', 'pollos', 1, 1),
 (5, 'reporter', 'Reporter', 1, 1),
+(10, 'sinaloa', 'sinaloa', 1, 1),
 (6, 'taxi', 'Uber', 1, 0),
-(1, 'unemployed', 'Nezaposlen', 0, 0);
+(1, 'unemployed', 'Nezaposlen', 0, 0),
+(12, 'zemunski', 'zemunski', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1018,8 +1002,8 @@ CREATE TABLE IF NOT EXISTS `job_grades` (
   `salary` int(11) NOT NULL,
   `skin_male` longtext NOT NULL,
   `skin_female` longtext NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=273 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `job_grades`
@@ -1046,24 +1030,24 @@ INSERT INTO `job_grades` (`id`, `job_name`, `grade`, `name`, `label`, `salary`, 
 (20, 'taxi', 2, 'experimente', 'Iskusni Vozac', 850, '{\"hair_2\":0,\"hair_color_2\":0,\"torso_1\":26,\"bags_1\":0,\"helmet_2\":0,\"chain_2\":0,\"eyebrows_3\":0,\"makeup_3\":0,\"makeup_2\":0,\"tshirt_1\":57,\"makeup_1\":0,\"bags_2\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"chain_1\":0,\"lipstick_4\":0,\"bproof_2\":0,\"hair_color_1\":0,\"decals_2\":0,\"pants_2\":4,\"age_2\":0,\"glasses_2\":0,\"ears_2\":0,\"arms\":11,\"lipstick_1\":0,\"ears_1\":-1,\"mask_2\":0,\"sex\":0,\"lipstick_3\":0,\"helmet_1\":-1,\"shoes_2\":0,\"beard_2\":0,\"beard_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"glasses_1\":0,\"bproof_1\":0,\"mask_1\":0,\"decals_1\":0,\"hair_1\":0,\"eyebrows_2\":0,\"beard_3\":0,\"age_1\":0,\"tshirt_2\":0,\"skin\":0,\"torso_2\":0,\"eyebrows_1\":0,\"face\":0,\"shoes_1\":10,\"pants_1\":24}', '{\"hair_2\":0,\"hair_color_2\":0,\"torso_1\":57,\"bags_1\":0,\"helmet_2\":0,\"chain_2\":0,\"eyebrows_3\":0,\"makeup_3\":0,\"makeup_2\":0,\"tshirt_1\":38,\"makeup_1\":0,\"bags_2\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"chain_1\":0,\"lipstick_4\":0,\"bproof_2\":0,\"hair_color_1\":0,\"decals_2\":0,\"pants_2\":1,\"age_2\":0,\"glasses_2\":0,\"ears_2\":0,\"arms\":21,\"lipstick_1\":0,\"ears_1\":-1,\"mask_2\":0,\"sex\":1,\"lipstick_3\":0,\"helmet_1\":-1,\"shoes_2\":0,\"beard_2\":0,\"beard_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"glasses_1\":5,\"bproof_1\":0,\"mask_1\":0,\"decals_1\":1,\"hair_1\":0,\"eyebrows_2\":0,\"beard_3\":0,\"age_1\":0,\"tshirt_2\":0,\"skin\":0,\"torso_2\":0,\"eyebrows_1\":0,\"face\":0,\"shoes_1\":49,\"pants_1\":11}'),
 (21, 'taxi', 3, 'uber', 'Uber', 1000, '{\"hair_2\":0,\"hair_color_2\":0,\"torso_1\":26,\"bags_1\":0,\"helmet_2\":0,\"chain_2\":0,\"eyebrows_3\":0,\"makeup_3\":0,\"makeup_2\":0,\"tshirt_1\":57,\"makeup_1\":0,\"bags_2\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"chain_1\":0,\"lipstick_4\":0,\"bproof_2\":0,\"hair_color_1\":0,\"decals_2\":0,\"pants_2\":4,\"age_2\":0,\"glasses_2\":0,\"ears_2\":0,\"arms\":11,\"lipstick_1\":0,\"ears_1\":-1,\"mask_2\":0,\"sex\":0,\"lipstick_3\":0,\"helmet_1\":-1,\"shoes_2\":0,\"beard_2\":0,\"beard_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"glasses_1\":0,\"bproof_1\":0,\"mask_1\":0,\"decals_1\":0,\"hair_1\":0,\"eyebrows_2\":0,\"beard_3\":0,\"age_1\":0,\"tshirt_2\":0,\"skin\":0,\"torso_2\":0,\"eyebrows_1\":0,\"face\":0,\"shoes_1\":10,\"pants_1\":24}', '{\"hair_2\":0,\"hair_color_2\":0,\"torso_1\":57,\"bags_1\":0,\"helmet_2\":0,\"chain_2\":0,\"eyebrows_3\":0,\"makeup_3\":0,\"makeup_2\":0,\"tshirt_1\":38,\"makeup_1\":0,\"bags_2\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"chain_1\":0,\"lipstick_4\":0,\"bproof_2\":0,\"hair_color_1\":0,\"decals_2\":0,\"pants_2\":1,\"age_2\":0,\"glasses_2\":0,\"ears_2\":0,\"arms\":21,\"lipstick_1\":0,\"ears_1\":-1,\"mask_2\":0,\"sex\":1,\"lipstick_3\":0,\"helmet_1\":-1,\"shoes_2\":0,\"beard_2\":0,\"beard_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"glasses_1\":5,\"bproof_1\":0,\"mask_1\":0,\"decals_1\":1,\"hair_1\":0,\"eyebrows_2\":0,\"beard_3\":0,\"age_1\":0,\"tshirt_2\":0,\"skin\":0,\"torso_2\":0,\"eyebrows_1\":0,\"face\":0,\"shoes_1\":49,\"pants_1\":11}'),
 (22, 'taxi', 4, 'boss', 'Sef', 1500, '{\"hair_2\":0,\"hair_color_2\":0,\"torso_1\":29,\"bags_1\":0,\"helmet_2\":0,\"chain_2\":0,\"eyebrows_3\":0,\"makeup_3\":0,\"makeup_2\":0,\"tshirt_1\":31,\"makeup_1\":0,\"bags_2\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"chain_1\":0,\"lipstick_4\":0,\"bproof_2\":0,\"hair_color_1\":0,\"decals_2\":0,\"pants_2\":4,\"age_2\":0,\"glasses_2\":0,\"ears_2\":0,\"arms\":1,\"lipstick_1\":0,\"ears_1\":-1,\"mask_2\":0,\"sex\":0,\"lipstick_3\":0,\"helmet_1\":-1,\"shoes_2\":0,\"beard_2\":0,\"beard_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"glasses_1\":0,\"bproof_1\":0,\"mask_1\":0,\"decals_1\":0,\"hair_1\":0,\"eyebrows_2\":0,\"beard_3\":0,\"age_1\":0,\"tshirt_2\":0,\"skin\":0,\"torso_2\":4,\"eyebrows_1\":0,\"face\":0,\"shoes_1\":10,\"pants_1\":24}', '{\"hair_2\":0,\"hair_color_2\":0,\"torso_1\":57,\"bags_1\":0,\"helmet_2\":0,\"chain_2\":0,\"eyebrows_3\":0,\"makeup_3\":0,\"makeup_2\":0,\"tshirt_1\":38,\"makeup_1\":0,\"bags_2\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"chain_1\":0,\"lipstick_4\":0,\"bproof_2\":0,\"hair_color_1\":0,\"decals_2\":0,\"pants_2\":1,\"age_2\":0,\"glasses_2\":0,\"ears_2\":0,\"arms\":21,\"lipstick_1\":0,\"ears_1\":-1,\"mask_2\":0,\"sex\":1,\"lipstick_3\":0,\"helmet_1\":-1,\"shoes_2\":0,\"beard_2\":0,\"beard_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"glasses_1\":5,\"bproof_1\":0,\"mask_1\":0,\"decals_1\":1,\"hair_1\":0,\"eyebrows_2\":0,\"beard_3\":0,\"age_1\":0,\"tshirt_2\":0,\"skin\":0,\"torso_2\":0,\"eyebrows_1\":0,\"face\":0,\"shoes_1\":49,\"pants_1\":11}'),
-(23, 'police', 0, 'recruit', 'Kadet', 800, '{}', '{}'),
-(24, 'police', 1, 'officer', 'Saobracajac', 1100, '{}', '{}'),
-(26, 'police', 2, 'sergeant', 'Policajac', 1300, '{}', '{}'),
-(27, 'police', 5, 'chef', 'Komandant', 1600, '{{\"tshirt_1\":96,\"tshirt_2\":0,\"torso_1\":32,\"arms\":4,\"pants_1\":28,\"shoes_1\":10,\"chain_1\":125,\"chain_2\":0,\"helmet_1\":46,\"helmet_2\":3}}', '{}'),
-(28, 'mechanic', 0, 'recrue', 'Segrt', 1000, '{}', '{}'),
-(29, 'mechanic', 1, 'novice', 'Radnik', 1200, '{}', '{}'),
-(30, 'mechanic', 2, 'experimente', 'Iskusni Radnik', 1500, '{}', '{}'),
-(31, 'mechanic', 3, 'chief', 'Podsef', 1700, '{}', '{}'),
-(32, 'mechanic', 4, 'boss', 'Sef', 2000, '{}', '{}'),
-(54, 'ambulance', 0, 'ambulance', 'Vozac', 1200, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
-(55, 'ambulance', 1, 'doctor', 'Medicinski Tehnicar', 1500, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
-(56, 'ambulance', 2, 'chief_doctor', 'Doktor', 1700, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
-(57, 'ambulance', 3, 'boss', 'Kirurg', 2000, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
+(23, 'police', 0, 'recruit', 'Kadet', 400, '{}', '{}'),
+(24, 'police', 1, 'officer', 'Saobracajac', 500, '{}', '{}'),
+(26, 'police', 2, 'sergeant', 'Policajac', 600, '{}', '{}'),
+(27, 'police', 5, 'chef', 'Komandant', 700, '{{\"tshirt_1\":96,\"tshirt_2\":0,\"torso_1\":32,\"arms\":4,\"pants_1\":28,\"shoes_1\":10,\"chain_1\":125,\"chain_2\":0,\"helmet_1\":46,\"helmet_2\":3}}', '{}'),
+(28, 'mechanic', 0, 'recrue', 'Segrt', 450, '{}', '{}'),
+(29, 'mechanic', 1, 'novice', 'Radnik', 700, '{}', '{}'),
+(30, 'mechanic', 2, 'experimente', 'Iskusni Radnik', 1000, '{}', '{}'),
+(31, 'mechanic', 3, 'chief', 'Podsef', 1500, '{}', '{}'),
+(32, 'mechanic', 4, 'boss', 'Sef', 10000, '{}', '{}'),
+(54, 'ambulance', 0, 'ambulance', 'Vozac', 400, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
+(55, 'ambulance', 1, 'doctor', 'Medicinski Tehnicar', 600, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
+(56, 'ambulance', 2, 'chief_doctor', 'Doktor', 800, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
+(57, 'ambulance', 3, 'boss', 'Kirurg', 1200, '{\"tshirt_2\":0,\"hair_color_1\":5,\"glasses_2\":3,\"shoes\":9,\"torso_2\":3,\"hair_color_2\":0,\"pants_1\":24,\"glasses_1\":4,\"hair_1\":2,\"sex\":0,\"decals_2\":0,\"tshirt_1\":15,\"helmet_1\":0,\"helmet_2\":0,\"arms\":92,\"face\":19,\"decals_1\":60,\"torso_1\":13,\"hair_2\":0,\"skin\":34,\"pants_2\":5}', '{\"tshirt_2\":3,\"decals_2\":0,\"glasses\":0,\"hair_1\":2,\"torso_1\":73,\"shoes\":1,\"hair_color_2\":0,\"glasses_1\":19,\"skin\":13,\"face\":6,\"pants_2\":5,\"tshirt_1\":75,\"pants_1\":37,\"helmet_1\":57,\"torso_2\":0,\"arms\":14,\"sex\":1,\"glasses_2\":0,\"decals_1\":0,\"hair_2\":0,\"helmet_2\":0,\"hair_color_1\":0}'),
 (58, 'kosac', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":59,\"torso_1\":89,\"arms\":31,\"pants_1\":36,\"glasses_1\":19,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":1,\"shoes\":35,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":5}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
 (59, 'deliverer', 0, 'employee', 'Radnik', 600, '{\"tshirt_1\":59,\"torso_1\":89,\"arms\":31,\"pants_1\":36,\"glasses_1\":19,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":1,\"shoes\":35,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":5}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
 (60, 'vatrogasac', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":75,\"torso_1\":267,\"arms\":17,\"pants_1\":34,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":4,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":4,\"shoes_1\":71,\"shoes_2\":25,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":0,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":3,\"helmet_1\":126}', '{\"tshirt_1\":75,\"torso_1\":267,\"arms\":17,\"pants_1\":34,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":4,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":4,\"shoes_1\":71,\"shoes_2\":25,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":0,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":3,\"helmet_1\":126}'),
-(62, 'police', 4, 'lieutenant', 'Inspektor', 1500, '{}', '{}'),
-(64, 'police', 3, 'intendent', 'Serif', 1300, '{\"tshirt_1\":5,\"tshirt_2\":3,\"torso_1\":53,\"arms\":17,\"pants_1\":33,\"shoes_1\":62,\"decals_1\":0,\"decals_2\":0,\"helmet_1\":59,\"helmet_2\":9,\"glasses_1\":15,\"glasses_2\":7,\"watch_1\":6,\"mask_1\":56,\"mask_2\":1}', '{}'),
+(62, 'police', 4, 'lieutenant', 'Inspektor', 750, '{}', '{}'),
+(64, 'police', 3, 'intendent', 'Serif', 0, '{\"tshirt_1\":5,\"tshirt_2\":3,\"torso_1\":53,\"arms\":17,\"pants_1\":33,\"shoes_1\":62,\"decals_1\":0,\"decals_2\":0,\"helmet_1\":59,\"helmet_2\":9,\"glasses_1\":15,\"glasses_2\":7,\"watch_1\":6,\"mask_1\":56,\"mask_2\":1}', '{}'),
 (76, 'reporter', 0, 'soldato', 'Pocetnik', 100, '{}', '{}'),
 (77, 'reporter', 1, 'capo', 'Novinar', 600, '{}', '{}'),
 (78, 'reporter', 2, 'consigliere', 'Reporter', 1000, '{}', '{}'),
@@ -1075,7 +1059,7 @@ INSERT INTO `job_grades` (`id`, `job_name`, `grade`, `name`, `label`, `salary`, 
 (89, 'hitman', 2, 'coleader', 'Nepoznato', 2100, '{}', '{}'),
 (90, 'hitman', 3, 'boss', 'Nepoznato', 2700, '{}', '{}'),
 (113, 'vodoinstalater', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":59,\"torso_1\":89,\"arms\":31,\"pants_1\":36,\"glasses_1\":19,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":1,\"shoes\":35,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":5}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
-(114, 'police', 6, 'boss', 'Nacelnik', 2000, '{{\"tshirt_1\":96,\"tshirt_2\":0,\"torso_1\":32,\"arms\":4,\"pants_1\":28,\"shoes_1\":10,\"chain_1\":125,\"chain_2\":0,\"helmet_1\":46,\"helmet_2\":3}}', '{}'),
+(114, 'police', 6, 'boss', 'Nacelnik', 900, '{{\"tshirt_1\":96,\"tshirt_2\":0,\"torso_1\":32,\"arms\":4,\"pants_1\":28,\"shoes_1\":10,\"chain_1\":125,\"chain_2\":0,\"helmet_1\":46,\"helmet_2\":3}}', '{}'),
 (120, 'drvosjeca', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":59,\"torso_1\":89,\"arms\":31,\"pants_1\":36,\"glasses_1\":19,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":1,\"shoes\":35,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":5}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
 (121, 'elektricar', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":59,\"torso_1\":89,\"arms\":31,\"pants_1\":36,\"glasses_1\":19,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":1,\"shoes\":35,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":5}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
 (135, 'ballas', 0, 'soldato', 'Younglings', 0, '{}', '{}'),
@@ -1090,7 +1074,35 @@ INSERT INTO `job_grades` (`id`, `job_name`, `grade`, `name`, `label`, `salary`, 
 (191, 'vlak', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":59,\"torso_1\":89,\"arms\":31,\"pants_1\":36,\"glasses_1\":19,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":1,\"shoes\":35,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":5}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
 (200, 'automafija', 4, 'boss', 'Sef', 300, '{}', '{}'),
 (202, 'spasioc', 0, 'employee', 'Radnik', 200, '{\"tshirt_1\":129,\"torso_1\":148,\"arms\":1,\"pants_1\":16,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":3,\"shoes\":5,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":0,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":-1}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
-(203, 'fastfood', 0, 'employee', 'Uber Eats', 200, '{\"tshirt_1\":59,\"torso_1\":67,\"arms\":1,\"pants_1\":22,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":3,\"shoes_1\":1,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":5,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":17}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}');
+(203, 'fastfood', 0, 'employee', 'Uber Eats', 200, '{\"tshirt_1\":59,\"torso_1\":67,\"arms\":1,\"pants_1\":22,\"glasses_1\":0,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":2,\"glasses_2\":0,\"torso_2\":3,\"shoes_1\":1,\"hair_1\":0,\"skin\":0,\"sex\":0,\"glasses_1\":19,\"pants_2\":5,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":17}', '{\"tshirt_1\":36,\"torso_1\":0,\"arms\":68,\"pants_1\":30,\"glasses_1\":15,\"decals_2\":0,\"hair_color_2\":0,\"helmet_2\":0,\"hair_color_1\":0,\"face\":27,\"glasses_2\":0,\"torso_2\":11,\"shoes\":26,\"hair_1\":5,\"skin\":0,\"sex\":1,\"glasses_1\":15,\"pants_2\":2,\"hair_2\":0,\"decals_1\":0,\"tshirt_2\":0,\"helmet_1\":19}'),
+(240, 'omerta', 0, 'Pocetnik', 'Pocetnik', 1, '{}', '{}'),
+(241, 'omerta', 1, 'Diler', 'Diler', 300, '{}', '{}'),
+(242, 'omerta', 2, 'Podsef', 'Podsef', 300, '{}', '{}'),
+(243, 'omerta', 3, 'boss', 'boss', 300, '{}', '{}'),
+(248, 'montana', 0, 'Pocetnik', 'pocetnik', 0, '{}', '{}'),
+(249, 'montana', 1, 'Diler', 'diler', 0, '{}', '{}'),
+(250, 'montana', 2, 'Podsef', 'podsef', 0, '{}', '{}'),
+(252, 'montana', 3, 'boss', 'boss', 0, '{}', '{}'),
+(253, 'panthers', 0, 'Pocetnik', 'pocetnik', 300, '{}', '{}'),
+(254, 'panthers', 1, 'Diler', 'diler', 300, '{}', '{}'),
+(255, 'panthers', 2, 'Podsef', 'podsef', 300, '{}', '{}'),
+(256, 'panthers', 3, 'boss', 'boss', 300, '{}', '{}'),
+(257, 'sinaloa', 0, 'Pocetnik', 'pocetnik', 0, '{}', '{}'),
+(258, 'sinaloa', 1, 'Diler', 'diler', 0, '{}', '{}'),
+(259, 'sinaloa', 2, 'Podsef', 'podsef', 0, '{}', '{}'),
+(260, 'sinaloa', 3, 'boss', 'boss', 0, '{}', '{}'),
+(261, 'pollos', 0, 'Pocetnik', 'pocetnik', 300, '{}', '{}'),
+(262, 'pollos', 1, 'Diler', 'diler', 300, '{}', '{}'),
+(263, 'pollos', 2, 'Podsef', 'podsef', 300, '{}', '{}'),
+(264, 'pollos', 3, 'boss', 'boss', 300, '{}', '{}'),
+(265, 'zemunski', 0, 'Pocetnik', 'pocetnik', 0, '{}', '{}'),
+(266, 'zemunski', 1, 'Diler', 'diler', 0, '{}', '{}'),
+(267, 'zemunski', 2, 'Podsef', 'podsef', 0, '{}', '{}'),
+(268, 'zemunski', 3, 'boss', 'boss', 0, '{}', '{}'),
+(269, 'devilzeye', 0, 'Pocetnik', 'pocetnik', 300, '{}', '{}'),
+(270, 'devilzeye', 1, 'Diler', 'Diler', 300, '{}', '{}'),
+(271, 'devilzeye', 2, 'Podsef', 'podsef', 300, '{}', '{}'),
+(272, 'devilzeye', 3, 'boss', 'boss', 300, '{}', '{}');
 
 -- --------------------------------------------------------
 
@@ -1106,25 +1118,12 @@ CREATE TABLE IF NOT EXISTS `jsfour_criminalrecord` (
   `charge` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `term` varchar(255) DEFAULT NULL,
-  `classified` int(2) NOT NULL DEFAULT 0,
+  `classified` int(11) NOT NULL DEFAULT 0,
   `identifier` varchar(255) DEFAULT NULL,
   `dob` varchar(255) DEFAULT NULL,
   `warden` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`offense`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `jsfour_criminalrecord`
---
-
-INSERT INTO `jsfour_criminalrecord` (`offense`, `date`, `institution`, `charge`, `description`, `term`, `classified`, `identifier`, `dob`, `warden`) VALUES
-('D-192', '01.05.2021', 'LOS SANTOS', 'UBIO TROJICU', 'QEQEQEQE', '0 60 0 ', 1, 'steam:110000115e9ac6b', '19960405', 'Meha'),
-('D-694', '01.05.2021', 'LOS SANTOS', 'Oruzana pljacka i ubistvo', 'Oruzana pljacka trgovine', '0 60 0 ', 1, 'steam:110000115e9ac6b', '19960405', 'Meha'),
-('A-287', '2021-05-01', 'LOS SANTOS', 'TEST', 'eeqeqqe', '0 30 0 ', 0, 'steam:11000010a1d1042', '01021987', 'Meha'),
-('D-713', '2021-05-01', 'LOS SANTOS', 'Pljacka', 'kkdkdkdk', '2 0 0', 0, 'steam:11000010441bee9', '1998-09-25', 'Tony'),
-('A-270', '2021-05-01', 'LOS SANTOS', 'Ubojstvo', 'Ubio ga ko vola u kupusu jebote', '1 0 0', 0, 'steam:11000010441bee9', '1998-09-25', 'Tony'),
-('F-301', '2021-05-01', 'LOS SANTOS', 'Kurcna', 'ahahah to je to', '5 2 1', 1, 'steam:11000010441bee9', '1998-09-25', 'Tony'),
-('F-330', 'DANAS', 'LOS SANTOS', 'Jeo burek', 'Jeo burek sa sirom', '5 10 0', 1, 'steam:11000010441bee9', '1998-09-25', 'Tony');
+  PRIMARY KEY (`offense`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1145,17 +1144,8 @@ CREATE TABLE IF NOT EXISTS `jsfour_criminaluserinfo` (
   `dob` varchar(255) DEFAULT NULL,
   `sex` varchar(255) DEFAULT NULL,
   `height` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`identifier`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `jsfour_criminaluserinfo`
---
-
-INSERT INTO `jsfour_criminaluserinfo` (`identifier`, `aliases`, `recordid`, `weight`, `eyecolor`, `haircolor`, `firstname`, `lastname`, `dob`, `sex`, `height`) VALUES
-('steam:11000010a1d1042', 'MEHA ', 'F767D915', '71kg', 'Smedja', 'Smedja', 'MEHA ', 'VAN DAMME', '01021987', 'm', '182cm'),
-('steam:11000010441bee9', 'TONY', 'F408C951', '77kg', 'Crna', 'Crna', 'TONY', 'SIKORA', '1998-09-25', 'm', '200cm'),
-('steam:110000115e9ac6b', 'DERIM', 'F755A779', '65kg', 'Crna', 'Crna', 'DERIM', 'UPAKAS', '19960405', 'm', '177cm');
+  PRIMARY KEY (`identifier`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1172,39 +1162,39 @@ CREATE TABLE IF NOT EXISTS `kuce` (
   `prodaja` int(11) NOT NULL DEFAULT 0,
   `rentanje` int(11) DEFAULT 0,
   `rentCijena` int(11) DEFAULT 20,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=356 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=356 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `kuce`
 --
 
 INSERT INTO `kuce` (`ID`, `prop`, `door`, `price`, `prodaja`, `rentanje`, `rentCijena`) VALUES
-(1, 'trevor', '{\"x\":-1112.25,\"y\":-1578.4000244140626,\"z\":7.69999980926513}', 250000, 0, 0, 20),
-(2, 'trevor', '{\"x\":-1114.3399658203126,\"y\":-1579.469970703125,\"z\":7.69999980926513}', 250000, 0, 0, 20),
-(3, 'trevor', '{\"x\":-1114.949951171875,\"y\":-1577.5699462890626,\"z\":3.55999994277954}', 250000, 0, 0, 20),
-(4, 'trevor', '{\"x\":373.9276123046875,\"y\":427.87890625,\"z\":144.7342071533203}', 350000, 0, 0, 20),
-(5, 'nice', '{\"x\":346.4424133300781,\"y\":440.6260070800781,\"z\":146.7830047607422}', 450000, 0, 0, 20),
-(6, 'nice', '{\"x\":331.4053955078125,\"y\":465.68231201171877,\"z\":150.2642059326172}', 450000, 0, 0, 20),
-(7, 'mansion', '{\"x\":316.0714111328125,\"y\":501.47869873046877,\"z\":152.22979736328126}', 750000, 0, 0, 20),
-(8, 'mansion', '{\"x\":325.3428039550781,\"y\":537.4041748046875,\"z\":152.92059326171876}', 750000, 0, 0, 20),
-(9, 'nice', '{\"x\":223.64830017089845,\"y\":513.9970703125,\"z\":139.8170928955078}', 450000, 0, 0, 20),
-(10, 'nice', '{\"x\":119.22889709472656,\"y\":494.32330322265627,\"z\":146.3928985595703}', 450000, 0, 0, 20),
-(11, 'nice', '{\"x\":80.12486267089844,\"y\":485.8677978515625,\"z\":147.25169372558595}', 450000, 0, 0, 20),
-(12, 'nice', '{\"x\":57.8746109008789,\"y\":450.0857849121094,\"z\":146.0814971923828}', 450000, 0, 0, 20),
-(13, 'nice', '{\"x\":42.98038864135742,\"y\":468.6543884277344,\"z\":147.14590454101563}', 450000, 0, 0, 20),
-(14, 'mansion', '{\"x\":-7.60816717147827,\"y\":468.3959045410156,\"z\":144.92080688476563}', 750000, 0, 0, 20),
-(15, 'nice', '{\"x\":-66.48236846923828,\"y\":490.8035888671875,\"z\":143.74229431152345}', 450000, 0, 0, 20),
-(16, 'mansion', '{\"x\":-109.8572006225586,\"y\":502.61920166015627,\"z\":142.3531036376953}', 750000, 0, 0, 20),
-(17, 'nice', '{\"x\":-174.7194061279297,\"y\":502.5979919433594,\"z\":136.47059631347657}', 450000, 0, 0, 20),
-(18, 'nice', '{\"x\":84.86479949951172,\"y\":561.9719848632813,\"z\":181.8175048828125}', 450000, 0, 0, 20),
-(19, 'lester', '{\"x\":119.08489990234375,\"y\":564.5529174804688,\"z\":183.00369262695313}', 150000, 0, 0, 20),
-(20, 'nice', '{\"x\":215.64540100097657,\"y\":620.1937255859375,\"z\":186.66729736328126}', 450000, 0, 0, 20),
-(21, 'nice', '{\"x\":231.95640563964845,\"y\":672.4473266601563,\"z\":188.99549865722657}', 450000, 0, 0, 20),
-(22, 'nice', '{\"x\":-230.5478057861328,\"y\":488.45928955078127,\"z\":127.81749725341797}', 450000, 0, 0, 20),
-(23, 'nice', '{\"x\":-311.9219970703125,\"y\":474.8205871582031,\"z\":110.87239837646485}', 450000, 0, 1, 40),
-(24, 'nice', '{\"x\":-166.7200927734375,\"y\":424.6629943847656,\"z\":110.85579681396485}', 450000, 0, 0, 20),
-(25, 'mansion', '{\"x\":-297.89208984375,\"y\":380.3153076171875,\"z\":111.14530181884766}', 750000, 0, 0, 20),
+(1, 'trevor', '{\"x\":-1112.25,\"y\":-1578.4000244140626,\"z\":7.69999980926513}', 22500, 0, 0, 20),
+(2, 'trevor', '{\"x\":-1114.3399658203126,\"y\":-1579.469970703125,\"z\":7.69999980926513}', 22500, 0, 0, 20),
+(3, 'trevor', '{\"x\":-1114.949951171875,\"y\":-1577.5699462890626,\"z\":3.55999994277954}', 22500, 0, 0, 20),
+(4, 'trevor', '{\"x\":373.9276123046875,\"y\":427.87890625,\"z\":144.7342071533203}', 22500, 0, 0, 20),
+(5, 'nice', '{\"x\":346.4424133300781,\"y\":440.6260070800781,\"z\":146.7830047607422}', 38000, 0, 0, 20),
+(6, 'nice', '{\"x\":331.4053955078125,\"y\":465.68231201171877,\"z\":150.2642059326172}', 38000, 0, 0, 20),
+(7, 'mansion', '{\"x\":316.0714111328125,\"y\":501.47869873046877,\"z\":152.22979736328126}', 65000, 0, 0, 20),
+(8, 'mansion', '{\"x\":325.3428039550781,\"y\":537.4041748046875,\"z\":152.92059326171876}', 65000, 0, 0, 20),
+(9, 'nice', '{\"x\":223.64830017089845,\"y\":513.9970703125,\"z\":139.8170928955078}', 38000, 0, 0, 20),
+(10, 'nice', '{\"x\":119.22889709472656,\"y\":494.32330322265627,\"z\":146.3928985595703}', 38000, 0, 0, 20),
+(11, 'nice', '{\"x\":80.12486267089844,\"y\":485.8677978515625,\"z\":147.25169372558595}', 38000, 0, 0, 20),
+(12, 'nice', '{\"x\":57.8746109008789,\"y\":450.0857849121094,\"z\":146.0814971923828}', 38000, 0, 0, 20),
+(13, 'nice', '{\"x\":42.98038864135742,\"y\":468.6543884277344,\"z\":147.14590454101563}', 38000, 0, 0, 20),
+(14, 'mansion', '{\"x\":-7.60816717147827,\"y\":468.3959045410156,\"z\":144.92080688476563}', 65000, 0, 0, 20),
+(15, 'nice', '{\"x\":-66.48236846923828,\"y\":490.8035888671875,\"z\":143.74229431152345}', 38000, 0, 0, 20),
+(16, 'mansion', '{\"x\":-109.8572006225586,\"y\":502.61920166015627,\"z\":142.3531036376953}', 65000, 0, 0, 20),
+(17, 'nice', '{\"x\":-174.7194061279297,\"y\":502.5979919433594,\"z\":136.47059631347657}', 38000, 0, 0, 20),
+(18, 'nice', '{\"x\":84.86479949951172,\"y\":561.9719848632813,\"z\":181.8175048828125}', 38000, 0, 0, 20),
+(19, 'lester', '{\"x\":119.08489990234375,\"y\":564.5529174804688,\"z\":183.00369262695313}', 25000, 0, 0, 20),
+(20, 'nice', '{\"x\":215.64540100097657,\"y\":620.1937255859375,\"z\":186.66729736328126}', 38000, 0, 0, 20),
+(21, 'nice', '{\"x\":231.95640563964845,\"y\":672.4473266601563,\"z\":188.99549865722657}', 38000, 0, 0, 20),
+(22, 'nice', '{\"x\":-230.5478057861328,\"y\":488.45928955078127,\"z\":127.81749725341797}', 38000, 0, 0, 20),
+(23, 'nice', '{\"x\":-311.9219970703125,\"y\":474.8205871582031,\"z\":110.87239837646485}', 38000, 0, 1, 40),
+(24, 'nice', '{\"x\":-166.7200927734375,\"y\":424.6629943847656,\"z\":110.85579681396485}', 38000, 0, 0, 20),
+(25, 'mansion', '{\"x\":-297.89208984375,\"y\":380.3153076171875,\"z\":111.14530181884766}', 65000, 0, 0, 20),
 (26, 'lester', '{\"x\":-328.2933044433594,\"y\":369.9056091308594,\"z\":109.05599975585938}', 150000, 0, 0, 20),
 (27, 'nice', '{\"x\":-371.7889099121094,\"y\":344.114990234375,\"z\":108.9926986694336}', 450000, 0, 0, 20),
 (28, 'nice', '{\"x\":-409.4172058105469,\"y\":341.6883850097656,\"z\":107.9573974609375}', 450000, 0, 0, 20),
@@ -1510,19 +1500,9 @@ CREATE TABLE IF NOT EXISTS `kuce_oruzja` (
   `owner` int(11) DEFAULT NULL,
   `kuca` int(11) DEFAULT NULL,
   `ime` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`ID`) USING BTREE,
   KEY `kuca` (`kuca`,`owner`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `kuce_oruzja`
---
-
-INSERT INTO `kuce_oruzja` (`ID`, `kolicina`, `owner`, `kuca`, `ime`) VALUES
-(17, 200, 10000, 23, 'WEAPON_PISTOL'),
-(5, 250, 10000, 23, 'WEAPON_PISTOL'),
-(15, 5, 250, 10000, '23'),
-(18, 250, 10000, 29, 'WEAPON_PISTOL');
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1536,17 +1516,9 @@ CREATE TABLE IF NOT EXISTS `kuce_outfit` (
   `ime` varchar(255) DEFAULT NULL,
   `skin` longtext DEFAULT NULL,
   `owner` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`ID`) USING BTREE,
   KEY `owner` (`owner`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `kuce_outfit`
---
-
-INSERT INTO `kuce_outfit` (`ID`, `ime`, `skin`, `owner`) VALUES
-(3, 'Otmjeni outfit', '{\"bags_1\":0,\"bproof_1\":0,\"eyebrows_3\":0,\"chest_1\":0,\"eyebrows_4\":0,\"jaw_2\":0,\"face\":19,\"bproof_2\":0,\"blush_1\":0,\"lip_thickness\":0,\"makeup_1\":0,\"chin_2\":0,\"eyebrows_1\":2,\"cheeks_1\":0,\"eye_color\":0,\"lipstick_3\":32,\"beard_3\":61,\"pants_1\":10,\"eyebrows_2\":10,\"nose_1\":0,\"nose_5\":0,\"shoes_1\":1,\"helmet_2\":-1,\"chain_1\":0,\"shoes_2\":2,\"sex\":0,\"pants_2\":0,\"beard_4\":0,\"chest_2\":0,\"lipstick_1\":0,\"sun_1\":0,\"age_1\":0,\"chain_2\":0,\"skin\":0,\"eye_squint\":0,\"neck_thickness\":0,\"bracelets_2\":0,\"bags_2\":0,\"jaw_1\":0,\"eyebrows_5\":0,\"nose_2\":0,\"sun_2\":0,\"arms_2\":0,\"chin_4\":0,\"moles_2\":0,\"chin_3\":0,\"hair_1\":0,\"cheeks_3\":0,\"blush_3\":\"2\",\"face_md_weight\":50,\"torso_2\":0,\"age_2\":0,\"mask_1\":0,\"complexion_2\":0,\"chin_1\":0,\"mask_2\":0,\"makeup_4\":0,\"ears_2\":-1,\"glasses_2\":1,\"hair_2\":0,\"chest_3\":0,\"nose_6\":0,\"lipstick_4\":0,\"blemishes_2\":0,\"glasses_1\":5,\"beard_1\":2,\"beard_2\":10,\"skin_md_weight\":50,\"decals_1\":0,\"tshirt_1\":3,\"eyebrows_6\":0,\"lipstick_2\":0,\"decals_2\":0,\"tshirt_2\":0,\"makeup_2\":0,\"cheeks_2\":0,\"bodyb_2\":0,\"hair_color_2\":0,\"watches_2\":-1,\"bodyb_1\":0,\"dad\":12,\"mom\":21,\"hair_color_1\":0,\"ears_1\":-1,\"moles_1\":0,\"watches_1\":-1,\"nose_3\":0,\"blush_2\":0,\"arms\":1,\"helmet_1\":-1,\"blemishes_1\":0,\"torso_1\":4,\"makeup_3\":0,\"complexion_1\":0,\"nose_4\":0,\"bracelets_1\":-1}', 10000),
-(2, 'Drugi outfit', '{\"bags_1\":0,\"bproof_1\":0,\"eyebrows_3\":0,\"chest_1\":0,\"eyebrows_4\":0,\"jaw_2\":0,\"face\":19,\"bproof_2\":0,\"blush_1\":0,\"lip_thickness\":0,\"makeup_1\":0,\"chin_2\":0,\"eyebrows_1\":2,\"cheeks_1\":0,\"eye_color\":0,\"lipstick_3\":32,\"beard_3\":61,\"pants_1\":1,\"eyebrows_2\":10,\"nose_1\":0,\"nose_5\":0,\"shoes_1\":1,\"helmet_2\":-1,\"chain_1\":0,\"shoes_2\":2,\"sex\":0,\"pants_2\":1,\"beard_4\":0,\"chest_2\":0,\"lipstick_1\":0,\"sun_1\":0,\"age_1\":0,\"chain_2\":0,\"skin\":0,\"eye_squint\":0,\"neck_thickness\":0,\"bracelets_2\":0,\"bags_2\":0,\"jaw_1\":0,\"eyebrows_5\":0,\"nose_2\":0,\"sun_2\":0,\"arms_2\":0,\"chin_4\":0,\"moles_2\":0,\"chin_3\":0,\"hair_1\":0,\"cheeks_3\":0,\"blush_3\":\"2\",\"face_md_weight\":50,\"torso_2\":0,\"age_2\":0,\"mask_1\":0,\"complexion_2\":0,\"chin_1\":0,\"mask_2\":0,\"makeup_4\":0,\"ears_2\":-1,\"glasses_2\":1,\"hair_2\":0,\"chest_3\":0,\"nose_6\":0,\"lipstick_4\":0,\"blemishes_2\":0,\"glasses_1\":5,\"beard_1\":2,\"beard_2\":10,\"skin_md_weight\":50,\"decals_1\":0,\"tshirt_1\":0,\"eyebrows_6\":0,\"lipstick_2\":0,\"decals_2\":0,\"tshirt_2\":2,\"makeup_2\":0,\"cheeks_2\":0,\"bodyb_2\":0,\"hair_color_2\":0,\"watches_2\":-1,\"bodyb_1\":0,\"dad\":12,\"mom\":21,\"hair_color_1\":0,\"ears_1\":-1,\"moles_1\":0,\"watches_1\":-1,\"nose_3\":0,\"blush_2\":0,\"arms\":1,\"helmet_1\":-1,\"blemishes_1\":0,\"torso_1\":4,\"makeup_3\":0,\"complexion_1\":0,\"nose_4\":0,\"bracelets_1\":-1}', 10000);
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1561,22 +1533,11 @@ CREATE TABLE IF NOT EXISTS `kuce_stvari` (
   `kolicina` varchar(255) DEFAULT NULL,
   `owner` int(11) DEFAULT NULL,
   `kuca` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`ID`) USING BTREE,
   KEY `item` (`item`) USING BTREE,
   KEY `owner` (`owner`) USING BTREE,
   KEY `kuca` (`kuca`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `kuce_stvari`
---
-
-INSERT INTO `kuce_stvari` (`ID`, `item`, `kolicina`, `owner`, `kuca`) VALUES
-(4, '11', '4', 10000, 23),
-(8, '4', '11', 5, 10000),
-(24, '156', '5', 10000, 29),
-(23, '11', '1', 10000, 29),
-(22, '92', '1', 10000, 23);
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1588,8 +1549,8 @@ DROP TABLE IF EXISTS `licenses`;
 CREATE TABLE IF NOT EXISTS `licenses` (
   `type` varchar(60) NOT NULL,
   `label` varchar(60) NOT NULL,
-  PRIMARY KEY (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`type`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `licenses`
@@ -1622,8 +1583,8 @@ CREATE TABLE IF NOT EXISTS `mafije` (
   `DeleteV` varchar(250) NOT NULL DEFAULT '{}',
   `LokVozila` varchar(250) NOT NULL DEFAULT '{}',
   `CrateDrop` varchar(250) NOT NULL DEFAULT '{}',
-  `Vozila` longtext NOT NULL DEFAULT '{}',
-  `Oruzja` longtext NOT NULL DEFAULT '{}',
+  `Vozila` longtext NOT NULL,
+  `Oruzja` longtext NOT NULL,
   `Boje` varchar(255) NOT NULL DEFAULT '{}',
   `Ulaz` varchar(250) NOT NULL DEFAULT '{}',
   `Izlaz` varchar(250) NOT NULL DEFAULT '{}',
@@ -1632,7 +1593,7 @@ CREATE TABLE IF NOT EXISTS `mafije` (
   `LokVozila2` varchar(250) NOT NULL DEFAULT '{}',
   `Kokain` varchar(255) NOT NULL DEFAULT '{}',
   `KamionK` varchar(255) NOT NULL DEFAULT '{}',
-  `Skladiste` int(5) NOT NULL DEFAULT 0,
+  `Skladiste` int(11) NOT NULL DEFAULT 0,
   `Posao` int(11) NOT NULL DEFAULT 0,
   `KPosao` varchar(255) NOT NULL DEFAULT '{}',
   `PosaoSpawn` varchar(255) NOT NULL DEFAULT '{}',
@@ -1640,8 +1601,21 @@ CREATE TABLE IF NOT EXISTS `mafije` (
   `KamionH` varchar(255) NOT NULL DEFAULT '{}',
   `Skladiste2` int(11) NOT NULL DEFAULT 0,
   `Avion` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `mafije`
+--
+
+INSERT INTO `mafije` (`ID`, `Ime`, `Label`, `Rankovi`, `Oruzarnica`, `Lider`, `SpawnV`, `DeleteV`, `LokVozila`, `CrateDrop`, `Vozila`, `Oruzja`, `Boje`, `Ulaz`, `Izlaz`, `Gradonacelnik`, `DeleteV2`, `LokVozila2`, `Kokain`, `KamionK`, `Skladiste`, `Posao`, `KPosao`, `PosaoSpawn`, `Heroin`, `KamionH`, `Skladiste2`, `Avion`) VALUES
+(28, 'omerta', 'omerta', '[{\"ID\":0,\"Ime\":\"Pocetnik\"},{\"ID\":1,\"Ime\":\"Diler\"},{\"ID\":2,\"Ime\":\"Podsef\"},{\"ID\":3,\"Ime\":\"boss\"}]', '[-811.65625,175.20733642578126,75.7453384399414]', '[-811.5560913085938,181.09063720703126,75.74079895019531]', '[-811.4532470703125,187.16062927246095,71.47862243652344]', '[-817.8375854492188,185.07177734375,71.32868194580078]', '[-822.4115600585938,181.62937927246095,70.76243591308594,126.18638610839844]', '{}', '[{\"Ime\":\"zastava101\",\"Label\":\"Zastava 101\"}]', '{}', '[{\"Ime\":\"Blip\",\"Boja\":1}]', '{}', '{}', 0, '{}', '{}', '[-1114.0413818359376,4926.70556640625,217.1011505126953]', '{}', 1, 0, '{}', '{}', '[-1106.9371337890626,4922.5107421875,216.10316467285157]', '{}', 1, 0),
+(29, 'montana', 'montana', '[{\"ID\":0,\"Ime\":\"Pocetnik\"},{\"ID\":1,\"Ime\":\"Diler\"},{\"ID\":2,\"Ime\":\"Podsef\"},{\"ID\":3,\"Ime\":\"boss\"}]', '[-1541.2978515625,91.93569946289063,52.89733505249023]', '[-1541.0174560546876,92.28370666503906,56.95387649536133]', '[-1524.326904296875,82.01624298095703,55.58827209472656]', '[-1528.9996337890626,81.60293579101563,55.65853500366211]', '[-1519.75244140625,87.71495819091797,55.35099411010742,265.9933776855469]', '{}', '[{\"Ime\":\"zastava101\",\"Label\":\"Zastava 101\"}]', '{}', '[{\"Ime\":\"Blip\",\"Boja\":26},{\"B\":26,\"R\":26,\"Ime\":\"Vozilo\",\"G\":26}]', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0),
+(30, 'panthers', 'panthers', '[{\"ID\":0,\"Ime\":\"Pocetnik\"},{\"ID\":1,\"Ime\":\"Diler\"},{\"ID\":2,\"Ime\":\"Podsef\"},{\"ID\":3,\"Ime\":\"boss\"}]', '[-574.8690185546875,291.2066650390625,78.17670440673828]', '[-561.3453979492188,281.8149108886719,84.67633819580078]', '[-565.8964233398438,302.029296875,82.13440704345703]', '[-553.1580200195313,308.3945007324219,82.21385955810547]', '[-551.0376586914063,303.62713623046877,82.15904235839844,273.2047119140625]', '{}', '[{\"Ime\":\"zastava101\",\"Label\":\"Zastava 101\"}]', '{}', '[{\"Ime\":\"Blip\",\"Boja\":58}]', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0),
+(31, 'sinaloa', 'sinaloa', '[{\"Ime\":\"Pocetnik\",\"ID\":0},{\"Ime\":\"Diler\",\"ID\":1},{\"Ime\":\"Podsef\",\"ID\":2},{\"Ime\":\"boss\",\"ID\":3}]', '[1414.9927978515626,1163.337646484375,113.33426666259766]', '[1414.8638916015626,1160.1529541015626,113.67388916015625]', '[1412.3978271484376,1118.8829345703126,113.8379135131836]', '{}', '[1398.4110107421876,1119.092529296875,113.8377685546875,88.17010498046875]', '{}', '[{\"Ime\":\"zastava101\",\"Label\":\"zastava\"}]', '{}', '[{\"Ime\":\"Blip\",\"Boja\":64}]', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0),
+(32, 'pollos', 'pollos', '[{\"Ime\":\"Pocetnik\",\"ID\":0},{\"Ime\":\"Diler\",\"ID\":1},{\"Ime\":\"Podsef\",\"ID\":2},{\"Ime\":\"boss\",\"ID\":3}]', '[9.5750093460083,528.8480834960938,169.6189727783203]', '[-1.46080720424652,535.55859375,174.34254455566407]', '[24.53618049621582,542.997314453125,175.0275115966797]', '[20.54754447937011,545.3576049804688,175.0275115966797]', '[13.37284183502197,549.2056884765625,175.1866912841797,102.77726745605469]', '{}', '[{\"Ime\":\"zastava101\",\"Label\":\"Zastava 101\"}]', '{}', '[{\"Ime\":\"Blip\",\"Boja\":8}]', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0),
+(33, 'zemunski', 'zemunski', '[{\"Ime\":\"Pocetnik\",\"ID\":0},{\"Ime\":\"Diler\",\"ID\":1},{\"Ime\":\"Podsef\",\"ID\":2},{\"Ime\":\"boss\",\"ID\":3}]', '[-1792.0670166015626,441.86492919921877,127.50787353515625]', '[-1757.3079833984376,427.458251953125,126.68441009521485]', '[-1789.4769287109376,462.2101745605469,127.30819702148438]', '[-1791.305908203125,456.5953369140625,127.30819702148438]', '[-1797.825439453125,458.25054931640627,127.30819702148438,109.52713775634766]', '{}', '[{\"Ime\":\"zastava101\",\"Label\":\"Zastava 101\"}]', '{}', '[{\"Ime\":\"Blip\",\"Boja\":73}]', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0),
+(34, 'devilzeye', 'devilzeye', '[{\"Ime\":\"Pocetnik\",\"ID\":0},{\"Ime\":\"Diler\",\"ID\":1},{\"Ime\":\"Podsef\",\"ID\":2},{\"Ime\":\"boss\",\"ID\":3}]', '[-1928.878662109375,2059.557373046875,139.83741760253907]', '[-1911.7056884765626,2074.21484375,139.38600158691407]', '[-1920.3162841796876,2043.9605712890626,139.73562622070313]', '[-1920.0379638671876,2048.2080078125,139.73562622070313]', '[-1913.44091796875,2041.1300048828126,139.7372283935547,177.92481994628907]', '{}', '[{\"Ime\":\"zastava101\",\"Label\":\"Zastava 101\"}]', '{}', '[{\"Ime\":\"Blip\",\"Boja\":43}]', '{}', '{}', 0, '{}', '{}', '{}', '{}', 0, 0, '{}', '{}', '{}', '{}', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1656,9 +1630,19 @@ CREATE TABLE IF NOT EXISTS `meh_narudzbe` (
   `narudzba` longtext DEFAULT NULL,
   `vrijeme` datetime DEFAULT NULL,
   `broj` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`ID`) USING BTREE,
   KEY `tablica` (`tablica`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=175 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `meh_narudzbe`
+--
+
+INSERT INTO `meh_narudzbe` (`ID`, `tablica`, `narudzba`, `vrijeme`, `broj`) VALUES
+(158, 'III 954', '[{\"modNum\":10,\"price\":26,\"label\":\"Lowrider [11] Classic Rod \",\"modType\":\"modFrontWheels\",\"wheelType\":2,\"tablica\":\"III 954\"},{\"modNum\":0,\"price\":28,\"label\":\"Auspuh [1] Titanium Tuner Exhaust \",\"modType\":\"modExhaust\",\"tablica\":\"III 954\"},{\"modNum\":12,\"price\":6,\"label\":\"Glavna [6] Matte Black \",\"modType\":\"color1\",\"tablica\":\"III 954\"},{\"modNum\":2,\"price\":6,\"label\":\"Tablica [3] Zuto na plavo \",\"modType\":\"plateIndex\",\"tablica\":\"III 954\"}]', '2022-11-26 19:33:50', 1092880),
+(155, 'VGM 553', '[{\"modNum\":12,\"price\":6,\"label\":\"Glavna [6] Matte Black \",\"modType\":\"color1\",\"tablica\":\"VGM 553\"},{\"modNum\":true,\"price\":20,\"label\":\"Svijetla Xenon \",\"modType\":\"modXenon\",\"tablica\":\"VGM 553\"}]', '2022-11-26 19:16:06', 4918169),
+(156, 'HLH 584', '[{\"modNum\":2,\"price\":900,\"label\":\"Stage tuning Stage 2 \",\"modType\":\"stage\",\"tablica\":\"HLH 584\"},{\"modNum\":3,\"price\":111,\"label\":\"Suspenzija Level 4 \",\"modType\":\"modSuspension\",\"tablica\":\"HLH 584\"}]', '2022-11-26 19:25:39', 1092880),
+(157, 'III 954', '[{\"modNum\":true,\"price\":313,\"label\":\"Turbo Turbo \",\"modType\":\"modTurbo\",\"tablica\":\"III 954\"},{\"modNum\":4,\"price\":953,\"label\":\"Motor Level 5 \",\"modType\":\"modEngine\",\"tablica\":\"III 954\"},{\"modNum\":3,\"price\":430,\"label\":\"Mjenjac Level 4 \",\"modType\":\"modTransmission\",\"tablica\":\"III 954\"},{\"modNum\":1,\"price\":900,\"label\":\"Stage tuning Stage 1 \",\"modType\":\"stage\",\"tablica\":\"III 954\"}]', '2022-11-26 19:30:49', 1092880);
 
 -- --------------------------------------------------------
 
@@ -1670,23 +1654,8 @@ DROP TABLE IF EXISTS `minute`;
 CREATE TABLE IF NOT EXISTS `minute` (
   `identifier` int(11) NOT NULL,
   `minute` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`identifier`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `minute`
---
-
-INSERT INTO `minute` (`identifier`, `minute`) VALUES
-(10000, 15790),
-(10003, 600),
-(10006, 15),
-(10007, 5),
-(10008, 5),
-(10010, 270),
-(10011, 110);
-
--- --------------------------------------------------------
+  PRIMARY KEY (`identifier`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=FIXED;
 
 --
 -- Table structure for table `mskladiste`
@@ -1700,10 +1669,8 @@ CREATE TABLE IF NOT EXISTS `mskladiste` (
   `kokain` int(11) NOT NULL DEFAULT 0,
   `gljive` int(11) NOT NULL DEFAULT 0,
   `heroin` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `narudzbe`
@@ -1717,8 +1684,8 @@ CREATE TABLE IF NOT EXISTS `narudzbe` (
   `Kolicina` int(11) NOT NULL,
   `Rezervirano` int(11) NOT NULL DEFAULT 0,
   `Cijena` int(11) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1751,50 +1718,6 @@ CREATE TABLE IF NOT EXISTS `owned_vehicles` (
   KEY `owner` (`owner`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
---
--- Dumping data for table `owned_vehicles`
---
-
-INSERT INTO `owned_vehicles` (`owner`, `state`, `plate`, `vehicle`, `type`, `job`, `stored`, `lasthouse`, `mjenjac`, `brod`, `model`, `kilometri`, `stage`, `motor`, `zracni`, `servis`, `kvar`, `naziv`) VALUES
-(10000, 1, 'AIY 300', '{\"color1\":4,\"modGrille\":-1,\"modDoorSpeaker\":-1,\"health\":1000,\"modRightFender\":-1,\"modArmor\":-1,\"modDial\":-1,\"modHood\":-1,\"modLivery\":-1,\"bodyHealth\":1000.0,\"modSmokeEnabled\":1,\"plate\":\"AIY 300\",\"tyres\":[false,false,false,false,false,false,false],\"modTrimB\":-1,\"modExhaust\":-1,\"modTransmission\":-1,\"pearlescentColor\":4,\"modSideSkirt\":-1,\"modAPlate\":-1,\"modShifterLeavers\":-1,\"dirtLevel\":0.20720222592353,\"tyreSmokeColor\":[255,255,255],\"fuel\":64.8740005493164,\"modHorns\":-1,\"plateIndex\":4,\"model\":1152513354,\"modSteeringWheel\":-1,\"modStruts\":-1,\"modFrontBumper\":-1,\"modArchCover\":-1,\"engineHealth\":1000.0,\"modBackWheels\":-1,\"neonColor\":[255,0,255],\"modRoof\":-1,\"modSuspension\":-1,\"windowTint\":-1,\"wheelColor\":4,\"modWindows\":-1,\"modEngineBlock\":-1,\"modFrontWheels\":-1,\"modSpoilers\":-1,\"color2\":4,\"extras\":{\"2\":true,\"3\":true,\"4\":true,\"5\":true,\"11\":true,\"12\":false,\"8\":true},\"modFender\":-1,\"modSeats\":-1,\"neonEnabled\":[false,false,false,false],\"svijetlaColor\":255,\"modPlateHolder\":-1,\"modRearBumper\":-1,\"modTrimA\":-1,\"modTrunk\":-1,\"modOrnaments\":-1,\"modAirFilter\":-1,\"modDashboard\":-1,\"modTank\":-1,\"modAerials\":-1,\"modHydrolic\":-1,\"modVanityPlate\":-1,\"modFrame\":-1,\"modBrakes\":-1,\"wheels\":0,\"modTurbo\":false,\"modSpeakers\":-1,\"modEngine\":1,\"modXenon\":false,\"doors\":[false,false,false,false,false,false]}', 'car', NULL, 0, 0, 1, 0, '1152513354', 8.681, 0, NULL, 0, 30, 0, NULL),
-(10010, 0, 'AJV 642', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":31,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"AJV 642\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":107,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":31,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":1,\"model\":-1347153492,\"fuel\":64.75994873046875,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-1347153492', 2.81, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'AZU 585', '{\"color1\":138,\"modGrille\":-1,\"modDoorSpeaker\":-1,\"health\":998,\"modRightFender\":-1,\"modArmor\":-1,\"modDial\":-1,\"modHood\":-1,\"modLivery\":-1,\"bodyHealth\":998.75,\"modSmokeEnabled\":1,\"plate\":\"AZU 585\",\"tyres\":[false,false,false,false,false,false,false],\"modTrimB\":-1,\"modExhaust\":-1,\"modTransmission\":-1,\"pearlescentColor\":4,\"modSideSkirt\":-1,\"modAPlate\":-1,\"modShifterLeavers\":-1,\"dirtLevel\":1.98138618469238,\"tyreSmokeColor\":[255,255,255],\"fuel\":64.5479965209961,\"modHorns\":-1,\"plateIndex\":1,\"model\":1932295607,\"modSteeringWheel\":-1,\"modStruts\":-1,\"modFrontBumper\":-1,\"modArchCover\":-1,\"engineHealth\":944.20166015625,\"modBackWheels\":-1,\"neonColor\":[255,0,255],\"modRoof\":-1,\"modSuspension\":-1,\"windowTint\":-1,\"wheelColor\":156,\"modWindows\":-1,\"modEngineBlock\":-1,\"modFrontWheels\":-1,\"modSpoilers\":-1,\"color2\":15,\"extras\":{\"1\":false},\"modFender\":-1,\"modSeats\":-1,\"neonEnabled\":[false,false,false,false],\"svijetlaColor\":255,\"modPlateHolder\":-1,\"modRearBumper\":-1,\"modTrimA\":-1,\"modTrunk\":-1,\"modOrnaments\":-1,\"modAirFilter\":-1,\"modDashboard\":-1,\"modTank\":-1,\"modAerials\":-1,\"modHydrolic\":-1,\"modVanityPlate\":-1,\"modFrame\":-1,\"modBrakes\":-1,\"wheels\":5,\"modTurbo\":false,\"modSpeakers\":-1,\"modEngine\":-1,\"modXenon\":false,\"doors\":[false,false,false,false,false,false]}', 'car', NULL, 0, 0, 1, 0, '1932295607', 10.264, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'CBV 957', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":6,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"CBV 957\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"9\":false,\"8\":false,\"3\":true,\"2\":false,\"5\":false,\"4\":false,\"7\":false,\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":6,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":-243837818,\"fuel\":64.83198547363281,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-243837818', 1.286, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'CCO 124', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":28,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"CCO 124\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":14,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"7\":true,\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":28,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":54381077,\"fuel\":64.81996154785156,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '54381077', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'DBM 622', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":53,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"DBM 622\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":5,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":53,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modBrakes\":-1,\"modRoof\":-1,\"dirtLevel\":0.0,\"modOrnaments\":-1,\"modPlateHolder\":-1,\"modTrimA\":-1,\"modDoorSpeaker\":-1,\"windowTint\":-1,\"wheels\":0,\"neonColor\":[255,0,255],\"modHorns\":-1,\"modFender\":-1,\"model\":1462416745,\"fuel\":64.95802307128906,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modWindows\":-1,\"modLivery\":0,\"modStruts\":-1,\"modDial\":-1,\"modHood\":-1,\"engineHealth\":1000.0,\"modSideSkirt\":-1}', 'car', NULL, 0, 0, 1, 0, '1462416745', 0.059, 0, NULL, 0, 30, 0, NULL),
-(10010, 0, 'EBI 256', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":39,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"EBI 256\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":[],\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":67,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":676238631,\"fuel\":64.86207580566406,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '676238631', 2.819, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'FOU 131', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":28,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"FOU 131\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":4,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"4\":false,\"3\":true,\"2\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":28,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":2057197469,\"fuel\":64.76200103759766,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '2057197469', 0.09, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'HBL 461', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":1,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"HBL 461\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":28,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":343720538,\"fuel\":99.85008239746094,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '343720538', 0.082, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'HXR 546', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":10,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"HXR 546\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":10,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"dirtLevel\":0.0,\"modBrakes\":-1,\"modRoof\":-1,\"bodyHealth\":1000.0,\"modTrimA\":-1,\"modHood\":-1,\"neonColor\":[255,0,255],\"wheels\":0,\"windowTint\":-1,\"modDoorSpeaker\":-1,\"modHorns\":-1,\"modWindows\":-1,\"modLivery\":-1,\"modOrnaments\":-1,\"fuel\":64.92504119873047,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modFender\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"modRightFender\":-1,\"modSideSkirt\":-1,\"model\":1820016202}', 'car', NULL, 0, 0, 1, 0, '1820016202', 6.611, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'HZY 976', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":134,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"HZY 976\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":134,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":1376955328,\"fuel\":64.74800109863281,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":3,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1376955328', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'IUY 175', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":38,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"IUY 175\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":2,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"3\":false,\"2\":true,\"5\":true,\"4\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":38,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"dirtLevel\":0.0,\"modBrakes\":-1,\"modRoof\":-1,\"bodyHealth\":1000.0,\"modTrimA\":-1,\"modHood\":-1,\"neonColor\":[255,0,255],\"wheels\":2,\"windowTint\":-1,\"modDoorSpeaker\":-1,\"modHorns\":-1,\"modWindows\":-1,\"modLivery\":0,\"modOrnaments\":-1,\"fuel\":64.8740005493164,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modFender\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"modRightFender\":-1,\"modSideSkirt\":-1,\"model\":-2147282465}', 'car', NULL, 0, 0, 1, 0, '-2147282465', 0.466, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'IUZ 411', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":38,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"IUZ 411\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":38,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1156552856,\"fuel\":64.63600158691406,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1156552856', 1.201, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'LAY 157', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":51,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LAY 157\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":103,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":51,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":-834393917,\"fuel\":64.81996154785156,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":2,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-834393917', 0.83, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'LKU 646', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":111,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LKU 646\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":2,\"wheelColor\":60,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"3\":false,\"2\":true,\"5\":false,\"12\":false,\"11\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":49,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":1148527416,\"fuel\":64.95099639892578,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1148527416', 0.323, 0, NULL, 1, 30, 0, NULL),
-(10000, 1, 'LOQ 483', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":138,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LOQ 483\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":5,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":138,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modBrakes\":-1,\"modRoof\":-1,\"dirtLevel\":0.0,\"modOrnaments\":-1,\"modPlateHolder\":-1,\"modTrimA\":-1,\"modDoorSpeaker\":-1,\"windowTint\":-1,\"wheels\":0,\"neonColor\":[255,0,255],\"modHorns\":-1,\"modFender\":-1,\"model\":1462416745,\"fuel\":64.97601318359375,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modWindows\":-1,\"modLivery\":0,\"modStruts\":-1,\"modDial\":-1,\"modHood\":-1,\"engineHealth\":1000.0,\"modSideSkirt\":-1}', 'car', NULL, 0, 0, 1, 0, '1462416745', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'LQU 876', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":15,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"LQU 876\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":138,\"modTrunk\":-1,\"modExhaust\":-1,\"modRearBumper\":-1,\"modHydrolic\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modEngine\":-1,\"modRoof\":-1,\"modSmokeEnabled\":false,\"modBrakes\":-1,\"neonColor\":[255,0,255],\"bodyHealth\":1000.0,\"modTrimA\":-1,\"windowTint\":-1,\"modOrnaments\":-1,\"modHood\":-1,\"modDoorSpeaker\":-1,\"modHorns\":-1,\"model\":1932295607,\"fuel\":64.95198059082031,\"modWindows\":-1,\"modFrontWheels\":-1,\"wheels\":5,\"modLivery\":-1,\"modStruts\":-1,\"modDial\":-1,\"engineHealth\":1000.0,\"dirtLevel\":0.0,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1932295607', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'MAF 770', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":123,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":123,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"MAF 770\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":true,\"12\":false,\"11\":false,\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":123,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":-1727242524,\"fuel\":64.8399658203125,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-1727242524', 0.018, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'MAN 322', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":129,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"MAN 322\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"3\":true,\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":129,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1049637452,\"fuel\":64.8399658203125,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1049637452', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'NRV 438', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":134,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"NRV 438\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false,\"4\":true,\"11\":false,\"10\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":134,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":5,\"model\":613402935,\"fuel\":64.69200134277344,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '613402935', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'NUG 310', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":6,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"NUG 310\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":112,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":[],\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":27,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":1,\"model\":1352183536,\"fuel\":59.62200164794922,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1352183536', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'NUO 048', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":1,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"NUO 048\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"3\":false,\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":1,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":1469861679,\"fuel\":64.78398132324219,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":3,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1469861679', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'OCQ 284', '{\"modSmokeEnabled\":false,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":6,\"modPlateHolder\":-1,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modDashboard\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"OCQ 284\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modSteeringWheel\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"8\":false,\"3\":true,\"2\":false,\"5\":false,\"4\":false,\"7\":false,\"9\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":6,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"dirtLevel\":0.0,\"modBrakes\":-1,\"modRoof\":-1,\"modRightFender\":-1,\"modHood\":-1,\"bodyHealth\":1000.0,\"modTrimA\":-1,\"neonColor\":[255,0,255],\"windowTint\":-1,\"modDoorSpeaker\":-1,\"wheels\":7,\"modFender\":-1,\"modHorns\":-1,\"model\":-243837818,\"fuel\":64.97000122070313,\"modRearBumper\":-1,\"modFrontWheels\":-1,\"modWindows\":-1,\"modLivery\":0,\"modStruts\":-1,\"modDial\":-1,\"engineHealth\":1000.0,\"modSideSkirt\":-1,\"modOrnaments\":-1}', 'car', NULL, 0, 0, 1, 0, '-243837818', 4.243, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'PQL 575', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":111,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":0,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"PQL 575\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":2,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":true,\"3\":false,\"2\":true,\"5\":true,\"4\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":5,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":-2147282465,\"fuel\":64.53800201416016,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-2147282465', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'PSO 533', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":12,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"PSO 533\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true,\"4\":true,\"11\":false,\"10\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":4,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":5,\"model\":336238405,\"fuel\":49.82003021240234,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '336238405', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'QCA 555', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":100,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"QCA 555\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":103,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":100,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":-1825007226,\"fuel\":64.88006591796875,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-1825007226', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'RAV 323', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":112,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":31,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"RAV 323\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":0,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":[],\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":4,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":1,\"model\":-526983904,\"fuel\":59.53800201416015,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '-526983904', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'RGS 911', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":111,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"RGS 911\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":3,\"wheelColor\":68,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"2\":true,\"12\":false,\"11\":false,\"10\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":67,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":640012156,\"fuel\":64.73400115966797,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '640012156', 0.014, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'SGA 921', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":138,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"SGA 921\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":5,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":138,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1462416745,\"fuel\":64.92204284667969,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":0,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1462416745', 0.124, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'SKE 718', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":4,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":51,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"SKE 718\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":105,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false,\"7\":true,\"2\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":51,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":2,\"model\":545326235,\"fuel\":64.8699722290039,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '545326235', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'SRX 150', '{\"modAirFilter\":-1,\"doors\":[false,false,false,false,false,false],\"extras\":{\"12\":false,\"10\":false,\"11\":true},\"modSteeringWheel\":-1,\"modWindows\":-1,\"modStruts\":-1,\"modOrnaments\":-1,\"modDial\":-1,\"modExhaust\":-1,\"wheels\":2,\"plate\":\"SRX 150\",\"modPlateHolder\":-1,\"svijetlaColor\":255,\"modHydrolic\":-1,\"color1\":4,\"modSideSkirt\":-1,\"color2\":12,\"modTrimB\":-1,\"modSuspension\":-1,\"modSeats\":-1,\"health\":996,\"modAPlate\":-1,\"pearlescentColor\":4,\"windowTint\":-1,\"neonColor\":[255,0,255],\"modFrame\":-1,\"bodyHealth\":996.75,\"model\":-58956387,\"tyres\":[false,false,false,false,false,false,false],\"modFender\":-1,\"modArmor\":-1,\"dirtLevel\":0.06516183167695,\"modBrakes\":-1,\"modRightFender\":-1,\"modSpoilers\":-1,\"modSmokeEnabled\":1,\"modXenon\":false,\"modFrontBumper\":-1,\"modLivery\":-1,\"modGrille\":-1,\"modFrontWheels\":-1,\"modBackWheels\":-1,\"modHorns\":-1,\"modRoof\":-1,\"modTrimA\":-1,\"plateIndex\":3,\"modRearBumper\":-1,\"modVanityPlate\":-1,\"engineHealth\":995.875,\"wheelColor\":156,\"tyreSmokeColor\":[255,255,255],\"modTransmission\":-1,\"modSpeakers\":-1,\"modDoorSpeaker\":-1,\"modDashboard\":-1,\"modHood\":-1,\"fuel\":64.04922485351563,\"modEngine\":-1,\"modTank\":-1,\"modTrunk\":-1,\"neonEnabled\":[false,false,false,false],\"modAerials\":-1,\"modShifterLeavers\":-1,\"modEngineBlock\":-1,\"modArchCover\":-1,\"modTurbo\":false}', 'car', NULL, 0, 0, 1, 0, '-58956387', 0.307, 0, NULL, 0, 30, 0, NULL),
-(10000, 1, 'UWX 023', '{\"modHood\":-1,\"modRightFender\":-1,\"modStruts\":-1,\"modWindows\":-1,\"modRoof\":-1,\"modFrontWheels\":-1,\"tyres\":[false,false,false,false,false,false,false],\"modBackWheels\":-1,\"modDial\":-1,\"modSpoilers\":-1,\"modXenon\":false,\"modSpeakers\":-1,\"color1\":0,\"engineHealth\":998.875,\"modSideSkirt\":-1,\"modFrame\":-1,\"modGrille\":-1,\"modArchCover\":-1,\"doors\":[false,false,false,false,false,false],\"wheels\":0,\"modFender\":-1,\"modTurbo\":false,\"neonColor\":[255,0,255],\"bodyHealth\":999.25,\"modDoorSpeaker\":-1,\"modSeats\":-1,\"modAerials\":-1,\"modTransmission\":-1,\"modSmokeEnabled\":1,\"modEngineBlock\":-1,\"tyreSmokeColor\":[255,255,255],\"modAirFilter\":-1,\"health\":1000,\"modHorns\":-1,\"svijetlaColor\":255,\"neonEnabled\":[false,false,false,false],\"windowTint\":-1,\"color2\":0,\"wheelColor\":4,\"extras\":{\"4\":false,\"1\":true,\"2\":false,\"3\":false},\"modTrimB\":-1,\"modRearBumper\":-1,\"modExhaust\":-1,\"modShifterLeavers\":-1,\"modTrimA\":-1,\"modSteeringWheel\":-1,\"modFrontBumper\":-1,\"modArmor\":-1,\"modPlateHolder\":-1,\"modEngine\":-1,\"modTrunk\":-1,\"modBrakes\":-1,\"modOrnaments\":-1,\"modSuspension\":-1,\"dirtLevel\":0.25937604904174,\"modTank\":-1,\"modDashboard\":-1,\"model\":2057197469,\"plate\":\"UWX 023\",\"modAPlate\":-1,\"modVanityPlate\":-1,\"fuel\":59.4209976196289,\"modHydrolic\":-1,\"pearlescentColor\":0,\"modLivery\":0,\"plateIndex\":3}', 'car', NULL, 0, 0, 1, 0, '2057197469', 3.89, 0, 'ta019b58', 0, 30, 0, NULL),
-(10000, 1, 'VKS 585', '{\"modSuspension\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modBackWheels\":-1,\"wheels\":1,\"modTank\":-1,\"dirtLevel\":0.91369575262069,\"modSpeakers\":-1,\"bodyHealth\":995.0,\"plate\":\"VKS 585\",\"modEngine\":-1,\"modWindows\":-1,\"modSpoilers\":-1,\"neonEnabled\":[false,false,false,false],\"modFrontBumper\":-1,\"modSeats\":-1,\"engineHealth\":840.63232421875,\"modSteeringWheel\":-1,\"modAirFilter\":-1,\"modTrimA\":-1,\"modSmokeEnabled\":1,\"fuel\":37.3930549621582,\"modGrille\":-1,\"modFender\":-1,\"pearlescentColor\":68,\"color1\":0,\"modStruts\":-1,\"modLivery\":2,\"doors\":[false,false,false,false,false,false],\"modDial\":-1,\"modDoorSpeaker\":-1,\"modAPlate\":-1,\"modBrakes\":-1,\"color2\":0,\"svijetlaColor\":255,\"extras\":{\"6\":false,\"4\":false,\"5\":false,\"2\":false,\"3\":true,\"1\":false},\"plateIndex\":1,\"neonColor\":[255,0,255],\"modTurbo\":false,\"modRearBumper\":-1,\"modHood\":-1,\"modEngineBlock\":-1,\"modFrontWheels\":-1,\"modTransmission\":-1,\"health\":997,\"modFrame\":-1,\"modRoof\":-1,\"modTrunk\":-1,\"modArmor\":-1,\"model\":-1066214505,\"modTrimB\":-1,\"modExhaust\":-1,\"windowTint\":0,\"modVanityPlate\":-1,\"modAerials\":-1,\"tyreSmokeColor\":[255,255,255],\"modSideSkirt\":-1,\"modOrnaments\":-1,\"modArchCover\":-1,\"modPlateHolder\":-1,\"modHorns\":-1,\"wheelColor\":0,\"modShifterLeavers\":-1,\"modDashboard\":-1,\"tyres\":[false,false,false,false,false,false,false],\"modHydrolic\":-1}', 'car', NULL, 0, 0, 1, 0, '-1066214505', 4.506, 0, NULL, 0, 26534, 0, 'Alfa Giulia Sprint');
-INSERT INTO `owned_vehicles` (`owner`, `state`, `plate`, `vehicle`, `type`, `job`, `stored`, `lasthouse`, `mjenjac`, `brod`, `model`, `kilometri`, `stage`, `motor`, `zracni`, `servis`, `kvar`, `naziv`) VALUES
-(10000, 1, 'WZK 607', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":29,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":29,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"WZK 607\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":4,\"wheelColor\":29,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"8\":true,\"3\":true,\"2\":true,\"5\":true,\"12\":false,\"11\":false,\"4\":true},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":29,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":0,\"model\":1152513354,\"fuel\":64.89805603027344,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1152513354', 0, 0, NULL, 0, 30, 0, NULL),
-(10000, 0, 'XXF 098', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":63,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"XXF 098\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":1,\"wheelColor\":156,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"1\":false,\"12\":true,\"11\":false,\"10\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":63,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":5,\"model\":1525524859,\"fuel\":49.96000671386719,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '1525524859', 0, 0, NULL, 0, 30, 0, NULL),
-(10010, 0, 'YEJ 388', '{\"modSideSkirt\":-1,\"modFrontBumper\":-1,\"pearlescentColor\":0,\"modTurbo\":false,\"modAPlate\":-1,\"color2\":0,\"bodyHealth\":1000.0,\"modGrille\":-1,\"modSeats\":-1,\"modSuspension\":-1,\"doors\":[false,false,false,false,false,false],\"modHorns\":-1,\"health\":1000,\"modFrame\":-1,\"modArmor\":-1,\"modShifterLeavers\":-1,\"plate\":\"YEJ 388\",\"modSpoilers\":-1,\"tyres\":[false,false,false,false,false,false,false],\"plateIndex\":0,\"wheelColor\":0,\"svijetlaColor\":255,\"modTank\":-1,\"modFender\":-1,\"modVanityPlate\":-1,\"tyreSmokeColor\":[255,255,255],\"modAerials\":-1,\"modBackWheels\":-1,\"modTrimB\":-1,\"modTransmission\":-1,\"neonEnabled\":[false,false,false,false],\"modEngineBlock\":-1,\"extras\":{\"12\":false},\"modSpeakers\":-1,\"modArchCover\":-1,\"color1\":0,\"modTrunk\":-1,\"modExhaust\":-1,\"modHydrolic\":-1,\"modEngine\":-1,\"modAirFilter\":-1,\"modXenon\":false,\"modRightFender\":-1,\"modSmokeEnabled\":false,\"modRoof\":-1,\"modBrakes\":-1,\"modDoorSpeaker\":-1,\"dirtLevel\":0.0,\"modPlateHolder\":-1,\"modTrimA\":-1,\"windowTint\":-1,\"modDashboard\":-1,\"modRearBumper\":-1,\"modHood\":-1,\"wheels\":7,\"model\":615801459,\"fuel\":64.80400085449219,\"modWindows\":-1,\"modFrontWheels\":-1,\"modLivery\":-1,\"engineHealth\":1000.0,\"modStruts\":-1,\"modDial\":-1,\"neonColor\":[255,0,255],\"modOrnaments\":-1,\"modSteeringWheel\":-1}', 'car', NULL, 0, 0, 1, 0, '615801459', 0.322, 0, NULL, 0, 30, 0, NULL);
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `phone_app_chat`
@@ -1807,31 +1730,8 @@ CREATE TABLE IF NOT EXISTS `phone_app_chat` (
   `message` varchar(255) NOT NULL,
   `time` timestamp NOT NULL DEFAULT current_timestamp(),
   `identifier` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `phone_app_chat`
---
-
-INSERT INTO `phone_app_chat` (`id`, `channel`, `message`, `time`, `identifier`) VALUES
-(1, 'test', 'test', '2021-04-01 18:37:53', 'steam:110000100242687'),
-(2, 'test', 'aaaa', '2021-04-01 18:41:04', 'steam:11000010441bee9'),
-(3, 'ulicnetrke', 'aaaa', '2021-04-01 18:41:30', 'steam:11000010441bee9'),
-(4, 'ulicnetrke', 'test', '2021-04-01 18:46:32', 'steam:11000010441bee9'),
-(5, 'ulicnetrke', 'test', '2021-04-01 18:46:55', 'steam:11000010441bee9'),
-(6, 'ulicnetrke', 'opaa', '2021-04-01 18:47:39', 'steam:11000010441bee9'),
-(7, 'ulicnetrke', 'ko si ti jbt', '2021-04-01 18:47:43', 'steam:11000010441bee9'),
-(8, 'ulicnetrke', 'ko je tebe zvao ovdje', '2021-04-01 18:47:47', 'steam:11000010441bee9'),
-(9, 'ulicnetrke', 'otkud tebe majke ti ga nabijem', '2021-04-01 18:47:52', 'steam:11000010441bee9'),
-(10, 'test', 'mamaa', '2021-04-01 18:50:00', 'steam:11000010441bee9'),
-(11, 'test', 'aaa', '2021-04-01 18:53:42', 'steam:11000010441bee9'),
-(12, 'ulicnetrke', 'aaaaaaaa', '2021-04-01 18:54:42', 'steam:11000010441bee9'),
-(13, 'ulicnetrke', 'opaaaaa', '2021-04-01 18:55:20', 'steam:11000010441bee9'),
-(14, 'test', 'eeeeeee', '2021-04-01 18:55:24', 'steam:11000010441bee9'),
-(15, 'novikanal', 'otkud tebe ovdje', '2021-04-01 18:55:31', 'steam:11000010441bee9'),
-(16, 'novikanal', 'sta ti ovdje radis koji kurac ono, ko je tebe jebeno zvao ovdjwe', '2021-04-01 18:55:55', 'steam:11000010441bee9'),
-(17, 'mama', 'di si', '2021-12-23 11:31:56', NULL);
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1847,9 +1747,9 @@ CREATE TABLE IF NOT EXISTS `phone_calls` (
   `incoming` int(11) NOT NULL COMMENT 'Define Incoming Call',
   `time` timestamp NOT NULL DEFAULT current_timestamp(),
   `accepts` int(11) NOT NULL COMMENT 'Accept Call',
-  PRIMARY KEY (`id`),
-  KEY `owner` (`owner`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `owner` (`owner`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1868,22 +1768,11 @@ CREATE TABLE IF NOT EXISTS `phone_messages` (
   `owner` int(11) NOT NULL DEFAULT 0,
   `coord` varchar(150) DEFAULT NULL,
   `orgBroj` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `time` (`time`),
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `time` (`time`) USING BTREE,
   KEY `rec` (`receiver`) USING BTREE,
   KEY `tran` (`transmitter`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `phone_messages`
---
-
-INSERT INTO `phone_messages` (`id`, `transmitter`, `receiver`, `message`, `time`, `isRead`, `owner`, `coord`, `orgBroj`) VALUES
-(81, 9717088, 3555299, 'dobar ', '2022-04-02 11:07:33', 0, 0, NULL, NULL),
-(80, 3555299, 9717088, 'Valjal v8', '2022-04-02 11:07:06', 0, 0, NULL, NULL),
-(79, 3555299, 9717088, 'Stigli dijelovi', '2022-04-02 11:00:47', 0, 0, NULL, NULL);
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=1574 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `phone_users_contacts`
@@ -1895,20 +1784,10 @@ CREATE TABLE IF NOT EXISTS `phone_users_contacts` (
   `identifier` int(11) DEFAULT NULL,
   `number` int(11) DEFAULT NULL,
   `display` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT '-1',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`) USING BTREE,
   KEY `number` (`number`) USING BTREE,
   KEY `ident` (`identifier`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `phone_users_contacts`
---
-
-INSERT INTO `phone_users_contacts` (`id`, `identifier`, `number`, `display`) VALUES
-(5, 10000, 555, 'Sikora 2'),
-(8, 10000, 9717088, 'Chame');
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `poslovi`
@@ -1920,11 +1799,11 @@ CREATE TABLE IF NOT EXISTS `poslovi` (
   `name` varchar(50) NOT NULL,
   `label` varchar(50) DEFAULT NULL,
   `whitelisted` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `id` int(255) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`name`),
-  KEY `whitelisted` (`whitelisted`),
-  KEY `pID` (`pID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`name`) USING BTREE,
+  KEY `whitelisted` (`whitelisted`) USING BTREE,
+  KEY `pID` (`pID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `poslovi`
@@ -1936,6 +1815,7 @@ INSERT INTO `poslovi` (`pID`, `name`, `label`, `whitelisted`, `id`) VALUES
 (4, 'kosac', 'Kosac trave', 0, 0),
 (6, 'kran', 'Kranista', 0, 1),
 (5, 'luka', 'Lucki radnik', 0, 1),
+(7, 'ralica', 'Cistac snijega', 0, 1),
 (1, 'unemployed', 'Nezaposlen', 0, 0);
 
 -- --------------------------------------------------------
@@ -1961,9 +1841,9 @@ CREATE TABLE IF NOT EXISTS `praone` (
 --
 
 INSERT INTO `praone` (`ID`, `vlasnik`, `pranje`, `koord`, `cijena`, `sef`, `kcijena`) VALUES
-(1, NULL, '{\"x\":25.20756912231445,\"y\":-1391.8756103515626,\"z\":28.33451271057129}', '{\"x\":-1.5900136232376,\"y\":-1400.3079833984376,\"z\":28.27205467224121}', 50, 0, 70000),
-(2, NULL, '{\"x\":-699.8239135742188,\"y\":-932.6240234375,\"z\":18.01389694213867}', '{\"x\":-703.8509521484375,\"y\":-941.4659423828125,\"z\":18.27253723144531}', 50, 0, 67000),
-(3, NULL, '{\"x\":168.01113891601563,\"y\":-1715.1614990234376,\"z\":28.29169845581054}', '{\"x\":167.40232849121095,\"y\":-1709.40869140625,\"z\":28.29169845581054}', 50, 0, 55000);
+(1, NULL, '{\"x\":25.20756912231445,\"y\":-1391.8756103515626,\"z\":28.33451271057129}', '{\"x\":-1.5900136232376,\"y\":-1400.3079833984376,\"z\":28.27205467224121}', 50, 20, 45000),
+(2, NULL, '{\"x\":-699.8239135742188,\"y\":-932.6240234375,\"z\":18.01389694213867}', '{\"x\":-703.8509521484375,\"y\":-941.4659423828125,\"z\":18.27253723144531}', 50, 0, 45000),
+(3, NULL, '{\"x\":168.01113891601563,\"y\":-1715.1614990234376,\"z\":28.29169845581054}', '{\"x\":167.40232849121095,\"y\":-1709.40869140625,\"z\":28.29169845581054}', 50, 0, 45000);
 
 -- --------------------------------------------------------
 
@@ -1976,8 +1856,8 @@ CREATE TABLE IF NOT EXISTS `prijatelji` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `VlasnikID` int(11) NOT NULL,
   `PrijateljID` int(11) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1992,28 +1872,8 @@ CREATE TABLE IF NOT EXISTS `priority` (
   `power` int(11) NOT NULL,
   `ime` varchar(255) DEFAULT NULL,
   `datum` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `priority`
---
-
-INSERT INTO `priority` (`ID`, `identifier`, `power`, `ime`, `datum`) VALUES
-(1, 'steam:110000142bd57ad', 10, 'SaSuKe', '03/15/21 22:39:34'),
-(2, 'steam:110000136ababbf', 10, 'KarlitoR1', '03/15/21 22:39:51'),
-(3, 'steam:11000013f954fd9', 10, 'MrZenzify', '03/15/21 22:40:05'),
-(4, 'steam:1100001423beac6', 10, 'MrZengaa', '03/15/21 22:45:49'),
-(5, 'steam:11000013f19f16f', 10, 'Stefuri', '03/15/21 22:46:56'),
-(6, 'steam:11000010e76d26f', 10, 'marketinja', '03/15/21 22:47:17'),
-(7, 'steam:11000010b4f617b', 10, 'menkavac', '03/15/21 23:03:35'),
-(8, 'steam:1100001193a8deb', 10, 'DOM1NO', '03/15/21 23:03:58'),
-(9, 'steam:110000117cdb4d1', 10, 'DuLeLega', '03/15/21 23:04:16'),
-(10, 'steam:11000013d37140e', 10, 'S3doX', '03/15/21 23:04:33'),
-(11, 'steam:110000106cd50b7', 10, 'RATAMATA', '03/15/21 23:04:53'),
-(12, 'steam:110000118fe4a37', 10, 'Deni2k', '03/15/21 23:05:06'),
-(13, 'steam:11000010818616c', 10, 'TheWitch', '03/15/21 23:05:20'),
-(14, 'steam:11000013c4e1c46', 10, 'NBGD', '03/15/21 23:10:00');
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2029,47 +1889,48 @@ CREATE TABLE IF NOT EXISTS `pumpe` (
   `vlasnik` int(11) DEFAULT NULL,
   `cijena` int(11) NOT NULL,
   `sef` int(11) NOT NULL,
-  `gcijena` double NOT NULL DEFAULT 1.5,
+  `gcijena` double NOT NULL DEFAULT 1,
   `kcijena` double NOT NULL DEFAULT 250,
   `gorivo` int(11) NOT NULL DEFAULT 500,
-  `narudzba` int(2) NOT NULL DEFAULT 0,
+  `narudzba` int(11) NOT NULL DEFAULT 0,
   `dostava` varchar(255) NOT NULL DEFAULT '{}',
   `kapacitet` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
+  `bcijena` double NOT NULL DEFAULT 700,
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `pumpe`
 --
 
-INSERT INTO `pumpe` (`ID`, `ime`, `koord`, `vlasnik`, `cijena`, `sef`, `gcijena`, `kcijena`, `gorivo`, `narudzba`, `dostava`, `kapacitet`) VALUES
-(5, 'Pumpa 1', '{\"x\":288.7102966308594,\"y\":-1266.9971923828126,\"z\":29.44075202941894}', 10000, 1600000, 0, 1.5, 250, 918, 0, '{\"x\":284.2962341308594,\"y\":-1251.5218505859376,\"z\":29.25572204589843}', 1),
-(6, 'Pumpa 2', '{\"x\":46.5079116821289,\"y\":2789.208740234375,\"z\":57.87831497192383}', NULL, 600000, 0, 1.5, 250, 500, 0, '{\"x\":65.29000854492188,\"y\":2782.740966796875,\"z\":57.8783073425293}', 0),
-(7, 'Pumpa 3', '{\"x\":265.904296875,\"y\":2598.3525390625,\"z\":44.83026885986328}', NULL, 500000, 0, 1.5, 250, 500, 0, '{\"x\":243.4324493408203,\"y\":2599.6689453125,\"z\":45.12274551391601}', 0),
-(8, 'Pumpa 4', '{\"x\":1039.33837890625,\"y\":2664.4296875,\"z\":39.55110931396484}', NULL, 700000, 0, 1.5, 250, 500, 0, '{\"x\":1057.305908203125,\"y\":2657.41064453125,\"z\":39.55492782592773}', 0),
-(9, 'Pumpa 5', '{\"x\":1204.728759765625,\"y\":2663.441162109375,\"z\":37.80981826782226}', NULL, 700000, 389, 1.5, 250, 500, 0, '{\"x\":1208.5582275390626,\"y\":2642.334228515625,\"z\":37.83019256591797}', 0),
-(10, 'Pumpa 6', '{\"x\":2545.087646484375,\"y\":2592.07177734375,\"z\":37.95740509033203}', NULL, 200000, 0, 1.5, 250, 500, 0, '{\"x\":2537.218017578125,\"y\":2587.263427734375,\"z\":37.94486999511719}', 0),
-(11, 'Pumpa 7', '{\"x\":2673.765625,\"y\":3267.038330078125,\"z\":55.24057006835937}', NULL, 800000, 0, 1.5, 250, 500, 0, '{\"x\":2685.82470703125,\"y\":3259.474853515625,\"z\":55.24052047729492}', 0),
-(12, 'Pumpa 8', '{\"x\":2001.4554443359376,\"y\":3779.962890625,\"z\":32.18083190917969}', NULL, 700000, 0, 1.5, 250, 500, 0, '{\"x\":1985.66357421875,\"y\":3757.26171875,\"z\":32.17351150512695}', 0),
-(13, 'Pumpa 9', '{\"x\":1693.9664306640626,\"y\":4924.24267578125,\"z\":42.07815170288086}', NULL, 700000, 54, 1.5, 250, 500, 0, '{\"x\":1699.9659423828126,\"y\":4942.923828125,\"z\":42.1611213684082}', 0),
-(14, 'Pumpa 10', '{\"x\":1706.0556640625,\"y\":6425.56298828125,\"z\":32.76841735839844}', NULL, 800000, 0, 1.5, 250, 500, 0, '{\"x\":1685.691650390625,\"y\":6435.3154296875,\"z\":32.35713958740234}', 0),
-(15, 'Pumpa 11', '{\"x\":179.8773956298828,\"y\":6602.54345703125,\"z\":31.86820411682129}', NULL, 1000000, 0, 1.5, 250, 500, 0, '{\"x\":201.42800903320313,\"y\":6622.1669921875,\"z\":31.57495498657226}', 0),
-(16, 'Pumpa 12', '{\"x\":-92.73368072509766,\"y\":6409.70263671875,\"z\":31.64035034179687}', 10003, 900000, 61, 1.5, 250, 460, 0, '{\"x\":-79.52699279785156,\"y\":6431.9990234375,\"z\":31.49045944213867}', 0),
-(17, 'Pumpa 13', '{\"x\":-2544.21923828125,\"y\":2316.140380859375,\"z\":33.21610641479492}', NULL, 1100000, 0, 1.5, 250, 500, 0, '{\"x\":-2544.855224609375,\"y\":2323.4072265625,\"z\":33.0599250793457}', 0),
-(18, 'Pumpa 14', '{\"x\":-1801.026611328125,\"y\":804.757080078125,\"z\":138.4710693359375}', NULL, 1200000, 0, 1.5, 250, 500, 0, '{\"x\":-1813.795654296875,\"y\":799.1516723632813,\"z\":138.47694396972657}', 0),
-(19, 'Pumpa 15', '{\"x\":-1427.7933349609376,\"y\":-268.3453674316406,\"z\":46.2274169921875}', NULL, 1300000, 1813364, 11, 250, 1000, 0, '{\"x\":-1408.90771484375,\"y\":-276.75555419921877,\"z\":46.37263870239258}', 1),
-(20, 'Pumpa 16', '{\"x\":-2073.2041015625,\"y\":-327.2723083496094,\"z\":13.31596565246582}', 10003, 1300000, 90500899, 1000000, 600, 268, 1, '{\"x\":-2064.948974609375,\"y\":-305.96405029296877,\"z\":13.142915725708}', 0),
-(21, 'Pumpa 17', '{\"x\":-724.0491333007813,\"y\":-937.43115234375,\"z\":19.03470802307129}', NULL, 1400000, 1901301, 4, 250, 1000, 0, '{\"x\":-711.2090454101563,\"y\":-927.6903686523438,\"z\":19.01409339904785}', 1),
-(22, 'Pumpa 18', '{\"x\":-531.4134521484375,\"y\":-1220.990234375,\"z\":18.45499420166015}', NULL, 1100000, 0, 1.5, 250, 500, 0, '{\"x\":-520.8833618164063,\"y\":-1201.466796875,\"z\":18.56760597229004}', 0),
-(23, 'Pumpa 19', '{\"x\":-71.19830322265625,\"y\":-1763.1817626953126,\"z\":29.3459243774414}', NULL, 1300000, 0, 1.5, 250, 500, 0, '{\"x\":-62.38230514526367,\"y\":-1745.2607421875,\"z\":29.33869361877441}', 0),
-(24, 'Pumpa 20', '{\"x\":818.1276245117188,\"y\":-1040.5389404296876,\"z\":26.75078582763672}', NULL, 1400000, 0, 1.5, 250, 500, 0, '{\"x\":817.4137573242188,\"y\":-1035.2459716796876,\"z\":26.3928050994873}', 0),
-(25, 'Pumpa 21', '{\"x\":1211.0872802734376,\"y\":-1389.131591796875,\"z\":35.37686920166015}', NULL, 1200000, 0, 1.5, 250, 500, 0, '{\"x\":1205.057861328125,\"y\":-1406.123291015625,\"z\":35.22417449951172}', 0),
-(26, 'Pumpa 22', '{\"x\":1182.912353515625,\"y\":-329.9923095703125,\"z\":69.17447662353516}', NULL, 1400000, 250250, 5, 250, 450, 0, '{\"x\":1173.80419921875,\"y\":-317.5242614746094,\"z\":69.17607879638672}', 0),
-(27, 'Pumpa 23', '{\"x\":646.076904296875,\"y\":267.31439208984377,\"z\":103.25042724609375}', NULL, 1500000, 0, 1.5, 250, 500, 0, '{\"x\":638.5718383789063,\"y\":274.66485595703127,\"z\":103.08860778808594}', 0),
-(28, 'Pumpa 24', '{\"x\":2559.566650390625,\"y\":373.7714538574219,\"z\":108.62117767333985}', NULL, 1300000, 0, 1.5, 250, 500, 0, '{\"x\":2565.124267578125,\"y\":357.2509765625,\"z\":108.46162414550781}', 0),
-(29, 'Pumpa 25', '{\"x\":167.09417724609376,\"y\":-1553.5196533203126,\"z\":29.26177215576172}', NULL, 1200000, 0, 1.5, 250, 500, 0, '{\"x\":173.6867218017578,\"y\":-1553.2872314453126,\"z\":29.21279525756836}', 0),
-(30, 'Pumpa 26', '{\"x\":-341.90545654296877,\"y\":-1482.9364013671876,\"z\":30.69084167480468}', NULL, 1200000, 0, 1.5, 250, 500, 0, '{\"x\":-336.7940673828125,\"y\":-1486.441162109375,\"z\":30.59874725341797}', 0),
-(31, 'Pumpa 27', '{\"x\":1776.7811279296876,\"y\":3327.733642578125,\"z\":41.4331169128418}', NULL, 800000, 0, 1.5, 250, 500, 0, '{\"x\":1776.112548828125,\"y\":3337.34912109375,\"z\":41.1572380065918}', 0);
+INSERT INTO `pumpe` (`ID`, `ime`, `koord`, `vlasnik`, `cijena`, `sef`, `gcijena`, `kcijena`, `gorivo`, `narudzba`, `dostava`, `kapacitet`, `bcijena`) VALUES
+(5, 'Pumpa 1', '{\"x\":288.7102966308594,\"y\":-1266.9971923828126,\"z\":29.44075202941894}', NULL, 600000, 1055, 1.1, 26, 2450, 0, '{\"x\":284.2962341308594,\"y\":-1251.5218505859376,\"z\":29.25572204589843}', 0, 50),
+(6, 'Pumpa 2', '{\"x\":46.5079116821289,\"y\":2789.208740234375,\"z\":57.87831497192383}', NULL, 600000, 0, 1.1, 26, 2500, 0, '{\"x\":65.29000854492188,\"y\":2782.740966796875,\"z\":57.8783073425293}', 0, 50),
+(7, 'Pumpa 3', '{\"x\":265.904296875,\"y\":2598.3525390625,\"z\":44.83026885986328}', NULL, 600000, 30, 1.1, 26, 2500, 0, '{\"x\":243.4324493408203,\"y\":2599.6689453125,\"z\":45.12274551391601}', 0, 50),
+(8, 'Pumpa 4', '{\"x\":1039.33837890625,\"y\":2664.4296875,\"z\":39.55110931396484}', NULL, 600000, 0, 1.1, 26, 2500, 0, '{\"x\":1057.305908203125,\"y\":2657.41064453125,\"z\":39.55492782592773}', 0, 50),
+(9, 'Pumpa 5', '{\"x\":1204.728759765625,\"y\":2663.441162109375,\"z\":37.80981826782226}', NULL, 600000, 72, 1.1, 26, 2500, 0, '{\"x\":1208.5582275390626,\"y\":2642.334228515625,\"z\":37.83019256591797}', 0, 50),
+(10, 'Pumpa 6', '{\"x\":2545.087646484375,\"y\":2592.07177734375,\"z\":37.95740509033203}', NULL, 600000, 0, 1.1, 26, 2500, 0, '{\"x\":2537.218017578125,\"y\":2587.263427734375,\"z\":37.94486999511719}', 0, 50),
+(11, 'Pumpa 7', '{\"x\":2673.765625,\"y\":3267.038330078125,\"z\":55.24057006835937}', NULL, 600000, 440, 1.1, 26, 2500, 0, '{\"x\":2685.82470703125,\"y\":3259.474853515625,\"z\":55.24052047729492}', 0, 50),
+(12, 'Pumpa 8', '{\"x\":2001.4554443359376,\"y\":3779.962890625,\"z\":32.18083190917969}', NULL, 600000, 144, 1.1, 26, 2500, 0, '{\"x\":1985.66357421875,\"y\":3757.26171875,\"z\":32.17351150512695}', 0, 50),
+(13, 'Pumpa 9', '{\"x\":1693.9664306640626,\"y\":4924.24267578125,\"z\":42.07815170288086}', NULL, 600000, 98, 1.1, 26, 2500, 0, '{\"x\":1699.9659423828126,\"y\":4942.923828125,\"z\":42.1611213684082}', 0, 50),
+(14, 'Pumpa 10', '{\"x\":1706.0556640625,\"y\":6425.56298828125,\"z\":32.76841735839844}', NULL, 600000, 114, 1.1, 26, 2500, 0, '{\"x\":1685.691650390625,\"y\":6435.3154296875,\"z\":32.35713958740234}', 0, 50),
+(15, 'Pumpa 11', '{\"x\":179.8773956298828,\"y\":6602.54345703125,\"z\":31.86820411682129}', NULL, 600000, 454, 1.1, 26, 2500, 0, '{\"x\":201.42800903320313,\"y\":6622.1669921875,\"z\":31.57495498657226}', 0, 50),
+(16, 'Pumpa 12', '{\"x\":-92.73368072509766,\"y\":6409.70263671875,\"z\":31.64035034179687}', NULL, 600000, 80, 1.1, 26, 2500, 0, '{\"x\":-79.52699279785156,\"y\":6431.9990234375,\"z\":31.49045944213867}', 0, 50),
+(17, 'Pumpa 13', '{\"x\":-2544.21923828125,\"y\":2316.140380859375,\"z\":33.21610641479492}', NULL, 600000, 26, 1.1, 26, 2500, 0, '{\"x\":-2544.855224609375,\"y\":2323.4072265625,\"z\":33.0599250793457}', 0, 50),
+(18, 'Pumpa 14', '{\"x\":-1801.026611328125,\"y\":804.757080078125,\"z\":138.4710693359375}', NULL, 600000, 40, 1.1, 26, 2500, 0, '{\"x\":-1813.795654296875,\"y\":799.1516723632813,\"z\":138.47694396972657}', 0, 50),
+(19, 'Pumpa 15', '{\"x\":-1427.7933349609376,\"y\":-268.3453674316406,\"z\":46.2274169921875}', NULL, 600000, 146, 1.1, 26, 2500, 0, '{\"x\":-1408.90771484375,\"y\":-276.75555419921877,\"z\":46.37263870239258}', 0, 50),
+(20, 'Pumpa 16', '{\"x\":-2073.2041015625,\"y\":-327.2723083496094,\"z\":13.31596565246582}', NULL, 600000, 0, 1.1, 26, 500, 0, '{\"x\":-2064.948974609375,\"y\":-305.96405029296877,\"z\":13.142915725708}', 0, 50),
+(21, 'Pumpa 17', '{\"x\":-724.0491333007813,\"y\":-937.43115234375,\"z\":19.03470802307129}', NULL, 600000, 308, 1.1, 26, 2500, 0, '{\"x\":-711.2090454101563,\"y\":-927.6903686523438,\"z\":19.01409339904785}', 0, 50),
+(22, 'Pumpa 18', '{\"x\":-531.4134521484375,\"y\":-1220.990234375,\"z\":18.45499420166015}', NULL, 600000, 32, 1.1, 26, 2500, 0, '{\"x\":-520.8833618164063,\"y\":-1201.466796875,\"z\":18.56760597229004}', 0, 50),
+(23, 'Pumpa 19', '{\"x\":-71.19830322265625,\"y\":-1763.1817626953126,\"z\":29.3459243774414}', NULL, 600000, 378, 1.1, 26, 2500, 0, '{\"x\":-62.38230514526367,\"y\":-1745.2607421875,\"z\":29.33869361877441}', 0, 50),
+(24, 'Pumpa 20', '{\"x\":818.1276245117188,\"y\":-1040.5389404296876,\"z\":26.75078582763672}', NULL, 600000, 0, 1.1, 26, 2500, 0, '{\"x\":817.4137573242188,\"y\":-1035.2459716796876,\"z\":26.3928050994873}', 0, 50),
+(25, 'Pumpa 21', '{\"x\":1211.0872802734376,\"y\":-1389.131591796875,\"z\":35.37686920166015}', NULL, 600000, 66, 1.1, 26, 2500, 0, '{\"x\":1205.057861328125,\"y\":-1406.123291015625,\"z\":35.22417449951172}', 0, 50),
+(26, 'Pumpa 22', '{\"x\":1182.912353515625,\"y\":-329.9923095703125,\"z\":69.17447662353516}', NULL, 600000, 0, 1.1, 26, 2500, 0, '{\"x\":1173.80419921875,\"y\":-317.5242614746094,\"z\":69.17607879638672}', 0, 50),
+(27, 'Pumpa 23', '{\"x\":646.076904296875,\"y\":267.31439208984377,\"z\":103.25042724609375}', NULL, 600000, 1470, 1.1, 26, 2500, 0, '{\"x\":638.5718383789063,\"y\":274.66485595703127,\"z\":103.08860778808594}', 0, 50),
+(28, 'Pumpa 24', '{\"x\":2559.566650390625,\"y\":373.7714538574219,\"z\":108.62117767333985}', NULL, 600000, 28, 1.1, 26, 2500, 0, '{\"x\":2565.124267578125,\"y\":357.2509765625,\"z\":108.46162414550781}', 0, 50),
+(29, 'Pumpa 25', '{\"x\":167.09417724609376,\"y\":-1553.5196533203126,\"z\":29.26177215576172}', NULL, 600000, 56, 1.1, 26, 2500, 0, '{\"x\":173.6867218017578,\"y\":-1553.2872314453126,\"z\":29.21279525756836}', 0, 50),
+(30, 'Pumpa 26', '{\"x\":-341.90545654296877,\"y\":-1482.9364013671876,\"z\":30.69084167480468}', NULL, 600000, 0, 1.1, 26, 2500, 0, '{\"x\":-336.7940673828125,\"y\":-1486.441162109375,\"z\":30.59874725341797}', 0, 50),
+(31, 'Pumpa 27', '{\"x\":1776.7811279296876,\"y\":3327.733642578125,\"z\":41.4331169128418}', NULL, 600000, 78, 1.1, 26, 500, 0, '{\"x\":1776.112548828125,\"y\":3337.34912109375,\"z\":41.1572380065918}', 0, 50);
 
 -- --------------------------------------------------------
 
@@ -2079,16 +1940,14 @@ INSERT INTO `pumpe` (`ID`, `ime`, `koord`, `vlasnik`, `cijena`, `sef`, `gcijena`
 
 DROP TABLE IF EXISTS `qalle_brottsregister`;
 CREATE TABLE IF NOT EXISTS `qalle_brottsregister` (
-  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `identifier` varchar(50) NOT NULL,
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `dateofcrime` varchar(255) NOT NULL,
   `crime` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `rent`
@@ -2104,17 +1963,23 @@ CREATE TABLE IF NOT EXISTS `rent` (
   `vozila` longtext DEFAULT NULL,
   `cijena` int(11) DEFAULT 0,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `rent`
 --
 
 INSERT INTO `rent` (`ID`, `ime`, `koord`, `vlasnik`, `sef`, `vozila`, `cijena`) VALUES
-(10, 'Rent 1', '{\"x\":-1054.64697265625,\"y\":-2650.354736328125,\"z\":13.83067226409912}', NULL, 0, NULL, 77000),
-(11, 'Rent 2', '{\"x\":302.8141784667969,\"y\":-1360.2646484375,\"z\":31.82571411132812}', NULL, 0, NULL, 110000),
-(12, 'Rent 3', '{\"x\":1875.635986328125,\"y\":2595.276123046875,\"z\":45.67189025878906}', NULL, 0, NULL, 110000),
-(13, 'Rent 4', '{\"x\":776.5717163085938,\"y\":-294.40673828125,\"z\":59.89569854736328}', NULL, 0, NULL, 105000);
+(10, 'Rent 1', '{\"x\":-1054.64697265625,\"y\":-2650.354736328125,\"z\":13.83067226409912}', NULL, 72, '[{\"label\":\"Zastava 101\",\"value\":\"zastava101\",\"cijena\":5}]', 100000),
+(11, 'Rent 2', '{\"x\":302.8141784667969,\"y\":-1360.2646484375,\"z\":31.82571411132812}', NULL, 4290, '[{\"label\":\"Zastava 101\",\"value\":\"zastava101\",\"cijena\":5}]', 100000),
+(12, 'Rent 3', '{\"x\":1875.635986328125,\"y\":2595.276123046875,\"z\":45.67189025878906}', NULL, 4194, '[{\"label\":\"zastava101\",\"value\":\"zastava101\",\"cijena\":5}]', 100000),
+(13, 'Rent 4', '{\"x\":776.5717163085938,\"y\":-294.40673828125,\"z\":59.89569854736328}', NULL, 2151, '[{\"label\":\"Zastava 101\",\"value\":\"zastava101\",\"cijena\":5}]', 100000),
+(15, 'Rent 5', '{\"x\":114.77751922607422,\"y\":6599.607421875,\"z\":31.99914932250976}', NULL, 1320, '[{\"value\":\"zastava101\",\"cijena\":5,\"label\":\"zastava101\"}]', 2147483647),
+(16, 'Rent 6', '{\"x\":1483.6966552734376,\"y\":3752.110107421875,\"z\":33.77544021606445}', NULL, 354, '[{\"value\":\"zastava101\",\"cijena\":5,\"label\":\"Zastava\"}]', 2147483647),
+(17, 'Rent 7', '{\"x\":1189.5391845703126,\"y\":-3104.508056640625,\"z\":5.74172687530517}', NULL, 651, '[{\"value\":\"zastava101\",\"cijena\":5,\"label\":\"Zastava\"}]', 2147483647),
+(18, 'Rent 8', '{\"x\":162.6787872314453,\"y\":-312.68359375,\"z\":44.41375350952148}', NULL, 4332, '[{\"value\":\"zastava101\",\"cijena\":5,\"label\":\"Zastava\"}]', 2147483647),
+(19, 'Rent 9', '{\"x\":-1406.2294921875,\"y\":88.32289123535156,\"z\":53.05549621582031}', NULL, 723, '[{\"value\":\"zastava101\",\"cijena\":5,\"label\":\"zastava\"}]', 2147483647),
+(20, 'Rent 10', '{\"x\":2452.509521484375,\"y\":4996.6611328125,\"z\":46.00117111206055}', NULL, 897, '[{\"value\":\"zastava101\",\"cijena\":5,\"label\":\"zastava\"}]', 2147483647);
 
 -- --------------------------------------------------------
 
@@ -2156,8 +2021,8 @@ CREATE TABLE IF NOT EXISTS `saloni` (
   `Vlasnik` int(11) DEFAULT NULL,
   `Kupovina` varchar(255) NOT NULL DEFAULT '{}',
   `Sef` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2176,8 +2041,8 @@ CREATE TABLE IF NOT EXISTS `saloni_vozila` (
   `Mjenjac` int(11) NOT NULL,
   `Lokacija` varchar(255) NOT NULL DEFAULT '{}',
   `Heading` float NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2191,38 +2056,38 @@ CREATE TABLE IF NOT EXISTS `shops` (
   `store` varchar(100) NOT NULL,
   `item` varchar(100) NOT NULL,
   `price` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `item` (`item`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `item` (`item`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `shops`
 --
 
 INSERT INTO `shops` (`id`, `store`, `item`, `price`) VALUES
-(1, 'TwentyFourSeven', 'bread', 7),
-(2, 'TwentyFourSeven', 'water', 5),
-(8, 'TwentyFourSeven', 'bandage', 50),
-(9, 'TwentyFourSeven', 'burek', 10),
-(15, 'TwentyFourSeven', 'rakija', 17),
-(17, 'TwentyFourSeven', 'pizza', 9),
-(18, 'TwentyFourSeven', 'kola', 7),
-(23, 'TwentyFourSeven', 'contract', 1),
-(27, 'TwentyFourSeven', 'repairkit', 2500),
-(64, 'TwentyFourSeven', 'milk', 10),
-(73, 'TwentyFourSeven', 'ukosnica', 10),
-(76, 'TwentyFourSeven', 'petarde', 10),
-(82, 'TwentyFourSeven', 'mobitel', 250),
+(1, 'TwentyFourSeven', 'bread', 1),
+(2, 'TwentyFourSeven', 'water', 1),
+(8, 'TwentyFourSeven', 'bandage', 25),
+(9, 'TwentyFourSeven', 'burek', 3),
+(15, 'TwentyFourSeven', 'rakija', 6),
+(17, 'TwentyFourSeven', 'pizza', 3),
+(18, 'TwentyFourSeven', 'kola', 2),
+(23, 'TwentyFourSeven', 'contract', 2),
+(27, 'TwentyFourSeven', 'repairkit', 800),
+(64, 'TwentyFourSeven', 'milk', 2),
+(73, 'TwentyFourSeven', 'ukosnica', 1),
+(76, 'TwentyFourSeven', 'petarde', 5),
+(82, 'TwentyFourSeven', 'mobitel', 150),
 (99, 'TwentyFourSeven', 'novine', 2),
 (101, 'TwentyFourSeven', 'fishingrod', 50),
-(102, 'TwentyFourSeven', 'fishbait', 5),
-(103, 'Bar', 'beer', 30),
-(104, 'Bar', 'wine', 25),
-(105, 'Bar', 'vodka', 60),
-(106, 'Bar', 'tequila', 40),
-(107, 'Bar', 'whisky', 50),
-(108, 'Bar', 'cigarett', 30),
-(109, 'Bar', 'lighter', 25);
+(102, 'TwentyFourSeven', 'fishbait', 3),
+(103, 'Bar', 'beer', 4),
+(104, 'Bar', 'wine', 6),
+(105, 'Bar', 'vodka', 9),
+(106, 'Bar', 'tequila', 9),
+(107, 'Bar', 'whisky', 11),
+(108, 'Bar', 'cigarett', 4),
+(109, 'Bar', 'lighter', 1);
 
 -- --------------------------------------------------------
 
@@ -2236,9 +2101,9 @@ CREATE TABLE IF NOT EXISTS `shops2` (
   `store` varchar(100) NOT NULL,
   `owner` varchar(60) DEFAULT NULL,
   `sef` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`) USING BTREE,
   KEY `owstore` (`owner`,`store`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2252,21 +2117,8 @@ CREATE TABLE IF NOT EXISTS `shops_itemi` (
   `trgovina` varchar(250) NOT NULL,
   `item` varchar(250) NOT NULL,
   `cijena` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `shops_itemi`
---
-
-INSERT INTO `shops_itemi` (`ID`, `trgovina`, `item`, `cijena`) VALUES
-(20, 'firma47', 'wine', 30),
-(19, 'firma47', 'whisky', 55),
-(18, 'firma47', 'vodka', 65),
-(17, 'firma47', 'tequila', 45),
-(16, 'firma47', 'lighter', 30),
-(15, 'firma47', 'cigarett', 35),
-(14, 'firma47', 'beer', 55);
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2283,19 +2135,9 @@ CREATE TABLE IF NOT EXISTS `truck_inventory` (
   `plate` varchar(8) NOT NULL,
   `name` varchar(255) NOT NULL,
   `owned` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `item` (`item`,`plate`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `truck_inventory`
---
-
-INSERT INTO `truck_inventory` (`id`, `item`, `itemt`, `count`, `plate`, `name`, `owned`) VALUES
-(1, 'gljive', 'item_standard', 5, 'XIB 746 ', 'Gljive', '0'),
-(3, 'gljive', 'item_standard', 5, 'LKU 646 ', 'Gljive', '0');
-
--- --------------------------------------------------------
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `item` (`item`,`plate`,`itemt`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `twitter_accounts`
@@ -2307,17 +2149,9 @@ CREATE TABLE IF NOT EXISTS `twitter_accounts` (
   `username` varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT '0',
   `password` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
   `avatar_url` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
---
--- Dumping data for table `twitter_accounts`
---
-
-INSERT INTO `twitter_accounts` (`id`, `username`, `password`, `avatar_url`) VALUES
-(1, 'Sikora', 'antonioas123', 'https://media.discordapp.net/attachments/923544204397920256/923551465950298112/screenshot.jpg'),
-(2, 'TonyVk', 'antonioas123', 'https://media.discordapp.net/attachments/923544204397920256/923551230393987092/screenshot.jpg');
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2330,17 +2164,10 @@ CREATE TABLE IF NOT EXISTS `twitter_likes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `authorId` int(11) DEFAULT NULL,
   `tweetId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_twitter_likes_twitter_accounts` (`authorId`),
-  KEY `FK_twitter_likes_twitter_tweets` (`tweetId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
---
--- Dumping data for table `twitter_likes`
---
-
-INSERT INTO `twitter_likes` (`id`, `authorId`, `tweetId`) VALUES
-(1, 1, 1);
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_twitter_likes_twitter_accounts` (`authorId`) USING BTREE,
+  KEY `FK_twitter_likes_twitter_tweets` (`tweetId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2356,22 +2183,9 @@ CREATE TABLE IF NOT EXISTS `twitter_tweets` (
   `message` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `time` timestamp NOT NULL DEFAULT current_timestamp(),
   `likes` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  KEY `FK_twitter_tweets_twitter_accounts` (`authorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `twitter_tweets`
---
-
-INSERT INTO `twitter_tweets` (`id`, `authorId`, `realUser`, `message`, `time`, `likes`) VALUES
-(1, 1, 'steam:11000010441bee9', 'aaaa', '2021-12-23 11:09:27', 1),
-(2, 1, 'steam:11000010441bee9', '@Sikora opaaa', '2021-12-23 11:09:33', 0),
-(3, 1, 'steam:11000010441bee9', 'https://media.discordapp.net/attachments/817846698671341631/923543947350011914/screenshot.jpg', '2021-12-23 11:53:55', 0),
-(4, 1, 'steam:11000010441bee9', 'https://media.discordapp.net/attachments/923544204397920256/923544605524365342/screenshot.jpg', '2021-12-23 11:56:32', 0),
-(5, 1, 'steam:11000010441bee9', 'https://media.discordapp.net/attachments/923544204397920256/923548261208444948/screenshot.jpg', '2021-12-23 12:11:04', 0),
-(6, 1, 'steam:11000010441bee9', '@Sikora dobar', '2021-12-23 12:11:15', 0),
-(7, 1, 'steam:11000010441bee9', 'https://media.discordapp.net/attachments/923544204397920256/923558661505318963/screenshot.jpg', '2021-12-23 12:52:23', 0);
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_twitter_tweets_twitter_accounts` (`authorId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2383,8 +2197,8 @@ DROP TABLE IF EXISTS `ukradeni`;
 CREATE TABLE IF NOT EXISTS `ukradeni` (
   `tablica` varchar(50) NOT NULL,
   `datum` varchar(50) NOT NULL,
-  PRIMARY KEY (`tablica`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`tablica`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -2400,7 +2214,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `money` int(11) DEFAULT NULL,
   `name` varchar(50) COLLATE utf8mb4_bin DEFAULT '',
   `skin` longtext COLLATE utf8mb4_bin DEFAULT NULL,
-  `job` int(50) DEFAULT 1,
+  `job` int(11) DEFAULT 1,
   `job_grade` int(11) DEFAULT 0,
   `loadout` longtext COLLATE utf8mb4_bin DEFAULT NULL,
   `position` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
@@ -2414,7 +2228,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `dateofbirth` varchar(25) COLLATE utf8mb4_bin DEFAULT '',
   `sex` varchar(10) COLLATE utf8mb4_bin DEFAULT '',
   `height` varchar(5) COLLATE utf8mb4_bin DEFAULT '',
-  `jail` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `jail` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `last_property` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   `is_dead` tinyint(1) DEFAULT 0,
   `armour` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
@@ -2424,9 +2238,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `mute` int(11) NOT NULL DEFAULT 0,
   `kpljacka` int(11) NOT NULL DEFAULT 0,
   `zadnji_login` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
-  `kredit` int(100) NOT NULL DEFAULT 0,
-  `rata` int(100) NOT NULL DEFAULT 0,
-  `brplaca` int(100) NOT NULL DEFAULT 0,
+  `kredit` int(11) NOT NULL DEFAULT 0,
+  `rata` int(11) NOT NULL DEFAULT 0,
+  `brplaca` int(11) NOT NULL DEFAULT 0,
   `lov` int(11) NOT NULL DEFAULT 0,
   `stamina` int(11) NOT NULL DEFAULT 20,
   `vjezbanje` int(11) NOT NULL DEFAULT 0,
@@ -2437,27 +2251,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `rentKuca` int(11) DEFAULT NULL,
   `rentDatum` date DEFAULT NULL,
   `tattoos` longtext COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`identifier`),
+  `atmpljacka` int(11) DEFAULT 0,
+  PRIMARY KEY (`identifier`) USING BTREE,
   UNIQUE KEY `phone` (`phone_number`) USING BTREE,
-  KEY `ident` (`identifier`),
-  KEY `ID` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10012 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`ID`, `identifier`, `license`, `money`, `name`, `skin`, `job`, `job_grade`, `loadout`, `position`, `bank`, `permission_level`, `group`, `phone_number`, `status`, `firstname`, `lastname`, `dateofbirth`, `sex`, `height`, `jail`, `last_property`, `is_dead`, `armour`, `house`, `bought_furniture`, `last_house`, `mute`, `kpljacka`, `zadnji_login`, `kredit`, `rata`, `brplaca`, `lov`, `stamina`, `vjezbanje`, `exp`, `level`, `posao`, `firma`, `rentKuca`, `rentDatum`, `tattoos`) VALUES
-(10000, 'steam:11000010441bee9', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 300, 'Sikora', '{\"shoes_2\":2,\"blush_1\":0,\"torso_2\":0,\"eye_color\":0,\"beard_4\":0,\"ears_2\":-1,\"bracelets_2\":0,\"eye_squint\":0,\"mask_1\":0,\"cheeks_2\":0,\"makeup_3\":0,\"lipstick_3\":32,\"jaw_2\":0,\"watches_1\":-1,\"chain_2\":0,\"chin_1\":0,\"nose_6\":0,\"bracelets_1\":-1,\"skin\":0,\"decals_2\":0,\"beard_1\":2,\"age_1\":0,\"nose_5\":0,\"bproof_2\":0,\"nose_1\":0,\"chin_3\":0,\"cheeks_1\":0,\"watches_2\":-1,\"dad\":12,\"complexion_2\":0,\"eyebrows_3\":0,\"lipstick_1\":0,\"blush_2\":0,\"beard_3\":61,\"makeup_2\":0,\"skin_md_weight\":50,\"blemishes_1\":0,\"nose_4\":0,\"chin_4\":0,\"eyebrows_2\":10,\"eyebrows_1\":2,\"neck_thickness\":0,\"pants_1\":10,\"hair_color_2\":0,\"cheeks_3\":0,\"hair_1\":0,\"bags_2\":0,\"glasses_2\":1,\"tshirt_2\":0,\"lipstick_2\":0,\"eyebrows_6\":0,\"nose_2\":0,\"chin_2\":0,\"face_md_weight\":50,\"hair_color_1\":0,\"bodyb_2\":0,\"arms_2\":0,\"decals_1\":0,\"sex\":0,\"mask_2\":0,\"nose_3\":0,\"pants_2\":0,\"face\":19,\"chain_1\":0,\"sun_1\":0,\"makeup_4\":0,\"eyebrows_4\":0,\"hair_2\":0,\"chest_2\":0,\"bodyb_1\":0,\"glasses_1\":5,\"age_2\":0,\"eyebrows_5\":0,\"chest_1\":0,\"torso_1\":4,\"makeup_1\":0,\"bproof_1\":0,\"chest_3\":0,\"moles_1\":0,\"moles_2\":0,\"shoes_1\":1,\"blemishes_2\":0,\"mom\":21,\"lipstick_4\":0,\"sun_2\":0,\"helmet_1\":-1,\"complexion_1\":0,\"arms\":1,\"jaw_1\":0,\"tshirt_1\":3,\"bags_1\":0,\"helmet_2\":-1,\"lip_thickness\":0,\"blush_3\":\"2\",\"ears_1\":-1,\"beard_2\":10}', 3, 4, '[]', '{\"x\":142.0,\"y\":-362.8,\"z\":43.2}', -840062, 69, 'superadmin', 3555299, '[{\"name\":\"hunger\",\"percent\":41,\"val\":0},{\"name\":\"thirst\",\"percent\":32,\"val\":0},{\"name\":\"drunk\",\"percent\":0,\"val\":0}]', 'Tony', 'Sikora', '25.9.1998', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"houseId\":29,\"furniture\":[{\"object\":\"prop_tv_cabinet_03\",\"offset\":[7.640869140625,3.6422119140625,-2.42674255371093],\"heading\":0.0,\"name\":\"TV Stol\"}]}', '{\"prop_ld_farm_table01\":{\"amount\":1,\"name\":\"Farm Stol 2\"}}', 0, 0, 0, '08/11/2022 21:46:52', 0, 0, 512, 0, 20, 0, 5, 9, 6, 0, NULL, '2022-06-04', '[{\"nameHash\":\"MP_Buis_M_Neck_000\",\"Count\":1,\"collection\":\"mpbusiness_overlays\"}]'),
-(10001, 'steam:110000106921eea', 'license:1a17700fb3ebe57d0e8179efdd6e6e1ccb43168b', 0, 'Ficho', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":0,\"complexion_2\":0,\"hair_1\":11,\"makeup_4\":0,\"bproof_1\":0,\"torso_1\":6,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":0,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"watches_1\":-1,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":0,\"moles_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"blush_3\":0,\"tshirt_2\":0,\"eyebrows_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":4,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":24,\"makeup_3\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"ears_1\":-1,\"mask_1\":0,\"pants_2\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"bracelets_1\":-1,\"chest_1\":0,\"hair_color_1\":3,\"eye_color\":0,\"lipstick_4\":0,\"ears_2\":0,\"watches_2\":0,\"blush_1\":0,\"lipstick_1\":0,\"face\":0,\"bags_1\":0,\"shoes_2\":0,\"beard_2\":0,\"sex\":0,\"sun_1\":0,\"skin\":1,\"lipstick_2\":0,\"mask_2\":0}', 1, 0, '[{\"label\":\"Pistol\",\"name\":\"WEAPON_PISTOL\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Micro SMG\",\"name\":\"WEAPON_MICROSMG\",\"ammo\":188,\"components\":[\"clip_default\"]},{\"label\":\"Pump shotgun\",\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":250,\"components\":[]},{\"label\":\"Assault rifle\",\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":250,\"components\":[\"clip_default\"]},{\"label\":\"Sniper rifle\",\"name\":\"WEAPON_SNIPERRIFLE\",\"ammo\":248,\"components\":[\"scope\"]}]', '{\"z\":544.6000000000931,\"y\":-4500.0,\"x\":-502.4000000000233}', 999946950, 69, 'superadmin', 973, '[{\"val\":456000,\"percent\":45.6,\"name\":\"hunger\"},{\"val\":467000,\"percent\":46.7,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Filip', 'Wizzy', '19980208', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 21:27:40', 0, 0, 17, 0, 20, 0, 5, 2, 1, 0, NULL, NULL, NULL),
-(10011, 'steam:11000010a1d1042', 'license:c7a857dcd5b4160c69d1671f02e52332bd339733', 176, 'chame', '{\"mask_1\":0,\"skin\":3,\"watches_1\":-1,\"lipstick_1\":0,\"beard_3\":0,\"eyebrows_4\":0,\"makeup_3\":0,\"beard_1\":0,\"makeup_4\":0,\"makeup_1\":0,\"watches_2\":0,\"sun_2\":0,\"decals_1\":0,\"age_2\":0,\"blush_2\":0,\"shoes_2\":0,\"hair_2\":3,\"bags_1\":0,\"pants_1\":0,\"beard_2\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"torso_2\":0,\"glasses_1\":0,\"helmet_1\":-1,\"blush_1\":0,\"hair_color_2\":1,\"shoes_1\":0,\"arms\":0,\"blemishes_1\":0,\"blemishes_2\":0,\"helmet_2\":0,\"tshirt_1\":1,\"eyebrows_3\":0,\"arms_2\":0,\"beard_4\":0,\"sun_1\":0,\"eyebrows_1\":0,\"moles_2\":0,\"lipstick_2\":0,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"bproof_2\":0,\"eye_color\":0,\"decals_2\":0,\"mask_2\":0,\"chest_2\":0,\"ears_2\":0,\"hair_1\":3,\"chain_2\":0,\"sex\":0,\"hair_color_1\":2,\"chest_3\":0,\"bags_2\":0,\"bodyb_2\":0,\"makeup_2\":0,\"moles_1\":0,\"bproof_1\":0,\"glasses_2\":0,\"age_1\":0,\"face\":2,\"bracelets_2\":0,\"ears_1\":-1,\"chest_1\":0,\"lipstick_3\":0,\"bodyb_1\":0,\"blush_3\":0,\"tshirt_2\":0,\"torso_1\":3,\"complexion_2\":0,\"bracelets_1\":-1}', 4, 4, '[]', '{\"x\":5103.2,\"y\":-4835.5,\"z\":8.1}', 100, 69, 'superadmin', 9717088, '[{\"percent\":59,\"val\":0,\"name\":\"hunger\"},{\"percent\":59,\"val\":0,\"name\":\"thirst\"}]', 'Murga', 'Vrtiprah', '2.1.1984', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '02/04/2022 13:54:38', 0, 0, 2, 0, 20, 0, 2, 1, 5, 0, NULL, NULL, NULL),
-(10002, 'steam:11000010ad5cf80', 'license:104849bd70250f8f538fb51379f5a4a258f6e960', 0, 'MaZz', '{\"bags_2\":0,\"arms\":0,\"bracelets_2\":0,\"bodyb_1\":0,\"age_2\":0,\"pants_1\":6,\"complexion_2\":0,\"hair_1\":9,\"makeup_4\":0,\"bproof_1\":4,\"torso_1\":0,\"glasses_2\":0,\"makeup_1\":0,\"arms_2\":0,\"eyebrows_3\":0,\"chest_3\":0,\"moles_1\":2,\"helmet_1\":-1,\"torso_2\":0,\"sun_2\":0,\"eyebrows_1\":0,\"chain_2\":0,\"age_1\":0,\"decals_1\":0,\"lipstick_2\":0,\"beard_4\":0,\"bodyb_2\":0,\"chain_1\":0,\"complexion_1\":4,\"pants_2\":0,\"glasses_1\":0,\"beard_1\":0,\"beard_3\":0,\"shoes_2\":0,\"tshirt_2\":2,\"mask_2\":0,\"makeup_2\":0,\"decals_2\":0,\"hair_2\":0,\"chest_2\":0,\"helmet_2\":0,\"lipstick_3\":0,\"shoes_1\":0,\"blush_2\":0,\"tshirt_1\":22,\"chest_1\":0,\"blemishes_1\":0,\"eyebrows_4\":0,\"sun_1\":0,\"mask_1\":0,\"lipstick_4\":0,\"hair_color_2\":0,\"blemishes_2\":0,\"bproof_2\":0,\"moles_2\":0,\"blush_1\":0,\"hair_color_1\":0,\"eye_color\":0,\"makeup_3\":0,\"ears_2\":0,\"watches_2\":0,\"blush_3\":0,\"lipstick_1\":0,\"bags_1\":0,\"ears_1\":-1,\"beard_2\":0,\"watches_1\":-1,\"sex\":0,\"face\":44,\"skin\":2,\"eyebrows_2\":0,\"bracelets_1\":-1}', 1, 0, '[{\"label\":\"Pistol .50\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_PISTOL50\",\"ammo\":130},{\"label\":\"Pump shotgun\",\"components\":[],\"name\":\"WEAPON_PUMPSHOTGUN\",\"ammo\":39},{\"label\":\"Assault rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ASSAULTRIFLE\",\"ammo\":59},{\"label\":\"Carbine rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_CARBINERIFLE\",\"ammo\":59},{\"label\":\"Advanced rifle\",\"components\":[\"clip_default\"],\"name\":\"WEAPON_ADVANCEDRIFLE\",\"ammo\":59},{\"label\":\"Taser\",\"components\":[],\"name\":\"WEAPON_STUNGUN\",\"ammo\":200},{\"label\":\"Flashlight\",\"components\":[],\"name\":\"WEAPON_FLASHLIGHT\",\"ammo\":0}]', '{\"z\":40.39999999999418,\"y\":3213.4000000003727,\"x\":1569.3999999999069}', 100020599, 69, 'superadmin', 12345, '[{\"val\":994100,\"name\":\"hunger\",\"percent\":99.41},{\"val\":995575,\"name\":\"thirst\",\"percent\":99.5575},{\"val\":0,\"name\":\"drunk\",\"percent\":0.0}]', 'Max', 'Cigarett', '0611199', 'm', '180', 0, NULL, 0, 30, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '01/11/2021 22:19:53', 0, 0, 45, 0, 20, 0, 2, 1, 1, 22, NULL, NULL, NULL),
-(10003, 'steam:11000010e086b7e', 'license:ebdfe690c597862ea966a6893ad2fe9aaddcc873', 4481549, 'LJANTU', '{\"moles_1\":0,\"sun_1\":0,\"age_2\":0,\"eyebrows_1\":0,\"hair_2\":0,\"chest_2\":0,\"mask_2\":0,\"decals_2\":0,\"bproof_2\":0,\"makeup_3\":0,\"glasses_2\":0,\"eyebrows_2\":0,\"mask_1\":0,\"bodyb_1\":0,\"makeup_1\":0,\"watches_1\":2,\"face\":19,\"makeup_2\":0,\"hair_color_2\":0,\"tshirt_1\":0,\"chest_1\":0,\"shoes_2\":0,\"helmet_2\":0,\"chain_2\":0,\"lipstick_3\":0,\"blemishes_1\":0,\"hair_color_1\":29,\"eye_color\":0,\"shoes\":35,\"torso_2\":0,\"bodyb_2\":0,\"complexion_1\":0,\"sex\":0,\"ears_1\":-1,\"torso_1\":381,\"beard_2\":0,\"moles_2\":0,\"beard_3\":0,\"blush_2\":0,\"blush_1\":0,\"bracelets_2\":0,\"blush_3\":0,\"chest_3\":0,\"hair_1\":22,\"age_1\":0,\"bags_1\":0,\"bags_2\":0,\"shoes_1\":24,\"pants_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"glasses_1\":30,\"blemishes_2\":0,\"bproof_1\":54,\"eyebrows_3\":0,\"eyebrows_4\":0,\"lipstick_1\":0,\"beard_4\":0,\"makeup_4\":0,\"helmet_1\":-1,\"decals_1\":0,\"tshirt_2\":2,\"skin\":18,\"ears_2\":0,\"watches_2\":0,\"arms\":28,\"pants_1\":130,\"lipstick_2\":0,\"bracelets_1\":-1,\"complexion_2\":0,\"arms_2\":0,\"beard_1\":0,\"sun_2\":0}', 3, 4, '[{\"label\":\"Pistol\",\"components\":[\"clip_default\"],\"ammo\":147,\"name\":\"WEAPON_PISTOL\"}]', '{\"z\":29.0,\"x\":-68.7,\"y\":-1722.6}', 99936001, 69, 'superadmin', 5799678, '[{\"percent\":88,\"val\":465400,\"name\":\"hunger\"},{\"percent\":88,\"val\":474050,\"name\":\"thirst\"},{\"percent\":0.0,\"val\":0,\"name\":\"drunk\"}]', 'Tuljan', 'Ljantu', '33333333', 'm', '195', 0, NULL, 0, 100, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '20/01/2022 21:03:41', 0, 0, 141, 0, 20, 2, 12, 6, 7, 22, NULL, NULL, NULL),
-(10004, 'steam:110000111cd0aa0', 'license:e4090a08909875dbb99f15633c3ec4ef87d9e9f8', 0, 'GABO', '{\"arms\":1,\"makeup_3\":0,\"hair_1\":19,\"ears_1\":-1,\"eye_color\":0,\"arms_2\":0,\"skin\":1,\"beard_1\":0,\"torso_1\":4,\"ears_2\":0,\"bproof_1\":0,\"hair_color_1\":5,\"age_2\":0,\"lipstick_2\":0,\"sun_2\":0,\"age_1\":0,\"eyebrows_2\":0,\"lipstick_3\":0,\"makeup_1\":0,\"blemishes_2\":0,\"watches_1\":-1,\"bodyb_2\":0,\"tshirt_1\":3,\"beard_3\":0,\"sex\":0,\"glasses_2\":0,\"bags_1\":0,\"helmet_1\":-1,\"pants_1\":7,\"watches_2\":0,\"chain_2\":0,\"blemishes_1\":0,\"tshirt_2\":0,\"decals_2\":0,\"chest_3\":0,\"shoes_1\":1,\"shoes_2\":0,\"glasses_1\":0,\"eyebrows_3\":0,\"blush_3\":0,\"makeup_4\":0,\"sun_1\":0,\"bracelets_2\":0,\"helmet_2\":0,\"bags_2\":0,\"moles_2\":0,\"hair_2\":4,\"lipstick_1\":0,\"bracelets_1\":-1,\"beard_2\":0,\"mask_2\":0,\"mask_1\":0,\"face\":12,\"blush_2\":0,\"lipstick_4\":0,\"chain_1\":0,\"beard_4\":0,\"eyebrows_1\":0,\"bproof_2\":0,\"moles_1\":0,\"makeup_2\":0,\"eyebrows_4\":0,\"complexion_2\":0,\"complexion_1\":0,\"torso_2\":3,\"blush_1\":0,\"hair_color_2\":0,\"decals_1\":0,\"chest_1\":0,\"pants_2\":0,\"bodyb_1\":0,\"chest_2\":0}', 1, 0, '[{\"name\":\"WEAPON_MG\",\"label\":\"MG\",\"components\":[\"clip_default\"],\"ammo\":190}]', '{\"z\":68.39999999999418,\"y\":354.5999999999767,\"x\":-1107.3999999999069}', 3035100, 69, 'superadmin', 5375773, '[{\"val\":314000,\"percent\":31.4,\"name\":\"hunger\"},{\"val\":360500,\"percent\":36.05,\"name\":\"thirst\"},{\"val\":0,\"percent\":0.0,\"name\":\"drunk\"}]', 'Daniel', 'Deacon', '03.11.1997', 'm', '180', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '04/11/2021 20:47:33', 0, 0, 16, 0, 20, 0, 1, 2, 1, 0, NULL, NULL, NULL),
-(10010, 'steam:11000011aee96e0', 'license:23735c7344bc9f32a2137cba6cbd67751184a27f', 514260, 'hashtag.sikora', '{\"arms_2\":0,\"bodyb_2\":0,\"sex\":0,\"complexion_1\":0,\"eyebrows_2\":0,\"hair_color_2\":0,\"bodyb_1\":0,\"pants_2\":0,\"blush_3\":0,\"lipstick_2\":0,\"watches_1\":-1,\"age_2\":0,\"decals_2\":0,\"bags_2\":0,\"arms\":0,\"decals_1\":0,\"face\":0,\"beard_2\":0,\"lipstick_1\":0,\"blush_1\":0,\"hair_color_1\":0,\"hair_2\":0,\"watches_2\":0,\"chest_1\":0,\"torso_1\":0,\"blemishes_1\":0,\"age_1\":0,\"chain_1\":0,\"bproof_1\":0,\"eyebrows_1\":0,\"tshirt_1\":0,\"glasses_1\":0,\"pants_1\":0,\"mask_1\":0,\"mask_2\":0,\"blemishes_2\":0,\"complexion_2\":0,\"beard_4\":0,\"chest_2\":0,\"chain_2\":0,\"glasses_2\":0,\"bproof_2\":0,\"sun_1\":0,\"makeup_2\":0,\"ears_2\":0,\"torso_2\":0,\"sun_2\":0,\"shoes_2\":0,\"skin\":0,\"shoes_1\":0,\"eyebrows_3\":0,\"eyebrows_4\":0,\"helmet_1\":-1,\"helmet_2\":0,\"ears_1\":-1,\"blush_2\":0,\"bracelets_1\":-1,\"hair_1\":0,\"makeup_1\":0,\"lipstick_4\":0,\"bags_1\":0,\"tshirt_2\":0,\"eye_color\":0,\"beard_3\":0,\"moles_1\":0,\"bracelets_2\":0,\"moles_2\":0,\"makeup_4\":0,\"beard_1\":0,\"makeup_3\":0,\"chest_3\":0,\"lipstick_3\":0}', 3, 1, '[]', '{\"z\":30.6,\"y\":-786.6,\"x\":231.4}', 100, 0, 'user', 555, '[{\"percent\":46,\"name\":\"hunger\",\"val\":0},{\"percent\":0,\"name\":\"thirst\",\"val\":0}]', 'Toni', 'Sikora', '9.3.2022', 'm', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '12/06/2022 16:50:59', 0, 0, 5, 0, 20, 0, 1, 2, 1, 0, NULL, '2022-06-04', NULL),
-(10009, 'steam:1100001453fc4a4', 'license:28b3a93ce930a76bb21c53788d5a938c86ed7160', 20, '~r~Owner | ~w~Fuezify', '{\"hair_color_2\":0,\"ears_1\":-1,\"makeup_4\":0,\"tshirt_2\":0,\"skin\":2,\"eyebrows_1\":0,\"complexion_2\":0,\"chain_1\":0,\"hair_color_1\":0,\"chest_1\":0,\"hair_1\":12,\"bracelets_1\":-1,\"bags_1\":0,\"blush_1\":0,\"mask_2\":0,\"shoes_1\":0,\"sex\":0,\"makeup_1\":0,\"tshirt_1\":0,\"blemishes_2\":0,\"decals_1\":2,\"watches_2\":0,\"lipstick_3\":0,\"complexion_1\":0,\"chest_3\":0,\"moles_2\":0,\"pants_1\":0,\"bodyb_2\":0,\"helmet_1\":-1,\"mask_1\":0,\"chain_2\":0,\"shoes_2\":0,\"arms_2\":0,\"moles_1\":0,\"lipstick_2\":0,\"pants_2\":0,\"sun_2\":0,\"face\":0,\"blush_2\":0,\"lipstick_1\":0,\"bproof_1\":0,\"arms\":0,\"beard_4\":0,\"blemishes_1\":0,\"torso_1\":0,\"watches_1\":-1,\"helmet_2\":0,\"hair_2\":0,\"bracelets_2\":0,\"decals_2\":0,\"bodyb_1\":0,\"age_2\":0,\"age_1\":0,\"bags_2\":0,\"beard_1\":0,\"torso_2\":0,\"makeup_2\":0,\"bproof_2\":0,\"blush_3\":0,\"beard_2\":0,\"eyebrows_4\":0,\"eyebrows_3\":0,\"eyebrows_2\":0,\"makeup_3\":0,\"lipstick_4\":0,\"sun_1\":0,\"beard_3\":0,\"glasses_1\":0,\"ears_2\":0,\"eye_color\":0,\"chest_2\":0,\"glasses_2\":0}', 1, 0, '[]', '{\"z\":45.7,\"y\":2592.9,\"x\":1882.1}', 100, 0, 'user', 5721548, '[{\"percent\":98,\"val\":0,\"name\":\"hunger\"},{\"percent\":98,\"val\":0,\"name\":\"thirst\"}]', 'Uzzi', 'Owner', '10.11.1111', 'z', '', 0, NULL, 0, 0, '{\"owns\":false,\"furniture\":[],\"houseId\":0}', '{}', 0, 0, 0, '31/01/2022 21:24:24', 0, 0, 0, 0, 20, 0, 0, 1, 1, 0, NULL, NULL, NULL);
-
--- --------------------------------------------------------
+  KEY `ident` (`identifier`) USING BTREE,
+  KEY `ID` (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=10466 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `user_inventory`
@@ -2469,1438 +2268,9 @@ CREATE TABLE IF NOT EXISTS `user_inventory` (
   `identifier` int(11) NOT NULL,
   `item` varchar(50) NOT NULL,
   `count` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1400 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=82219 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
---
--- Dumping data for table `user_inventory`
---
-
-INSERT INTO `user_inventory` (`id`, `identifier`, `item`, `count`) VALUES
-(1, 10000, 'heartpump', 0),
-(2, 10000, 'croquettes', 0),
-(3, 10000, 'weapon_musket', 0),
-(4, 10000, 'moneywash', 0),
-(5, 10000, 'clothe', 0),
-(6, 10000, 'weapon_minismg', 0),
-(7, 10000, 'odznaka', 0),
-(8, 10000, 'scijev', 0),
-(9, 10000, 'ukosnica', 0),
-(10, 10000, 'mobitel', 0),
-(11, 10000, 'milk', 0),
-(12, 10000, 'weapon_fireextinguisher', 0),
-(13, 10000, 'kcijev', 0),
-(14, 10000, 'marijuana', 0),
-(15, 10000, 'narukvica', 0),
-(16, 10000, 'weapon_marksmanrifle_mk2', 0),
-(17, 10000, 'cannabis', 0),
-(18, 10000, 'ccijev', 0),
-(19, 10000, 'gym_membership', 0),
-(20, 10000, 'sodium', 0),
-(21, 10000, 'weapon_wrench', 0),
-(22, 10000, 'packaged_plank', 0),
-(23, 10000, 'petarda', 0),
-(24, 10000, 'elektronika', 0),
-(25, 10000, 'weapon_knife', 0),
-(26, 10000, 'acid', 0),
-(27, 10000, 'kola', 0),
-(28, 10000, 'weapon_firework', 0),
-(29, 10000, 'blowpipe', 0),
-(30, 10000, 'weapon_flashlight', 0),
-(31, 10000, 'wood', 0),
-(32, 10000, 'koza', 0),
-(33, 10000, 'ronjenje', 0),
-(34, 10000, 'weapon_advancedrifle', 0),
-(35, 10000, 'clip', 0),
-(36, 10000, 'grebalica', 0),
-(37, 10000, 'gazbottle', 0),
-(38, 10000, 'weapon_appistol', 0),
-(39, 10000, 'saksija', 0),
-(40, 10000, 'finjectori', 0),
-(41, 10000, 'burek', 0),
-(42, 10000, 'medikit', 0),
-(43, 10000, 'gljive', 0),
-(44, 10000, 'zemlja', 0),
-(45, 10000, 'weapon_snspistol', 0),
-(46, 10000, 'stijelo', 0),
-(47, 10000, 'essence', 0),
-(48, 10000, 'weapon_pumpshotgun', 0),
-(49, 10000, 'ktijelo', 0),
-(50, 10000, 'weapon_revolver_mk2', 0),
-(51, 10000, 'weapon_pistol', 0),
-(52, 10000, 'ctijelo', 0),
-(53, 10000, 'bread', 0),
-(54, 10000, 'contract', 0),
-(55, 10000, 'intercooler', 0),
-(56, 10000, 'weapon_nightstick', 0),
-(57, 10000, 'weapon_bullpupshotgun', 0),
-(58, 10000, 'kmotor', 0),
-(59, 10000, 'fish', 0),
-(60, 10000, 'cutted_wood', 0),
-(61, 10000, 'weapon_mg', 0),
-(62, 10000, 'zeton', 0),
-(63, 10000, 'petarde', 0),
-(64, 10000, 'stone', 0),
-(65, 10000, 'cocaine', 0),
-(66, 10000, 'slaughtered_chicken', 0),
-(67, 10000, 'ckundak', 0),
-(68, 10000, 'petrol_raffin', 0),
-(69, 10000, 'bandage', 0),
-(70, 10000, 'kkundak', 0),
-(71, 10000, 'pizza', 0),
-(72, 10000, 'coke', 0),
-(73, 10000, 'weapon_heavysniper', 0),
-(74, 10000, 'skundak', 0),
-(75, 10000, 'alive_chicken', 0),
-(76, 10000, 'meth', 0),
-(77, 10000, 'seed', 0),
-(78, 10000, 'wool', 0),
-(79, 10000, 'water', 0),
-(80, 10000, 'weapon_battleaxe', 0),
-(81, 10000, 'autobomba', 0),
-(82, 10000, 'whisky', 0),
-(83, 10000, 'auspuh', 0),
-(84, 10000, 'weapon_vintagepistol', 0),
-(85, 10000, 'weapon_assaultrifle', 0),
-(86, 10000, 'weapon_hatchet', 0),
-(87, 10000, 'weapon_smg', 0),
-(88, 10000, 'weapon_specialcarbine', 0),
-(89, 10000, 'weapon_sniperrifle', 0),
-(90, 10000, 'weapon_switchblade', 0),
-(91, 10000, 'jewels', 0),
-(92, 10000, 'weapon_revolver', 0),
-(93, 10000, 'weapon_poolcue', 0),
-(94, 10000, 'LSD', 0),
-(95, 10000, 'weapon_pistol50', 0),
-(96, 10000, 'weapon_microsmg', 0),
-(97, 10000, 'smcijev', 0),
-(98, 10000, 'weapon_dbshotgun', 0),
-(99, 10000, 'weapon_heavyshotgun', 0),
-(100, 10000, 'weapon_marksmanpistol', 0),
-(101, 10000, 'weapon_machete', 0),
-(102, 10000, 'weapon_gusenberg', 0),
-(103, 10000, 'meso', 0),
-(104, 10000, 'champagne', 0),
-(105, 10000, 'packaged_chicken', 0),
-(106, 10000, 'weapon_marksmanrifle', 0),
-(107, 10000, 'weapon_heavypistol', 0),
-(108, 10000, 'weapon_hammer', 0),
-(109, 10000, 'weapon_machinepsitol', 0),
-(110, 10000, 'smtijelo', 0),
-(111, 10000, 'gold', 0),
-(112, 10000, 'kvacilo', 0),
-(113, 10000, 'filter', 0),
-(114, 10000, 'copper', 0),
-(115, 10000, 'weapon_combatpdw', 0),
-(116, 10000, 'heroin', 0),
-(117, 10000, 'sulfuric_acid', 0),
-(118, 10000, 'lancic', 0),
-(119, 10000, 'weapon_combatpistol', 0),
-(120, 10000, 'biser', 0),
-(121, 10000, 'weapon_doubleaction', 0),
-(122, 10000, 'chemicals', 0),
-(123, 10000, 'weapon_crowbar', 0),
-(124, 10000, 'petrol', 0),
-(125, 10000, 'iron', 0),
-(126, 10000, 'kemija', 0),
-(127, 10000, 'lighter', 0),
-(128, 10000, 'gintonic', 0),
-(129, 10000, 'ljudi', 0),
-(130, 10000, 'weapon_carbinerifle_mk2', 0),
-(131, 10000, 'net_cracker', 0),
-(132, 10000, 'weapon_carbinerifle', 0),
-(133, 10000, 'diamond', 0),
-(134, 10000, 'cigarett', 0),
-(135, 10000, 'beer', 0),
-(136, 10000, 'repairkit', 0),
-(137, 10000, 'methlab', 0),
-(138, 10000, 'drone_flyer_7', 0),
-(139, 10000, 'fixtool', 0),
-(140, 10000, 'weapon_sawnoffshotgun', 0),
-(141, 10000, 'weapon_combatmg', 0),
-(142, 10000, 'wine', 0),
-(143, 10000, 'chemicalslisence', 0),
-(144, 10000, 'weapon_compactrifle', 0),
-(145, 10000, 'weapon_bat', 0),
-(146, 10000, 'hydrochloric_acid', 0),
-(147, 10000, 'carokit', 0),
-(148, 10000, 'speed', 0),
-(149, 10000, 'weapon_autoshotgun', 0),
-(150, 10000, 'weapon_assaultsmg', 0),
-(151, 10000, 'loto', 0),
-(152, 10000, 'weapon_assaultshotgun', 0),
-(153, 10000, 'weapon_assaultrifle_mk2', 0),
-(154, 10000, 'turbo', 0),
-(155, 10000, 'thermite', 0),
-(156, 10000, 'lithium', 0),
-(157, 10000, 'washed_stone', 0),
-(158, 10000, 'acetone', 0),
-(159, 10000, 'vodka', 0),
-(160, 10000, 'vatromet', 0),
-(161, 10000, 'headbag', 0),
-(162, 10000, 'smkundak', 0),
-(163, 10000, 'thionyl_chloride', 0),
-(164, 10000, 'fixkit', 0),
-(165, 10000, 'tequila', 0),
-(166, 10000, 'duhan', 0),
-(167, 10000, 'fabric', 0),
-(168, 10000, 'weapon_golfclub', 0),
-(169, 10000, 'skoljka', 0),
-(170, 10000, 'absinthe', 0),
-(171, 10000, 'weapon_bullpuprifle', 0),
-(172, 10000, 'rakija', 0),
-(173, 10000, 'carotool', 0),
-(174, 10000, 'poppyresin', 0),
-(175, 10003, 'lighter', 0),
-(176, 10003, 'pizza', 0),
-(177, 10003, 'cocaine', 0),
-(178, 10003, 'grebalica', 0),
-(179, 10003, 'copper', 0),
-(180, 10003, 'carotool', 0),
-(181, 10003, 'blowpipe', 0),
-(182, 10003, 'absinthe', 0),
-(183, 10003, 'fish', 0),
-(184, 10003, 'weapon_combatpistol', 0),
-(185, 10003, 'carokit', 0),
-(186, 10003, 'weapon_carbinerifle', 0),
-(187, 10003, 'champagne', 0),
-(188, 10003, 'weapon_assaultsmg', 0),
-(189, 10003, 'headbag', 0),
-(190, 10003, 'weapon_dbshotgun', 0),
-(191, 10003, 'weapon_appistol', 0),
-(192, 10003, 'gazbottle', 0),
-(193, 10003, 'speed', 0),
-(194, 10003, 'thermite', 0),
-(195, 10003, 'weapon_knife', 0),
-(196, 10003, 'kola', 0),
-(197, 10003, 'sodium', 0),
-(198, 10003, 'ronjenje', 0),
-(199, 10003, 'mobitel', 1),
-(200, 10003, 'weapon_wrench', 0),
-(201, 10003, 'bandage', 0),
-(202, 10003, 'washed_stone', 0),
-(203, 10003, 'meso', 0),
-(204, 10003, 'cannabis', 0),
-(205, 10003, 'marijuana', 0),
-(206, 10003, 'alive_chicken', 0),
-(207, 10003, 'weapon_marksmanpistol', 0),
-(208, 10003, 'weapon_carbinerifle_mk2', 0),
-(209, 10003, 'clothe', 0),
-(210, 10003, 'weapon_firework', 0),
-(211, 10003, 'heroin', 0),
-(212, 10003, 'croquettes', 0),
-(213, 10003, 'acid', 0),
-(214, 10003, 'stone', 0),
-(215, 10003, 'weapon_minismg', 0),
-(216, 10003, 'bread', 0),
-(217, 10003, 'filter', 0),
-(218, 10003, 'intercooler', 0),
-(219, 10003, 'heartpump', 0),
-(220, 10003, 'ljudi', 0),
-(221, 10003, 'duhan', 0),
-(222, 10003, 'weapon_revolver_mk2', 0),
-(223, 10003, 'finjectori', 0),
-(224, 10003, 'sulfuric_acid', 0),
-(225, 10003, 'essence', 0),
-(226, 10003, 'weapon_assaultrifle_mk2', 0),
-(227, 10003, 'fixkit', 0),
-(228, 10003, 'autobomba', 0),
-(229, 10003, 'wine', 0),
-(230, 10003, 'meth', 0),
-(231, 10003, 'net_cracker', 0),
-(232, 10003, 'packaged_chicken', 0),
-(233, 10003, 'weapon_assaultshotgun', 0),
-(234, 10003, 'weapon_pistol50', 0),
-(235, 10003, 'weapon_hammer', 0),
-(236, 10003, 'whisky', 0),
-(237, 10003, 'lancic', 0),
-(238, 10003, 'petrol', 0),
-(239, 10003, 'zeton', 0),
-(240, 10003, 'hydrochloric_acid', 0),
-(241, 10003, 'water', 0),
-(242, 10003, 'wood', 0),
-(243, 10003, 'weapon_advancedrifle', 0),
-(244, 10003, 'auspuh', 0),
-(245, 10003, 'weapon_marksmanrifle', 0),
-(246, 10003, 'weapon_combatpdw', 0),
-(247, 10003, 'ukosnica', 0),
-(248, 10003, 'fixtool', 0),
-(249, 10003, 'diamond', 0),
-(250, 10003, 'weapon_autoshotgun', 0),
-(251, 10003, 'elektronika', 0),
-(252, 10003, 'gljive', 0),
-(253, 10003, 'weapon_nightstick', 0),
-(254, 10003, 'smkundak', 0),
-(255, 10003, 'weapon_specialcarbine', 0),
-(256, 10003, 'drone_flyer_7', 0),
-(257, 10003, 'weapon_snspistol', 0),
-(258, 10003, 'saksija', 0),
-(259, 10003, 'lithium', 0),
-(260, 10003, 'weapon_smg', 0),
-(261, 10003, 'ckundak', 0),
-(262, 10003, 'vatromet', 1),
-(263, 10003, 'weapon_sawnoffshotgun', 0),
-(264, 10003, 'weapon_revolver', 0),
-(265, 10003, 'burek', 0),
-(266, 10003, 'weapon_pumpshotgun', 0),
-(267, 10003, 'weapon_poolcue', 0),
-(268, 10003, 'milk', 0),
-(269, 10003, 'kkundak', 0),
-(270, 10003, 'koza', 0),
-(271, 10003, 'weapon_fireextinguisher', 0),
-(272, 10003, 'weapon_switchblade', 0),
-(273, 10003, 'ktijelo', 0),
-(274, 10003, 'weapon_musket', 0),
-(275, 10003, 'weapon_microsmg', 0),
-(276, 10003, 'weapon_vintagepistol', 0),
-(277, 10003, 'skundak', 0),
-(278, 10003, 'weapon_marksmanrifle_mk2', 0),
-(279, 10003, 'weapon_heavyshotgun', 0),
-(280, 10003, 'weapon_machete', 0),
-(281, 10003, 'kmotor', 0),
-(282, 10003, 'smcijev', 0),
-(283, 10003, 'petrol_raffin', 0),
-(284, 10003, 'weapon_heavysniper', 0),
-(285, 10003, 'kcijev', 0),
-(286, 10003, 'seed', 0),
-(287, 10003, 'weapon_machinepsitol', 0),
-(288, 10003, 'gintonic', 0),
-(289, 10003, 'iron', 0),
-(290, 10003, 'contract', 0),
-(291, 10003, 'weapon_hatchet', 0),
-(292, 10003, 'weapon_gusenberg', 0),
-(293, 10003, 'scijev', 0),
-(294, 10003, 'loto', 0),
-(295, 10003, 'weapon_flashlight', 0),
-(296, 10003, 'weapon_doubleaction', 0),
-(297, 10003, 'ctijelo', 0),
-(298, 10003, 'weapon_crowbar', 0),
-(299, 10003, 'cutted_wood', 0),
-(300, 10003, 'weapon_compactrifle', 0),
-(301, 10003, 'jewels', 0),
-(302, 10003, 'petarde', 0),
-(303, 10003, 'odznaka', 0),
-(304, 10003, 'weapon_combatmg', 0),
-(305, 10003, 'vodka', 0),
-(306, 10003, 'kvacilo', 0),
-(307, 10003, 'weapon_bullpupshotgun', 0),
-(308, 10003, 'beer', 0),
-(309, 10003, 'biser', 0),
-(310, 10003, 'petarda', 0),
-(311, 10003, 'weapon_bullpuprifle', 0),
-(312, 10003, 'gold', 0),
-(313, 10003, 'chemicals', 0),
-(314, 10003, 'weapon_mg', 0),
-(315, 10003, 'weapon_assaultrifle', 0),
-(316, 10003, 'wool', 0),
-(317, 10003, 'clip', 0),
-(318, 10003, 'LSD', 0),
-(319, 10003, 'chemicalslisence', 0),
-(320, 10003, 'medikit', 0),
-(321, 10003, 'turbo', 0),
-(322, 10003, 'thionyl_chloride', 0),
-(323, 10003, 'tequila', 0),
-(324, 10003, 'coke', 0),
-(325, 10003, 'gym_membership', 0),
-(326, 10003, 'stijelo', 0),
-(327, 10003, 'moneywash', 0),
-(328, 10003, 'smtijelo', 0),
-(329, 10003, 'narukvica', 0),
-(330, 10003, 'slaughtered_chicken', 0),
-(331, 10003, 'weapon_heavypistol', 0),
-(332, 10003, 'packaged_plank', 0),
-(333, 10003, 'skoljka', 0),
-(334, 10003, 'zemlja', 0),
-(335, 10003, 'fabric', 0),
-(336, 10003, 'kemija', 0),
-(337, 10003, 'weapon_sniperrifle', 0),
-(338, 10003, 'weapon_battleaxe', 0),
-(339, 10003, 'cigarett', 0),
-(340, 10003, 'acetone', 0),
-(341, 10003, 'ccijev', 0),
-(342, 10003, 'rakija', 0),
-(343, 10003, 'repairkit', 0),
-(344, 10003, 'poppyresin', 0),
-(345, 10003, 'weapon_pistol', 0),
-(346, 10003, 'methlab', 0),
-(347, 10003, 'weapon_golfclub', 0),
-(348, 10003, 'weapon_bat', 0),
-(349, 10006, 'heartpump', 0),
-(350, 10006, 'weapon_assaultrifle', 0),
-(351, 10006, 'filter', 0),
-(352, 10006, 'meso', 0),
-(353, 10006, 'headbag', 0),
-(354, 10006, 'grebalica', 0),
-(355, 10006, 'zemlja', 0),
-(356, 10006, 'rakija', 0),
-(357, 10006, 'sodium', 0),
-(358, 10006, 'iron', 0),
-(359, 10006, 'weapon_assaultshotgun', 0),
-(360, 10006, 'hydrochloric_acid', 0),
-(361, 10006, 'weapon_combatmg', 0),
-(362, 10006, 'fixtool', 0),
-(363, 10006, 'weapon_vintagepistol', 0),
-(364, 10006, 'weapon_heavysniper', 0),
-(365, 10006, 'milk', 0),
-(366, 10006, 'water', 0),
-(367, 10006, 'weapon_bullpupshotgun', 0),
-(368, 10006, 'weapon_specialcarbine', 0),
-(369, 10006, 'clip', 0),
-(370, 10006, 'duhan', 0),
-(371, 10006, 'loto', 0),
-(372, 10006, 'cutted_wood', 0),
-(373, 10006, 'vatromet', 0),
-(374, 10006, 'lithium', 0),
-(375, 10006, 'weapon_flashlight', 0),
-(376, 10006, 'biser', 0),
-(377, 10006, 'weapon_marksmanrifle_mk2', 0),
-(378, 10006, 'lighter', 0),
-(379, 10006, 'wool', 0),
-(380, 10006, 'essence', 0),
-(381, 10006, 'odznaka', 0),
-(382, 10006, 'moneywash', 0),
-(383, 10006, 'weapon_carbinerifle', 0),
-(384, 10006, 'weapon_heavyshotgun', 0),
-(385, 10006, 'ctijelo', 0),
-(386, 10006, 'weapon_bullpuprifle', 0),
-(387, 10006, 'weapon_knife', 0),
-(388, 10006, 'net_cracker', 0),
-(389, 10006, 'intercooler', 0),
-(390, 10006, 'bread', 0),
-(391, 10006, 'ktijelo', 0),
-(392, 10006, 'weapon_combatpdw', 0),
-(393, 10006, 'contract', 0),
-(394, 10006, 'gold', 0),
-(395, 10006, 'gym_membership', 0),
-(396, 10006, 'fish', 0),
-(397, 10006, 'stijelo', 0),
-(398, 10006, 'gazbottle', 0),
-(399, 10006, 'weapon_revolver', 0),
-(400, 10006, 'gintonic', 0),
-(401, 10006, 'repairkit', 0),
-(402, 10006, 'stone', 0),
-(403, 10006, 'kola', 0),
-(404, 10006, 'medikit', 0),
-(405, 10006, 'weapon_musket', 0),
-(406, 10006, 'scijev', 0),
-(407, 10006, 'petarde', 0),
-(408, 10006, 'packaged_plank', 0),
-(409, 10006, 'skoljka', 0),
-(410, 10006, 'chemicalslisence', 0),
-(411, 10006, 'smtijelo', 0),
-(412, 10006, 'bandage', 0),
-(413, 10006, 'ccijev', 0),
-(414, 10006, 'lancic', 0),
-(415, 10006, 'wine', 0),
-(416, 10006, 'seed', 0),
-(417, 10006, 'kemija', 0),
-(418, 10006, 'kcijev', 0),
-(419, 10006, 'wood', 0),
-(420, 10006, 'weapon_sniperrifle', 0),
-(421, 10006, 'kmotor', 0),
-(422, 10006, 'weapon_smg', 0),
-(423, 10006, 'LSD', 0),
-(424, 10006, 'petarda', 0),
-(425, 10006, 'weapon_hatchet', 0),
-(426, 10006, 'zeton', 0),
-(427, 10006, 'thermite', 0),
-(428, 10006, 'weapon_heavypistol', 0),
-(429, 10006, 'kkundak', 0),
-(430, 10006, 'clothe', 0),
-(431, 10006, 'weapon_machete', 0),
-(432, 10006, 'cannabis', 0),
-(433, 10006, 'burek', 0),
-(434, 10006, 'ronjenje', 0),
-(435, 10006, 'weapon_switchblade', 0),
-(436, 10006, 'koza', 0),
-(437, 10006, 'whisky', 0),
-(438, 10006, 'weapon_wrench', 0),
-(439, 10006, 'weapon_combatpistol', 0),
-(440, 10006, 'skundak', 0),
-(441, 10006, 'methlab', 0),
-(442, 10006, 'absinthe', 0),
-(443, 10006, 'weapon_revolver_mk2', 0),
-(444, 10006, 'poppyresin', 0),
-(445, 10006, 'weapon_sawnoffshotgun', 0),
-(446, 10006, 'weapon_pistol50', 0),
-(447, 10006, 'weapon_minismg', 0),
-(448, 10006, 'weapon_poolcue', 0),
-(449, 10006, 'weapon_pistol', 0),
-(450, 10006, 'weapon_nightstick', 0),
-(451, 10006, 'packaged_chicken', 0),
-(452, 10006, 'acid', 0),
-(453, 10006, 'weapon_mg', 0),
-(454, 10006, 'cigarett', 0),
-(455, 10006, 'weapon_marksmanpistol', 0),
-(456, 10006, 'weapon_machinepsitol', 0),
-(457, 10006, 'weapon_assaultrifle_mk2', 0),
-(458, 10006, 'petrol', 0),
-(459, 10006, 'fixkit', 0),
-(460, 10006, 'turbo', 0),
-(461, 10006, 'saksija', 0),
-(462, 10006, 'weapon_gusenberg', 0),
-(463, 10006, 'weapon_advancedrifle', 0),
-(464, 10006, 'kvacilo', 0),
-(465, 10006, 'weapon_carbinerifle_mk2', 0),
-(466, 10006, 'weapon_golfclub', 0),
-(467, 10006, 'weapon_firework', 0),
-(468, 10006, 'weapon_pumpshotgun', 0),
-(469, 10006, 'weapon_doubleaction', 0),
-(470, 10006, 'weapon_dbshotgun', 0),
-(471, 10006, 'weapon_crowbar', 0),
-(472, 10006, 'weapon_compactrifle', 0),
-(473, 10006, 'finjectori', 0),
-(474, 10006, 'weapon_snspistol', 0),
-(475, 10006, 'smkundak', 0),
-(476, 10006, 'narukvica', 0),
-(477, 10006, 'ukosnica', 0),
-(478, 10006, 'autobomba', 0),
-(479, 10006, 'mobitel', 0),
-(480, 10006, 'croquettes', 0),
-(481, 10006, 'blowpipe', 0),
-(482, 10006, 'jewels', 0),
-(483, 10006, 'acetone', 0),
-(484, 10006, 'diamond', 0),
-(485, 10006, 'copper', 0),
-(486, 10006, 'carokit', 0),
-(487, 10006, 'auspuh', 0),
-(488, 10006, 'weapon_bat', 0),
-(489, 10006, 'petrol_raffin', 0),
-(490, 10006, 'weapon_autoshotgun', 0),
-(491, 10006, 'beer', 0),
-(492, 10006, 'gljive', 0),
-(493, 10006, 'ljudi', 0),
-(494, 10006, 'pizza', 0),
-(495, 10006, 'weapon_appistol', 0),
-(496, 10006, 'chemicals', 0),
-(497, 10006, 'weapon_assaultsmg', 0),
-(498, 10006, 'weapon_hammer', 0),
-(499, 10006, 'carotool', 0),
-(500, 10006, 'marijuana', 0),
-(501, 10006, 'weapon_battleaxe', 0),
-(502, 10006, 'ckundak', 0),
-(503, 10006, 'washed_stone', 0),
-(504, 10006, 'slaughtered_chicken', 0),
-(505, 10006, 'tequila', 0),
-(506, 10006, 'weapon_marksmanrifle', 0),
-(507, 10006, 'elektronika', 0),
-(508, 10006, 'smcijev', 0),
-(509, 10006, 'fabric', 0),
-(510, 10006, 'thionyl_chloride', 0),
-(511, 10006, 'weapon_microsmg', 0),
-(512, 10006, 'speed', 0),
-(513, 10006, 'drone_flyer_7', 0),
-(514, 10006, 'vodka', 0),
-(515, 10006, 'alive_chicken', 0),
-(516, 10006, 'meth', 0),
-(517, 10006, 'sulfuric_acid', 0),
-(518, 10006, 'weapon_fireextinguisher', 0),
-(519, 10006, 'heroin', 0),
-(520, 10006, 'coke', 0),
-(521, 10006, 'champagne', 0),
-(522, 10006, 'cocaine', 0),
-(523, 10007, 'weapon_assaultrifle', 0),
-(524, 10007, 'meso', 0),
-(525, 10007, 'headbag', 0),
-(526, 10007, 'heartpump', 0),
-(527, 10007, 'filter', 0),
-(528, 10007, 'rakija', 0),
-(529, 10007, 'iron', 0),
-(530, 10007, 'zemlja', 0),
-(531, 10007, 'grebalica', 0),
-(532, 10007, 'sodium', 0),
-(533, 10007, 'fixtool', 0),
-(534, 10007, 'weapon_assaultshotgun', 0),
-(535, 10007, 'weapon_combatmg', 0),
-(536, 10007, 'hydrochloric_acid', 0),
-(537, 10007, 'weapon_vintagepistol', 0),
-(538, 10007, 'weapon_heavysniper', 0),
-(539, 10007, 'milk', 0),
-(540, 10007, 'weapon_specialcarbine', 0),
-(541, 10007, 'water', 0),
-(542, 10007, 'weapon_bullpupshotgun', 0),
-(543, 10007, 'clip', 0),
-(544, 10007, 'duhan', 0),
-(545, 10007, 'loto', 0),
-(546, 10007, 'cutted_wood', 0),
-(547, 10007, 'vatromet', 0),
-(548, 10007, 'lithium', 0),
-(549, 10007, 'weapon_flashlight', 0),
-(550, 10007, 'biser', 0),
-(551, 10007, 'weapon_marksmanrifle_mk2', 0),
-(552, 10007, 'lighter', 0),
-(553, 10007, 'wool', 0),
-(554, 10007, 'essence', 0),
-(555, 10007, 'weapon_carbinerifle', 0),
-(556, 10007, 'odznaka', 0),
-(557, 10007, 'moneywash', 0),
-(558, 10007, 'weapon_heavyshotgun', 0),
-(559, 10007, 'weapon_bullpuprifle', 0),
-(560, 10007, 'ctijelo', 0),
-(561, 10007, 'weapon_knife', 0),
-(562, 10007, 'net_cracker', 0),
-(563, 10007, 'intercooler', 0),
-(564, 10007, 'ktijelo', 0),
-(565, 10007, 'bread', 0),
-(566, 10007, 'weapon_combatpdw', 0),
-(567, 10007, 'contract', 0),
-(568, 10007, 'gym_membership', 0),
-(569, 10007, 'gold', 0),
-(570, 10007, 'stijelo', 0),
-(571, 10007, 'fish', 0),
-(572, 10007, 'gazbottle', 0),
-(573, 10007, 'weapon_revolver', 0),
-(574, 10007, 'gintonic', 0),
-(575, 10007, 'repairkit', 0),
-(576, 10007, 'kola', 0),
-(577, 10007, 'stone', 0),
-(578, 10007, 'medikit', 0),
-(579, 10007, 'weapon_musket', 0),
-(580, 10007, 'scijev', 0),
-(581, 10007, 'petarde', 0),
-(582, 10007, 'packaged_plank', 0),
-(583, 10007, 'skoljka', 0),
-(584, 10007, 'smtijelo', 0),
-(585, 10007, 'chemicalslisence', 0),
-(586, 10007, 'bandage', 0),
-(587, 10007, 'ccijev', 0),
-(588, 10007, 'lancic', 0),
-(589, 10007, 'seed', 0),
-(590, 10007, 'wine', 0),
-(591, 10007, 'kemija', 0),
-(592, 10007, 'kcijev', 0),
-(593, 10007, 'wood', 0),
-(594, 10007, 'weapon_sniperrifle', 0),
-(595, 10007, 'kmotor', 0),
-(596, 10007, 'LSD', 0),
-(597, 10007, 'weapon_smg', 0),
-(598, 10007, 'petarda', 0),
-(599, 10007, 'zeton', 0),
-(600, 10007, 'weapon_hatchet', 0),
-(601, 10007, 'thermite', 0),
-(602, 10007, 'weapon_heavypistol', 0),
-(603, 10007, 'kkundak', 0),
-(604, 10007, 'cannabis', 0),
-(605, 10007, 'clothe', 0),
-(606, 10007, 'weapon_machete', 0),
-(607, 10007, 'burek', 0),
-(608, 10007, 'ronjenje', 0),
-(609, 10007, 'weapon_switchblade', 0),
-(610, 10007, 'koza', 0),
-(611, 10007, 'whisky', 0),
-(612, 10007, 'weapon_wrench', 0),
-(613, 10007, 'weapon_combatpistol', 0),
-(614, 10007, 'methlab', 0),
-(615, 10007, 'skundak', 0),
-(616, 10007, 'absinthe', 0),
-(617, 10007, 'weapon_revolver_mk2', 0),
-(618, 10007, 'poppyresin', 0),
-(619, 10007, 'weapon_sawnoffshotgun', 0),
-(620, 10007, 'weapon_minismg', 0),
-(621, 10007, 'weapon_poolcue', 0),
-(622, 10007, 'weapon_pistol50', 0),
-(623, 10007, 'weapon_pistol', 0),
-(624, 10007, 'weapon_nightstick', 0),
-(625, 10007, 'acid', 0),
-(626, 10007, 'weapon_mg', 0),
-(627, 10007, 'packaged_chicken', 0),
-(628, 10007, 'cigarett', 0),
-(629, 10007, 'weapon_marksmanpistol', 0),
-(630, 10007, 'weapon_machinepsitol', 0),
-(631, 10007, 'weapon_assaultrifle_mk2', 0),
-(632, 10007, 'petrol', 0),
-(633, 10007, 'turbo', 0),
-(634, 10007, 'fixkit', 0),
-(635, 10007, 'saksija', 0),
-(636, 10007, 'weapon_gusenberg', 0),
-(637, 10007, 'weapon_advancedrifle', 0),
-(638, 10007, 'kvacilo', 0),
-(639, 10007, 'weapon_carbinerifle_mk2', 0),
-(640, 10007, 'weapon_golfclub', 0),
-(641, 10007, 'weapon_firework', 0),
-(642, 10007, 'weapon_pumpshotgun', 0),
-(643, 10007, 'weapon_doubleaction', 0),
-(644, 10007, 'weapon_dbshotgun', 0),
-(645, 10007, 'weapon_crowbar', 0),
-(646, 10007, 'weapon_compactrifle', 0),
-(647, 10007, 'finjectori', 0),
-(648, 10007, 'weapon_snspistol', 0),
-(649, 10007, 'narukvica', 0),
-(650, 10007, 'smkundak', 0),
-(651, 10007, 'ukosnica', 0),
-(652, 10007, 'autobomba', 0),
-(653, 10007, 'mobitel', 0),
-(654, 10007, 'croquettes', 0),
-(655, 10007, 'blowpipe', 0),
-(656, 10007, 'jewels', 0),
-(657, 10007, 'acetone', 0),
-(658, 10007, 'diamond', 0),
-(659, 10007, 'carokit', 0),
-(660, 10007, 'copper', 0),
-(661, 10007, 'auspuh', 0),
-(662, 10007, 'weapon_bat', 0),
-(663, 10007, 'petrol_raffin', 0),
-(664, 10007, 'weapon_autoshotgun', 0),
-(665, 10007, 'beer', 0),
-(666, 10007, 'gljive', 0),
-(667, 10007, 'ljudi', 0),
-(668, 10007, 'pizza', 0),
-(669, 10007, 'weapon_appistol', 0),
-(670, 10007, 'chemicals', 0),
-(671, 10007, 'weapon_assaultsmg', 0),
-(672, 10007, 'weapon_hammer', 0),
-(673, 10007, 'carotool', 0),
-(674, 10007, 'marijuana', 0),
-(675, 10007, 'weapon_battleaxe', 0),
-(676, 10007, 'ckundak', 0),
-(677, 10007, 'washed_stone', 0),
-(678, 10007, 'tequila', 0),
-(679, 10007, 'smcijev', 0),
-(680, 10007, 'slaughtered_chicken', 0),
-(681, 10007, 'weapon_marksmanrifle', 0),
-(682, 10007, 'elektronika', 0),
-(683, 10007, 'fabric', 0),
-(684, 10007, 'thionyl_chloride', 0),
-(685, 10007, 'weapon_microsmg', 0),
-(686, 10007, 'speed', 0),
-(687, 10007, 'drone_flyer_7', 0),
-(688, 10007, 'vodka', 0),
-(689, 10007, 'alive_chicken', 0),
-(690, 10007, 'sulfuric_acid', 0),
-(691, 10007, 'meth', 0),
-(692, 10007, 'weapon_fireextinguisher', 0),
-(693, 10007, 'coke', 0),
-(694, 10007, 'heroin', 0),
-(695, 10007, 'champagne', 0),
-(696, 10007, 'cocaine', 0),
-(697, 10008, 'headbag', 0),
-(698, 10008, 'weapon_assaultrifle', 0),
-(699, 10008, 'heartpump', 0),
-(700, 10008, 'filter', 0),
-(701, 10008, 'meso', 0),
-(702, 10008, 'grebalica', 0),
-(703, 10008, 'zemlja', 0),
-(704, 10008, 'rakija', 0),
-(705, 10008, 'iron', 0),
-(706, 10008, 'sodium', 0),
-(707, 10008, 'weapon_assaultshotgun', 0),
-(708, 10008, 'hydrochloric_acid', 0),
-(709, 10008, 'fixtool', 0),
-(710, 10008, 'weapon_vintagepistol', 0),
-(711, 10008, 'weapon_combatmg', 0),
-(712, 10008, 'weapon_heavysniper', 0),
-(713, 10008, 'milk', 0),
-(714, 10008, 'weapon_specialcarbine', 0),
-(715, 10008, 'water', 0),
-(716, 10008, 'weapon_bullpupshotgun', 0),
-(717, 10008, 'duhan', 0),
-(718, 10008, 'clip', 0),
-(719, 10008, 'cutted_wood', 0),
-(720, 10008, 'loto', 0),
-(721, 10008, 'vatromet', 0),
-(722, 10008, 'weapon_flashlight', 0),
-(723, 10008, 'lithium', 0),
-(724, 10008, 'weapon_marksmanrifle_mk2', 0),
-(725, 10008, 'lighter', 0),
-(726, 10008, 'biser', 0),
-(727, 10008, 'essence', 0),
-(728, 10008, 'odznaka', 0),
-(729, 10008, 'wool', 0),
-(730, 10008, 'weapon_carbinerifle', 0),
-(731, 10008, 'moneywash', 0),
-(732, 10008, 'weapon_heavyshotgun', 0),
-(733, 10008, 'ctijelo', 0),
-(734, 10008, 'weapon_bullpuprifle', 0),
-(735, 10008, 'weapon_knife', 0),
-(736, 10008, 'net_cracker', 0),
-(737, 10008, 'intercooler', 0),
-(738, 10008, 'bread', 0),
-(739, 10008, 'weapon_combatpdw', 0),
-(740, 10008, 'ktijelo', 0),
-(741, 10008, 'contract', 0),
-(742, 10008, 'gold', 0),
-(743, 10008, 'gym_membership', 0),
-(744, 10008, 'fish', 0),
-(745, 10008, 'stijelo', 0),
-(746, 10008, 'gazbottle', 0),
-(747, 10008, 'weapon_revolver', 0),
-(748, 10008, 'gintonic', 0),
-(749, 10008, 'repairkit', 0),
-(750, 10008, 'stone', 0),
-(751, 10008, 'kola', 0),
-(752, 10008, 'medikit', 0),
-(753, 10008, 'weapon_musket', 0),
-(754, 10008, 'scijev', 0),
-(755, 10008, 'petarde', 0),
-(756, 10008, 'packaged_plank', 0),
-(757, 10008, 'skoljka', 0),
-(758, 10008, 'smtijelo', 0),
-(759, 10008, 'chemicalslisence', 0),
-(760, 10008, 'bandage', 0),
-(761, 10008, 'ccijev', 0),
-(762, 10008, 'lancic', 0),
-(763, 10008, 'wine', 0),
-(764, 10008, 'seed', 0),
-(765, 10008, 'kemija', 0),
-(766, 10008, 'kcijev', 0),
-(767, 10008, 'wood', 0),
-(768, 10008, 'weapon_sniperrifle', 0),
-(769, 10008, 'LSD', 0),
-(770, 10008, 'kmotor', 0),
-(771, 10008, 'weapon_smg', 0),
-(772, 10008, 'petarda', 0),
-(773, 10008, 'zeton', 0),
-(774, 10008, 'weapon_hatchet', 0),
-(775, 10008, 'thermite', 0),
-(776, 10008, 'weapon_heavypistol', 0),
-(777, 10008, 'kkundak', 0),
-(778, 10008, 'clothe', 0),
-(779, 10008, 'weapon_machete', 0),
-(780, 10008, 'cannabis', 0),
-(781, 10008, 'burek', 0),
-(782, 10008, 'ronjenje', 0),
-(783, 10008, 'weapon_switchblade', 0),
-(784, 10008, 'koza', 0),
-(785, 10008, 'weapon_wrench', 0),
-(786, 10008, 'whisky', 0),
-(787, 10008, 'weapon_combatpistol', 0),
-(788, 10008, 'skundak', 0),
-(789, 10008, 'methlab', 0),
-(790, 10008, 'absinthe', 0),
-(791, 10008, 'weapon_revolver_mk2', 0),
-(792, 10008, 'poppyresin', 0),
-(793, 10008, 'weapon_sawnoffshotgun', 0),
-(794, 10008, 'weapon_minismg', 0),
-(795, 10008, 'weapon_poolcue', 0),
-(796, 10008, 'weapon_pistol50', 0),
-(797, 10008, 'weapon_nightstick', 0),
-(798, 10008, 'weapon_pistol', 0),
-(799, 10008, 'packaged_chicken', 0),
-(800, 10008, 'weapon_mg', 0),
-(801, 10008, 'acid', 0),
-(802, 10008, 'cigarett', 0),
-(803, 10008, 'weapon_marksmanpistol', 0),
-(804, 10008, 'weapon_machinepsitol', 0),
-(805, 10008, 'weapon_assaultrifle_mk2', 0),
-(806, 10008, 'petrol', 0),
-(807, 10008, 'fixkit', 0),
-(808, 10008, 'turbo', 0),
-(809, 10008, 'saksija', 0),
-(810, 10008, 'weapon_gusenberg', 0),
-(811, 10008, 'weapon_advancedrifle', 0),
-(812, 10008, 'kvacilo', 0),
-(813, 10008, 'weapon_carbinerifle_mk2', 0),
-(814, 10008, 'weapon_golfclub', 0),
-(815, 10008, 'weapon_pumpshotgun', 0),
-(816, 10008, 'weapon_firework', 0),
-(817, 10008, 'weapon_doubleaction', 0),
-(818, 10008, 'weapon_dbshotgun', 0),
-(819, 10008, 'weapon_crowbar', 0),
-(820, 10008, 'weapon_compactrifle', 0),
-(821, 10008, 'finjectori', 0),
-(822, 10008, 'weapon_snspistol', 0),
-(823, 10008, 'narukvica', 0),
-(824, 10008, 'smkundak', 0),
-(825, 10008, 'ukosnica', 0),
-(826, 10008, 'autobomba', 0),
-(827, 10008, 'mobitel', 0),
-(828, 10008, 'croquettes', 0),
-(829, 10008, 'blowpipe', 0),
-(830, 10008, 'jewels', 0),
-(831, 10008, 'acetone', 0),
-(832, 10008, 'diamond', 0),
-(833, 10008, 'copper', 0),
-(834, 10008, 'carokit', 0),
-(835, 10008, 'auspuh', 0),
-(836, 10008, 'weapon_bat', 0),
-(837, 10008, 'petrol_raffin', 0),
-(838, 10008, 'weapon_autoshotgun', 0),
-(839, 10008, 'beer', 0),
-(840, 10008, 'gljive', 0),
-(841, 10008, 'ljudi', 0),
-(842, 10008, 'weapon_appistol', 0),
-(843, 10008, 'pizza', 0),
-(844, 10008, 'weapon_assaultsmg', 0),
-(845, 10008, 'chemicals', 0),
-(846, 10008, 'weapon_hammer', 0),
-(847, 10008, 'carotool', 0),
-(848, 10008, 'marijuana', 0),
-(849, 10008, 'weapon_battleaxe', 0),
-(850, 10008, 'ckundak', 0),
-(851, 10008, 'washed_stone', 0),
-(852, 10008, 'tequila', 0),
-(853, 10008, 'slaughtered_chicken', 0),
-(854, 10008, 'weapon_marksmanrifle', 0),
-(855, 10008, 'elektronika', 0),
-(856, 10008, 'smcijev', 0),
-(857, 10008, 'fabric', 0),
-(858, 10008, 'thionyl_chloride', 0),
-(859, 10008, 'weapon_microsmg', 0),
-(860, 10008, 'speed', 0),
-(861, 10008, 'drone_flyer_7', 0),
-(862, 10008, 'vodka', 0),
-(863, 10008, 'alive_chicken', 0),
-(864, 10008, 'meth', 0),
-(865, 10008, 'weapon_fireextinguisher', 0),
-(866, 10008, 'sulfuric_acid', 0),
-(867, 10008, 'heroin', 0),
-(868, 10008, 'coke', 0),
-(869, 10008, 'champagne', 0),
-(870, 10008, 'cocaine', 0),
-(871, 10009, 'clip', 0),
-(872, 10009, 'ckundak', 0),
-(873, 10009, 'weapon_combatmg', 0),
-(874, 10009, 'vatromet', 0),
-(875, 10009, 'weapon_machete', 0),
-(876, 10009, 'wool', 0),
-(877, 10009, 'kkundak', 0),
-(878, 10009, 'weapon_sawnoffshotgun', 0),
-(879, 10009, 'filter', 0),
-(880, 10009, 'weapon_musket', 0),
-(881, 10009, 'diamond', 0),
-(882, 10009, 'absinthe', 0),
-(883, 10009, 'bread', 0),
-(884, 10009, 'marijuana', 0),
-(885, 10009, 'kvacilo', 0),
-(886, 10009, 'slaughtered_chicken', 0),
-(887, 10009, 'lighter', 0),
-(888, 10009, 'mobitel', 0),
-(889, 10009, 'koza', 0),
-(890, 10009, 'thionyl_chloride', 0),
-(891, 10009, 'chemicalslisence', 0),
-(892, 10009, 'methlab', 0),
-(893, 10009, 'ljudi', 0),
-(894, 10009, 'ronjenje', 0),
-(895, 10009, 'weapon_switchblade', 0),
-(896, 10009, 'acetone', 0),
-(897, 10009, 'hydrochloric_acid', 0),
-(898, 10009, 'beer', 0),
-(899, 10009, 'contract', 0),
-(900, 10009, 'jewels', 0),
-(901, 10009, 'grebalica', 0),
-(902, 10009, 'seed', 0),
-(903, 10009, 'weapon_pumpshotgun', 0),
-(904, 10009, 'weapon_assaultshotgun', 0),
-(905, 10009, 'iron', 0),
-(906, 10009, 'intercooler', 0),
-(907, 10009, 'drone_flyer_7', 0),
-(908, 10009, 'water', 0),
-(909, 10009, 'weapon_bullpupshotgun', 0),
-(910, 10009, 'fabric', 0),
-(911, 10009, 'cigarett', 0),
-(912, 10009, 'weapon_minismg', 0),
-(913, 10009, 'smcijev', 0),
-(914, 10009, 'scijev', 0),
-(915, 10009, 'weapon_firework', 0),
-(916, 10009, 'smtijelo', 0),
-(917, 10009, 'weapon_revolver', 0),
-(918, 10009, 'weapon_smg', 0),
-(919, 10009, 'weapon_fireextinguisher', 0),
-(920, 10009, 'ccijev', 0),
-(921, 10009, 'net_cracker', 0),
-(922, 10009, 'loto', 0),
-(923, 10009, 'carotool', 0),
-(924, 10009, 'turbo', 0),
-(925, 10009, 'kcijev', 0),
-(926, 10009, 'chemicals', 0),
-(927, 10009, 'weapon_doubleaction', 0),
-(928, 10009, 'petrol_raffin', 0),
-(929, 10009, 'packaged_plank', 0),
-(930, 10009, 'cutted_wood', 0),
-(931, 10009, 'weapon_assaultsmg', 0),
-(932, 10009, 'weapon_bat', 0),
-(933, 10009, 'duhan', 0),
-(934, 10009, 'pizza', 0),
-(935, 10009, 'weapon_flashlight', 0),
-(936, 10009, 'weapon_crowbar', 0),
-(937, 10009, 'auspuh', 0),
-(938, 10009, 'weapon_bullpuprifle', 0),
-(939, 10009, 'cocaine', 0),
-(940, 10009, 'copper', 0),
-(941, 10009, 'ukosnica', 0),
-(942, 10009, 'carokit', 0),
-(943, 10009, 'ctijelo', 0),
-(944, 10009, 'repairkit', 0),
-(945, 10009, 'washed_stone', 0),
-(946, 10009, 'coke', 0),
-(947, 10009, 'moneywash', 0),
-(948, 10009, 'burek', 0),
-(949, 10009, 'weapon_compactrifle', 0),
-(950, 10009, 'weapon_marksmanpistol', 0),
-(951, 10009, 'gljive', 0),
-(952, 10009, 'weapon_assaultrifle_mk2', 0),
-(953, 10009, 'weapon_carbinerifle_mk2', 0),
-(954, 10009, 'sulfuric_acid', 0),
-(955, 10009, 'weapon_hammer', 0),
-(956, 10009, 'medikit', 0),
-(957, 10009, 'weapon_assaultrifle', 0),
-(958, 10009, 'weapon_sniperrifle', 0),
-(959, 10009, 'weapon_revolver_mk2', 0),
-(960, 10009, 'weapon_mg', 0),
-(961, 10009, 'weapon_snspistol', 0),
-(962, 10009, 'cannabis', 0),
-(963, 10009, 'zeton', 0),
-(964, 10009, 'zemlja', 0),
-(965, 10009, 'weapon_advancedrifle', 0),
-(966, 10009, 'weapon_microsmg', 0),
-(967, 10009, 'packaged_chicken', 0),
-(968, 10009, 'sodium', 0),
-(969, 10009, 'whisky', 0),
-(970, 10009, 'weapon_golfclub', 0),
-(971, 10009, 'LSD', 0),
-(972, 10009, 'tequila', 0),
-(973, 10009, 'champagne', 0),
-(974, 10009, 'meso', 0),
-(975, 10009, 'weapon_pistol', 0),
-(976, 10009, 'weapon_combatpdw', 0),
-(977, 10009, 'weapon_wrench', 0),
-(978, 10009, 'weapon_vintagepistol', 0),
-(979, 10009, 'milk', 0),
-(980, 10009, 'ktijelo', 0),
-(981, 10009, 'weapon_combatpistol', 0),
-(982, 10009, 'weapon_heavyshotgun', 0),
-(983, 10009, 'weapon_pistol50', 0),
-(984, 10009, 'odznaka', 0),
-(985, 10009, 'weapon_poolcue', 0),
-(986, 10009, 'weapon_autoshotgun', 0),
-(987, 10009, 'weapon_nightstick', 0),
-(988, 10009, 'biser', 0),
-(989, 10009, 'wine', 0),
-(990, 10009, 'fixkit', 0),
-(991, 10009, 'lancic', 0),
-(992, 10009, 'speed', 0),
-(993, 10009, 'weapon_machinepsitol', 0),
-(994, 10009, 'weapon_knife', 0),
-(995, 10009, 'weapon_heavysniper', 0),
-(996, 10009, 'weapon_heavypistol', 0),
-(997, 10009, 'weapon_hatchet', 0),
-(998, 10009, 'kola', 0),
-(999, 10009, 'weapon_dbshotgun', 0),
-(1000, 10009, 'autobomba', 0),
-(1001, 10009, 'weapon_specialcarbine', 0),
-(1002, 10009, 'weapon_marksmanrifle', 0),
-(1003, 10009, 'headbag', 0),
-(1004, 10009, 'blowpipe', 0),
-(1005, 10009, 'weapon_carbinerifle', 0),
-(1006, 10009, 'kmotor', 0),
-(1007, 10009, 'gintonic', 0),
-(1008, 10009, 'weapon_battleaxe', 0),
-(1009, 10009, 'meth', 0),
-(1010, 10009, 'gold', 0),
-(1011, 10009, 'gym_membership', 0),
-(1012, 10009, 'petarda', 0),
-(1013, 10009, 'lithium', 0),
-(1014, 10009, 'smkundak', 0),
-(1015, 10009, 'finjectori', 0),
-(1016, 10009, 'alive_chicken', 0),
-(1017, 10009, 'gazbottle', 0),
-(1018, 10009, 'weapon_appistol', 0),
-(1019, 10009, 'wood', 0),
-(1020, 10009, 'vodka', 0),
-(1021, 10009, 'kemija', 0),
-(1022, 10009, 'elektronika', 0),
-(1023, 10009, 'poppyresin', 0),
-(1024, 10009, 'clothe', 0),
-(1025, 10009, 'petarde', 0),
-(1026, 10009, 'bandage', 0),
-(1027, 10009, 'thermite', 0),
-(1028, 10009, 'stijelo', 0),
-(1029, 10009, 'essence', 0),
-(1030, 10009, 'fixtool', 0),
-(1031, 10009, 'acid', 0),
-(1032, 10009, 'croquettes', 0),
-(1033, 10009, 'narukvica', 0),
-(1034, 10009, 'stone', 0),
-(1035, 10009, 'heartpump', 0),
-(1036, 10009, 'fish', 0),
-(1037, 10009, 'skundak', 0),
-(1038, 10009, 'skoljka', 0),
-(1039, 10009, 'saksija', 0),
-(1040, 10009, 'rakija', 0),
-(1041, 10009, 'heroin', 0),
-(1042, 10009, 'weapon_gusenberg', 0),
-(1043, 10009, 'petrol', 0),
-(1044, 10009, 'weapon_marksmanrifle_mk2', 0),
-(1045, 10010, 'iron', 0),
-(1046, 10010, 'mobitel', 0),
-(1047, 10010, 'weapon_combatpdw', 0),
-(1048, 10010, 'contract', 0),
-(1049, 10010, 'pizza', 0),
-(1050, 10010, 'weapon_smg', 0),
-(1051, 10010, 'weapon_gusenberg', 0),
-(1052, 10010, 'chemicalslisence', 0),
-(1053, 10010, 'slaughtered_chicken', 0),
-(1054, 10010, 'weapon_switchblade', 0),
-(1055, 10010, 'tequila', 0),
-(1056, 10010, 'sodium', 0),
-(1057, 10010, 'ukosnica', 0),
-(1058, 10010, 'thionyl_chloride', 0),
-(1059, 10010, 'weapon_musket', 0),
-(1060, 10010, 'narukvica', 0),
-(1061, 10010, 'weapon_sniperrifle', 0),
-(1062, 10010, 'weapon_assaultrifle', 0),
-(1063, 10010, 'weapon_microsmg', 0),
-(1064, 10010, 'weapon_poolcue', 0),
-(1065, 10010, 'weapon_bullpupshotgun', 0),
-(1066, 10010, 'copper', 0),
-(1067, 10010, 'weapon_combatmg', 0),
-(1068, 10010, 'weapon_heavyshotgun', 0),
-(1069, 10010, 'repairkit', 0),
-(1070, 10010, 'kvacilo', 0),
-(1071, 10010, 'weapon_golfclub', 0),
-(1072, 10010, 'gljive', 0),
-(1073, 10010, 'carokit', 0),
-(1074, 10010, 'fabric', 0),
-(1075, 10010, 'loto', 0),
-(1076, 10010, 'meso', 0),
-(1077, 10010, 'weapon_firework', 0),
-(1078, 10010, 'weapon_sawnoffshotgun', 0),
-(1079, 10010, 'smcijev', 0),
-(1080, 10010, 'weapon_nightstick', 0),
-(1081, 10010, 'packaged_chicken', 0),
-(1082, 10010, 'petrol_raffin', 0),
-(1083, 10010, 'fish', 0),
-(1084, 10010, 'coke', 0),
-(1085, 10010, 'grebalica', 0),
-(1086, 10010, 'milk', 0),
-(1087, 10010, 'ctijelo', 0),
-(1088, 10010, 'ronjenje', 0),
-(1089, 10010, 'hydrochloric_acid', 0),
-(1090, 10010, 'methlab', 0),
-(1091, 10010, 'blowpipe', 0),
-(1092, 10010, 'essence', 0),
-(1093, 10010, 'stijelo', 0),
-(1094, 10010, 'chemicals', 0),
-(1095, 10010, 'auspuh', 0),
-(1096, 10010, 'medikit', 0),
-(1097, 10010, 'ktijelo', 0),
-(1098, 10010, 'heartpump', 0),
-(1099, 10010, 'elektronika', 0),
-(1100, 10010, 'kola', 0),
-(1101, 10010, 'weapon_hammer', 0),
-(1102, 10010, 'weapon_combatpistol', 0),
-(1103, 10010, 'weapon_specialcarbine', 0),
-(1104, 10010, 'scijev', 0),
-(1105, 10010, 'vatromet', 0),
-(1106, 10010, 'burek', 0),
-(1107, 10010, 'weapon_marksmanpistol', 0),
-(1108, 10010, 'petarda', 0),
-(1109, 10010, 'weapon_doubleaction', 0),
-(1110, 10010, 'weapon_autoshotgun', 0),
-(1111, 10010, 'ccijev', 0),
-(1112, 10010, 'acid', 0),
-(1113, 10010, 'croquettes', 0),
-(1114, 10010, 'filter', 0),
-(1115, 10010, 'LSD', 0),
-(1116, 10010, 'absinthe', 0),
-(1117, 10010, 'weapon_fireextinguisher', 0),
-(1118, 10010, 'skundak', 0),
-(1119, 10010, 'skoljka', 0),
-(1120, 10010, 'weapon_compactrifle', 0),
-(1121, 10010, 'thermite', 0),
-(1122, 10010, 'zeton', 0),
-(1123, 10010, 'cannabis', 0),
-(1124, 10010, 'weapon_battleaxe', 0),
-(1125, 10010, 'weapon_bullpuprifle', 0),
-(1126, 10010, 'rakija', 0),
-(1127, 10010, 'ckundak', 0),
-(1128, 10010, 'weapon_marksmanrifle_mk2', 0),
-(1129, 10010, 'kkundak', 0),
-(1130, 10010, 'lighter', 0),
-(1131, 10010, 'weapon_bat', 0),
-(1132, 10010, 'weapon_vintagepistol', 0),
-(1133, 10010, 'sulfuric_acid', 0),
-(1134, 10010, 'carotool', 0),
-(1135, 10010, 'wool', 0),
-(1136, 10010, 'alive_chicken', 0),
-(1137, 10010, 'wine', 0),
-(1138, 10010, 'whisky', 0),
-(1139, 10010, 'weapon_wrench', 0),
-(1140, 10010, 'speed', 0),
-(1141, 10010, 'marijuana', 0),
-(1142, 10010, 'weapon_assaultrifle_mk2', 0),
-(1143, 10010, 'weapon_revolver', 0),
-(1144, 10010, 'weapon_machete', 0),
-(1145, 10010, 'autobomba', 0),
-(1146, 10010, 'weapon_pumpshotgun', 0),
-(1147, 10010, 'gold', 0),
-(1148, 10010, 'weapon_pistol50', 0),
-(1149, 10010, 'bandage', 0),
-(1150, 10010, 'water', 0),
-(1151, 10010, 'weapon_pistol', 0),
-(1152, 10010, 'beer', 0),
-(1153, 10010, 'weapon_carbinerifle_mk2', 0),
-(1154, 10010, 'biser', 0),
-(1155, 10010, 'weapon_minismg', 0),
-(1156, 10010, 'clip', 0),
-(1157, 10010, 'kmotor', 0),
-(1158, 10010, 'poppyresin', 0),
-(1159, 10010, 'moneywash', 0),
-(1160, 10010, 'odznaka', 0),
-(1161, 10010, 'weapon_dbshotgun', 0),
-(1162, 10010, 'weapon_machinepsitol', 0),
-(1163, 10010, 'gintonic', 0),
-(1164, 10010, 'weapon_heavysniper', 0),
-(1165, 10010, 'cocaine', 0),
-(1166, 10010, 'net_cracker', 0),
-(1167, 10010, 'weapon_heavypistol', 0),
-(1168, 10010, 'washed_stone', 0),
-(1169, 10010, 'gym_membership', 0),
-(1170, 10010, 'weapon_flashlight', 0),
-(1171, 10010, 'turbo', 0),
-(1172, 10010, 'weapon_crowbar', 0),
-(1173, 10010, 'acetone', 0),
-(1174, 10010, 'wood', 0),
-(1175, 10010, 'cigarett', 0),
-(1176, 10010, 'vodka', 0),
-(1177, 10010, 'seed', 0),
-(1178, 10010, 'jewels', 0),
-(1179, 10010, 'finjectori', 0),
-(1180, 10010, 'weapon_carbinerifle', 0),
-(1181, 10010, 'meth', 0),
-(1182, 10010, 'weapon_advancedrifle', 0),
-(1183, 10010, 'koza', 0),
-(1184, 10010, 'petrol', 0),
-(1185, 10010, 'weapon_assaultshotgun', 0),
-(1186, 10010, 'bread', 0),
-(1187, 10010, 'weapon_revolver_mk2', 0),
-(1188, 10010, 'lancic', 0),
-(1189, 10010, 'weapon_appistol', 0),
-(1190, 10010, 'lithium', 0),
-(1191, 10010, 'weapon_hatchet', 0),
-(1192, 10010, 'packaged_plank', 0),
-(1193, 10010, 'zemlja', 0),
-(1194, 10010, 'cutted_wood', 0),
-(1195, 10010, 'diamond', 0),
-(1196, 10010, 'gazbottle', 0),
-(1197, 10010, 'intercooler', 0),
-(1198, 10010, 'stone', 0),
-(1199, 10010, 'kemija', 0),
-(1200, 10010, 'duhan', 0),
-(1201, 10010, 'headbag', 0),
-(1202, 10010, 'weapon_snspistol', 0),
-(1203, 10010, 'weapon_assaultsmg', 0),
-(1204, 10010, 'smtijelo', 0),
-(1205, 10010, 'smkundak', 0),
-(1206, 10010, 'champagne', 0),
-(1207, 10010, 'weapon_mg', 0),
-(1208, 10010, 'clothe', 0),
-(1209, 10010, 'fixkit', 0),
-(1210, 10010, 'saksija', 0),
-(1211, 10010, 'heroin', 0),
-(1212, 10010, 'petarde', 0),
-(1213, 10010, 'drone_flyer_7', 0),
-(1214, 10010, 'ljudi', 0),
-(1215, 10010, 'weapon_marksmanrifle', 0),
-(1216, 10010, 'weapon_knife', 0),
-(1217, 10010, 'fixtool', 0),
-(1218, 10010, 'kcijev', 0),
-(1219, 10011, 'pizza', 0),
-(1220, 10011, 'fabric', 0),
-(1221, 10011, 'loto', 0),
-(1222, 10011, 'repairkit', 0),
-(1223, 10011, 'weapon_pistol50', 0),
-(1224, 10011, 'water', 0),
-(1225, 10011, 'elektronika', 0),
-(1226, 10011, 'packaged_plank', 0),
-(1227, 10011, 'zemlja', 0),
-(1228, 10011, 'smtijelo', 0),
-(1229, 10011, 'hydrochloric_acid', 0),
-(1230, 10011, 'petrol', 0),
-(1231, 10011, 'fixkit', 0),
-(1232, 10011, 'lighter', 0),
-(1233, 10011, 'washed_stone', 0),
-(1234, 10011, 'turbo', 0),
-(1235, 10011, 'sodium', 0),
-(1236, 10011, 'weapon_microsmg', 0),
-(1237, 10011, 'weapon_minismg', 0),
-(1238, 10011, 'meth', 0),
-(1239, 10011, 'carokit', 0),
-(1240, 10011, 'slaughtered_chicken', 0),
-(1241, 10011, 'cocaine', 0),
-(1242, 10011, 'diamond', 0),
-(1243, 10011, 'fish', 0),
-(1244, 10011, 'narukvica', 0),
-(1245, 10011, 'contract', 0),
-(1246, 10011, 'smcijev', 0),
-(1247, 10011, 'weapon_crowbar', 0),
-(1248, 10011, 'copper', 0),
-(1249, 10011, 'absinthe', 0),
-(1250, 10011, 'weapon_machete', 0),
-(1251, 10011, 'gljive', 0),
-(1252, 10011, 'biser', 0),
-(1253, 10011, 'marijuana', 0),
-(1254, 10011, 'coke', 0),
-(1255, 10011, 'medikit', 0),
-(1256, 10011, 'burek', 0),
-(1257, 10011, 'rakija', 0),
-(1258, 10011, 'grebalica', 0),
-(1259, 10011, 'blowpipe', 0),
-(1260, 10011, 'speed', 0),
-(1261, 10011, 'heartpump', 0),
-(1262, 10011, 'sulfuric_acid', 0),
-(1263, 10011, 'stone', 0),
-(1264, 10011, 'alive_chicken', 0),
-(1265, 10011, 'weapon_fireextinguisher', 0),
-(1266, 10011, 'kola', 0),
-(1267, 10011, 'ccijev', 0),
-(1268, 10011, 'petarda', 0),
-(1269, 10011, 'chemicals', 0),
-(1270, 10011, 'koza', 0),
-(1271, 10011, 'chemicalslisence', 0),
-(1272, 10011, 'gintonic', 0),
-(1273, 10011, 'weapon_assaultrifle', 0),
-(1274, 10011, 'ukosnica', 0),
-(1275, 10011, 'scijev', 0),
-(1276, 10011, 'weapon_marksmanrifle_mk2', 0),
-(1277, 10011, 'weapon_revolver', 0),
-(1278, 10011, 'methlab', 0),
-(1279, 10011, 'weapon_combatmg', 0),
-(1280, 10011, 'weapon_heavysniper', 0),
-(1281, 10011, 'kcijev', 0),
-(1282, 10011, 'weapon_switchblade', 0),
-(1283, 10011, 'finjectori', 0),
-(1284, 10011, 'weapon_marksmanpistol', 0),
-(1285, 10011, 'poppyresin', 0),
-(1286, 10011, 'drone_flyer_7', 0),
-(1287, 10011, 'weapon_battleaxe', 0),
-(1288, 10011, 'weapon_combatpdw', 0),
-(1289, 10011, 'zeton', 0),
-(1290, 10011, 'wool', 0),
-(1291, 10011, 'wood', 0),
-(1292, 10011, 'wine', 0),
-(1293, 10011, 'weapon_golfclub', 0),
-(1294, 10011, 'whisky', 0),
-(1295, 10011, 'skoljka', 0),
-(1296, 10011, 'autobomba', 0),
-(1297, 10011, 'filter', 0),
-(1298, 10011, 'cutted_wood', 0),
-(1299, 10011, 'weapon_knife', 0),
-(1300, 10011, 'weapon_autoshotgun', 0),
-(1301, 10011, 'weapon_musket', 0),
-(1302, 10011, 'vatromet', 0),
-(1303, 10011, 'weapon_vintagepistol', 0),
-(1304, 10011, 'weapon_specialcarbine', 0),
-(1305, 10011, 'weapon_snspistol', 0),
-(1306, 10011, 'weapon_hatchet', 0),
-(1307, 10011, 'weapon_sniperrifle', 0),
-(1308, 10011, 'weapon_heavyshotgun', 0),
-(1309, 10011, 'weapon_smg', 0),
-(1310, 10011, 'weapon_sawnoffshotgun', 0),
-(1311, 10011, 'weapon_heavypistol', 0),
-(1312, 10011, 'weapon_revolver_mk2', 0),
-(1313, 10011, 'weapon_pumpshotgun', 0),
-(1314, 10011, 'weapon_poolcue', 0),
-(1315, 10011, 'weapon_pistol', 0),
-(1316, 10011, 'weapon_nightstick', 0),
-(1317, 10011, 'seed', 0),
-(1318, 10011, 'weapon_marksmanrifle', 0),
-(1319, 10011, 'weapon_machinepsitol', 0),
-(1320, 10011, 'gold', 0),
-(1321, 10011, 'essence', 0),
-(1322, 10011, 'meso', 0),
-(1323, 10011, 'ljudi', 0),
-(1324, 10011, 'thionyl_chloride', 0),
-(1325, 10011, 'cannabis', 0),
-(1326, 10011, 'weapon_gusenberg', 0),
-(1327, 10011, 'gym_membership', 0),
-(1328, 10011, 'bread', 0),
-(1329, 10011, 'weapon_firework', 0),
-(1330, 10011, 'auspuh', 0),
-(1331, 10011, 'milk', 0),
-(1332, 10011, 'kemija', 0),
-(1333, 10011, 'LSD', 0),
-(1334, 10011, 'weapon_dbshotgun', 0),
-(1335, 10011, 'weapon_compactrifle', 0),
-(1336, 10011, 'clothe', 0),
-(1337, 10011, 'duhan', 0),
-(1338, 10011, 'weapon_combatpistol', 0),
-(1339, 10011, 'lithium', 0),
-(1340, 10011, 'ktijelo', 0),
-(1341, 10011, 'packaged_chicken', 0),
-(1342, 10011, 'moneywash', 0),
-(1343, 10011, 'net_cracker', 0),
-(1344, 10011, 'iron', 0),
-(1345, 10011, 'weapon_assaultshotgun', 0),
-(1346, 10011, 'weapon_carbinerifle_mk2', 0),
-(1347, 10011, 'acetone', 0),
-(1348, 10011, 'weapon_carbinerifle', 0),
-(1349, 10011, 'weapon_bullpupshotgun', 0),
-(1350, 10011, 'weapon_bullpuprifle', 0),
-(1351, 10011, 'weapon_assaultrifle_mk2', 0),
-(1352, 10011, 'headbag', 0),
-(1353, 10011, 'champagne', 0),
-(1354, 10011, 'weapon_bat', 0),
-(1355, 10011, 'kkundak', 0),
-(1356, 10011, 'fixtool', 0),
-(1357, 10011, 'ronjenje', 0),
-(1358, 10011, 'weapon_wrench', 0),
-(1359, 10011, 'thermite', 0),
-(1360, 10011, 'beer', 0),
-(1361, 10011, 'petarde', 0),
-(1362, 10011, 'lancic', 0),
-(1363, 10011, 'jewels', 0),
-(1364, 10011, 'ctijelo', 0),
-(1365, 10011, 'gazbottle', 0),
-(1366, 10011, 'acid', 0),
-(1367, 10011, 'clip', 0),
-(1368, 10011, 'weapon_appistol', 0),
-(1369, 10011, 'cigarett', 0),
-(1370, 10011, 'weapon_doubleaction', 0),
-(1371, 10011, 'vodka', 0),
-(1372, 10011, 'smkundak', 0),
-(1373, 10011, 'kvacilo', 0),
-(1374, 10011, 'weapon_hammer', 0),
-(1375, 10011, 'weapon_advancedrifle', 0),
-(1376, 10011, 'mobitel', 0),
-(1377, 10011, 'tequila', 0),
-(1378, 10011, 'heroin', 0),
-(1379, 10011, 'bandage', 0),
-(1380, 10011, 'stijelo', 0),
-(1381, 10011, 'skundak', 0),
-(1382, 10011, 'carotool', 0),
-(1383, 10011, 'weapon_mg', 0),
-(1384, 10011, 'kmotor', 0),
-(1385, 10011, 'saksija', 0),
-(1386, 10011, 'petrol_raffin', 0),
-(1387, 10011, 'croquettes', 0),
-(1388, 10011, 'ckundak', 0),
-(1389, 10011, 'intercooler', 0),
-(1390, 10011, 'odznaka', 0),
-(1391, 10011, 'weapon_flashlight', 0),
-(1392, 10011, 'weapon_assaultsmg', 0),
-(1393, 10000, 'sarafciger', 0),
-(1394, 10010, 'sarafciger', 0),
-(1395, 10000, 'novine', 0),
-(1396, 10010, 'novine', 0),
-(1397, 10000, 'fishingrod', 0),
-(1398, 10000, 'fishbait', 0),
-(1399, 10000, 'spikestrip', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_licenses`
---
-
-DROP TABLE IF EXISTS `user_licenses`;
-CREATE TABLE IF NOT EXISTS `user_licenses` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(60) NOT NULL,
-  `owner` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `user_licenses`
---
-
-INSERT INTO `user_licenses` (`id`, `type`, `owner`) VALUES
-(8, 'drive', 10000),
-(11, 'weapon', 10000),
-(16, 'weapon', 10010);
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `user_races`
@@ -3911,7 +2281,7 @@ CREATE TABLE IF NOT EXISTS `user_races` (
   `name` varchar(50) NOT NULL,
   `time` double NOT NULL,
   `race` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -3922,15 +2292,15 @@ CREATE TABLE IF NOT EXISTS `user_races` (
 DROP TABLE IF EXISTS `uteknark`;
 CREATE TABLE IF NOT EXISTS `uteknark` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `stage` int(3) UNSIGNED NOT NULL DEFAULT 1,
+  `stage` int(10) UNSIGNED NOT NULL DEFAULT 1,
   `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `x` float NOT NULL,
   `y` float NOT NULL,
   `z` float NOT NULL,
   `soil` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `stage` (`stage`,`time`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `stage` (`stage`,`time`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -3945,53 +2315,60 @@ CREATE TABLE IF NOT EXISTS `vehicles` (
   `price` int(11) NOT NULL,
   `category` varchar(60) DEFAULT NULL,
   `brod` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`model`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`model`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `vehicles`
 --
 
 INSERT INTO `vehicles` (`name`, `model`, `price`, `category`, `brod`) VALUES
-('Opel Rekord Coupe', '2dopelr3', 12, 'opel', 0),
-('Opel Rekord', '4dopelr3', 14, 'opel', 0),
-('Porsche 718', '718', 53, 'porsche', 0),
-('Alfa Giulia Sprint', 'agta', 500, 'alfa', 0),
-('Alfa Romeo 75', 'alfa75', 300, 'alfa', 0),
-('Audi 100 Coupe S', 'audi100sc1', 5, 'audi', 0),
-('Audi Union', 'audif103', 9, 'audi', 0),
-('Audi Quattro', 'audquattros', 8, 'audi', 0),
-('Austin Mini Cooper', 'austminlhd', 23, 'austin', 0),
-('BMW 2002t', 'bmw2002t', 26, 'bmw', 0),
-('Ferrari California 250GT', 'cali57', 23, 'ferrari', 0),
+('Opel Rekord Coupe', '2dopelr3', 18500, 'opel', 0),
+('Opel Rekord', '4dopelr3', 17000, 'opel', 0),
+('Porsche 718', '718', 123000, 'porsche', 0),
+('Alfa Giulia Sprint', 'agta', 42000, 'alfa', 0),
+('Alfa Romeo 75', 'alfa75', 36000, 'alfa', 0),
+('Mercedes AMG Hammer', 'amgh', 100000000, 'donatorski', 0),
+('Audi 100 Coupe S', 'audi100sc1', 64000, 'audi', 0),
+('Audi Union', 'audif103', 48000, 'audi', 0),
+('Audi Quattro', 'audquattros', 75000, 'audi', 0),
+('Austin Mini Cooper', 'austminlhd', 22000, 'austin', 0),
+('Ferrari California 250GT', 'cali57', 130000, 'ferrari', 0),
+('Jeep Grand Cherokee', 'cherokee1', 50000, 'jeep', 0),
+('Lamborghini Countach', 'cont88', 100000000, 'donatorski', 0),
 ('Dinghy', 'dinghy', 800000, 'gliser', 1),
-('Ferrari Dino', 'dino', 35, 'ferrari', 0),
-('BMW E21', 'e21', 15, 'bmw', 0),
-('Zastava 1300', 'fiat1300', 233, 'zastava', 0),
-('Zastava 750', 'fiat600', 26, 'zastava', 0),
-('BMW E24', 'm686eu', 17, 'bmw', 0),
-('Porsche 904GTS', 'p904', 235, 'porsche', 0),
-('Porsche 928', 'p928', 634, 'porsche', 0),
-('Peugeot 204', 'peugeot204', 23, 'peugeot', 0),
-('Porsche 911', 'porrs73', 63, 'porsche', 0),
-('NSU Prinz 1000TT', 'prinztt', 12, 'nsu', 0),
-('Renault 4', 'renault4', 12, 'renault', 0),
+('Ferrari Dino', 'dino', 145000, 'ferrari', 0),
+('BMW E21', 'e21', 53000, 'bmw', 0),
+('Zastava 1300', 'fiat1300', 12000, 'zastava', 0),
+('Zastava 750', 'fiat600', 11000, 'zastava', 0),
+('Ford GT40', 'gt401', 100000000, 'donatorski', 0),
+('Lancia Delta HF Integrale', 'lanciad', 100000000, 'donatorski', 0),
+('Land Rover Defender', 'landseries3', 53000, 'landrover', 0),
+('BMW E24', 'm686eu', 63000, 'bmw', 0),
+('Ford Mustang Mach1', 'mustangmach1', 100000000, 'donatorski', 0),
+('Porsche 928', 'p928', 65000, 'porsche', 0),
+('Peugeot 204', 'peugeot204', 18000, 'peugeot', 0),
+('Porsche 911', 'porrs73', 115000, 'porsche', 0),
+('NSU Prinz 1000TT', 'prinztt', 8500, 'nsu', 0),
+('Renault 4', 'renault4', 7500, 'renault', 0),
 ('Jet Ski', 'seashark', 500000, 'jetski', 1),
-('Simca 1100', 'simca1100', 43, 'simca', 0),
-('Skoda 100', 'skoda100', 23, 'skoda', 0),
-('Alfa Romeo Spider 115', 'spider115', 100, 'alfa', 0),
+('Simca 1100', 'simca1100', 8100, 'simca', 0),
+('Skoda 100', 'skoda100', 6300, 'skoda', 0),
+('Alfa Romeo Spider 115', 'spider115', 39000, 'alfa', 0),
 ('Squalo', 'squalo', 1500000, 'gliser', 1),
 ('Podmornica', 'submersible', 5000000, 'podmornica', 1),
 ('Podmornica 2', 'submersible2', 5000000, 'podmornica', 1),
-('Suntrap', 'suntrap', 700000, 'gliser', 1),
 ('Tropic', 'tropic2', 1000000, 'gliser', 1),
-('VW Type 3', 'type3fast', 443, 'vw', 0),
-('Volvo 142', 'volvo142', 12, 'volvo', 0),
-('Volvo 144', 'volvo144', 15, 'volvo', 0),
-('Volvo 145', 'volvo145', 43, 'volvo', 0),
-('Mercedes W115', 'w115200d', 45, 'mercedes', 0),
-('Wartburg 353', 'wartburg353', 43, 'wartburg', 0),
-('Zastava 101', 'zastava101', 23, 'zastava', 0);
+('VW Type 3 Fastback', 'type3fast', 6000, 'vw', 0),
+('VW Type 3 Sedan', 'type3notch', 6000, 'vw', 0),
+('VW Type 3 Kocka', 'type3square', 6000, 'vw', 0),
+('Aston Martin Vantage', 'v877', 100000000, 'donatorski', 0),
+('Volvo 142', 'volvo142', 24000, 'volvo', 0),
+('Volvo 144', 'volvo144', 25000, 'volvo', 0),
+('Volvo 145', 'volvo145', 26000, 'volvo', 0),
+('Mercedes W115', 'w115200d', 81000, 'mercedes', 0),
+('Wartburg 353', 'wartburg353', 4500, 'wartburg', 0),
+('Zastava 101', 'zastava101', 3000, 'zastava', 0);
 
 -- --------------------------------------------------------
 
@@ -4005,8 +2382,8 @@ CREATE TABLE IF NOT EXISTS `vehicle_categories` (
   `label` varchar(60) NOT NULL,
   `brod` int(11) NOT NULL DEFAULT 0,
   `slika` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `vehicle_categories`
@@ -4017,9 +2394,12 @@ INSERT INTO `vehicle_categories` (`name`, `label`, `brod`, `slika`) VALUES
 ('audi', 'Audi', 0, 'audi.png'),
 ('austin', 'Austin', 0, 'austin.png'),
 ('bmw', 'BMW', 0, 'bmw.png'),
+('donatorski', 'Donatorski', 0, 'dolla.png'),
 ('ferrari', 'Ferrari', 0, 'ferrari.png'),
 ('gliser', 'Gliser', 1, 'gtav.png'),
+('jeep', 'Jeep', 0, 'jeep.png'),
 ('jetski', 'Jet Ski', 1, 'gtav.png'),
+('landrover', 'LandRover', 0, 'landrover.png'),
 ('mercedes', 'Mercedes', 0, 'mercedes.png'),
 ('nsu', 'NSU', 0, 'nsu.png'),
 ('obrisani', 'Obrisani', 0, NULL),
@@ -4047,21 +2427,8 @@ CREATE TABLE IF NOT EXISTS `vijesti` (
   `Naziv` varchar(255) CHARACTER SET latin1 NOT NULL,
   `Clanak` longtext CHARACTER SET latin1 NOT NULL,
   `Autor` varchar(255) CHARACTER SET latin1 NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_croatian_ci;
-
---
--- Dumping data for table `vijesti`
---
-
-INSERT INTO `vijesti` (`ID`, `Naziv`, `Clanak`, `Autor`) VALUES
-(1, 'Sikora najvolji skripter', 'Sickora je najbolj iskripter na balkanu, ostale ko jebe ! ', 'GABO'),
-(2, 'Slika', '<img src=&quot;https://i.imgur.com/s3V8w2q.png&quot;>', '#Sikora'),
-(3, 'Slika 2', '<img src=&quot;https://i.imgur.com/FMD4QIl.png&quot;>', '#Sikora'),
-(4, 'Slika 2', '<img src=&quot;https://i.imgur.com/FMD4QIl.png&quot; width=&quot;500px&quot;>', '#Sikora'),
-(5, 'Slika 2', '<img src=&quot;https://i.imgur.com/FMD4QIl.png&quot; style=&quot;width=\'500px\'&quot;>', '#Sikora'),
-(6, 'Slika 2', '<img src=&quot;https://i.imgur.com/FMD4QIl.png&quot; style=&quot;width: 500px&quot;>', '#Sikora'),
-(7, 'Slika 2', '<img src=&quot;https://i.imgur.com/FMD4QIl.png&quot; style=&quot;min-width: 500px&quot;>', '#Sikora');
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_croatian_ci ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -4078,8 +2445,8 @@ CREATE TABLE IF NOT EXISTS `vrata` (
   `dist` double(4,1) NOT NULL,
   `model` varchar(100) NOT NULL,
   `banka` tinyint(4) DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `vrata`
@@ -4124,8 +2491,8 @@ CREATE TABLE IF NOT EXISTS `waroruzja` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `identifier` char(60) NOT NULL,
   `data` longtext NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -4139,8 +2506,16 @@ CREATE TABLE IF NOT EXISTS `warovi` (
   `Ime` tinytext DEFAULT NULL,
   `Win` int(11) DEFAULT 0,
   `Lose` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `warovi`
+--
+
+INSERT INTO `warovi` (`ID`, `Ime`, `Win`, `Lose`) VALUES
+(3, 'omerta', 16, 2),
+(4, 'montana', 10, 7);
 
 -- --------------------------------------------------------
 
@@ -4154,26 +2529,26 @@ CREATE TABLE IF NOT EXISTS `weashops` (
   `name` varchar(255) NOT NULL,
   `item` varchar(255) NOT NULL,
   `price` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `weashops`
 --
 
 INSERT INTO `weashops` (`id`, `name`, `item`, `price`) VALUES
-(1, 'GunShop', 'WEAPON_PISTOL', 1000),
-(5, 'GunShop', 'WEAPON_MACHETE', 100),
-(11, 'GunShop', 'WEAPON_STUNGUN', 200),
-(41, 'GunShop', 'WEAPON_KNIFE', 50),
-(42, 'GunShop', 'WEAPON_CROWBAR', 75),
-(43, 'GunShop', 'WEAPON_DAGGER', 75),
-(44, 'GunShop', 'WEAPON_KNUCKLE', 45),
-(45, 'GunShop', 'WEAPON_SWITCHBLADE', 75),
-(46, 'GunShop', 'WEAPON_PISTOL_MK2', 1200),
-(47, 'GunShop', 'WEAPON_PISTOL50', 1400),
-(48, 'GunShop', 'WEAPON_MICROSMG', 25000),
-(49, 'GunShop', 'WEAPON_COMBATPISTOL', 5000);
+(1, 'GunShop', 'WEAPON_PISTOL', 1500),
+(5, 'GunShop', 'WEAPON_MACHETE', 250),
+(11, 'GunShop', 'WEAPON_STUNGUN', 450),
+(41, 'GunShop', 'WEAPON_KNIFE', 100),
+(42, 'GunShop', 'WEAPON_CROWBAR', 15),
+(43, 'GunShop', 'WEAPON_DAGGER', 100),
+(44, 'GunShop', 'WEAPON_KNUCKLE', 100),
+(45, 'GunShop', 'WEAPON_SWITCHBLADE', 100),
+(46, 'GunShop', 'WEAPON_PISTOL_MK2', 2000),
+(47, 'GunShop', 'WEAPON_PISTOL50', 3000),
+(48, 'GunShop', 'WEAPON_MICROSMG', 3500),
+(49, 'GunShop', 'WEAPON_COMBATPISTOL', 2500);
 
 -- --------------------------------------------------------
 
@@ -4187,25 +2562,25 @@ CREATE TABLE IF NOT EXISTS `weashops2` (
   `name` varchar(255) NOT NULL,
   `owner` varchar(60) DEFAULT NULL,
   `sef` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`) USING BTREE,
   KEY `owname` (`owner`,`name`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `weashops2`
 --
 
 INSERT INTO `weashops2` (`id`, `name`, `owner`, `sef`) VALUES
-(1, 'GunShop1', NULL, 0),
-(2, 'GunShop2', NULL, 0),
-(3, 'GunShop3', 'steam:11000010e086b7e', 11850),
-(4, 'GunShop4', 'steam:11000010e086b7e', 161238),
-(5, 'GunShop5', NULL, 0),
-(6, 'GunShop6', 'steam:11000010441bee9', 56462),
+(1, 'GunShop1', NULL, 538),
+(2, 'GunShop2', NULL, 1615),
+(3, 'GunShop3', NULL, 25966),
+(4, 'GunShop4', NULL, 13054),
+(5, 'GunShop5', NULL, 10811),
+(6, 'GunShop6', NULL, 17890),
 (7, 'GunShop7', NULL, 0),
 (8, 'GunShop8', NULL, 0),
-(9, 'GunShop9', NULL, 0),
-(10, 'GunShop10', 'steam:11000010441bee9', 18100);
+(9, 'GunShop9', NULL, 25),
+(10, 'GunShop10', NULL, 5792);
 
 -- --------------------------------------------------------
 
@@ -4222,48 +2597,9 @@ CREATE TABLE IF NOT EXISTS `yellow_tweets` (
   `message` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `time` timestamp NOT NULL DEFAULT current_timestamp(),
   `novine` tinyint(4) DEFAULT 0,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`) USING BTREE,
   KEY `novine` (`novine`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `yellow_tweets`
---
-
-INSERT INTO `yellow_tweets` (`id`, `phone_number`, `firstname`, `lastname`, `message`, `time`, `novine`) VALUES
-(1, '185-9995', 'Tony', 'Sikora', 'aaa bbb ccc ddd eee', '2021-10-17 14:41:40', 1),
-(2, '579-9678', 'Tuljan', 'Ljantu', 'Prodajem 10 crvenih dijamanata', '2021-10-23 23:00:18', 1),
-(3, '579-9678', 'Tuljan', 'Ljantu', 'moze zamjena za plave', '2021-10-23 23:00:28', 1),
-(4, '530-0343', 'Max', 'Cigarett', 'Pusis kurac', '2021-10-23 23:01:02', 1),
-(5, '579-9678', 'Tuljan', 'Ljantu', 'Kupujem ferrari', '2021-10-28 20:29:24', 1),
-(6, '185-9995', 'Tony', 'Sikora', 'dgfdgdf fdsgf', '2021-12-23 11:58:24', 1),
-(7, '185-9995', 'Tony', 'Sikora', 'dfsfsdfd sdsdfs', '2021-12-23 12:15:27', 1),
-(8, '185-9995', 'Tony', 'Sikora', 'Prodajem corsu', '2021-12-23 12:44:11', 1),
-(9, '185-9995', 'Tony', 'Sikora', 'gfdg sdfsdf', '2021-12-23 15:59:55', 1),
-(10, '185-9995', 'Tony', 'Sikora', 'h gdghdfgfds fs', '2021-12-23 22:47:32', 1),
-(11, '185-9995', 'Tony', 'Sikora', ' gfdgsfd dfsfdsf', '2021-12-23 23:18:53', 1),
-(12, '185-9995', 'Tony', 'Sikora', ' hdgfhdfg sgffs', '2021-12-23 23:19:27', 1),
-(13, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/923722215487307926/screenshot.jpg', '2021-12-23 23:42:17', 1),
-(14, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/924023616771866654/screenshot.jpg', '2021-12-24 19:39:56', 1),
-(15, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/925473260777394306/screenshot.jpg', '2021-12-28 19:40:20', 1),
-(16, '579-9678', 'Tuljan', 'Ljantu', 'alo', '2022-01-09 18:00:40', 1),
-(17, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/929813748015829142/screenshot.jpg', '2022-01-09 19:07:51', 1),
-(18, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/931949644471226478/screenshot.jpg', '2022-01-15 16:35:10', 1),
-(19, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/931950397101338684/screenshot.jpg', '2022-01-15 16:38:10', 1),
-(20, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/932045967757299752/screenshot.jpg', '2022-01-15 22:57:55', 1),
-(21, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/932046930404585472/screenshot.jpg', '2022-01-15 23:01:44', 1),
-(22, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933107734629453904/screenshot.jpg', '2022-01-18 21:17:00', 1),
-(23, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933110193250783412/screenshot.jpg', '2022-01-18 21:26:46', 1),
-(24, '185-9995', 'Tony', 'Sikora', 'https://media.discordapp.net/attachments/923544204397920256/933116659894480986/screenshot.jpg', '2022-01-18 21:52:27', 1),
-(25, '579-9678', 'Tuljan', 'Ljantu', 'https://media.discordapp.net/attachments/923544204397920256/933478241623236628/screenshot.jpg', '2022-01-19 21:49:14', 1),
-(26, '3555299', 'Tony', 'Sikora', 'Testiram nove oglase hehe', '2022-05-23 20:10:14', 1),
-(27, '3555299', 'Tony', 'Sikora', 'Prodajem Yugo volim ga puno! Samo dobre ponude', '2022-05-23 20:26:55', 1),
-(28, '3555299', 'Tony', 'Sikora', 'Imal ko para da posalje?', '2022-05-23 20:43:04', 1),
-(29, '3555299', 'Tony', 'Sikora', 'Hvala Tony Sikora na 50000 dolara', '2022-05-23 20:43:32', 1),
-(30, '3555299', 'Tony', 'Sikora', 'Evo mi je jos love poslao lik', '2022-05-23 20:44:00', 1),
-(31, '3555299', 'Tony', 'Sikora', 'Prodajem Yuga. $500', '2022-05-24 18:57:07', 1);
-
--- --------------------------------------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 --
 -- Table structure for table `zemljista`
@@ -4273,23 +2609,16 @@ DROP TABLE IF EXISTS `zemljista`;
 CREATE TABLE IF NOT EXISTS `zemljista` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Ime` varchar(255) NOT NULL,
-  `Koord1` longtext NOT NULL DEFAULT '{}',
-  `Koord2` longtext NOT NULL DEFAULT '{}',
+  `Koord1` longtext NOT NULL,
+  `Koord2` longtext NOT NULL,
   `Cijena` int(11) NOT NULL DEFAULT 0,
   `Vlasnik` int(11) DEFAULT NULL,
   `Kuca` varchar(255) DEFAULT NULL,
-  `KKoord` longtext NOT NULL DEFAULT '{}',
-  `MKoord` longtext NOT NULL DEFAULT '{}',
+  `KKoord` longtext NOT NULL,
+  `MKoord` longtext NOT NULL,
   `KucaID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `zemljista`
---
-
-INSERT INTO `zemljista` (`ID`, `Ime`, `Koord1`, `Koord2`, `Cijena`, `Vlasnik`, `Kuca`, `KKoord`, `MKoord`, `KucaID`) VALUES
-(9, 'Zemljiste 1', '[203.828125,3219.237548828125,41.32288360595703]', '[187.4740753173828,3200.868896484375,41.16582870483398]', 120000, NULL, NULL, '{}', '{\"x\":207.5401153564453,\"y\":3218.24755859375,\"z\":42.37691497802734}', NULL);
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -4311,24 +2640,24 @@ CREATE TABLE IF NOT EXISTS `zone` (
   `vrijednost` int(11) NOT NULL DEFAULT 30000,
   `PedKoord` varchar(255) DEFAULT NULL,
   `PedHead` double(11,2) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `zone`
 --
 
 INSERT INTO `zone` (`ID`, `ime`, `koord`, `velicina`, `rotacija`, `boja`, `vlasnik`, `label`, `vrijeme`, `vrijednost`, `PedKoord`, `PedHead`) VALUES
-(1, 'zona1', '{\"x\":105.22411346435547,\"y\":-1940.76611328125,\"z\":20.23876953125}', 300, 51, 0, NULL, NULL, 0, 40000, '{\"x\":75.71347045898438,\"y\":-1970.0006103515626,\"z\":21.12518119812011}', 140.85),
-(2, 'zona2', '{\"x\":1297.9000244140626,\"y\":-1724.8807373046876,\"z\":53.41697311401367}', 200, 115, 0, NULL, NULL, 0, 30000, NULL, NULL),
-(3, 'zona3', '{\"x\":8.01981258392334,\"y\":-2478.081787109375,\"z\":5.44206237792968}', 200, -123, 0, NULL, NULL, 0, 30000, NULL, NULL),
-(4, 'zona4', '{\"x\":-1048.6021728515626,\"y\":-1143.892578125,\"z\":1.55892622470855}', 100, 121, 0, NULL, NULL, 0, 20000, NULL, NULL),
-(5, 'zona5', '{\"x\":-956.7833862304688,\"y\":-1090.5233154296876,\"z\":1.65182423591613}', 100, 122, 0, NULL, NULL, 0, 20000, NULL, NULL),
-(6, 'zona6', '{\"x\":-113.91008758544922,\"y\":923.5415649414063,\"z\":235.12802124023438}', 200, 39, 0, NULL, NULL, 0, 30000, NULL, NULL),
-(7, 'zona7', '{\"x\":1829.34326171875,\"y\":3860.934814453125,\"z\":33.62311553955078}', 200, 31, 0, NULL, NULL, 0, 30000, NULL, NULL),
-(8, 'zona8', '{\"x\":-210.73080444335938,\"y\":6362.62939453125,\"z\":31.49229049682617}', 200, -44, 0, NULL, NULL, 0, 30000, NULL, NULL),
-(9, 'zona9', '{\"x\":-1054.79931640625,\"y\":-1576.043212890625,\"z\":4.77379131317138}', 200, -147, 0, NULL, NULL, 0, 30000, NULL, NULL),
-(10, 'zona10', '{\"x\":2862.156005859375,\"y\":2823.3935546875,\"z\":53.36796569824219}', 400, -121, 0, NULL, NULL, 0, 50000, NULL, NULL);
+(2, 'zona2', '{\"x\":2789.8134765625,\"y\":1587.1585693359376,\"z\":24.50067138671875}', 200, -176, 0, NULL, NULL, 0, 200, NULL, NULL),
+(3, 'zona3', '{\"x\":8.01981258392334,\"y\":-2478.081787109375,\"z\":5.44206237792968}', 200, -123, 0, NULL, NULL, 0, 5000, NULL, NULL),
+(4, 'zona4', '{\"x\":-1048.6021728515626,\"y\":-1143.892578125,\"z\":1.55892622470855}', 100, 121, 73, 'zemunski', 'zemunski', 0, 5000, NULL, NULL),
+(5, 'zona5', '{\"x\":-956.7833862304688,\"y\":-1090.5233154296876,\"z\":1.65182423591613}', 100, 122, 73, 'zemunski', 'zemunski', 0, 5000, NULL, NULL),
+(6, 'zona6', '{\"x\":-113.91008758544922,\"y\":923.5415649414063,\"z\":235.12802124023438}', 200, 39, 1, 'omerta', 'Omerta', 0, 5000, NULL, NULL),
+(7, 'zona7', '{\"x\":-1613.794189453125,\"y\":3177.352294921875,\"z\":30.19296836853027}', 200, -158, 0, NULL, NULL, 0, 5000, NULL, NULL),
+(8, 'zona8', '{\"x\":2517.48876953125,\"y\":-383.7721862792969,\"z\":93.14043426513672}', 200, -61, 26, 'montana', 'Montana Cartel', 0, 5000, NULL, NULL),
+(9, 'zona9', '{\"x\":-1054.79931640625,\"y\":-1576.043212890625,\"z\":4.77379131317138}', 200, -147, 1, 'omerta', 'Omerta', 0, 5000, NULL, NULL),
+(10, 'zona10', '{\"x\":2862.156005859375,\"y\":2823.3935546875,\"z\":53.36796569824219}', 400, -121, 64, 'sinaloa', 'sinaloa', 0, 5000, NULL, NULL),
+(15, 'zona12', '{\"x\":-1119.9439697265626,\"y\":4925.0185546875,\"z\":218.40289306640626}', 100, 88, 1, 'omerta', 'omerta', 0, 30000, '{\"x\":-1124.54150390625,\"y\":4924.2109375,\"z\":218.89468383789063}', 278.11);
 
 -- --------------------------------------------------------
 
@@ -4345,15 +2674,15 @@ CREATE TABLE IF NOT EXISTS `zpostavke` (
   `sat` int(11) NOT NULL DEFAULT 0,
   `minuta` int(11) NOT NULL DEFAULT 0,
   `zauzimanje` int(11) NOT NULL DEFAULT 10,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `zpostavke`
 --
 
 INSERT INTO `zpostavke` (`id`, `idzone`, `mafije`, `vrijeme`, `sat`, `minuta`, `zauzimanje`) VALUES
-(1, 11, '[]', 10, 0, 0, 10);
+(1, 13, '[]', 10, 0, 0, 10);
 
 --
 -- Constraints for dumped tables
