@@ -389,7 +389,7 @@ function OpenLSMenu2(elems, menuName, menuTitle, parent)
 					elements = elems
 				}, function(data, menu)
 					if data.current.modType == "zavrsi" then
-						if not IsVehicleSeatFree(vehicle, -1) then
+						--if not IsVehicleSeatFree(vehicle, -1) then
 							local pedara = GetPedInVehicleSeat(vehicle, -1)
 							local plID = DajPlayerId(pedara)
 							local srwID = GetPlayerServerId(plID)
@@ -400,9 +400,9 @@ function OpenLSMenu2(elems, menuName, menuTitle, parent)
 							TriggerServerEvent('esx_billing:posaljiTuljana', srwID, 'society_mechanic', "Mehanicar | Dijelovi", cijena)
 							TriggerServerEvent("meh:NaruciDijelove", Narudzba, srwID)
 							ESX.ShowNotification("Narucili ste dijelove")
-						else
-							ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
-						end
+						--else
+							--ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
+						--end
 						Narudzba = {}
 						lsMenuIsShowed = false
 						menu.close()
@@ -1264,7 +1264,7 @@ function GetAction(data)
 				elements = elems
 			}, function(data, menu)
 				if data.current.modType == "zavrsi" then
-					if not IsVehicleSeatFree(vehicle, -1) then
+					--if not IsVehicleSeatFree(vehicle, -1) then
 						local pedara = GetPedInVehicleSeat(vehicle, -1)
 						local plID = DajPlayerId(pedara)
 						local srwID = GetPlayerServerId(plID)
@@ -1276,10 +1276,10 @@ function GetAction(data)
 						TriggerServerEvent("meh:NaruciDijelove", Narudzba, srwID)
 						ESX.ShowNotification("Narucili ste dijelove")
 						FreezeEntityPosition(vehicle, false)
-					else
-						ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
-						FreezeEntityPosition(vehicle, false)
-					end
+					--else
+						--ESX.ShowNotification("Nema vozaca! Narudzba je ponistena!")
+						--FreezeEntityPosition(vehicle, false)
+					--end
 					lsMenuIsShowed = false
 					Narudzba = {}
 					menu.close()
@@ -1716,11 +1716,11 @@ function GetAction(data)
 		end)
 		if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
 			if GetPedInVehicleSeat(vehicle, 0) == playerPed then
-				if not IsVehicleSeatFree(vehicle, -1) then
+				--if not IsVehicleSeatFree(vehicle, -1) then
 					OpenLSMenu2(elements, menuName, menuTitle, parent)
-				else
-					ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
-				end
+				--else
+					--ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
+				--end
 			elseif GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				OpenLSMenu(elements, menuName, menuTitle, parent)
 			end
@@ -1848,7 +1848,7 @@ function OpenIzborMenu()
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
 			if GetPedInVehicleSeat(vehicle, 0) == playerPed then
 				if PlayerData.job ~= nil and PlayerData.job.name == 'mechanic' then
-					if not IsVehicleSeatFree(vehicle, -1) then
+					--if not IsVehicleSeatFree(vehicle, -1) then
 						lsMenuIsShowed = true
 
 						FreezeEntityPosition(vehicle, true)
@@ -1857,9 +1857,9 @@ function OpenIzborMenu()
 						Narudzba = {}
 						ESX.UI.Menu.CloseAll()
 						GetAction({value = 'main'})
-					else
-						ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
-					end
+					--else
+						--ESX.ShowNotification("Vlasnik vozila mora biti na vozacevom mjestu!")
+					--end
 				end
 			elseif GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				lsMenuIsShowed = true

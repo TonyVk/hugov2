@@ -272,8 +272,23 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 		end)
 	end
 	Citizen.CreateThread(function ()
+		local lastPritisak = 0.0
+		while not RequestScriptAudioBank('audiodirectory/custom_sounds', false) do Wait(0) end
+		local soundID = GetSoundId()
 		while UVozilu do
 			Citizen.Wait(100)
+			--print("last", lastPritisak)
+			--print(GetVehicleTurboPressure(Vozilo))
+			if lastPritisak >= 0.98 and GetVehicleTurboPressure(Vozilo) < 0.98 and HasSoundFinished(soundID) then
+				--PlaySoundFrontend(soundID, 'blowoff', 'special_soundset', true)
+				PlaySoundFromEntity(soundID, "blowoff", Vozilo, "special_soundset", true, 0)
+			end
+			local speed = GetEntitySpeed(Vozilo)
+			if GetVehicleTurboPressure(Vozilo) > -0.60 and IsControlJustReleased(0, 71) and HasSoundFinished(soundID) and GetVehicleHandbrake(Vozilo) and math.floor(speed) == 0 then
+				--PlaySoundFrontend(soundID, 'blowoff', 'special_soundset', true)
+				PlaySoundFromEntity(soundID, "blowoff", Vozilo, "special_soundset", true, 0)
+			end
+			lastPritisak = GetVehicleTurboPressure(Vozilo)
 			SetRadioTrack(radioname, 255)
 			if IsPlayerVehicleRadioEnabled() and GetPlayerRadioStationName()==radioname and not wasenabled then
 				SendNuiMessage(json.encode({type="enable",state=true}))
@@ -290,6 +305,8 @@ AddEventHandler('baseevents:enteredVehicle', function(currentVehicle, currentSea
 			end
 			wasenabled = IsPlayerVehicleRadioEnabled() and GetPlayerRadioStationName()==radioname
 		end
+		ReleaseSoundId(soundID)
+    	ReleaseNamedScriptAudioBank('audiodirectory/custom_sounds')
 	end)
 	if GetVehicleClass(Vozilo) == 18 then
 		ModifyVehicleTopSpeed(GetVehiclePedIsIn(Vozilo, false), 70.0)
@@ -381,6 +398,14 @@ AddEventHandler('kontenjer:Pretrazi', function(data)
 	end, koord)
 end)
 
+RegisterCommand('+snimanje', function()
+    if IsRecording() then
+		StopRecordingAndSaveClip()
+	else
+		StartRecording(1)
+	end
+end, false)
+RegisterKeyMapping('+snimanje', 'Pokreni snimanje', 'keyboard', 'ADD')
 
 RegisterCommand("auredi", function(source, args, raw)
 	local elements = {}
@@ -1937,17 +1962,32 @@ RegisterNUICallback(
 --     end
 -- )
 
+local pokrenutLaunch = false
+
+RegisterCommand('+startaj', function()
+	local veha = GetVehiclePedIsIn(PlayerPedId(), false)
+	SetVehicleHandbrake(veha, false)
+	pokrenutLaunch = false
+end, false)
+RegisterKeyMapping('+startaj', 'Prekini launch control', 'keyboard', 'w')
+
 RegisterCommand("lc", function(source, args, rawCommandString)
 	if IsPedInAnyVehicle(PlayerPedId(), false) then
-		local deri = true
+		pokrenutLaunch = true
 		local veha = GetVehiclePedIsIn(PlayerPedId(), false)
 		SetVehicleHandbrake(veha, true)
-		while deri do
-			if IsControlJustPressed(0, 71) then
+		while pokrenutLaunch do
+			if not IsPedInAnyVehicle(PlayerPedId(), false) then
 				SetVehicleHandbrake(veha, false)
-				deri = false
+				pokrenutLaunch = false
 			end
-			SetVehicleCurrentRpm(veha, 0.8)
+			SetControlNormal(0, 71, 0.0)
+			SetVehicleCurrentRpm(veha, 0.9)
+			local vr = GetGameTimer()
+			while vr+50 > GetGameTimer() do
+				Wait(1)
+			end
+			SetControlNormal(0, 71, 1.0)
 			Wait(1)
 		end
 	else
